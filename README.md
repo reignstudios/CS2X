@@ -1,6 +1,6 @@
 # CS2X (Currently Experimental)
 Transpiles C# to non .NET languages. (Powered by Roslyn)<br>
-If you're looking for CS2X: https://github.com/reignstudios/IL2X
+If you're looking for IL2X: https://github.com/reignstudios/IL2X
 
 ## Goals
 This project will focus on transpiling a C# subset for writing GPU programs.
