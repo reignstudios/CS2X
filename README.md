@@ -1,5 +1,5 @@
 # CS2X (Currently Experimental)
-Transpiles C# to non .NET languages. (Powered by Roslyn)<br>
+Transpiles a C# subset to non .NET languages. (Powered by Roslyn)<br>
 If you're looking for IL2X: https://github.com/reignstudios/IL2X
 
 ## Goals
@@ -12,6 +12,12 @@ This project will focus on transpiling a C# subset for writing GPU programs.
 * PSSL (PlayStation Shader Language) [PS4]
 * MSL (Metal Shading Language) [macOS / iOS]
 * AGAL (Adobe Pixel Bender and Adobe Graphics Assembly Language) [Flash: if useful]
+
+Later focus on CPU programs.
+* javaScript
+* Python
+* Java
+* ActionScript
 
 ## Project libraries
 * CS2X.Core: .NET transpiler lib
