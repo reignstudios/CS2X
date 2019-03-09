@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Reign-Studios</id>
+    <version>1.0.0</version>
+    <title>TestLizer</title>
+    <authors>Andrew</authors>
+    <owners>Andrew</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://reign-studios.com/</licenseUrl>
+    <projectUrl>http://reign-studios.com/</projectUrl>
+    <iconUrl>https://upload.wikimedia.org/wikipedia/en/e/e0/WPVG_icon_2016.svg</iconUrl>
+    <description>Some desc</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>ReflectionIT.Analyzer, analyzers, CSharp</tags>
+    <dependencies>
+      <group targetFramework=".NETStandard1.3" />
+    </dependencies>
+  </metadata>
+</package>

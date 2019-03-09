@@ -1,0 +1,11 @@
+<<< Roslyn Code Analyzers >>>
+* Create code analyzer in VS by: File->New Proj->Extensibility->Analyzer With Code Fix (.NET Standard)
+* Run .Vsix for debugging for testing syntax highlighting errors.
+* NOTE: Only installed NuGet will get you failed builds (not just syntax highlighting).
+* To package anylizer for NuGet prep: ".\nuget pack .\Analyzer.csproj -IncludeReferencedProjects"
+* Then extract .nupkg (aka zip) files and reformat them using "AnylizerRef"
+* Then re-zip and change ext to .nupkg
+* Custom NuGet packages can be installed in VS via:
+	* Tools->NuGet Package Manager->Package Manager Settings->Package Sources
+	* Set "Source" to file location .nupkg files are located
+NuGet Cache location: C:\Users\<USER>\.nuget\packages\...
