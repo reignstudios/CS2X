@@ -1,5 +1,5 @@
 ﻿using CS2X.Core;
-//using CS2X.Core.Emitters;
+using CS2X.Core.Transpilers;
 using System;
 using System.IO;
 
@@ -17,9 +17,18 @@ namespace CS2X.Core.Test
 			var task = solution.Parse();
 			task.Wait();
 
-			// emit solution
-			//var emitter = new EmitterC(solution, Path.Combine(path, "TestOutput"), EmitterC.CVersions.c99, EmitterC.CompilerTargets.VC, EmitterC.PlatformTypes.Standalone, EmitterC.GCTypes.Boehm);
-			//emitter.Emit(false);
+			// transpile solution
+			var options = new Transpiler_C.Options()
+			{
+				gc = Transpiler_C.GC_Type.Boehm,
+				gcFolderPath = Path.Combine(path, "CS2X.Native"),
+				ptrSize = Transpiler_C.Ptr_Size.Bit_64,
+				endianness = Transpiler_C.Endianness.Little,
+				storeRuntimeTypeStringLiteralMetadata = true,
+				stringLiteralMemoryLocation = Transpiler_C.StringLiteralMemoryLocation.GlobalProgramMemory_RAM
+			};
+			var emitter = new Transpiler_C(solution, options);
+			emitter.Transpile(Path.Combine(path, "TestOutput"));
 		}
 	}
 }

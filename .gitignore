@@ -53,7 +53,7 @@ artifacts/
 *.meta
 *.obj
 *.pch
-*.pdb
+#*.pdb
 *.pgc
 *.pgd
 *.rsp
@@ -246,9 +246,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
-# Installer
-Installer/Setup Files/
-Installer/Git-It-GUI_Installer-cache/
-
-*.gititgui
-*.gititgui-user
+# 3rdParty
+!3rdParty/**

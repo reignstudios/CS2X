@@ -25,10 +25,11 @@ namespace CS2X.Core
 		public IReadOnlyList<Project> references { get; private set;}
 		
 		public CSharpCompilation compilation { get; private set; }
-		public IReadOnlyList<INamedTypeSymbol> classObjects { get; private set; }
-		public IReadOnlyList<INamedTypeSymbol> structObjects { get; private set; }
-		public IReadOnlyList<INamedTypeSymbol> interfaceObjects { get; private set; }
-		public IReadOnlyList<INamedTypeSymbol> enumObjects { get; private set; }
+		public IReadOnlyList<INamedTypeSymbol> allTypes { get; private set; }
+		public IReadOnlyList<INamedTypeSymbol> classTypes { get; private set; }
+		public IReadOnlyList<INamedTypeSymbol> structTypes { get; private set; }
+		public IReadOnlyList<INamedTypeSymbol> interfaceTypes { get; private set; }
+		public IReadOnlyList<INamedTypeSymbol> enumTypes { get; private set; }
 
 		public Project(Solution solution, RoslynProject roslynProject)
 		{
@@ -67,14 +68,22 @@ namespace CS2X.Core
 			this.references = references;
 
 			// init main objects
-			enumObjects = new List<INamedTypeSymbol>();
-			classObjects = new List<INamedTypeSymbol>();
-			structObjects = new List<INamedTypeSymbol>();
-			interfaceObjects = new List<INamedTypeSymbol>();
+			classTypes = new List<INamedTypeSymbol>();
+			structTypes = new List<INamedTypeSymbol>();
+			interfaceTypes = new List<INamedTypeSymbol>();
+			enumTypes = new List<INamedTypeSymbol>();
 
 			// parse lowered objects
 			compilation = (CSharpCompilation)await roslynProject.GetCompilationAsync();
 			ParseNamespace(compilation.Assembly.GlobalNamespace);
+			
+			// merge all types in one list
+			var allTypesList = new List<INamedTypeSymbol>();
+			allTypesList.AddRange(classTypes);
+			allTypesList.AddRange(structTypes);
+			allTypesList.AddRange(interfaceTypes);
+			allTypesList.AddRange(enumTypes);
+			allTypes = allTypesList;
 		}
 
 		private void ParseNamespace(INamespaceSymbol namespaceSymbol)
@@ -96,10 +105,10 @@ namespace CS2X.Core
 		{
 			switch (member.TypeKind)
 			{
-				case TypeKind.Enum: ((List<INamedTypeSymbol>)enumObjects).Add(member); break;
-				case TypeKind.Class: ((List<INamedTypeSymbol>)classObjects).Add(member); break;
-				case TypeKind.Struct: ((List<INamedTypeSymbol>)structObjects).Add(member); break;
-				case TypeKind.Interface: ((List<INamedTypeSymbol>)interfaceObjects).Add(member); break;
+				case TypeKind.Enum: ((List<INamedTypeSymbol>)enumTypes).Add(member); break;
+				case TypeKind.Class: ((List<INamedTypeSymbol>)classTypes).Add(member); break;
+				case TypeKind.Struct: ((List<INamedTypeSymbol>)structTypes).Add(member); break;
+				case TypeKind.Interface: ((List<INamedTypeSymbol>)interfaceTypes).Add(member); break;
 			}
 
 			// parse sub members
