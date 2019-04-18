@@ -1,4 +1,6 @@
 <<< Roslyn Code Analyzers >>>
+* In VS 2019 installer: Check "Visual Stdios extension development".
+* In VS 2019 installer -> "Individual Components" tab: Check ".NET Compiler Platform SDK".
 * Create code analyzer in VS by: File->New Proj->Extensibility->Analyzer With Code Fix (.NET Standard)
 * Run .Vsix for debugging for testing syntax highlighting errors.
 * NOTE: Only installed NuGet will get you failed builds (not just syntax highlighting).
@@ -9,3 +11,14 @@
 	* Tools->NuGet Package Manager->Package Manager Settings->Package Sources
 	* Set "Source" to file location .nupkg files are located
 NuGet Cache location: C:\Users\<USER>\.nuget\packages\...
+
+<<< Install Roslyn compiler services >>>
+Roslyn compiler from NuGet (Install or Update these ONLY): https://gist.github.com/DustinCampbell/32cd69d04ea1c08a16ae5c4cd21dd3a3
+* Microsoft.VisualStudio.LanguageServices (.NET Framework)
+* Microsoft.CodeAnalysis.CSharp.Workspaces (.NET Core)
+* Microsoft.CodeAnalysis.Workspaces.MSBuild
+* Microsoft.Build.Locator
+
+To uninstall all packaged for clean updates
+* Open in VS: "Tools->NuGet Package Manager->Package Manager Consonle"
+* Run command: get-package | uninstall-package -removedependencies -force
