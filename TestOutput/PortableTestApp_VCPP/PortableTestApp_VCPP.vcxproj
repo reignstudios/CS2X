@@ -147,7 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\PortableTestApp.c" />
+    <ClCompile Include="..\PortableTestApp.CS2X.c" />
     <ClCompile Include="PortableTestApp_VCPP.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

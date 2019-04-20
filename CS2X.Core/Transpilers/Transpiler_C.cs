@@ -204,11 +204,12 @@ namespace CS2X.Core.Transpilers
 				}
 				else if (type.TypeKind == TypeKind.Interface)
 				{
-					writer.WriteLine($"typedef void* {GetTypeFullName(type)};");
+					writer.WriteLine($"typedef void {GetTypeFullName(type)};");
 				}
 				else
 				{
-					writer.WriteLine(string.Format("typedef struct {0} {0};", GetTypeFullName(type)));
+					if (IsEmptyType(type)) writer.WriteLine(string.Format("typedef void {0};", GetTypeFullName(type)));
+					else writer.WriteLine(string.Format("typedef struct {0} {0};", GetTypeFullName(type)));
 				}
 			}
 			else

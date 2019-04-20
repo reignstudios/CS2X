@@ -12,6 +12,9 @@ namespace PortableTestApp
 
 	class Program
 	{
+		public static int abc;
+		public int abc2;
+
 		static void Main(string[] args)
 		{
 			Console.WriteLine("Hello World!");

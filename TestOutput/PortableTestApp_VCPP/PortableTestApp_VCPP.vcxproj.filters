@@ -21,7 +21,7 @@
     <ClCompile Include="PortableTestApp_VCPP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\PortableTestApp.c">
+    <ClCompile Include="..\PortableTestApp.CS2X.c">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>
