@@ -13,7 +13,9 @@ namespace PortableTestApp
 	class Program
 	{
 		public static int abc;
-		public int abc2;
+		public int abcStatic;
+		public int MyProp { get; private set; }
+		public static int MyPropStatic { get; private set; }
 
 		static void Main(string[] args)
 		{

@@ -172,6 +172,14 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine($"/* Generated with CS2X v{Utils.GetAssemblyInfoVersion()} */");
 			writer.WriteLine("/* ############################### */");
 
+			// include std libraries
+			writer.WriteLine("#include <stdio.h>");
+			writer.WriteLine("#include <math.h>");
+			writer.WriteLine("#include <stdint.h>");
+			writer.WriteLine("#include <uchar.h>");
+			writer.WriteLine("#include <locale.h>");
+			if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
+
 			// include references
 			writer.WriteLine("#include \"CS2X.CoreLib.h\"");
 			foreach (var reference in project.references)
@@ -216,17 +224,34 @@ namespace CS2X.Core.Transpilers
 			{
 				if (type.TypeKind == TypeKind.Enum) return;
 
+				// write non-static fields
 				writer.WriteLine($"struct {GetTypeFullName(type)}");
 				writer.WriteLine('{');
 				writer.AddTab();
-				// TODO: writer fields
+				foreach (var member in type.GetMembers())
+				{
+					if (member.IsStatic) continue;
+					if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
+				}
 				writer.RemoveTab();
 				writer.WriteLine("};");
+
+				// write static fields
+				foreach (var member in type.GetMembers())
+				{
+					if (!member.IsStatic) continue;
+					if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
+				}
 			}
 		}
 
+		private void WriteField(IFieldSymbol field)
+		{
+			writer.WriteLinePrefix($"{GetTypeFullName(field.Type)} {GetFieldFullName(field)};");
+		}
+
 		#region C name resolution
-		private string GetPrimitiveName(INamedTypeSymbol type)
+		private string GetPrimitiveName(ITypeSymbol type)
 		{
 			switch (type.SpecialType)
 			{
@@ -248,14 +273,18 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		private string GetTypeName(INamedTypeSymbol type)
+		protected override string GetTypeFullName(ITypeSymbol type)
 		{
-			return type.Name;
+			if (IsPrimitiveType(type)) return GetPrimitiveName(type);
+			else return "t_" + base.GetTypeFullName(type);
 		}
 
-		protected override string GetTypeFullName(INamedTypeSymbol type)
+		protected override string GetFieldFullName(IFieldSymbol field)
 		{
-			return "t_" + base.GetTypeFullName(type);
+			string result = base.GetFieldFullName(field);
+			if (!field.IsStatic) result = "f_" + result;
+			else result = $"f_{GetTypeFullName(field.ContainingType)}_{result}";
+			return result;
 		}
 
 		protected override string GetTypeDelimiter()
