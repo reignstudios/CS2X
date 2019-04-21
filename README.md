@@ -36,11 +36,12 @@ This project will focus on transpiling a C# subset for writing CPU and GPU progr
 * CS2X.Core: .NET transpiler lib
 * CS2X.CLI: CLI interface for CS2X.Core
 * CS2X.Analyzer: C# syntax analyzer to limit unsuported features.
+* CS2X.CoreLib: Portable CoreLib subset
 
 ## Building
 * Prerequisites
 	* Visual Studios 2019 (VS for Mac / MonoDevelop or VSCode have not yet been tested)
 	* .NET Core 2.2
 	* .NET Compiler Platform SDK
-* Run: CS2X.Core.Test proj in VS. This will build "PortableTestApp.CS2X.csproj" to "TestOutput" folder
+* Run: CS2X.Core.Test proj in VS. This will build "PortableTestApp.csproj" to "TestOutput" folder
 * NOTE: Very early stages so nothing else is supported yet.

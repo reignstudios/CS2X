@@ -11,7 +11,7 @@ namespace CS2X.Core.Test
 		{
 			// load solution
 			string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\");
-			var solution = new Solution(Path.Combine(path, @"PortableTestApp\PortableTestApp.CS2X.csproj"));
+			var solution = new Solution(Path.Combine(path, @"PortableTestApp\PortableTestApp.csproj"));
 
 			// parse solution
 			var task = solution.Parse();

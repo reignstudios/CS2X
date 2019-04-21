@@ -147,8 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\PortableTestApp.CS2X.c" />
+    <ClCompile Include="..\PortableTestApp.c" />
     <ClCompile Include="PortableTestApp_VCPP.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\CS2X.CoreLib.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

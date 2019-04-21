@@ -23,12 +23,12 @@ namespace CS2X.Core.Transpilers
 		{
 			var result = new StringBuilder(type.Name);
 
-			// prefix base types
-			var baseType = type.BaseType;
-			while (baseType != null)
+			// prefix containing types
+			var containingType = type.ContainingType;
+			while (containingType != null)
 			{
-				result.Insert(0, baseType.Name + GetTypeDelimiter());
-				baseType = baseType.BaseType;
+				result.Insert(0, containingType.Name + GetContainingTypeDelimiter());
+				containingType = containingType.ContainingType;
 			}
 
 			// write namespace
@@ -36,7 +36,7 @@ namespace CS2X.Core.Transpilers
 			while (baseNamespace != null)
 			{
 				if (baseNamespace.IsGlobalNamespace) break;
-				result.Insert(0, baseNamespace.Name + GetnamespaceDelimiter());
+				result.Insert(0, baseNamespace.Name + GetNamespaceDelimiter());
 				baseNamespace = baseNamespace.ContainingNamespace;
 			}
 
@@ -50,8 +50,8 @@ namespace CS2X.Core.Transpilers
 			return result;
 		}
 
-		protected abstract string GetTypeDelimiter();
-		protected abstract string GetnamespaceDelimiter();
+		protected abstract string GetContainingTypeDelimiter();
+		protected abstract string GetNamespaceDelimiter();
 
 		protected void ParseImplementationDetail(ref string name)
 		{
@@ -67,18 +67,25 @@ namespace CS2X.Core.Transpilers
 		protected bool IsEmptyType(ITypeSymbol type, bool staticsDontCount = true)
 		{
 			var currentType = type;
-			while (currentType != null)
+			if (staticsDontCount)
 			{
-				if (staticsDontCount)
+				while (currentType != null)
 				{
-					if (!currentType.GetMembers().All(x => x is IFieldSymbol && x.IsStatic)) return false;
+					foreach (var member in currentType.GetMembers())
+					{
+						if (!(member is IFieldSymbol) || member.IsStatic) continue;
+						return false;
+					}
+					currentType = currentType.BaseType;
 				}
-				else
+			}
+			else
+			{
+				while (currentType != null)
 				{
-					return false;
+					if (currentType.GetMembers().Any(x => x is IFieldSymbol)) return false;
+					currentType = currentType.BaseType;
 				}
-
-				currentType = currentType.BaseType;
 			}
 
 			return true;

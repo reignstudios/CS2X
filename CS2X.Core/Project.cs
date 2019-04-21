@@ -19,6 +19,7 @@ namespace CS2X.Core
 	{
 		public readonly Solution solution;
 		public readonly RoslynProject roslynProject;
+		public readonly bool isCoreLib;
 
 		public readonly ProjectTypes type;
 		public readonly OptimizationLevel optimizationLevel;
@@ -35,6 +36,7 @@ namespace CS2X.Core
 		{
 			this.solution = solution;
 			this.roslynProject = roslynProject;
+			isCoreLib = roslynProject.AllProjectReferences.Count == 0;
 
 			// validate compiler options
 			//var parseOptions = (CSharpParseOptions)roslynProject.ParseOptions;

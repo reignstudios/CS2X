@@ -173,15 +173,17 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* ############################### */");
 
 			// include std libraries
-			writer.WriteLine("#include <stdio.h>");
-			writer.WriteLine("#include <math.h>");
-			writer.WriteLine("#include <stdint.h>");
-			writer.WriteLine("#include <uchar.h>");
-			writer.WriteLine("#include <locale.h>");
-			if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
+			if (project.isCoreLib)
+			{
+				writer.WriteLine("#include <stdio.h>");
+				writer.WriteLine("#include <math.h>");
+				writer.WriteLine("#include <stdint.h>");
+				writer.WriteLine("#include <uchar.h>");
+				writer.WriteLine("#include <locale.h>");
+				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
+			}
 
 			// include references
-			writer.WriteLine("#include \"CS2X.CoreLib.h\"");
 			foreach (var reference in project.references)
 			{
 				writer.WriteLine($"#include \"{reference.roslynProject.AssemblyName}.h\"");
@@ -204,11 +206,13 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteType(INamedTypeSymbol type, bool writeBody)
 		{
+			if (IsPrimitiveType(type)) return;
+
 			if (!writeBody)
 			{
 				if (type.TypeKind == TypeKind.Enum)
 				{
-					writer.WriteLine($"typedef struct {GetPrimitiveName(type.EnumUnderlyingType)} {GetTypeFullName(type)};");
+					writer.WriteLine($"typedef {GetPrimitiveName(type.EnumUnderlyingType)} {GetTypeFullName(type)};");
 				}
 				else if (type.TypeKind == TypeKind.Interface)
 				{
@@ -216,22 +220,44 @@ namespace CS2X.Core.Transpilers
 				}
 				else
 				{
-					if (IsEmptyType(type)) writer.WriteLine(string.Format("typedef void {0};", GetTypeFullName(type)));
-					else writer.WriteLine(string.Format("typedef struct {0} {0};", GetTypeFullName(type)));
+					if (IsEmptyType(type))
+					{
+						string ptr;
+						if (type.IsValueType) ptr = "*";
+						else ptr = string.Empty;
+						writer.WriteLine($"typedef void{ptr} {GetTypeFullName(type)};");
+					}
+					else
+					{
+						writer.WriteLine(string.Format("typedef struct {0} {0};", GetTypeFullName(type)));
+					}
 				}
 			}
-			else
+			else if(!IsEmptyType(type))
 			{
 				if (type.TypeKind == TypeKind.Enum) return;
+
+				// get all types that should write non-static fields
+				var fieldTypeList = new List<INamedTypeSymbol>();
+				fieldTypeList.Add(type);
+				var baseType = type.BaseType;
+				while (baseType != null)
+				{
+					fieldTypeList.Add(baseType);
+					baseType = baseType.BaseType;
+				}
 
 				// write non-static fields
 				writer.WriteLine($"struct {GetTypeFullName(type)}");
 				writer.WriteLine('{');
 				writer.AddTab();
-				foreach (var member in type.GetMembers())
+				foreach (var t in fieldTypeList)
 				{
-					if (member.IsStatic) continue;
-					if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
+					foreach (var member in t.GetMembers())
+					{
+						if (member.IsStatic) continue;
+						if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
+					}
 				}
 				writer.RemoveTab();
 				writer.WriteLine("};");
@@ -247,7 +273,7 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteField(IFieldSymbol field)
 		{
-			writer.WriteLinePrefix($"{GetTypeFullName(field.Type)} {GetFieldFullName(field)};");
+			writer.WriteLinePrefix($"{GetTypeFullNameRef(field.Type)} {GetFieldFullName(field)};");
 		}
 
 		#region C name resolution
@@ -279,6 +305,13 @@ namespace CS2X.Core.Transpilers
 			else return "t_" + base.GetTypeFullName(type);
 		}
 
+		private string GetTypeFullNameRef(ITypeSymbol type)
+		{
+			string result = GetTypeFullName(type);
+			if (type.IsReferenceType || type is IPointerTypeSymbol) result += '*';
+			return result;
+		}
+
 		protected override string GetFieldFullName(IFieldSymbol field)
 		{
 			string result = base.GetFieldFullName(field);
@@ -287,11 +320,11 @@ namespace CS2X.Core.Transpilers
 			return result;
 		}
 
-		protected override string GetTypeDelimiter()
+		protected override string GetContainingTypeDelimiter()
 		{
 			return "_";
 		}
-		protected override string GetnamespaceDelimiter()
+		protected override string GetNamespaceDelimiter()
 		{
 			return "_";
 		}
