@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
+using System.Collections.Immutable;
 
 namespace CS2X.Core.Transpilers
 {
@@ -192,21 +193,47 @@ namespace CS2X.Core.Transpilers
 			// forward declare types
 			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Type forward declares */");
+			writer.WriteLine("/* Torward declare Types */");
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes) WriteType(type, false);
+
+			// forward declare types
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Forward decalre Methods */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var type in project.allTypes)
+			{
+				foreach (var method in type.GetMembers())
+				{
+					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, false);
+				}
+			}
 
 			// types
 			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Types */");
+			writer.WriteLine("/* Type definitions */");
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes) WriteType(type, true);
+
+			// methods
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Method definitions */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var type in project.allTypes)
+			{
+				foreach (var method in type.GetMembers())
+				{
+					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
+				}
+			}
 		}
 
 		private void WriteType(INamedTypeSymbol type, bool writeBody)
 		{
-			if (IsPrimitiveType(type)) return;
+			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return;
 
 			if (!writeBody)
 			{
@@ -233,10 +260,21 @@ namespace CS2X.Core.Transpilers
 					}
 				}
 			}
+			else if (type.TypeKind == TypeKind.Enum) 
+			{
+				foreach (var member in type.GetMembers())
+				{
+					if (!member.IsStatic) continue;
+					if (member is IFieldSymbol)
+					{
+						var field = (IFieldSymbol)member;
+						writer.WriteLine($"#define {GetFieldFullName(field)} {field.ConstantValue.ToString()}");
+					}
+				}
+				return;
+			}
 			else if(!IsEmptyType(type))
 			{
-				if (type.TypeKind == TypeKind.Enum) return;
-
 				// get all types that should write non-static fields
 				var fieldTypeList = new List<INamedTypeSymbol>();
 				fieldTypeList.Add(type);
@@ -251,9 +289,9 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"struct {GetTypeFullName(type)}");
 				writer.WriteLine('{');
 				writer.AddTab();
-				foreach (var t in fieldTypeList)
+				foreach (var subType in fieldTypeList)
 				{
-					foreach (var member in t.GetMembers())
+					foreach (var member in subType.GetMembers())
 					{
 						if (member.IsStatic) continue;
 						if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
@@ -274,6 +312,37 @@ namespace CS2X.Core.Transpilers
 		private void WriteField(IFieldSymbol field)
 		{
 			writer.WriteLinePrefix($"{GetTypeFullNameRef(field.Type)} {GetFieldFullName(field)};");
+		}
+
+		private void WriteMethod(IMethodSymbol method, bool writeBody)
+		{
+			if (!writeBody)
+			{
+				writer.WritePrefix($"{GetTypeFullNameRef(method.ReceiverType)} {GetMethodFullName(method)}(");
+				WriteParameters(method.Parameters);
+				writer.WriteLine(");");
+			}
+			else
+			{
+				writer.WritePrefix($"{GetTypeFullNameRef(method.ReceiverType)} {GetMethodFullName(method)}(");
+				WriteParameters(method.Parameters);
+				writer.WriteLine(')');
+				writer.WriteLine('{');
+				writer.AddTab();
+				// TODO: write instructions
+				writer.RemoveTab();
+				writer.WriteLine('}');
+			}
+		}
+
+		private void WriteParameters(ImmutableArray<IParameterSymbol> parameters)
+		{
+			var lastParameter = parameters.LastOrDefault();
+			foreach (var parameter in parameters)
+			{
+				writer.Write($"{GetTypeFullNameRef(parameter.Type)} {GetParameterFullName(parameter)}");
+				if (parameter != lastParameter) writer.Write(", ");
+			}
 		}
 
 		#region C name resolution
@@ -299,25 +368,87 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+		private Enabler allowTypePrefix = new Enabler();
 		protected override string GetTypeFullName(ITypeSymbol type)
 		{
-			if (IsPrimitiveType(type)) return GetPrimitiveName(type);
-			else return "t_" + base.GetTypeFullName(type);
+			if (IsPrimitiveType(type))
+			{
+				return GetPrimitiveName(type);
+			}
+			else if (type.SpecialType == SpecialType.System_Void)
+			{
+				return "void";
+			}
+			else
+			{
+				if (allowTypePrefix.enabled) return "t_" + base.GetTypeFullName(type);
+				else return base.GetTypeFullName(type);
+			}
 		}
 
 		private string GetTypeFullNameRef(ITypeSymbol type)
 		{
+			string ptr = string.Empty;
+			while (true)
+			{
+				if (type is IArrayTypeSymbol)
+				{
+					ptr += "*";
+					var t = (IArrayTypeSymbol)type;
+					type = t.ElementType;
+				}
+				else if (type is IPointerTypeSymbol)
+				{
+					ptr += "*";
+					var t = (IPointerTypeSymbol)type;
+					type = t.PointedAtType;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			if (type.IsReferenceType) ptr += "*";
+
 			string result = GetTypeFullName(type);
-			if (type.IsReferenceType || type is IPointerTypeSymbol) result += '*';
+			result += ptr;
 			return result;
 		}
 
 		protected override string GetFieldFullName(IFieldSymbol field)
 		{
-			string result = base.GetFieldFullName(field);
-			if (!field.IsStatic) result = "f_" + result;
-			else result = $"f_{GetTypeFullName(field.ContainingType)}_{result}";
-			return result;
+			using (allowTypePrefix.Disable())
+			{
+				string result = base.GetFieldFullName(field);
+				if (!field.IsStatic) result = "f_" + result;
+				else result = $"f_{GetTypeFullName(field.ContainingType)}_{result}";
+				return result;
+			}
+		}
+
+		protected override string GetParameterFullName(IParameterSymbol parameter)
+		{
+			using (allowTypePrefix.Disable())
+			{
+				return "p_" + base.GetParameterFullName(parameter);
+			}
+		}
+
+		protected override string GetLocalFullName(ILocalSymbol local)
+		{
+			using (allowTypePrefix.Disable())
+			{
+				return "l_" + base.GetLocalFullName(local);
+			}
+		}
+
+		protected override string GetMethodFullName(IMethodSymbol method)
+		{
+			using (allowTypePrefix.Disable())
+			{
+				return $"m_{GetTypeFullName(method.ContainingType)}_{base.GetMethodFullName(method)}";
+			}
 		}
 
 		protected override string GetContainingTypeDelimiter()

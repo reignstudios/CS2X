@@ -56,4 +56,26 @@ namespace CS2X.Core
 			return newValue.ToString();
 		}
 	}
+
+	class Enabler : IDisposable
+	{
+		public bool enabled { get; private set; }
+
+		public Enabler Enable()
+		{
+			enabled = true;
+			return this;
+		}
+
+		public Enabler Disable()
+		{
+			enabled = false;
+			return this;
+		}
+
+		public void Dispose()
+		{
+			enabled = !enabled;
+		}
+	}
 }

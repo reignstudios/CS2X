@@ -50,6 +50,27 @@ namespace CS2X.Core.Transpilers
 			return result;
 		}
 
+		protected virtual string GetParameterFullName(IParameterSymbol parameter)
+		{
+			string result = parameter.Name;
+			ParseImplementationDetail(ref result);
+			return result;
+		}
+
+		protected virtual string GetLocalFullName(ILocalSymbol local)
+		{
+			string result = local.Name;
+			ParseImplementationDetail(ref result);
+			return result;
+		}
+
+		protected virtual string GetMethodFullName(IMethodSymbol method)
+		{
+			string result = method.Name;
+			ParseImplementationDetail(ref result);
+			return result;
+		}
+
 		protected abstract string GetContainingTypeDelimiter();
 		protected abstract string GetNamespaceDelimiter();
 
@@ -57,6 +78,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (name.Contains('<')) name = name.Replace('<', '_');
 			if (name.Contains('>')) name = name.Replace('>', '_');
+			if (name.Contains('.')) name = name.Replace('.', '_');
 		}
 
 		protected bool PropertyIsFieldBacked(IPropertySymbol property)
@@ -128,6 +150,12 @@ namespace CS2X.Core.Transpilers
 					return true;
 			}
 			return false;
+		}
+
+		protected int GetMethodOverloadIndex(IMethodSymbol method)
+		{
+			// TODO
+			return 0;
 		}
 	}
 }
