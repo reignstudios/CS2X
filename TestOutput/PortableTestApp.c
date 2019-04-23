@@ -12,21 +12,21 @@ typedef int32_t t_PortableTestApp_MyNamespace_MyEnum;
 /* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
-t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyProp();
-t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyProp(int32_t p_value);
-t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyPropStatic();
-t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyPropStatic(int32_t p_value);
-t_PortableTestApp_Program* m_PortableTestApp_Program_Main(t_System_String** p_args);
-t_PortableTestApp_Program* m_PortableTestApp_Program__ctor();
-t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor();
+t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyProp_0();
+t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyProp_0(int32_t p_value);
+t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyPropStatic_0();
+t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value);
+t_PortableTestApp_Program* m_PortableTestApp_Program_Main_0(t_System_String** p_args);
+t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0();
+t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor_0();
 
 /* =============================== */
 /* Type definitions */
 /* =============================== */
 struct t_PortableTestApp_Program
 {
-	int32_t f_abcStatic;
-	int32_t f__MyProp_k__BackingField;
+	int32_t f_abcStatic_1;
+	int32_t f__MyProp_k__BackingField_1;
 };
 int32_t f_PortableTestApp_Program_abc;
 int32_t f_PortableTestApp_Program__MyPropStatic_k__BackingField;
@@ -37,24 +37,24 @@ int32_t f_PortableTestApp_Program__MyPropStatic_k__BackingField;
 /* =============================== */
 /* Method definitions */
 /* =============================== */
-t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyProp()
+t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyProp_0()
 {
 }
-t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyProp(int32_t p_value)
+t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyProp_0(int32_t p_value)
 {
 }
-t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyPropStatic()
+t_PortableTestApp_Program* m_PortableTestApp_Program_get_MyPropStatic_0()
 {
 }
-t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyPropStatic(int32_t p_value)
+t_PortableTestApp_Program* m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value)
 {
 }
-t_PortableTestApp_Program* m_PortableTestApp_Program_Main(t_System_String** p_args)
+t_PortableTestApp_Program* m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 {
 }
-t_PortableTestApp_Program* m_PortableTestApp_Program__ctor()
+t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0()
 {
 }
-t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor()
+t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor_0()
 {
 }

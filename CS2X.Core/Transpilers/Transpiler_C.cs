@@ -231,6 +231,7 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+		#region Type Writers
 		private void WriteType(INamedTypeSymbol type, bool writeBody)
 		{
 			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return;
@@ -344,6 +345,11 @@ namespace CS2X.Core.Transpilers
 				if (parameter != lastParameter) writer.Write(", ");
 			}
 		}
+		#endregion
+
+		#region Method Body / IL Instructions
+
+		#endregion
 
 		#region C name resolution
 		private string GetPrimitiveName(ITypeSymbol type)
@@ -421,7 +427,7 @@ namespace CS2X.Core.Transpilers
 			using (allowTypePrefix.Disable())
 			{
 				string result = base.GetFieldFullName(field);
-				if (!field.IsStatic) result = "f_" + result;
+				if (!field.IsStatic) result = $"f_{result}_{GetBaseTypeCount(field.ContainingType)}";
 				else result = $"f_{GetTypeFullName(field.ContainingType)}_{result}";
 				return result;
 			}
@@ -447,7 +453,7 @@ namespace CS2X.Core.Transpilers
 		{
 			using (allowTypePrefix.Disable())
 			{
-				return $"m_{GetTypeFullName(method.ContainingType)}_{base.GetMethodFullName(method)}";
+				return $"m_{GetTypeFullName(method.ContainingType)}_{base.GetMethodFullName(method)}_{GetMethodOverloadIndex(method)}";
 			}
 		}
 

@@ -152,10 +152,30 @@ namespace CS2X.Core.Transpilers
 			return false;
 		}
 
+		protected int GetBaseTypeCount(ITypeSymbol type)
+		{
+			int count = 0;
+			var baseType = type.BaseType;
+			while (baseType != null)
+			{
+				++count;
+				baseType = baseType.BaseType;
+			}
+			return count;
+		}
+
 		protected int GetMethodOverloadIndex(IMethodSymbol method)
 		{
-			// TODO
-			return 0;
+			int index = 0;
+			foreach (var typeMethod in method.ContainingType.GetMembers())
+			{
+				if (typeMethod is IMethodSymbol)
+				{
+					if (typeMethod == method) break;
+					else if (typeMethod.Name == method.Name) ++index;
+				}
+			}
+			return index;
 		}
 	}
 }
