@@ -8,27 +8,19 @@ namespace System
 		public const float E = 2.71828183f;
 		public const float PI = 3.14159265f;
 
-		[NativeExternC("sqrtf")]
+		[NativeExtern(NativeExternTarget.C, "sqrtf")]
 		public static extern float Sqrt(float x);
 
-		[NativeExternC("powf")]
+		[NativeExtern(NativeExternTarget.C, "powf")]
 		public static extern float Pow(float x, float y);
 
-		[NativeExternC("tanf")]
+		[NativeExtern(NativeExternTarget.C, "tanf")]
 		public static extern float Tan(float a);
 
-		// TODO: use [NativeExternC("maxf")]
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float Max(float x, float y)
-		{
-			return Math.Max(x, y);
-		}
+		[NativeExtern(NativeExternTarget.C, "maxf")]
+		public static extern float Max(float x, float y);
 
-		// TODO: use [NativeExternC("minf")]
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float Min(float x, float y)
-		{
-			return Math.Min(x, y);
-		}
+		[NativeExtern(NativeExternTarget.C, "minf")]
+		public static extern float Min(float x, float y);
 	}
 }

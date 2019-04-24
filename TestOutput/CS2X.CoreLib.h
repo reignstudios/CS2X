@@ -78,7 +78,7 @@ typedef void t_System_Runtime_CompilerServices_RuntimeHelpers;
 typedef void t_System_Runtime_InteropServices_OutAttribute;
 typedef struct t_System_Runtime_InteropServices_StructLayoutAttribute t_System_Runtime_InteropServices_StructLayoutAttribute;
 typedef struct t_System_Runtime_Versioning_TargetFrameworkAttribute t_System_Runtime_Versioning_TargetFrameworkAttribute;
-typedef struct t_CS2X_NativeExternCAttribute t_CS2X_NativeExternCAttribute;
+typedef struct t_CS2X_NativeExternAttribute t_CS2X_NativeExternAttribute;
 typedef struct t_System_Decimal t_System_Decimal;
 typedef void* t_System_RuntimeFieldHandle;
 typedef struct t_System_RuntimeTypeHandle t_System_RuntimeTypeHandle;
@@ -95,6 +95,7 @@ typedef int32_t t_System_Reflection_MethodImplAttributes;
 typedef int32_t t_System_Runtime_CompilerServices_MethodCodeType;
 typedef int32_t t_System_Runtime_CompilerServices_MethodImplOptions;
 typedef int32_t t_System_Runtime_InteropServices_LayoutKind;
+typedef int32_t t_CS2X_NativeExternTarget;
 
 /* =============================== */
 /* Forward decalre Methods */
@@ -112,13 +113,11 @@ t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute_set_AllowMult
 t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute_get_Inherited_0();
 t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute_set_Inherited_0(char p_value);
 t_System_BitConverter* m_System_BitConverter_SingleToInt32Bits_0(float p_value);
-t_System_Buffer* m_System_Buffer_memcpy_0(void* p__Dst, void* p__Src, void* p__Size);
 t_System_Buffer* m_System_Buffer_MemoryCopy_0(void* p_source, void* p_destination, int64_t p_destinationSizeInBytes, int64_t p_sourceBytesToCopy);
 t_System_Buffer* m_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t p_destinationSizeInBytes, uint64_t p_sourceBytesToCopy);
 t_System_CancelEventArgs* m_System_CancelEventArgs__ctor_0();
 t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(char p_isCompliant);
 t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute_get_IsCompliant_0();
-t_System_Console* m_System_Console_wprintf_0(char16_t* p_text);
 t_System_Console* m_System_Console_Write_0(t_System_String* p_s);
 t_System_Console* m_System_Console_WriteLine_0(t_System_String* p_s);
 t_System_Console* m_System_Console_WriteLine_1();
@@ -134,16 +133,6 @@ t_System_Exception* m_System_Exception_set_Message_0(t_System_String* p_value);
 t_System_Exception* m_System_Exception_get_StackTrace_0();
 t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0();
 t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0();
-t_System_Math* m_System_Math_Sqrt_0(double p_d);
-t_System_Math* m_System_Math_Pow_0(double p_x, double p_y);
-t_System_Math* m_System_Math_Tan_0(double p_a);
-t_System_Math* m_System_Math_Max_0(float p_val1, float p_val2);
-t_System_Math* m_System_Math_Min_0(float p_val1, float p_val2);
-t_System_MathF* m_System_MathF_Sqrt_0(float p_x);
-t_System_MathF* m_System_MathF_Pow_0(float p_x, float p_y);
-t_System_MathF* m_System_MathF_Tan_0(float p_a);
-t_System_MathF* m_System_MathF_Max_0(float p_x, float p_y);
-t_System_MathF* m_System_MathF_Min_0(float p_x, float p_y);
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0();
 t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0();
 t_System_NotSupportedException* m_System_NotSupportedException__ctor_0();
@@ -245,7 +234,7 @@ t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versionin
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute_set_FrameworkDisplayName_0(t_System_String* p_value);
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute_get_FrameworkName_0();
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute_set_FrameworkName_0(t_System_String* p_value);
-t_CS2X_NativeExternCAttribute* m_CS2X_NativeExternCAttribute__ctor_0(t_System_String* p_methodName);
+t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName);
 char m_char__ctor_0();
 uint8_t m_uint8_t__ctor_0();
 char16_t m_char16_t__ctor_0();
@@ -286,6 +275,7 @@ t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttribute
 t_System_Runtime_CompilerServices_MethodCodeType m_System_Runtime_CompilerServices_MethodCodeType__ctor_0();
 t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerServices_MethodImplOptions__ctor_0();
 t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0();
+t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0();
 
 /* =============================== */
 /* Type definitions */
@@ -414,8 +404,9 @@ struct t_System_Runtime_Versioning_TargetFrameworkAttribute
 	t_System_String* f__FrameworkDisplayName_k__BackingField_2;
 	t_System_String* f__FrameworkName_k__BackingField_2;
 };
-struct t_CS2X_NativeExternCAttribute
+struct t_CS2X_NativeExternAttribute
 {
+	t_CS2X_NativeExternTarget f_target_2;
 	t_System_String* f_methodName_2;
 };
 struct t_System_Decimal
@@ -486,6 +477,7 @@ struct t_System_Collections_DictionaryEntry
 #define f_System_Runtime_InteropServices_LayoutKind_Sequential 0
 #define f_System_Runtime_InteropServices_LayoutKind_Explicit 2
 #define f_System_Runtime_InteropServices_LayoutKind_Auto 3
+#define f_CS2X_NativeExternTarget_C 0
 
 /* =============================== */
 /* Method definitions */
@@ -529,9 +521,6 @@ t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute_set_Inherited
 t_System_BitConverter* m_System_BitConverter_SingleToInt32Bits_0(float p_value)
 {
 }
-t_System_Buffer* m_System_Buffer_memcpy_0(void* p__Dst, void* p__Src, void* p__Size)
-{
-}
 t_System_Buffer* m_System_Buffer_MemoryCopy_0(void* p_source, void* p_destination, int64_t p_destinationSizeInBytes, int64_t p_sourceBytesToCopy)
 {
 }
@@ -545,9 +534,6 @@ t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(char p_is
 {
 }
 t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute_get_IsCompliant_0()
-{
-}
-t_System_Console* m_System_Console_wprintf_0(char16_t* p_text)
 {
 }
 t_System_Console* m_System_Console_Write_0(t_System_String* p_s)
@@ -567,6 +553,7 @@ t_System_Enum* m_System_Enum__ctor_0()
 }
 t_System_Environment* m_System_Environment_get_NewLine_0()
 {
+	return ;
 }
 t_System_EventArgs* m_System_EventArgs__ctor_0()
 {
@@ -593,36 +580,6 @@ t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0()
 {
 }
 t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0()
-{
-}
-t_System_Math* m_System_Math_Sqrt_0(double p_d)
-{
-}
-t_System_Math* m_System_Math_Pow_0(double p_x, double p_y)
-{
-}
-t_System_Math* m_System_Math_Tan_0(double p_a)
-{
-}
-t_System_Math* m_System_Math_Max_0(float p_val1, float p_val2)
-{
-}
-t_System_Math* m_System_Math_Min_0(float p_val1, float p_val2)
-{
-}
-t_System_MathF* m_System_MathF_Sqrt_0(float p_x)
-{
-}
-t_System_MathF* m_System_MathF_Pow_0(float p_x, float p_y)
-{
-}
-t_System_MathF* m_System_MathF_Tan_0(float p_a)
-{
-}
-t_System_MathF* m_System_MathF_Max_0(float p_x, float p_y)
-{
-}
-t_System_MathF* m_System_MathF_Min_0(float p_x, float p_y)
 {
 }
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0()
@@ -663,15 +620,19 @@ t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0()
 }
 t_System_RuntimeType* m_System_RuntimeType_get_BaseType_0()
 {
+	return ;
 }
 t_System_RuntimeType* m_System_RuntimeType_get_Name_0()
 {
+	return ;
 }
 t_System_RuntimeType* m_System_RuntimeType_get_FullName_0()
 {
+	return ;
 }
 t_System_RuntimeType* m_System_RuntimeType_get_TypeHandle_0()
 {
+	return ;
 }
 t_System_RuntimeType* m_System_RuntimeType__ctor_0()
 {
@@ -928,7 +889,7 @@ t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versionin
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute_set_FrameworkName_0(t_System_String* p_value)
 {
 }
-t_CS2X_NativeExternCAttribute* m_CS2X_NativeExternCAttribute__ctor_0(t_System_String* p_methodName)
+t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName)
 {
 }
 char m_char__ctor_0()
@@ -1049,5 +1010,8 @@ t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerSer
 {
 }
 t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0()
+{
+}
+t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0()
 {
 }

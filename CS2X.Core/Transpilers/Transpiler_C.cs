@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CS2X.Core.Transpilers
 {
@@ -317,6 +318,28 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteMethod(IMethodSymbol method, bool writeBody)
 		{
+			// skip if method is native extern
+			foreach (var attribute in method.GetAttributes())
+			{
+				var type = attribute.AttributeClass;
+				if (type.ContainingNamespace.Name == "CS2X" && type.Name == "NativeExternAttribute")
+				{
+					return;
+				}
+			}
+
+			// validate method type is supported
+			switch (method.MethodKind)
+			{
+				case MethodKind.Ordinary:
+				case MethodKind.Constructor:
+				case MethodKind.PropertyGet:
+				case MethodKind.PropertySet:
+					break;
+				default: throw new NotSupportedException("Unsupported method kind: " + method.MethodKind);
+			}
+
+			// write method
 			if (!writeBody)
 			{
 				writer.WritePrefix($"{GetTypeFullNameRef(method.ReceiverType)} {GetMethodFullName(method)}(");
@@ -330,7 +353,47 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine(')');
 				writer.WriteLine('{');
 				writer.AddTab();
-				// TODO: write instructions
+				if (!method.IsImplicitlyDeclared)
+				{
+					if (method.DeclaringSyntaxReferences.Length != 1) throw new Exception("Method can only be defined in one location: " + method.Name);
+					var reference = method.DeclaringSyntaxReferences.First();
+					var syntaxDeclaration = reference.GetSyntax();
+					BlockSyntax body;
+					if (syntaxDeclaration is MethodDeclarationSyntax)
+					{
+						var syntax = (MethodDeclarationSyntax)syntaxDeclaration;
+						WriteBody(syntax.Body);
+					}
+					else if (syntaxDeclaration is ConstructorDeclarationSyntax)
+					{
+						var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
+						WriteBody(syntax.Body);
+					}
+					else if (syntaxDeclaration is AccessorDeclarationSyntax)
+					{
+						var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
+						WriteBody(syntax.Body);
+					}
+					else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
+					{
+						var syntax = (ArrowExpressionClauseSyntax)syntaxDeclaration;
+						writer.WritePrefix("return ");
+						WriteExpression(syntax.Expression);
+						writer.WriteLine(';');
+					}
+					else
+					{
+						throw new NotSupportedException("Unsupported method syntax body: " + syntaxDeclaration.GetType());
+					}
+				}
+				else if (method.MethodKind == MethodKind.Constructor)
+				{
+					// TODO: write implicit contructor
+				}
+				else
+				{
+					throw new NotImplementedException("Unsupported implicit method kind: " + method.MethodKind);
+				}
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}
@@ -348,7 +411,15 @@ namespace CS2X.Core.Transpilers
 		#endregion
 
 		#region Method Body / IL Instructions
+		private void WriteBody(BlockSyntax body)
+		{
+			
+		}
 
+		private void WriteExpression(ExpressionSyntax expression)
+		{
+			
+		}
 		#endregion
 
 		#region C name resolution

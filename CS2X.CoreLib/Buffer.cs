@@ -4,7 +4,7 @@ namespace System
 {
 	public static class Buffer
 	{
-		[NativeExternC("memcpy")]
+		[NativeExtern(NativeExternTarget.C)]
 		internal static unsafe extern void* memcpy(void* _Dst, void* _Src, void* _Size);
 
 		public static unsafe void MemoryCopy(void* source, void* destination, long destinationSizeInBytes, long sourceBytesToCopy)
