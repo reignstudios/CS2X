@@ -113,9 +113,10 @@ namespace CS2X.Core.Transpilers
 
 		public readonly Options options;
 		private List<TranspiledProject> transpiledProjects = new List<TranspiledProject>();
-		private TranspiledProject activeTranspiledProject;
-		private Project activeProject;
-		private StreamWriterEx writer;// active project stream writer
+		private TranspiledProject transpiledProject;
+		private Project project;
+		private StreamWriteSwitcher writer;// active project stream writer
+		private InstructionalBody instructionalBody;// active instructional body states and values
 
 		public Transpiler_C(Solution solution, in Options options)
 		: base(solution)
@@ -151,10 +152,11 @@ namespace CS2X.Core.Transpilers
 			}
 
 			// transpile project
-			activeTranspiledProject = transpiledProject;
+			this.transpiledProject = transpiledProject;
 			string filename = project.roslynProject.AssemblyName + (project.type == ProjectTypes.Exe ? ".c" : ".h");
-			using (var stream = new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read))
-			using (writer = new StreamWriterEx(stream))
+			//using (stream = new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read))
+			//using (writer = new StreamWriterEx(stream))
+			using (writer = new StreamWriteSwitcher(new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read)))
 			{
 				WriteProject(project);
 			}
@@ -166,7 +168,7 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteProject(Project project)
 		{
-			activeProject = project;
+			this.project = project;
 			if (project.type == ProjectTypes.Dll) writer.WriteLine("#pragma once");
 
 			// writer info
@@ -342,13 +344,13 @@ namespace CS2X.Core.Transpilers
 			// write method
 			if (!writeBody)
 			{
-				writer.WritePrefix($"{GetTypeFullNameRef(method.ReceiverType)} {GetMethodFullName(method)}(");
+				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
 				WriteParameters(method.Parameters);
 				writer.WriteLine(");");
 			}
 			else
 			{
-				writer.WritePrefix($"{GetTypeFullNameRef(method.ReceiverType)} {GetMethodFullName(method)}(");
+				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
 				WriteParameters(method.Parameters);
 				writer.WriteLine(')');
 				writer.WriteLine('{');
@@ -358,32 +360,42 @@ namespace CS2X.Core.Transpilers
 					if (method.DeclaringSyntaxReferences.Length != 1) throw new Exception("Method can only be defined in one location: " + method.Name);
 					var reference = method.DeclaringSyntaxReferences.First();
 					var syntaxDeclaration = reference.GetSyntax();
-					BlockSyntax body;
-					if (syntaxDeclaration is MethodDeclarationSyntax)
+					using (instructionalBody = new InstructionalBody(writer))
 					{
-						var syntax = (MethodDeclarationSyntax)syntaxDeclaration;
-						WriteBody(syntax.Body);
-					}
-					else if (syntaxDeclaration is ConstructorDeclarationSyntax)
-					{
-						var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
-						WriteBody(syntax.Body);
-					}
-					else if (syntaxDeclaration is AccessorDeclarationSyntax)
-					{
-						var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
-						WriteBody(syntax.Body);
-					}
-					else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
-					{
-						var syntax = (ArrowExpressionClauseSyntax)syntaxDeclaration;
-						writer.WritePrefix("return ");
-						WriteExpression(syntax.Expression);
-						writer.WriteLine(';');
-					}
-					else
-					{
-						throw new NotSupportedException("Unsupported method syntax body: " + syntaxDeclaration.GetType());
+						if (syntaxDeclaration is MethodDeclarationSyntax)
+						{
+							var syntax = (MethodDeclarationSyntax)syntaxDeclaration;
+							WriteBody(syntax.Body);
+						}
+						else if (syntaxDeclaration is ConstructorDeclarationSyntax)
+						{
+							var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
+							WriteBody(syntax.Body);
+						}
+						else if (syntaxDeclaration is AccessorDeclarationSyntax)
+						{
+							var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
+							WriteBody(syntax.Body);
+						}
+						else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
+						{
+							var syntax = (ArrowExpressionClauseSyntax)syntaxDeclaration;
+							writer.AddTab();
+							instructionalBody.writer.WritePrefix("return ");
+							WriteExpression(syntax.Expression);
+							instructionalBody.writer.WriteLine(';');
+							writer.RemoveTab();
+						}
+						else
+						{
+							throw new NotSupportedException("Unsupported method syntax body: " + syntaxDeclaration.GetType());
+						}
+
+						// write define locals
+						foreach (var local in instructionalBody.locals)
+						{
+							writer.writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
+						}
 					}
 				}
 				else if (method.MethodKind == MethodKind.Constructor)
@@ -398,7 +410,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine('}');
 			}
 		}
-
+		
 		private void WriteParameters(ImmutableArray<IParameterSymbol> parameters)
 		{
 			var lastParameter = parameters.LastOrDefault();
@@ -417,6 +429,25 @@ namespace CS2X.Core.Transpilers
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)
+		{
+			if (expression is LiteralExpressionSyntax) WriteLiteralExpression((LiteralExpressionSyntax)expression);
+			else if (expression is IdentifierNameSyntax) WriteIdentifierName((IdentifierNameSyntax)expression);
+			else if (expression is ObjectCreationExpressionSyntax) ObjectCreationExpression((ObjectCreationExpressionSyntax)expression);
+			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
+		}
+
+		private void WriteLiteralExpression(LiteralExpressionSyntax expression)
+		{
+			//if (expression.IsKind(SyntaxKind.StringLiteralExpression))// TODO: string literals
+			writer.Write(expression.Token.Text);
+		}
+
+		private void WriteIdentifierName(IdentifierNameSyntax expression)
+		{
+			
+		}
+
+		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
 			
 		}
