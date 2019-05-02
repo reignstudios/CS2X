@@ -113,8 +113,9 @@ namespace CS2X.Core.Transpilers
 
 		public readonly Options options;
 		private List<TranspiledProject> transpiledProjects = new List<TranspiledProject>();
-		private TranspiledProject transpiledProject;
-		private Project project;
+		private TranspiledProject transpiledProject;// active transpiling project
+		private Project project;// active project
+		private SemanticModel semanticModel;// active semantic model for a method
 		private StreamWriterEx writer, stringLiteralWriter;
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
@@ -187,12 +188,29 @@ namespace CS2X.Core.Transpilers
 			// include std libraries
 			if (project.isCoreLib)
 			{
+				// std
 				writer.WriteLine("#include <stdio.h>");
 				writer.WriteLine("#include <math.h>");
 				writer.WriteLine("#include <stdint.h>");
 				writer.WriteLine("#include <uchar.h>");
 				writer.WriteLine("#include <locale.h>");
 				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
+
+				// write include of gc to be used
+				string gcFileName;
+				switch (options.gc)
+				{
+					case GC_Type.Boehm: gcFileName = "CS2X.GC.Boehm"; break;
+					case GC_Type.Portable: gcFileName = "CS2X.GC.Portable"; break;
+					case GC_Type.Micro: gcFileName = "CS2X.GC.Micro"; break;
+					default: throw new Exception("Unsupported GC option: " + options.gc);
+				}
+					
+				gcFileName = Path.Combine(options.gcFolderPath, gcFileName);
+				writer.WriteLine($"#include \"{gcFileName}.h\"");
+				writer.WriteLine($"#include \"{Path.Combine(options.gcFolderPath, "CS2X.InstructionHelpers.h")}\"");
+
+				// include string literals
 				writer.WriteLine("#include \"_StringLiterals.h\"");
 			}
 
@@ -367,6 +385,8 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteMethod(IMethodSymbol method, bool writeBody)
 		{
+			if (method.ContainingType.SpecialType == SpecialType.System_Void) return;
+
 			// skip if method is native extern
 			foreach (var attribute in method.GetAttributes())
 			{
@@ -388,25 +408,53 @@ namespace CS2X.Core.Transpilers
 				default: throw new NotSupportedException("Unsupported method kind: " + method.MethodKind);
 			}
 
-			// write method
+			// write method desc
+			if (method.MethodKind != MethodKind.Constructor) writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
+			else writer.WritePrefix($"{GetTypeFullNameRef(method.ContainingType)} {GetMethodFullName(method)}(");
+			if (!method.IsStatic && method.MethodKind != MethodKind.Constructor)
+			{
+				writer.Write($"{GetTypeFullName(method.ContainingType)}* self");
+				if (method.Parameters.Length != 0) writer.Write(", ");
+			}
+			WriteParameters(method.Parameters);
+
+			// write method block
 			if (!writeBody)
 			{
-				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
-				WriteParameters(method.Parameters);
 				writer.WriteLine(");");
 			}
 			else
 			{
-				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
-				WriteParameters(method.Parameters);
 				writer.WriteLine(')');
 				writer.WriteLine('{');
 				writer.AddTab();
+				if (method.MethodKind == MethodKind.Constructor)
+				{
+					var type = method.ContainingType;
+					if (type.IsReferenceType)
+					{
+						writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} self;");
+						string ptr = string.Empty;
+						if (IsEmptyType(type)) ptr = "*";
+						writer.WriteLinePrefix($"self = {GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}{ptr}));");
+					}
+					else if (method.IsImplicitlyDeclared)
+					{
+						writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj = {{0}};");
+					}
+					else
+					{
+						writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj;");
+						writer.WriteLinePrefix($"{GetTypeFullName(type)}* self = &selfObj;");
+					}
+				}
+
 				if (!method.IsImplicitlyDeclared)
 				{
 					if (method.DeclaringSyntaxReferences.Length != 1) throw new Exception("Method can only be defined in one location: " + method.Name);
 					var reference = method.DeclaringSyntaxReferences.First();
 					var syntaxDeclaration = reference.GetSyntax();
+					semanticModel = project.compilation.GetSemanticModel(syntaxDeclaration.SyntaxTree);
 					using (var stream = new MemoryStream())
 					using (instructionalBody = new InstructionalBody(stream, writer))
 					{
@@ -425,7 +473,8 @@ namespace CS2X.Core.Transpilers
 						else if (syntaxDeclaration is AccessorDeclarationSyntax)
 						{
 							var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
-							WriteBody(syntax.Body);
+							if (syntax.Body != null) WriteBody(syntax.Body);
+							//else // TODO: get backing field
 						}
 						else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
 						{
@@ -451,11 +500,17 @@ namespace CS2X.Core.Transpilers
 				}
 				else if (method.MethodKind == MethodKind.Constructor)
 				{
-					// TODO: write implicit contructor
+					// do nothing...
 				}
 				else
 				{
-					throw new NotImplementedException("Unsupported implicit method kind: " + method.MethodKind);
+					throw new NotSupportedException("Unsupported implicit method kind: " + method.MethodKind);
+				}
+
+				if (method.MethodKind == MethodKind.Constructor)
+				{
+					if (method.ContainingType.IsReferenceType) writer.WriteLinePrefix("return self;");
+					else writer.WriteLinePrefix("return selfObj;");
 				}
 				writer.RemoveTab();
 				writer.WriteLine('}');
@@ -475,8 +530,24 @@ namespace CS2X.Core.Transpilers
 
 		#region Method Body / Syntax Instructions
 		private void WriteBody(BlockSyntax body)
+		{return;// TODO: handle WriteCaller
+			foreach (var statement in body.Statements)
+			{
+				WriteStatment(statement);
+			}
+		}
+
+		private void WriteStatment(StatementSyntax statement)
 		{
-			
+			if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
+			//else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
+		}
+
+		private void WriteReturnStatement(ReturnStatementSyntax statement)
+		{
+			writer.WritePrefix("return ");
+			WriteExpression(statement.Expression);
+			writer.WriteLine(';');
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)
@@ -494,6 +565,7 @@ namespace CS2X.Core.Transpilers
 				string literalName;
 				if (!stringLiterals.ContainsKey(expression.Token.ValueText))
 				{
+					// write new string literal to header
 					literalName = "StringLiteral_" + stringLiterals.Count.ToString();
 					stringLiterals.Add(expression.Token.ValueText, literalName);
 					string value;
@@ -501,32 +573,73 @@ namespace CS2X.Core.Transpilers
 					else value = expression.Token.ValueText;
 					if (value.Contains('\n')) value = value.Replace("\n", "/n");
 					if (value.Contains('\r')) value = value.Replace("\r", "/r");
-					stringLiteralWriter.WriteLine($"// '{value}'");
+					stringLiteralWriter.WriteLine($"/* '{value}' */");
 					stringLiteralWriter.Write($"int8_t {literalName}[{GetStringMemorySize(expression.Token.ValueText)}] = ");
 					stringLiteralWriter.Write(StringToLiteral(expression.Token.ValueText));
 					stringLiteralWriter.WriteLine(';');
 				}
 				else
 				{
+					// just get existing string literal
 					literalName = stringLiterals[expression.Token.ValueText];
 				}
-			}
 
-			writer.Write(expression.Token.Text);
+				writer.Write(literalName);
+			}
+			else if (expression.IsKind(SyntaxKind.NullLiteralExpression))
+			{
+				writer.Write('0');
+			}
+			else
+			{
+				throw new NotSupportedException("LiteralExpressionSyntax not supported: " + expression.Kind());
+			}
 		}
 
-		private void WriteIdentifierName(IdentifierNameSyntax expression)
+		private void WriteIdentifierName(IdentifierNameSyntax expression)// NOTE: Identifiers are always 'self' based members
 		{
-			
+			var symbolInfo = semanticModel.GetSymbolInfo(expression);
+			if (symbolInfo.Symbol is IFieldSymbol)
+			{
+				var field = (IFieldSymbol)symbolInfo.Symbol;
+				if (!field.IsStatic) writer.Write($"self->{GetFieldFullName(field)}");
+				else writer.Write(GetFieldFullName(field));
+			}
+			else if (symbolInfo.Symbol is IPropertySymbol)
+			{
+				var property = (IPropertySymbol)symbolInfo.Symbol;
+				if (PropertyIsFieldBacked(property))
+				{
+					// TODO: return backing field directly
+				}
+				else
+				{
+					if (!property.IsStatic) writer.Write($"{GetMethodFullName(property.GetMethod)}(self)");
+					else writer.Write($"{GetMethodFullName(property.GetMethod)}()");
+				}
+			}
+			else
+			{
+				throw new NotSupportedException("IdentifierNameSyntax Symbol not supported: " + symbolInfo.Symbol);
+			}
 		}
 
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
-			
+			//var type = semanticModel.GetTypeInfo(expression);
+			//GetTypeFullName(type.Type);
+			//project.compilation.
+			//expression.Identifier.v
 		}
 		#endregion
 
 		#region C name resolution
+		private string GetNewObjectMethod(ITypeSymbol type)
+		{
+			if (IsAtomicType(type)) return "CS2X_GC_NewAtomic";
+			else return "CS2X_GC_New";
+		}
+
 		private string GetPrimitiveName(ITypeSymbol type)
 		{
 			switch (type.SpecialType)

@@ -114,6 +114,22 @@ namespace CS2X.Core.Transpilers
 			return true;
 		}
 
+		protected bool IsAtomicType(ITypeSymbol type)
+		{
+			var currentType = type;
+			while (currentType != null)
+			{
+				foreach (var member in currentType.GetMembers())
+				{
+					if (!(member is IFieldSymbol) || member.IsStatic || ((IFieldSymbol)member).Type.IsValueType) continue;
+					return false;
+				}
+				currentType = currentType.BaseType;
+			}
+
+			return true;
+		}
+
 		protected bool HasFields(ITypeSymbol type)
 		{
 			return type.GetMembers().Any(x => x is IFieldSymbol);

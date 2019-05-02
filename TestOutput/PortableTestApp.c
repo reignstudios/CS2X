@@ -12,13 +12,13 @@ typedef int32_t t_PortableTestApp_MyNamespace_MyEnum;
 /* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
-int32_t m_PortableTestApp_Program_get_MyProp_0();
-void m_PortableTestApp_Program_set_MyProp_0(int32_t p_value);
+int32_t m_PortableTestApp_Program_get_MyProp_0(t_PortableTestApp_Program* self);
+void m_PortableTestApp_Program_set_MyProp_0(t_PortableTestApp_Program* self, int32_t p_value);
 int32_t m_PortableTestApp_Program_get_MyPropStatic_0();
 void m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value);
 void m_PortableTestApp_Program_Main_0(t_System_String** p_args);
-void m_PortableTestApp_Program__ctor_0();
-void m_PortableTestApp_MyNamespace_MyEnum__ctor_0();
+t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0();
+t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor_0();
 
 /* =============================== */
 /* Type definitions */
@@ -37,10 +37,10 @@ int32_t f_PortableTestApp_Program__MyPropStatic_k__BackingField;
 /* =============================== */
 /* Method definitions */
 /* =============================== */
-int32_t m_PortableTestApp_Program_get_MyProp_0()
+int32_t m_PortableTestApp_Program_get_MyProp_0(t_PortableTestApp_Program* self)
 {
 }
-void m_PortableTestApp_Program_set_MyProp_0(int32_t p_value)
+void m_PortableTestApp_Program_set_MyProp_0(t_PortableTestApp_Program* self, int32_t p_value)
 {
 }
 int32_t m_PortableTestApp_Program_get_MyPropStatic_0()
@@ -52,9 +52,14 @@ void m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value)
 void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 {
 }
-void m_PortableTestApp_Program__ctor_0()
+t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0()
 {
+	t_PortableTestApp_Program* self;
+	self = CS2X_GC_NewAtomic(sizeof(t_PortableTestApp_Program));
+	return self;
 }
-void m_PortableTestApp_MyNamespace_MyEnum__ctor_0()
+t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor_0()
 {
+	t_PortableTestApp_MyNamespace_MyEnum selfObj = {0};
+	return selfObj;
 }
