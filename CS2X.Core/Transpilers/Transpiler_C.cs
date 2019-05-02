@@ -117,6 +117,8 @@ namespace CS2X.Core.Transpilers
 		private Project project;
 		private StreamWriteSwitcher writer;// active project stream writer
 		private InstructionalBody instructionalBody;// active instructional body states and values
+		private Dictionary<string, string> allStringLiterals;// string literals that span all projects
+		private Dictionary<string, string> activeStringLiterals;// string literals that root in active project
 
 		public Transpiler_C(Solution solution, in Options options)
 		: base(solution)
@@ -126,6 +128,7 @@ namespace CS2X.Core.Transpilers
 
 		public override void Transpile(string outputPath)
 		{
+			allStringLiterals = new Dictionary<string, string>();
 			foreach (var project in solution.projects)
 			{
 				TranspileProject(outputPath, project);
@@ -154,8 +157,6 @@ namespace CS2X.Core.Transpilers
 			// transpile project
 			this.transpiledProject = transpiledProject;
 			string filename = project.roslynProject.AssemblyName + (project.type == ProjectTypes.Exe ? ".c" : ".h");
-			//using (stream = new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read))
-			//using (writer = new StreamWriterEx(stream))
 			using (writer = new StreamWriteSwitcher(new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read)))
 			{
 				WriteProject(project);
@@ -168,6 +169,9 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteProject(Project project)
 		{
+			if (activeStringLiterals == null) activeStringLiterals = new Dictionary<string, string>();
+			else activeStringLiterals.Clear();
+
 			this.project = project;
 			if (project.type == ProjectTypes.Dll) writer.WriteLine("#pragma once");
 
@@ -193,43 +197,53 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"#include \"{reference.roslynProject.AssemblyName}.h\"");
 			}
 
-			// forward declare types
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Torward declare Types */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes) WriteType(type, false);
-
-			// forward declare types
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Forward decalre Methods */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes)
+			using (var memoryWriter = new MemoryWriter(writer))
 			{
-				foreach (var method in type.GetMembers())
+				// forward declare types
+				writer.WriteLine();
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* Torward declare Types */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in project.allTypes) WriteType(type, false);
+
+				// forward declare types
+				writer.WriteLine();
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* Forward decalre Methods */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in project.allTypes)
 				{
-					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, false);
+					foreach (var method in type.GetMembers())
+					{
+						if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, false);
+					}
 				}
-			}
 
-			// types
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Type definitions */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes) WriteType(type, true);
+				// types
+				writer.WriteLine();
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* Type definitions */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in project.allTypes) WriteType(type, true);
 
-			// methods
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Method definitions */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes)
-			{
-				foreach (var method in type.GetMembers())
+				// methods
+				writer.WriteLine();
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* Method definitions */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in project.allTypes)
 				{
-					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
+					foreach (var method in type.GetMembers())
+					{
+						if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
+					}
+				}
+
+				// write string literals
+				foreach (var literal in activeStringLiterals)
+				{
+					allStringLiterals.Add(literal.Key, literal.Value);
+					// TODO: writer string literal buffer
 				}
 			}
 		}
@@ -422,7 +436,7 @@ namespace CS2X.Core.Transpilers
 		}
 		#endregion
 
-		#region Method Body / IL Instructions
+		#region Method Body / Syntax Instructions
 		private void WriteBody(BlockSyntax body)
 		{
 			

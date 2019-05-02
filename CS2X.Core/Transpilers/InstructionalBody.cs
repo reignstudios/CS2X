@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace CS2X.Core.Transpilers
 {
-	class InstructionalBody : IDisposable
+	class InstructionalBody : MemoryWriter
 	{
 		public class Local
 		{
@@ -21,36 +21,13 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		public StreamWriteSwitcher switcher;
-		public MemoryStream stream;
-		public StreamWriterEx writer;
 		public List<Local> locals, expressionLocals;
 
 		public InstructionalBody(StreamWriteSwitcher switcher)
+		: base(switcher)
 		{
-			this.switcher = switcher;
-			stream = new MemoryStream();
-			writer = new StreamWriterEx(stream);
-			switcher.Switch(stream, writer);
-
 			locals = new List<Local>();
 			expressionLocals = new List<Local>();
-		}
-
-		public void Dispose()
-		{
-			switcher.Revert();
-
-			// copy streams to global
-			writer.Flush();
-			stream.Flush();
-			stream.Position = 0;
-			switcher.Flush();
-			stream.CopyTo(switcher.stream);
-
-			// dispose streams
-			Utils.DisposeInstance(ref writer);
-			Utils.DisposeInstance(ref stream);
 		}
 	}
 }

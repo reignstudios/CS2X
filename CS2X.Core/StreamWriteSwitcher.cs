@@ -13,12 +13,22 @@ namespace CS2X.Core
 		public Stream activeStream { get; private set; }
 		public StreamWriterEx activeWriter { get; private set; }
 
+		public Stream prevStream { get; private set; }
+		public StreamWriterEx prevWriter { get; private set; }
+
+		private Stack<Stream> activeStreams;
+		private Stack<StreamWriterEx> activeWriters;
+
 		public StreamWriteSwitcher(Stream stream)
 		{
 			this.stream = stream;
 			writer = new StreamWriterEx(stream);
 			activeStream = stream;
 			activeWriter = writer;
+			activeStreams = new Stack<Stream>();
+			activeWriters = new Stack<StreamWriterEx>();
+			activeStreams.Push(activeStream);
+			activeWriters.Push(activeWriter);
 		}
 
 		public void Dispose()
@@ -38,22 +48,42 @@ namespace CS2X.Core
 
 		public void Switch(Stream stream, StreamWriterEx writer)
 		{
+			activeStreams.Push(stream);
+			activeWriters.Push(writer);
+			prevStream = activeStream;
+			prevWriter = activeWriter;
 			activeStream = stream;
 			activeWriter = writer;
+		}
+
+		public void RollBack()
+		{
+			activeStreams.Pop();
+			activeWriters.Pop();
+			activeStream = activeStreams.Peek();
+			activeWriter = activeWriters.Peek();
 		}
 
 		public void Revert()
 		{
+			prevStream = null;
+			prevWriter = null;
 			activeStream = stream;
 			activeWriter = writer;
+			activeStreams.Clear();
+			activeWriters.Clear();
 		}
 
 		public void Flush()
 		{
-			writer.Flush();
-			stream.Flush();
-			if (activeWriter != writer) activeWriter.Flush();
-			if (activeStream != stream) activeStream.Flush();
+			activeWriter.Flush();
+			activeStream.Flush();
+		}
+
+		public void FlushPrev()
+		{
+			prevWriter.Flush();
+			prevStream.Flush();
 		}
 
 		#region Writer
