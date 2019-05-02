@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <uchar.h>
 #include <locale.h>
+#include "_StringLiterals.h"
 
 /* =============================== */
 /* Torward declare Types */

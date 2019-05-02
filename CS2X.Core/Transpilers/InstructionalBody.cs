@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace CS2X.Core.Transpilers
 {
-	class InstructionalBody : MemoryWriter
+	class InstructionalBody : StreamWriterEx
 	{
 		public class Local
 		{
@@ -23,8 +23,8 @@ namespace CS2X.Core.Transpilers
 
 		public List<Local> locals, expressionLocals;
 
-		public InstructionalBody(StreamWriteSwitcher switcher)
-		: base(switcher)
+		public InstructionalBody(Stream stream, StreamWriterEx prev)
+		: base(stream, prev)
 		{
 			locals = new List<Local>();
 			expressionLocals = new List<Local>();

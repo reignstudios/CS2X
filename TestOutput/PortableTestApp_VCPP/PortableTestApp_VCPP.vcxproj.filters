@@ -29,5 +29,8 @@
     <ClInclude Include="..\CS2X.CoreLib.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="..\_StringLiterals.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

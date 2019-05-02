@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace System.IO
 {
-	public class StreamWriterEx : StreamWriter
+	public class StreamWriterEx : StreamWriter, IDisposable
 	{
+		public StreamWriterEx next, prev;
 		public string prefix = string.Empty;
 		public bool disableWrite;
 
@@ -16,6 +17,34 @@ namespace System.IO
 		: base(stream)
 		{
 			
+		}
+
+		public StreamWriterEx(Stream stream, StreamWriterEx prev)
+		: base(stream)
+		{
+			prev.next = this;
+			this.prev = prev;
+		}
+
+		public new void Dispose()
+		{
+			if (prev != null)
+			{
+				Flush();
+				BaseStream.Flush();
+				BaseStream.Position = 0;
+				prev.Flush();
+				prev.BaseStream.Flush();
+				BaseStream.CopyTo(prev.BaseStream);
+				prev.next = null;
+				prev = null;
+			}
+			if (next != null)
+			{
+				next.prev = null;
+				next = null;
+			}
+			base.Dispose();
 		}
 
 		public void AddTab()
