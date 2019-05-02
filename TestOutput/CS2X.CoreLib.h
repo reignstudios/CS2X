@@ -282,148 +282,148 @@ void m_CS2X_NativeExternTarget__ctor_0();
 /* =============================== */
 struct t_System_AttributeUsageAttribute
 {
-t_System_AttributeTargets f__attributeTarget_2;
-char f__AllowMultiple_k__BackingField_2;
-char f__Inherited_k__BackingField_2;
+	t_System_AttributeTargets f__attributeTarget_2;
+	char f__AllowMultiple_k__BackingField_2;
+	char f__Inherited_k__BackingField_2;
 };
 struct t_System_CLSCompliantAttribute
 {
-char f__isCompliant_2;
+	char f__isCompliant_2;
 };
 struct t_System_Exception
 {
-t_System_String* f__Message_k__BackingField_1;
+	t_System_String* f__Message_k__BackingField_1;
 };
 struct t_System_IndexOutOfRangeException
 {
-t_System_String* f__Message_k__BackingField_1;
+	t_System_String* f__Message_k__BackingField_1;
 };
 struct t_System_NotSupportedException
 {
-t_System_String* f__Message_k__BackingField_1;
+	t_System_String* f__Message_k__BackingField_1;
 };
 struct t_System_ObsoleteAttribute
 {
-char f__error_2;
-t_System_String* f__message_2;
+	char f__error_2;
+	t_System_String* f__message_2;
 };
 struct t_System_RuntimeType
 {
-t_System_Type* f__baseType_4;
-t_System_String* f__name_4;
-t_System_String* f__fullName_4;
+	t_System_Type* f__baseType_4;
+	t_System_String* f__name_4;
+	t_System_String* f__fullName_4;
 };
 struct t_System_String
 {
-int32_t f__stringLength_1;
-char16_t f__firstChar_1;
+	int32_t f__stringLength_1;
+	char16_t f__firstChar_1;
 };
 t_System_String* f_System_String_Empty;
 struct t_System_CodeDom_Compiler_GeneratedCodeAttribute
 {
-t_System_String* f__tool_2;
-t_System_String* f__version_2;
+	t_System_String* f__tool_2;
+	t_System_String* f__version_2;
 };
 struct t_System_ComponentModel_EditorBrowsableAttribute
 {
-t_System_ComponentModel_EditorBrowsableState f__browsableState_2;
+	t_System_ComponentModel_EditorBrowsableState f__browsableState_2;
 };
 struct t_System_Diagnostics_ConditionalAttribute
 {
-t_System_String* f__conditionString_2;
+	t_System_String* f__conditionString_2;
 };
 struct t_System_Reflection_AssemblyCompanyAttribute
 {
-t_System_String* f__company_2;
+	t_System_String* f__company_2;
 };
 struct t_System_Reflection_AssemblyConfigurationAttribute
 {
-t_System_String* f__configuration_2;
+	t_System_String* f__configuration_2;
 };
 struct t_System_Reflection_AssemblyCopyrightAttribute
 {
-t_System_String* f__copyright_2;
+	t_System_String* f__copyright_2;
 };
 struct t_System_Reflection_AssemblyCultureAttribute
 {
-t_System_String* f__culture_2;
+	t_System_String* f__culture_2;
 };
 struct t_System_Reflection_AssemblyDelaySignAttribute
 {
-char f__delaySign_2;
+	char f__delaySign_2;
 };
 struct t_System_Reflection_AssemblyDescriptionAttribute
 {
-t_System_String* f__description_2;
+	t_System_String* f__description_2;
 };
 struct t_System_Reflection_AssemblyFileVersionAttribute
 {
-t_System_String* f__version_2;
+	t_System_String* f__version_2;
 };
 struct t_System_Reflection_AssemblyInformationalVersionAttribute
 {
-t_System_String* f__informationalVersion_2;
+	t_System_String* f__informationalVersion_2;
 };
 struct t_System_Reflection_AssemblyKeyFileAttribute
 {
-t_System_String* f__keyFile_2;
+	t_System_String* f__keyFile_2;
 };
 struct t_System_Reflection_AssemblyProductAttribute
 {
-t_System_String* f__product_2;
+	t_System_String* f__product_2;
 };
 struct t_System_Reflection_AssemblyTitleAttribute
 {
-t_System_String* f__title_2;
+	t_System_String* f__title_2;
 };
 struct t_System_Reflection_AssemblyTrademarkAttribute
 {
-t_System_String* f__trademark_2;
+	t_System_String* f__trademark_2;
 };
 struct t_System_Reflection_AssemblyVersionAttribute
 {
-t_System_String* f__version_2;
+	t_System_String* f__version_2;
 };
 struct t_System_Reflection_DefaultMemberAttribute
 {
-t_System_String* f__memberName_2;
+	t_System_String* f__memberName_2;
 };
 struct t_System_Runtime_CompilerServices_MethodImplAttribute
 {
-t_System_Runtime_CompilerServices_MethodCodeType f_MethodCodeType_2;
-t_System_Runtime_CompilerServices_MethodImplOptions f__Value_k__BackingField_2;
+	t_System_Runtime_CompilerServices_MethodCodeType f_MethodCodeType_2;
+	t_System_Runtime_CompilerServices_MethodImplOptions f__Value_k__BackingField_2;
 };
 struct t_System_Runtime_InteropServices_StructLayoutAttribute
 {
-t_System_Runtime_InteropServices_LayoutKind f__Value_k__BackingField_2;
-int32_t f_Pack_2;
-int32_t f_Size_2;
+	t_System_Runtime_InteropServices_LayoutKind f__Value_k__BackingField_2;
+	int32_t f_Pack_2;
+	int32_t f_Size_2;
 };
 struct t_System_Runtime_Versioning_TargetFrameworkAttribute
 {
-t_System_String* f__FrameworkDisplayName_k__BackingField_2;
-t_System_String* f__FrameworkName_k__BackingField_2;
+	t_System_String* f__FrameworkDisplayName_k__BackingField_2;
+	t_System_String* f__FrameworkName_k__BackingField_2;
 };
 struct t_CS2X_NativeExternAttribute
 {
-t_CS2X_NativeExternTarget f_target_2;
-t_System_String* f_methodName_2;
+	t_CS2X_NativeExternTarget f_target_2;
+	t_System_String* f_methodName_2;
 };
 struct t_System_Decimal
 {
-int32_t f_flags_2;
-int32_t f_hi_2;
-int32_t f_lo_2;
-int32_t f_mid_2;
+	int32_t f_flags_2;
+	int32_t f_hi_2;
+	int32_t f_lo_2;
+	int32_t f_mid_2;
 };
 struct t_System_RuntimeTypeHandle
 {
-t_System_RuntimeType* f_m_type_2;
+	t_System_RuntimeType* f_m_type_2;
 };
 struct t_System_Collections_DictionaryEntry
 {
-t_System_Object* f__Key_k__BackingField_2;
-t_System_Object* f__Value_k__BackingField_2;
+	t_System_Object* f__Key_k__BackingField_2;
+	t_System_Object* f__Value_k__BackingField_2;
 };
 #define f_System_AttributeTargets_Assembly 1
 #define f_System_AttributeTargets_Module 2

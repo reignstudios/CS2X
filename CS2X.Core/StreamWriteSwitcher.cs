@@ -94,12 +94,12 @@ namespace CS2X.Core
 
 		public void WritePrefix(string value)
 		{
-			activeWriter.Write(value);
+			activeWriter.WritePrefix(value);
 		}
 
 		public void WritePrefix(char value)
 		{
-			activeWriter.Write(value);
+			activeWriter.WritePrefix(value);
 		}
 
 		public void WriteLinePrefix()
@@ -109,12 +109,12 @@ namespace CS2X.Core
 
 		public void WriteLinePrefix(string value)
 		{
-			activeWriter.WriteLine(value);
+			activeWriter.WriteLinePrefix(value);
 		}
 
 		public void WriteLinePrefix(char value)
 		{
-			activeWriter.WriteLine(value);
+			activeWriter.WriteLinePrefix(value);
 		}
 		#endregion
 	}

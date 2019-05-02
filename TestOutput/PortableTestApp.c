@@ -25,8 +25,8 @@ void m_PortableTestApp_MyNamespace_MyEnum__ctor_0();
 /* =============================== */
 struct t_PortableTestApp_Program
 {
-int32_t f_abcStatic_1;
-int32_t f__MyProp_k__BackingField_1;
+	int32_t f_abcStatic_1;
+	int32_t f__MyProp_k__BackingField_1;
 };
 int32_t f_PortableTestApp_Program_abc;
 int32_t f_PortableTestApp_Program__MyPropStatic_k__BackingField;
