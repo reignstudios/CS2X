@@ -194,5 +194,23 @@ namespace CS2X.Core.Transpilers
 			}
 			return index;
 		}
+
+		protected bool IsInternalCall(IMethodSymbol method)
+		{
+			foreach (var a in method.GetAttributes())
+			{
+				if
+				(
+					a.AttributeClass.ContainingNamespace != null && a.AttributeClass.ContainingNamespace.Name == "CompilerServices" &&
+					a.AttributeClass.ContainingNamespace.ContainingNamespace != null && a.AttributeClass.ContainingNamespace.ContainingNamespace.Name == "Runtime" &&
+					a.AttributeClass.ContainingNamespace.ContainingNamespace.ContainingNamespace != null && a.AttributeClass.ContainingNamespace.ContainingNamespace.ContainingNamespace.Name == "System" &&
+					a.AttributeClass.Name == "MethodImplAttribute"
+				)
+				{
+					if ((int)a.ConstructorArguments[0].Value == 0x1000) return true;
+				}
+			}
+			return false;
+		}
 	}
 }

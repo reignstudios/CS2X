@@ -264,13 +264,6 @@ void m_System_Collections_DictionaryEntry_set_Key_0(t_System_Collections_Diction
 t_System_Object* m_System_Collections_DictionaryEntry_get_Value_0(t_System_Collections_DictionaryEntry* self);
 void m_System_Collections_DictionaryEntry_set_Value_0(t_System_Collections_DictionaryEntry* self, t_System_Object* p_value);
 t_System_Collections_DictionaryEntry m_System_Collections_DictionaryEntry__ctor_1();
-t_System_Object* m_System_ICloneable_Clone_0(t_System_ICloneable* self);
-void m_System_IDisposable_Dispose_0(t_System_IDisposable* self);
-int32_t m_System_Collections_ICollection_get_Count_0(t_System_Collections_ICollection* self);
-t_System_Collections_IEnumerator* m_System_Collections_IEnumerable_GetEnumerator_0(t_System_Collections_IEnumerable* self);
-t_System_Object* m_System_Collections_IEnumerator_get_Current_0(t_System_Collections_IEnumerator* self);
-char m_System_Collections_IEnumerator_MoveNext_0(t_System_Collections_IEnumerator* self);
-void m_System_Collections_IEnumerator_Reset_0(t_System_Collections_IEnumerator* self);
 t_System_AttributeTargets m_System_AttributeTargets__ctor_0();
 t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableState__ctor_0();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
@@ -486,6 +479,7 @@ struct t_System_Collections_DictionaryEntry
 /* =============================== */
 t_System_Collections_IEnumerator* m_System_Array_GetEnumerator_0(t_System_Array* self)
 {
+	return 0;
 }
 int32_t m_System_Array_get_Length_0(t_System_Array* self)
 {
@@ -495,6 +489,7 @@ int64_t m_System_Array_get_LongLength_0(t_System_Array* self)
 }
 int32_t m_System_Array_System_Collections_ICollection_get_Count_0(t_System_Array* self)
 {
+	return m_System_Array_get_Length_0(self);
 }
 t_System_Array* m_System_Array__ctor_0()
 {
@@ -516,6 +511,7 @@ t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_Sys
 }
 t_System_AttributeTargets m_System_AttributeUsageAttribute_get_ValidOn_0(t_System_AttributeUsageAttribute* self)
 {
+	return self->f__attributeTarget_2;
 }
 char m_System_AttributeUsageAttribute_get_AllowMultiple_0(t_System_AttributeUsageAttribute* self)
 {
@@ -531,6 +527,7 @@ void m_System_AttributeUsageAttribute_set_Inherited_0(t_System_AttributeUsageAtt
 }
 int32_t m_System_BitConverter_SingleToInt32Bits_0(float p_value)
 {
+	return *;
 }
 void m_System_Buffer_MemoryCopy_0(void* p_source, void* p_destination, int64_t p_destinationSizeInBytes, int64_t p_sourceBytesToCopy)
 {
@@ -552,15 +549,18 @@ t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(char p_is
 }
 char m_System_CLSCompliantAttribute_get_IsCompliant_0(t_System_CLSCompliantAttribute* self)
 {
+	return self->f__isCompliant_2;
 }
 void m_System_Console_Write_0(t_System_String* p_s)
 {
 }
 void m_System_Console_WriteLine_0(t_System_String* p_s)
 {
+;
 }
 void m_System_Console_WriteLine_1()
 {
+;
 }
 t_System_Delegate* m_System_Delegate__ctor_0()
 {
@@ -598,6 +598,7 @@ t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message)
 }
 t_System_Exception* m_System_Exception_get_InnerException_0(t_System_Exception* self)
 {
+	return 0;
 }
 t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self)
 {
@@ -607,6 +608,7 @@ void m_System_Exception_set_Message_0(t_System_Exception* self, t_System_String*
 }
 t_System_String* m_System_Exception_get_StackTrace_0(t_System_Exception* self)
 {
+	return 0;
 }
 t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0()
 {
@@ -643,6 +645,7 @@ t_System_Type* m_System_Object_GetType_0(t_System_Object* self)
 }
 t_System_String* m_System_Object_ToString_0(t_System_Object* self)
 {
+	return ;
 }
 t_System_Object* m_System_Object__ctor_0()
 {
@@ -670,9 +673,11 @@ t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_2(t_System_String* 
 }
 char m_System_ObsoleteAttribute_get_IsError_0(t_System_ObsoleteAttribute* self)
 {
+	return self->f__error_2;
 }
 t_System_String* m_System_ObsoleteAttribute_get_Message_0(t_System_ObsoleteAttribute* self)
 {
+	return self->f__message_2;
 }
 t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0()
 {
@@ -710,18 +715,22 @@ t_System_String* m_System_String_FastAllocateString_0(int32_t p_length)
 }
 char m_System_String_IsNullOrEmpty_0(t_System_String* p_value)
 {
+	return ;
 }
 void m_System_String_FillStringChecked_0(t_System_String* p_dest, int32_t p_destPos, t_System_String* p_src)
 {
 }
 t_System_String* m_System_String_Concat_0(t_System_String* p_str0, t_System_String* p_str1)
 {
+	return ;
 }
 t_System_String* m_System_String_Concat_1(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2)
 {
+	return ;
 }
 t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2, t_System_String* p_str3)
 {
+	return ;
 }
 t_System_String* m_System_String__ctor_0()
 {
@@ -773,15 +782,19 @@ t_System_CodeDom_Compiler_GeneratedCodeAttribute* m_System_CodeDom_Compiler_Gene
 }
 t_System_String* m_System_CodeDom_Compiler_GeneratedCodeAttribute_get_Tool_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self)
 {
+	return self->f__tool_2;
 }
 t_System_String* m_System_CodeDom_Compiler_GeneratedCodeAttribute_get_Version_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self)
 {
+	return self->f__version_2;
 }
 int32_t m_System_Collections_ArrayList_get_Count_0(t_System_Collections_ArrayList* self)
 {
+	return 0;
 }
 t_System_Collections_IEnumerator* m_System_Collections_ArrayList_GetEnumerator_0(t_System_Collections_ArrayList* self)
 {
+	return 0;
 }
 t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0()
 {
@@ -791,9 +804,11 @@ t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0()
 }
 int32_t m_System_Collections_Queue_get_Count_0(t_System_Collections_Queue* self)
 {
+	return 0;
 }
 t_System_Collections_IEnumerator* m_System_Collections_Queue_GetEnumerator_0(t_System_Collections_Queue* self)
 {
+	return 0;
 }
 t_System_Collections_Queue* m_System_Collections_Queue__ctor_0()
 {
@@ -803,9 +818,11 @@ t_System_Collections_Queue* m_System_Collections_Queue__ctor_0()
 }
 int32_t m_System_Collections_Stack_get_Count_0(t_System_Collections_Stack* self)
 {
+	return 0;
 }
 t_System_Collections_IEnumerator* m_System_Collections_Stack_GetEnumerator_0(t_System_Collections_Stack* self)
 {
+	return 0;
 }
 t_System_Collections_Stack* m_System_Collections_Stack__ctor_0()
 {
@@ -833,6 +850,7 @@ t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_Editor
 }
 t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableAttribute_get_State_0(t_System_ComponentModel_EditorBrowsableAttribute* self)
 {
+	return self->f__browsableState_2;
 }
 t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttribute__ctor_0(t_System_String* p_conditionString)
 {
@@ -842,6 +860,7 @@ t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttri
 }
 t_System_String* m_System_Diagnostics_ConditionalAttribute_get_ConditionString_0(t_System_Diagnostics_ConditionalAttribute* self)
 {
+	return self->f__conditionString_2;
 }
 t_System_Diagnostics_Debug* m_System_Diagnostics_Debug__ctor_0()
 {
@@ -875,6 +894,7 @@ t_System_Reflection_AssemblyCompanyAttribute* m_System_Reflection_AssemblyCompan
 }
 t_System_String* m_System_Reflection_AssemblyCompanyAttribute_get_Company_0(t_System_Reflection_AssemblyCompanyAttribute* self)
 {
+	return self->f__company_2;
 }
 t_System_Reflection_AssemblyConfigurationAttribute* m_System_Reflection_AssemblyConfigurationAttribute__ctor_0(t_System_String* p_configuration)
 {
@@ -884,6 +904,7 @@ t_System_Reflection_AssemblyConfigurationAttribute* m_System_Reflection_Assembly
 }
 t_System_String* m_System_Reflection_AssemblyConfigurationAttribute_get_Configuration_0(t_System_Reflection_AssemblyConfigurationAttribute* self)
 {
+	return self->f__configuration_2;
 }
 t_System_Reflection_AssemblyCopyrightAttribute* m_System_Reflection_AssemblyCopyrightAttribute__ctor_0(t_System_String* p_copyright)
 {
@@ -893,6 +914,7 @@ t_System_Reflection_AssemblyCopyrightAttribute* m_System_Reflection_AssemblyCopy
 }
 t_System_String* m_System_Reflection_AssemblyCopyrightAttribute_get_Copyright_0(t_System_Reflection_AssemblyCopyrightAttribute* self)
 {
+	return self->f__copyright_2;
 }
 t_System_Reflection_AssemblyCultureAttribute* m_System_Reflection_AssemblyCultureAttribute__ctor_0(t_System_String* p_culture)
 {
@@ -902,6 +924,7 @@ t_System_Reflection_AssemblyCultureAttribute* m_System_Reflection_AssemblyCultur
 }
 t_System_String* m_System_Reflection_AssemblyCultureAttribute_get_Culture_0(t_System_Reflection_AssemblyCultureAttribute* self)
 {
+	return self->f__culture_2;
 }
 t_System_Reflection_AssemblyDelaySignAttribute* m_System_Reflection_AssemblyDelaySignAttribute__ctor_0(char p_delaySign)
 {
@@ -911,6 +934,7 @@ t_System_Reflection_AssemblyDelaySignAttribute* m_System_Reflection_AssemblyDela
 }
 char m_System_Reflection_AssemblyDelaySignAttribute_get_DelaySign_0(t_System_Reflection_AssemblyDelaySignAttribute* self)
 {
+	return self->f__delaySign_2;
 }
 t_System_Reflection_AssemblyDescriptionAttribute* m_System_Reflection_AssemblyDescriptionAttribute__ctor_0(t_System_String* p_description)
 {
@@ -920,6 +944,7 @@ t_System_Reflection_AssemblyDescriptionAttribute* m_System_Reflection_AssemblyDe
 }
 t_System_String* m_System_Reflection_AssemblyDescriptionAttribute_get_Description_0(t_System_Reflection_AssemblyDescriptionAttribute* self)
 {
+	return self->f__description_2;
 }
 t_System_Reflection_AssemblyFileVersionAttribute* m_System_Reflection_AssemblyFileVersionAttribute__ctor_0(t_System_String* p_version)
 {
@@ -929,6 +954,7 @@ t_System_Reflection_AssemblyFileVersionAttribute* m_System_Reflection_AssemblyFi
 }
 t_System_String* m_System_Reflection_AssemblyFileVersionAttribute_get_Version_0(t_System_Reflection_AssemblyFileVersionAttribute* self)
 {
+	return self->f__version_2;
 }
 t_System_Reflection_AssemblyInformationalVersionAttribute* m_System_Reflection_AssemblyInformationalVersionAttribute__ctor_0(t_System_String* p_informationalVersion)
 {
@@ -938,6 +964,7 @@ t_System_Reflection_AssemblyInformationalVersionAttribute* m_System_Reflection_A
 }
 t_System_String* m_System_Reflection_AssemblyInformationalVersionAttribute_get_InformationalVersion_0(t_System_Reflection_AssemblyInformationalVersionAttribute* self)
 {
+	return self->f__informationalVersion_2;
 }
 t_System_Reflection_AssemblyKeyFileAttribute* m_System_Reflection_AssemblyKeyFileAttribute__ctor_0(t_System_String* p_keyFile)
 {
@@ -947,6 +974,7 @@ t_System_Reflection_AssemblyKeyFileAttribute* m_System_Reflection_AssemblyKeyFil
 }
 t_System_String* m_System_Reflection_AssemblyKeyFileAttribute_get_KeyFile_0(t_System_Reflection_AssemblyKeyFileAttribute* self)
 {
+	return self->f__keyFile_2;
 }
 t_System_Reflection_AssemblyProductAttribute* m_System_Reflection_AssemblyProductAttribute__ctor_0(t_System_String* p_product)
 {
@@ -956,6 +984,7 @@ t_System_Reflection_AssemblyProductAttribute* m_System_Reflection_AssemblyProduc
 }
 t_System_String* m_System_Reflection_AssemblyProductAttribute_get_Product_0(t_System_Reflection_AssemblyProductAttribute* self)
 {
+	return self->f__product_2;
 }
 t_System_Reflection_AssemblyTitleAttribute* m_System_Reflection_AssemblyTitleAttribute__ctor_0(t_System_String* p_title)
 {
@@ -965,6 +994,7 @@ t_System_Reflection_AssemblyTitleAttribute* m_System_Reflection_AssemblyTitleAtt
 }
 t_System_String* m_System_Reflection_AssemblyTitleAttribute_get_Title_0(t_System_Reflection_AssemblyTitleAttribute* self)
 {
+	return self->f__title_2;
 }
 t_System_Reflection_AssemblyTrademarkAttribute* m_System_Reflection_AssemblyTrademarkAttribute__ctor_0(t_System_String* p_trademark)
 {
@@ -974,6 +1004,7 @@ t_System_Reflection_AssemblyTrademarkAttribute* m_System_Reflection_AssemblyTrad
 }
 t_System_String* m_System_Reflection_AssemblyTrademarkAttribute_get_Trademark_0(t_System_Reflection_AssemblyTrademarkAttribute* self)
 {
+	return self->f__trademark_2;
 }
 t_System_Reflection_AssemblyVersionAttribute* m_System_Reflection_AssemblyVersionAttribute__ctor_0(t_System_String* p_version)
 {
@@ -983,6 +1014,7 @@ t_System_Reflection_AssemblyVersionAttribute* m_System_Reflection_AssemblyVersio
 }
 t_System_String* m_System_Reflection_AssemblyVersionAttribute_get_Version_0(t_System_Reflection_AssemblyVersionAttribute* self)
 {
+	return self->f__version_2;
 }
 t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAttribute__ctor_0(t_System_String* p_memberName)
 {
@@ -992,6 +1024,7 @@ t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAtt
 }
 t_System_String* m_System_Reflection_DefaultMemberAttribute_get_MemberName_0(t_System_Reflection_DefaultMemberAttribute* self)
 {
+	return self->f__memberName_2;
 }
 t_System_String* m_System_Reflection_MemberInfo_get_Name_0(t_System_Reflection_MemberInfo* self)
 {
@@ -1154,9 +1187,11 @@ int8_t m_int8_t__ctor_0()
 }
 char m_float_IsNaN_0(float p_f)
 {
+	return ;
 }
 char m_float_IsNegative_0(float p_f)
 {
+	return ;
 }
 float m_float__ctor_0()
 {
@@ -1205,27 +1240,6 @@ t_System_Collections_DictionaryEntry m_System_Collections_DictionaryEntry__ctor_
 {
 	t_System_Collections_DictionaryEntry selfObj = {0};
 	return selfObj;
-}
-t_System_Object* m_System_ICloneable_Clone_0(t_System_ICloneable* self)
-{
-}
-void m_System_IDisposable_Dispose_0(t_System_IDisposable* self)
-{
-}
-int32_t m_System_Collections_ICollection_get_Count_0(t_System_Collections_ICollection* self)
-{
-}
-t_System_Collections_IEnumerator* m_System_Collections_IEnumerable_GetEnumerator_0(t_System_Collections_IEnumerable* self)
-{
-}
-t_System_Object* m_System_Collections_IEnumerator_get_Current_0(t_System_Collections_IEnumerator* self)
-{
-}
-char m_System_Collections_IEnumerator_MoveNext_0(t_System_Collections_IEnumerator* self)
-{
-}
-void m_System_Collections_IEnumerator_Reset_0(t_System_Collections_IEnumerator* self)
-{
 }
 t_System_AttributeTargets m_System_AttributeTargets__ctor_0()
 {

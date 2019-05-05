@@ -28,6 +28,7 @@ namespace CS2X.Core.Transpilers
 		{
 			locals = new List<Local>();
 			expressionLocals = new List<Local>();
+			if (prev != null) prefix = prev.prefix;
 		}
 	}
 }

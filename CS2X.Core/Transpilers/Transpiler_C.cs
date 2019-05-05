@@ -234,6 +234,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes)
 			{
+				if (type.TypeKind == TypeKind.Interface) continue;
 				foreach (var method in type.GetMembers())
 				{
 					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, false);
@@ -254,6 +255,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes)
 			{
+				if (type.TypeKind == TypeKind.Interface) continue;
 				foreach (var method in type.GetMembers())
 				{
 					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
@@ -451,51 +453,136 @@ namespace CS2X.Core.Transpilers
 
 				if (!method.IsImplicitlyDeclared)
 				{
-					if (method.DeclaringSyntaxReferences.Length != 1) throw new Exception("Method can only be defined in one location: " + method.Name);
-					var reference = method.DeclaringSyntaxReferences.First();
-					var syntaxDeclaration = reference.GetSyntax();
-					semanticModel = project.compilation.GetSemanticModel(syntaxDeclaration.SyntaxTree);
-					using (var stream = new MemoryStream())
-					using (instructionalBody = new InstructionalBody(stream, writer))
+					if (!method.IsExtern)
 					{
-						var origWriter = writer;
-						writer = instructionalBody;
-						if (syntaxDeclaration is MethodDeclarationSyntax)
+						if (method.DeclaringSyntaxReferences.Length != 1) throw new Exception("Method can only be defined in one location: " + method.Name);
+						var reference = method.DeclaringSyntaxReferences.First();
+						var syntaxDeclaration = reference.GetSyntax();
+						semanticModel = project.compilation.GetSemanticModel(syntaxDeclaration.SyntaxTree);
+						using (var stream = new MemoryStream())
+						using (instructionalBody = new InstructionalBody(stream, writer))
 						{
-							var syntax = (MethodDeclarationSyntax)syntaxDeclaration;
-							WriteBody(syntax.Body);
+							var origWriter = writer;
+							writer = instructionalBody;
+							if (syntaxDeclaration is MethodDeclarationSyntax)
+							{
+								var syntax = (MethodDeclarationSyntax)syntaxDeclaration;
+								if (syntax.Body != null)
+								{
+									WriteBody(syntax.Body);
+								}
+								else if(syntax.ExpressionBody != null)
+								{
+									if (!method.ReturnsVoid) writer.WritePrefix("return ");
+									WriteExpression(syntax.ExpressionBody.Expression);
+									writer.WriteLine(';');
+								}
+								else
+								{
+									throw new NotSupportedException("Unsupported empty method syntax: " + method.Name);
+								}
+							}
+							else if (syntaxDeclaration is ConstructorDeclarationSyntax)
+							{
+								var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
+								WriteBody(syntax.Body);
+							}
+							else if (syntaxDeclaration is AccessorDeclarationSyntax)
+							{
+								var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
+								if (syntax.Body != null) WriteBody(syntax.Body);
+								//else // TODO: get backing field
+							}
+							else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
+							{
+								var syntax = (ArrowExpressionClauseSyntax)syntaxDeclaration;
+								writer.WritePrefix("return ");
+								WriteExpression(syntax.Expression);
+								writer.WriteLine(';');
+							}
+							else
+							{
+								throw new NotSupportedException("Unsupported method syntax body: " + syntaxDeclaration.GetType());
+							}
+
+							// write define locals
+							writer = origWriter;
+							foreach (var local in instructionalBody.locals)
+							{
+								writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
+							}
 						}
-						else if (syntaxDeclaration is ConstructorDeclarationSyntax)
+					}
+					else if (IsInternalCall(method))
+					{
+						var type = method.ContainingType;
+						if (type.ContainingNamespace.Name == "System")
 						{
-							var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
-							WriteBody(syntax.Body);
-						}
-						else if (syntaxDeclaration is AccessorDeclarationSyntax)
-						{
-							var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
-							if (syntax.Body != null) WriteBody(syntax.Body);
-							//else // TODO: get backing field
-						}
-						else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
-						{
-							var syntax = (ArrowExpressionClauseSyntax)syntaxDeclaration;
-							writer.AddTab();
-							writer.WritePrefix("return ");
-							WriteExpression(syntax.Expression);
-							writer.WriteLine(';');
-							writer.RemoveTab();
+							if (type.Name == "Object")
+							{
+								if (method.Name == "GetType")
+								{
+									// TODO
+								}
+								else
+								{
+									throw new NotSupportedException("Unsupported internal Object method: " + method.Name);
+								}
+							}
+							else if (type.Name == "Type")
+							{
+								if (method.Name == "GetTypeFromHandle")
+								{
+									// TODO
+								}
+								else
+								{
+									throw new NotSupportedException("Unsupported internal Type method: " + method.Name);
+								}
+							}
+							else if (type.Name == "String")
+							{
+								if (method.Name == "get_Length")
+								{
+									// TODO
+								}
+								else if (method.Name == "FastAllocateString")
+								{
+									// TODO
+								}
+								else
+								{
+									throw new NotSupportedException("Unsupported internal String method: " + method.Name);
+								}
+							}
+							else if (type.Name == "Array")
+							{
+								if (method.Name == "get_Length")
+								{
+									// TODO
+								}
+								else if (method.Name == "get_LongLength")
+								{
+									// TODO
+								}
+								else
+								{
+									throw new NotSupportedException("Unsupported internal Array method: " + method.Name);
+								}
+							}
+							else
+							{
+								throw new NotSupportedException("Unsupported internal method in type: " + type.Name);
+							}
 						}
 						else
 						{
-							throw new NotSupportedException("Unsupported method syntax body: " + syntaxDeclaration.GetType());
+							throw new NotSupportedException("Unsupported internal method in namespace: " + type.Name);
 						}
-
-						// write define locals
-						writer = origWriter;
-						foreach (var local in instructionalBody.locals)
-						{
-							writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
-						}
+					}
+					else
+					{
+						throw new NotSupportedException("Unsupported method extern: " + method.Name);
 					}
 				}
 				else if (method.MethodKind == MethodKind.Constructor)
@@ -530,7 +617,7 @@ namespace CS2X.Core.Transpilers
 
 		#region Method Body / Syntax Instructions
 		private void WriteBody(BlockSyntax body)
-		{return;// TODO: handle WriteCaller
+		{
 			foreach (var statement in body.Statements)
 			{
 				WriteStatment(statement);
@@ -540,7 +627,37 @@ namespace CS2X.Core.Transpilers
 		private void WriteStatment(StatementSyntax statement)
 		{
 			if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
-			//else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
+			else if (statement is ExpressionStatementSyntax) ExpressionStatement((ExpressionStatementSyntax)statement);
+			else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
+			else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
+			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
+			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
+			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
+		}
+
+		private void ExpressionStatement(ExpressionStatementSyntax statement)
+		{
+			// TODO
+		}
+
+		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
+		{
+			// TODO
+		}
+
+		private void IfStatement(IfStatementSyntax statement)
+		{
+			// TODO
+		}
+
+		private void FixedStatement(FixedStatementSyntax statement)
+		{
+			// TODO
+		}
+
+		private void ThrowStatement(ThrowStatementSyntax statement)
+		{
+			// TODO
 		}
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
@@ -554,7 +671,12 @@ namespace CS2X.Core.Transpilers
 		{
 			if (expression is LiteralExpressionSyntax) WriteLiteralExpression((LiteralExpressionSyntax)expression);
 			else if (expression is IdentifierNameSyntax) WriteIdentifierName((IdentifierNameSyntax)expression);
+			else if (expression is MemberAccessExpressionSyntax) MemberAccessExpression((MemberAccessExpressionSyntax)expression);
 			else if (expression is ObjectCreationExpressionSyntax) ObjectCreationExpression((ObjectCreationExpressionSyntax)expression);
+			else if (expression is PrefixUnaryExpressionSyntax) PrefixUnaryExpression((PrefixUnaryExpressionSyntax)expression);
+			else if (expression is InvocationExpressionSyntax) InvocationExpression((InvocationExpressionSyntax)expression);
+			else if (expression is ConditionalExpressionSyntax) ConditionalExpression((ConditionalExpressionSyntax)expression);
+			else if (expression is BinaryExpressionSyntax) BinaryExpression((BinaryExpressionSyntax)expression);
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
@@ -590,6 +712,10 @@ namespace CS2X.Core.Transpilers
 			{
 				writer.Write('0');
 			}
+			else if (expression.IsKind(SyntaxKind.NumericLiteralExpression))
+			{
+				writer.Write(expression.Token.ValueText);
+			}
 			else
 			{
 				throw new NotSupportedException("LiteralExpressionSyntax not supported: " + expression.Kind());
@@ -599,7 +725,15 @@ namespace CS2X.Core.Transpilers
 		private void WriteIdentifierName(IdentifierNameSyntax expression)// NOTE: Identifiers are always 'self' based members
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
-			if (symbolInfo.Symbol is IFieldSymbol)
+			if (symbolInfo.Symbol is ILocalSymbol)
+			{
+				// TODO
+			}
+			else if (symbolInfo.Symbol is IParameterSymbol)
+			{
+				// TODO
+			}
+			else if (symbolInfo.Symbol is IFieldSymbol)
 			{
 				var field = (IFieldSymbol)symbolInfo.Symbol;
 				if (!field.IsStatic) writer.Write($"self->{GetFieldFullName(field)}");
@@ -620,8 +754,13 @@ namespace CS2X.Core.Transpilers
 			}
 			else
 			{
-				throw new NotSupportedException("IdentifierNameSyntax Symbol not supported: " + symbolInfo.Symbol);
+				throw new NotSupportedException("IdentifierNameSyntax Symbol not supported: " + symbolInfo.Symbol.GetType());
 			}
+		}
+
+		private void MemberAccessExpression(MemberAccessExpressionSyntax expression)
+		{
+			// TODO
 		}
 
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
@@ -630,6 +769,26 @@ namespace CS2X.Core.Transpilers
 			//GetTypeFullName(type.Type);
 			//project.compilation.
 			//expression.Identifier.v
+		}
+
+		private void PrefixUnaryExpression(PrefixUnaryExpressionSyntax expression)
+		{
+			writer.Write(expression.OperatorToken.Text);
+		}
+
+		private void InvocationExpression(InvocationExpressionSyntax expression)
+		{
+			// TODO
+		}
+
+		private void ConditionalExpression(ConditionalExpressionSyntax expression)
+		{
+			// TODO
+		}
+
+		private void BinaryExpression(BinaryExpressionSyntax expression)
+		{
+			// TODO
 		}
 		#endregion
 
