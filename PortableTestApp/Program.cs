@@ -19,6 +19,7 @@ namespace PortableTestApp
 
 		static void Main(string[] args)
 		{
+			MyPropStatic = 0;
 			Console.WriteLine("Hello World!");
 		}
 	}

@@ -11,12 +11,12 @@ namespace CS2X.Core.Transpilers
 	{
 		public class Local
 		{
-			public readonly ITypeSymbol type;
+			public readonly ILocalSymbol local;
 			public readonly string name;
 
-			public Local(ITypeSymbol type, string name)
+			public Local(ILocalSymbol local, string name)
 			{
-				this.type = type;
+				this.local = local;
 				this.name = name;
 			}
 		}

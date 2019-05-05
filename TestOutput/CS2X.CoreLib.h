@@ -556,11 +556,11 @@ void m_System_Console_Write_0(t_System_String* p_s)
 }
 void m_System_Console_WriteLine_0(t_System_String* p_s)
 {
-;
+m_System_Console_Write_0(p_s + m_System_Environment_get_NewLine_0());
 }
 void m_System_Console_WriteLine_1()
 {
-;
+m_System_Console_Write_0(m_System_Environment_get_NewLine_0());
 }
 t_System_Delegate* m_System_Delegate__ctor_0()
 {
@@ -645,7 +645,7 @@ t_System_Type* m_System_Object_GetType_0(t_System_Object* self)
 }
 t_System_String* m_System_Object_ToString_0(t_System_Object* self)
 {
-	return ;
+	return m_System_Object_GetType_0(self);
 }
 t_System_Object* m_System_Object__ctor_0()
 {
@@ -699,7 +699,7 @@ t_System_String* m_System_RuntimeType_get_FullName_0(t_System_RuntimeType* self)
 }
 t_System_RuntimeTypeHandle m_System_RuntimeType_get_TypeHandle_0(t_System_RuntimeType* self)
 {
-	return ;
+	return m_System_RuntimeTypeHandle__ctor_0(self);
 }
 t_System_RuntimeType* m_System_RuntimeType__ctor_0()
 {
@@ -715,22 +715,25 @@ t_System_String* m_System_String_FastAllocateString_0(int32_t p_length)
 }
 char m_System_String_IsNullOrEmpty_0(t_System_String* p_value)
 {
-	return ;
+	return (p_value == 0 || 0 >= (uint32_t)p_value->m_System_String_get_Length_0(self)) ? 1 : 0;
 }
 void m_System_String_FillStringChecked_0(t_System_String* p_dest, int32_t p_destPos, t_System_String* p_src)
 {
 }
 t_System_String* m_System_String_Concat_0(t_System_String* p_str0, t_System_String* p_str1)
 {
-	return ;
+	t_System_String* l_result_0;
+	return l_result_0;
 }
 t_System_String* m_System_String_Concat_1(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2)
 {
-	return ;
+	t_System_String* l_result_0;
+	return l_result_0;
 }
 t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2, t_System_String* p_str3)
 {
-	return ;
+	t_System_String* l_result_0;
+	return l_result_0;
 }
 t_System_String* m_System_String__ctor_0()
 {
@@ -1187,11 +1190,12 @@ int8_t m_int8_t__ctor_0()
 }
 char m_float_IsNaN_0(float p_f)
 {
-	return ;
+	int32_t l_bits_0;
+	return (l_bits_0 & 2147483647) > 2139095040;
 }
 char m_float_IsNegative_0(float p_f)
 {
-	return ;
+	return m_System_BitConverter_SingleToInt32Bits_0(p_f) < 0;
 }
 float m_float__ctor_0()
 {

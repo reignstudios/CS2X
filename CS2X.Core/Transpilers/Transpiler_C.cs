@@ -115,6 +115,7 @@ namespace CS2X.Core.Transpilers
 		private List<TranspiledProject> transpiledProjects = new List<TranspiledProject>();
 		private TranspiledProject transpiledProject;// active transpiling project
 		private Project project;// active project
+		private IMethodSymbol method;// active method
 		private SemanticModel semanticModel;// active semantic model for a method
 		private StreamWriterEx writer, stringLiteralWriter;
 		private InstructionalBody instructionalBody;// active instructional body states and values
@@ -387,6 +388,7 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteMethod(IMethodSymbol method, bool writeBody)
 		{
+			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return;
 
 			// skip if method is native extern
@@ -509,7 +511,7 @@ namespace CS2X.Core.Transpilers
 							writer = origWriter;
 							foreach (var local in instructionalBody.locals)
 							{
-								writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
+								writer.WriteLinePrefix($"{GetTypeFullNameRef(local.local.Type)} {local.name};");
 							}
 						}
 					}
@@ -635,6 +637,13 @@ namespace CS2X.Core.Transpilers
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
 		}
 
+		private void WriteReturnStatement(ReturnStatementSyntax statement)
+		{
+			writer.WritePrefix("return ");
+			WriteExpression(statement.Expression);
+			writer.WriteLine(';');
+		}
+
 		private void ExpressionStatement(ExpressionStatementSyntax statement)
 		{
 			// TODO
@@ -656,15 +665,8 @@ namespace CS2X.Core.Transpilers
 		}
 
 		private void ThrowStatement(ThrowStatementSyntax statement)
-		{
+		{ 
 			// TODO
-		}
-
-		private void WriteReturnStatement(ReturnStatementSyntax statement)
-		{
-			writer.WritePrefix("return ");
-			WriteExpression(statement.Expression);
-			writer.WriteLine(';');
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)
@@ -677,7 +679,26 @@ namespace CS2X.Core.Transpilers
 			else if (expression is InvocationExpressionSyntax) InvocationExpression((InvocationExpressionSyntax)expression);
 			else if (expression is ConditionalExpressionSyntax) ConditionalExpression((ConditionalExpressionSyntax)expression);
 			else if (expression is BinaryExpressionSyntax) BinaryExpression((BinaryExpressionSyntax)expression);
+			else if (expression is CastExpressionSyntax) CastExpression((CastExpressionSyntax)expression);
+			else if (expression is ThisExpressionSyntax) ThisExpression((ThisExpressionSyntax)expression);
+			else if (expression is ParenthesizedExpressionSyntax) ParenthesizedExpression((ParenthesizedExpressionSyntax)expression);
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
+		}
+
+		private void WriteCaller(ExpressionSyntax expression)
+		{
+			if (expression is MemberAccessExpressionSyntax)
+			{
+				var accessExpression = (MemberAccessExpressionSyntax)expression;
+				expression = accessExpression.Expression;
+			}
+			else
+			{
+				var symbolInfo = semanticModel.GetSymbolInfo(expression);
+				if (symbolInfo.Symbol.ContainingType == method.ContainingType) expression = SyntaxFactory.ThisExpression();
+			}
+
+			WriteExpression(expression);
 		}
 
 		private void WriteLiteralExpression(LiteralExpressionSyntax expression)
@@ -716,22 +737,42 @@ namespace CS2X.Core.Transpilers
 			{
 				writer.Write(expression.Token.ValueText);
 			}
+			else if (expression.IsKind(SyntaxKind.CharacterLiteralExpression))
+			{
+				writer.Write($"'{expression.Token.ValueText}'");
+			}
+			else if (expression.IsKind(SyntaxKind.TrueLiteralExpression))
+			{
+				writer.Write('1');
+			}
+			else if (expression.IsKind(SyntaxKind.FalseLiteralExpression))
+			{
+				writer.Write('0');
+			}
 			else
 			{
 				throw new NotSupportedException("LiteralExpressionSyntax not supported: " + expression.Kind());
 			}
 		}
 
-		private void WriteIdentifierName(IdentifierNameSyntax expression)// NOTE: Identifiers are always 'self' based members
+		private void WriteIdentifierName(IdentifierNameSyntax expression)
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
 			if (symbolInfo.Symbol is ILocalSymbol)
 			{
-				// TODO
+				var local = (ILocalSymbol)symbolInfo.Symbol;
+				var localObj = instructionalBody.locals.FirstOrDefault(x => x.local == local);
+				if (localObj == null)
+				{
+					localObj = new InstructionalBody.Local(local, $"l_{local.Name}_{instructionalBody.locals.Count}");
+					instructionalBody.locals.Add(localObj);
+				}
+				writer.Write(localObj.name);
 			}
 			else if (symbolInfo.Symbol is IParameterSymbol)
 			{
-				// TODO
+				var parameter = (IParameterSymbol)symbolInfo.Symbol;
+				writer.Write(GetParameterFullName(parameter));
 			}
 			else if (symbolInfo.Symbol is IFieldSymbol)
 			{
@@ -744,7 +785,7 @@ namespace CS2X.Core.Transpilers
 				var property = (IPropertySymbol)symbolInfo.Symbol;
 				if (PropertyIsFieldBacked(property))
 				{
-					// TODO: return backing field directly
+					throw new NotImplementedException("TODO");
 				}
 				else
 				{
@@ -752,23 +793,79 @@ namespace CS2X.Core.Transpilers
 					else writer.Write($"{GetMethodFullName(property.GetMethod)}()");
 				}
 			}
+			else if (symbolInfo.Symbol is IMethodSymbol)
+			{
+				var method = (IMethodSymbol)symbolInfo.Symbol;
+				writer.Write($"{GetMethodFullName(method)}");
+			}
 			else
 			{
 				throw new NotSupportedException("IdentifierNameSyntax Symbol not supported: " + symbolInfo.Symbol.GetType());
 			}
 		}
 
+		private void WriteArgumentList(ArgumentListSyntax argumentList)
+		{
+			var arguments = argumentList.Arguments;
+			if (arguments.Count != 0)
+			{
+				var lastArg = arguments.Last();
+				foreach (var arg in arguments)
+				{
+					WriteExpression(arg.Expression);
+					if (arg != lastArg) writer.Write(", ");
+				}
+			}
+		}
+
 		private void MemberAccessExpression(MemberAccessExpressionSyntax expression)
 		{
-			// TODO
+			if (expression.Expression is InvocationExpressionSyntax)
+			{
+				var e = (InvocationExpressionSyntax)expression.Expression;
+				WriteExpression(e.Expression);
+				writer.Write('(');
+				WriteCaller(e);
+				if (e.ArgumentList.Arguments.Count != 0) writer.Write(", ");
+				WriteArgumentList(e.ArgumentList);
+				writer.Write(')');
+			}
+			else if (expression.Expression is IdentifierNameSyntax)
+			{
+				var e = (IdentifierNameSyntax)expression.Expression;
+				var symbolInfo = semanticModel.GetSymbolInfo(e);
+				bool isStaticTypeAccess = symbolInfo.Symbol is ITypeSymbol && symbolInfo.Symbol.IsStatic;
+				if (!isStaticTypeAccess) WriteExpression(expression.Expression);
+
+				ITypeSymbol type;
+				if (symbolInfo.Symbol is ITypeSymbol) type = (ITypeSymbol)symbolInfo.Symbol;
+				else if (symbolInfo.Symbol is ILocalSymbol) type = ((ILocalSymbol)symbolInfo.Symbol).Type;
+				else if (symbolInfo.Symbol is IParameterSymbol) type = ((IParameterSymbol)symbolInfo.Symbol).Type;
+				else if (symbolInfo.Symbol is IFieldSymbol) type = ((IFieldSymbol)symbolInfo.Symbol).Type;
+				//else if (symbolInfo.Symbol is IPropertySymbol) type = ((IPropertySymbol)symbolInfo.Symbol).Type;// TODO: validate how this should work
+				else throw new NotSupportedException("Unsupported member access symbol: " + symbolInfo.Symbol.GetType());
+
+				if (!isStaticTypeAccess)
+				{
+					if (type.IsReferenceType) writer.Write("->");
+					else writer.Write('.');
+				}
+				WriteExpression(expression.Name);
+			}
+			else
+			{
+				throw new NotSupportedException("Unsupported MemberAccessExpression: " + expression.GetType());
+			}
 		}
 
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
-			//var type = semanticModel.GetTypeInfo(expression);
-			//GetTypeFullName(type.Type);
-			//project.compilation.
-			//expression.Identifier.v
+			var symbolInfo = semanticModel.GetSymbolInfo(expression);
+			var method = (IMethodSymbol)symbolInfo.Symbol;
+			writer.Write(GetMethodFullName(method));
+			writer.Write('(');
+			WriteArgumentList(expression.ArgumentList);
+			writer.Write(')');
 		}
 
 		private void PrefixUnaryExpression(PrefixUnaryExpressionSyntax expression)
@@ -778,17 +875,51 @@ namespace CS2X.Core.Transpilers
 
 		private void InvocationExpression(InvocationExpressionSyntax expression)
 		{
-			// TODO
+			WriteExpression(expression.Expression);
+			writer.Write('(');
+			var symbolInfo = semanticModel.GetSymbolInfo(expression);
+			if (!symbolInfo.Symbol.IsStatic)
+			{
+				writer.Write("self");// writer caller
+				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
+			}
+			WriteArgumentList(expression.ArgumentList);
+			writer.Write(')');
 		}
 
 		private void ConditionalExpression(ConditionalExpressionSyntax expression)
 		{
-			// TODO
+			WriteExpression(expression.Condition);
+			writer.Write(" ? ");
+			WriteExpression(expression.WhenTrue);
+			writer.Write(" : ");
+			WriteExpression(expression.WhenFalse);
 		}
 
 		private void BinaryExpression(BinaryExpressionSyntax expression)
 		{
-			// TODO
+			WriteExpression(expression.Left);
+			writer.Write($" {expression.OperatorToken.ValueText} ");
+			WriteExpression(expression.Right);
+		}
+
+		private void CastExpression(CastExpressionSyntax expression)
+		{
+			var type = semanticModel.GetTypeInfo(expression.Type);
+			writer.Write($"({GetTypeFullNameRef(type.Type)})");
+			WriteExpression(expression.Expression);
+		}
+
+		private void ThisExpression(ThisExpressionSyntax expression)
+		{
+			writer.Write("self");
+		}
+
+		private void ParenthesizedExpression(ParenthesizedExpressionSyntax expression)
+		{
+			writer.Write('(');
+			WriteExpression(expression.Expression);
+			writer.Write(')');
 		}
 		#endregion
 
