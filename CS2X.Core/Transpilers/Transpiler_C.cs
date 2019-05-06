@@ -476,6 +476,7 @@ namespace CS2X.Core.Transpilers
 								else if(syntax.ExpressionBody != null)
 								{
 									if (!method.ReturnsVoid) writer.WritePrefix("return ");
+									writer.Write(writer.prefix);
 									WriteExpression(syntax.ExpressionBody.Expression);
 									writer.WriteLine(';');
 								}
@@ -783,7 +784,7 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IPropertySymbol)
 			{
 				var property = (IPropertySymbol)symbolInfo.Symbol;
-				if (PropertyIsFieldBacked(property))
+				if (IsAutoProperty(property))
 				{
 					throw new NotImplementedException("TODO");
 				}
@@ -820,21 +821,56 @@ namespace CS2X.Core.Transpilers
 
 		private void MemberAccessExpression(MemberAccessExpressionSyntax expression)
 		{
-			if (expression.Expression is InvocationExpressionSyntax)
+			var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
+			//if (expression.Expression is InvocationExpressionSyntax)
+			if (nameSymbolInfo.Symbol is IMethodSymbol)
 			{
-				var e = (InvocationExpressionSyntax)expression.Expression;
-				WriteExpression(e.Expression);
-				writer.Write('(');
-				WriteCaller(e);
-				if (e.ArgumentList.Arguments.Count != 0) writer.Write(", ");
-				WriteArgumentList(e.ArgumentList);
-				writer.Write(')');
+				//var e = (InvocationExpressionSyntax)expression.Expression;
+				//WriteExpression(e.Expression);
+				//writer.Write('(');
+				//WriteCaller(expression);
+				//if (e.ArgumentList.Arguments.Count != 0) writer.Write(", ");
+				//WriteArgumentList(e.ArgumentList);
+				//writer.Write(')');
+				
+				WriteExpression(expression.Name);
+
+				//WriteExpression(expression.Expression);
+				//var symbolInfo = semanticModel.GetSymbolInfo(expression.Expression);
+				//var methodInvoke = (IMethodSymbol)symbolInfo.Symbol;
+				//if (methodInvoke.ReturnType.IsReferenceType) writer.Write("->");
+				//else writer.Write('.');
+				//WriteExpression(expression.Name);
+				//if (method.Name == "ToString")
+				//{ }
+			}
+			else if (nameSymbolInfo.Symbol is IPropertySymbol)
+			{
+				var property = (IPropertySymbol)nameSymbolInfo.Symbol;
+				WriteExpression(expression.Name);
 			}
 			else if (expression.Expression is IdentifierNameSyntax)
 			{
 				var e = (IdentifierNameSyntax)expression.Expression;
 				var symbolInfo = semanticModel.GetSymbolInfo(e);
 				bool isStaticTypeAccess = symbolInfo.Symbol is ITypeSymbol && symbolInfo.Symbol.IsStatic;
+
+				//var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
+				//if (nameSymbolInfo.Symbol is IPropertySymbol)
+				//{
+				//	var property = (IPropertySymbol)nameSymbolInfo.Symbol;
+				//	if (!IsAutoProperty(property))
+				//	{
+				//		writer.Write($"{GetMethodFullName(property.GetMethod)}(");
+				//		if (!isStaticTypeAccess)
+				//		{
+				//			WriteCaller(expression);
+				//		}
+				//		writer.Write(')');
+				//		return;
+				//	}
+				//}
+
 				if (!isStaticTypeAccess) WriteExpression(expression.Expression);
 
 				ITypeSymbol type;
@@ -854,7 +890,8 @@ namespace CS2X.Core.Transpilers
 			}
 			else
 			{
-				throw new NotSupportedException("Unsupported MemberAccessExpression: " + expression.GetType());
+				throw new NotSupportedException("Unsupported MemberAccessExpression: " + expression.ToString());
+				//WriteExpression(expression.Expression);
 			}
 		}
 
@@ -871,6 +908,7 @@ namespace CS2X.Core.Transpilers
 		private void PrefixUnaryExpression(PrefixUnaryExpressionSyntax expression)
 		{
 			writer.Write(expression.OperatorToken.Text);
+			WriteExpression(expression.Operand);
 		}
 
 		private void InvocationExpression(InvocationExpressionSyntax expression)
@@ -880,7 +918,7 @@ namespace CS2X.Core.Transpilers
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
 			if (!symbolInfo.Symbol.IsStatic)
 			{
-				writer.Write("self");// writer caller
+				WriteCaller(expression.Expression);
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}
 			WriteArgumentList(expression.ArgumentList);
@@ -898,9 +936,86 @@ namespace CS2X.Core.Transpilers
 
 		private void BinaryExpression(BinaryExpressionSyntax expression)
 		{
-			WriteExpression(expression.Left);
-			writer.Write($" {expression.OperatorToken.ValueText} ");
-			WriteExpression(expression.Right);
+			var symbolInfo = semanticModel.GetSymbolInfo(expression);
+			if (symbolInfo.Symbol == null)
+			{
+				WriteExpression(expression.Left);
+				writer.Write($" {expression.OperatorToken.ValueText} ");
+				WriteExpression(expression.Right);
+			}
+			else if (symbolInfo.Symbol is IMethodSymbol)
+			{
+				var operatorMethod = (IMethodSymbol)symbolInfo.Symbol;
+				var type = operatorMethod.ContainingType;
+				if (type.SpecialType == SpecialType.System_String)
+				{
+					IMethodSymbol specialMethod = null;
+					if
+					(
+						expression.OperatorToken.ValueText == "+" &&
+						operatorMethod.ReturnType.SpecialType == SpecialType.System_String &&
+						operatorMethod.Parameters.Length == 2 &&
+						operatorMethod.Parameters[0].Type.SpecialType == SpecialType.System_String &&
+						operatorMethod.Parameters[1].Type.SpecialType == SpecialType.System_String
+					)
+					{
+						specialMethod = (IMethodSymbol)type.GetMembers().First(x => x is IMethodSymbol && x.Name == "Concat" && ((IMethodSymbol)x).Parameters.Length == 2);
+					}
+					else if
+					(
+						expression.OperatorToken.ValueText == "==" &&
+						operatorMethod.ReturnType.SpecialType == SpecialType.System_Boolean &&
+						operatorMethod.Parameters.Length == 2 &&
+						operatorMethod.Parameters[0].Type.SpecialType == SpecialType.System_String &&
+						operatorMethod.Parameters[1].Type.SpecialType == SpecialType.System_String
+					)
+					{
+						specialMethod = (IMethodSymbol)type.GetMembers().First(x => x is IMethodSymbol && x.Name == "Equals" && ((IMethodSymbol)x).Parameters.Length == 1 && ((IMethodSymbol)x).Parameters[0].Type.SpecialType == SpecialType.System_String);
+					}
+
+					if (specialMethod != null)
+					{
+						writer.Write(GetMethodFullName(specialMethod));
+						writer.Write('(');
+						//if (!leftString) writer.Write("ToString_vTableTODO(");// TODO: <<<<<<<< add ToString support for non string types
+						WriteExpression(expression.Left);
+						//if (!leftString) writer.Write(')');
+						writer.Write(", ");
+						//if (!rightString) writer.Write("ToString_vTableTODO(");
+						WriteExpression(expression.Right);
+						//if (!rightString) writer.Write(')');
+						writer.Write(')');
+					}
+					else
+					{
+						writer.Write(GetMethodFullName(operatorMethod));
+						writer.Write('(');
+						WriteExpression(expression.Left);
+						writer.Write(", ");
+						WriteExpression(expression.Right);
+						writer.Write(')');
+					}
+				}
+				else if (IsPrimitiveType(operatorMethod.Parameters[0].Type) && IsPrimitiveType(operatorMethod.Parameters[1].Type))
+				{
+					WriteExpression(expression.Left);
+					writer.Write($" {expression.OperatorToken.ValueText} ");
+					WriteExpression(expression.Right);
+				}
+				else
+				{
+					writer.Write(GetMethodFullName(operatorMethod));
+					writer.Write('(');
+					WriteExpression(expression.Left);
+					writer.Write(", ");
+					WriteExpression(expression.Right);
+					writer.Write(')');
+				}
+			}
+			else
+			{
+				throw new NotSupportedException("Unsupported binary expression symbol: " + symbolInfo.Symbol.GetType());
+			}
 		}
 
 		private void CastExpression(CastExpressionSyntax expression)

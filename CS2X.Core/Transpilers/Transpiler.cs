@@ -82,7 +82,7 @@ namespace CS2X.Core.Transpilers
 			if (name.Contains('.')) name = name.Replace('.', '_');
 		}
 
-		protected bool PropertyIsFieldBacked(IPropertySymbol property)
+		protected bool IsAutoProperty(IPropertySymbol property)
 		{
 			return property.GetMethod == null && property.SetMethod == null;
 		}

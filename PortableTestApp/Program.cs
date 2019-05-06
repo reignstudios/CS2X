@@ -16,11 +16,13 @@ namespace PortableTestApp
 		public int abcStatic;
 		public int MyProp { get; private set; }
 		public static int MyPropStatic { get; private set; }
+		private static string value;
 
 		static void Main(string[] args)
 		{
 			MyPropStatic = 0;
-			Console.WriteLine("Hello World!");
+			var v = "Hello World!" + value;
+			Console.WriteLine("Hello World!" + value);
 		}
 	}
 }

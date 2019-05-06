@@ -145,5 +145,15 @@ namespace System
 
 			return result;
 		}
+
+		public bool Equals(string value)
+		{
+			if (this.Length != value.Length) return false;
+			/*for (int i = 0; i != Length; ++i)
+			{
+				//if (this[i] != value[i]) return false;// TODO: need indexers
+			}*/
+			return true;
+		}
 	}
 }
