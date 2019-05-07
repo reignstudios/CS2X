@@ -121,6 +121,16 @@ namespace CS2X.Core.Transpilers
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
 
+		/// <summary>
+		/// For debugging only. Skips compiling references
+		/// </summary>
+		public bool skipReferenced;
+
+		/// <summary>
+		/// For debugging only. Only transpile first project
+		/// </summary>
+		public bool firstProjOnly;
+
 		#region Core resolution
 		public Transpiler_C(Solution solution, in Options options)
 		: base(solution)
@@ -138,7 +148,9 @@ namespace CS2X.Core.Transpilers
 				stringLiteralWriter.WriteLine();
 				foreach (var project in solution.projects)
 				{
-					TranspileProject(outputPath, project);
+					var transpileReference = transpiledProjects.FirstOrDefault(x => x.project == project);
+					if (transpileReference == null) TranspileProject(outputPath, project);
+					if (firstProjOnly) break;
 				}
 			}
 		}
@@ -148,17 +160,20 @@ namespace CS2X.Core.Transpilers
 			var transpiledProject = new TranspiledProject(project);
 
 			// transpile references first
-			foreach (var reference in project.references)
+			if (!skipReferenced)
 			{
-				var transpileReference = transpiledProjects.FirstOrDefault(x => x.project == reference);
-				if (transpileReference == null)
+				foreach (var reference in project.references)
 				{
-					transpileReference = TranspileProject(outputPath, reference);
-					transpiledProject.references.Add(transpileReference);
-				}
-				else
-				{
-					transpiledProject.references.Add(transpileReference);
+					var transpileReference = transpiledProjects.FirstOrDefault(x => x.project == reference);
+					if (transpileReference == null)
+					{
+						transpileReference = TranspileProject(outputPath, reference);
+						transpiledProject.references.Add(transpileReference);
+					}
+					else
+					{
+						transpiledProject.references.Add(transpileReference);
+					}
 				}
 			}
 
@@ -512,7 +527,7 @@ namespace CS2X.Core.Transpilers
 							writer = origWriter;
 							foreach (var local in instructionalBody.locals)
 							{
-								writer.WriteLinePrefix($"{GetTypeFullNameRef(local.local.Type)} {local.name};");
+								writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
 							}
 						}
 					}
@@ -636,23 +651,35 @@ namespace CS2X.Core.Transpilers
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
+			writer.WriteLine(';');
 		}
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
 		{
 			writer.WritePrefix("return ");
 			WriteExpression(statement.Expression);
-			writer.WriteLine(';');
 		}
 
 		private void ExpressionStatement(ExpressionStatementSyntax statement)
 		{
-			// TODO
+			writer.WritePrefix();
+			WriteExpression(statement.Expression);
 		}
 
 		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
 		{
-			// TODO
+			var typeInfo = semanticModel.GetTypeInfo(statement.Declaration.Type);
+			foreach (var variable in statement.Declaration.Variables)
+			{
+				var localSymbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(variable);
+				var local = new InstructionalBody.Local(variable, localSymbol, typeInfo.Type, $"l_{variable.Identifier.ValueText}_{instructionalBody.locals.Count}");
+				instructionalBody.locals.Add(local);
+				if (variable.Initializer != null)
+				{
+					writer.WritePrefix(local.name + " = ");
+					WriteExpression(variable.Initializer.Value);
+				}
+			}
 		}
 
 		private void IfStatement(IfStatementSyntax statement)
@@ -676,6 +703,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is IdentifierNameSyntax) WriteIdentifierName((IdentifierNameSyntax)expression);
 			else if (expression is MemberAccessExpressionSyntax) MemberAccessExpression((MemberAccessExpressionSyntax)expression);
 			else if (expression is ObjectCreationExpressionSyntax) ObjectCreationExpression((ObjectCreationExpressionSyntax)expression);
+			else if (expression is AssignmentExpressionSyntax) AssignmentExpression((AssignmentExpressionSyntax)expression);
 			else if (expression is PrefixUnaryExpressionSyntax) PrefixUnaryExpression((PrefixUnaryExpressionSyntax)expression);
 			else if (expression is InvocationExpressionSyntax) InvocationExpression((InvocationExpressionSyntax)expression);
 			else if (expression is ConditionalExpressionSyntax) ConditionalExpression((ConditionalExpressionSyntax)expression);
@@ -717,7 +745,7 @@ namespace CS2X.Core.Transpilers
 					else value = expression.Token.ValueText;
 					if (value.Contains('\n')) value = value.Replace("\n", "/n");
 					if (value.Contains('\r')) value = value.Replace("\r", "/r");
-					stringLiteralWriter.WriteLine($"/* '{value}' */");
+					stringLiteralWriter.WriteLine($"/* {value} */");
 					stringLiteralWriter.Write($"int8_t {literalName}[{GetStringMemorySize(expression.Token.ValueText)}] = ");
 					stringLiteralWriter.Write(StringToLiteral(expression.Token.ValueText));
 					stringLiteralWriter.WriteLine(';');
@@ -762,12 +790,7 @@ namespace CS2X.Core.Transpilers
 			if (symbolInfo.Symbol is ILocalSymbol)
 			{
 				var local = (ILocalSymbol)symbolInfo.Symbol;
-				var localObj = instructionalBody.locals.FirstOrDefault(x => x.local == local);
-				if (localObj == null)
-				{
-					localObj = new InstructionalBody.Local(local, $"l_{local.Name}_{instructionalBody.locals.Count}");
-					instructionalBody.locals.Add(localObj);
-				}
+				var localObj = instructionalBody.locals.First(x => x.local == local);
 				writer.Write(localObj.name);
 			}
 			else if (symbolInfo.Symbol is IParameterSymbol)
@@ -821,6 +844,7 @@ namespace CS2X.Core.Transpilers
 
 		private void MemberAccessExpression(MemberAccessExpressionSyntax expression)
 		{
+			var symbolInfo = semanticModel.GetSymbolInfo(expression.Expression);
 			var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
 			//if (expression.Expression is InvocationExpressionSyntax)
 			if (nameSymbolInfo.Symbol is IMethodSymbol)
@@ -847,12 +871,20 @@ namespace CS2X.Core.Transpilers
 			else if (nameSymbolInfo.Symbol is IPropertySymbol)
 			{
 				var property = (IPropertySymbol)nameSymbolInfo.Symbol;
-				WriteExpression(expression.Name);
+				if (!IsAutoProperty(property))
+				{
+					WriteExpression(expression.Name);
+				}
+				else
+				{
+					bool isStaticTypeAccess = symbolInfo.Symbol is ITypeSymbol && symbolInfo.Symbol.IsStatic;
+					WriteExpression(expression.Expression);
+				}
 			}
 			else if (expression.Expression is IdentifierNameSyntax)
 			{
 				var e = (IdentifierNameSyntax)expression.Expression;
-				var symbolInfo = semanticModel.GetSymbolInfo(e);
+				//var symbolInfo = semanticModel.GetSymbolInfo(e);
 				bool isStaticTypeAccess = symbolInfo.Symbol is ITypeSymbol && symbolInfo.Symbol.IsStatic;
 
 				//var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
@@ -903,6 +935,13 @@ namespace CS2X.Core.Transpilers
 			writer.Write('(');
 			WriteArgumentList(expression.ArgumentList);
 			writer.Write(')');
+		}
+
+		private void AssignmentExpression(AssignmentExpressionSyntax expression)
+		{
+			WriteExpression(expression.Left);
+			writer.Write(" = ");
+			WriteExpression(expression.Right);
 		}
 
 		private void PrefixUnaryExpression(PrefixUnaryExpressionSyntax expression)

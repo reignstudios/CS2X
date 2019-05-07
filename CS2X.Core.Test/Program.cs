@@ -27,8 +27,10 @@ namespace CS2X.Core.Test
 				storeRuntimeTypeStringLiteralMetadata = true,
 				stringLiteralMemoryLocation = Transpiler_C.StringLiteralMemoryLocation.GlobalProgramMemory_RAM
 			};
-			var emitter = new Transpiler_C(solution, options);
-			emitter.Transpile(Path.Combine(path, "TestOutput"));
+			var transpiler = new Transpiler_C(solution, options);
+			transpiler.firstProjOnly = true;
+			transpiler.skipReferenced = true;
+			transpiler.Transpile(Path.Combine(path, "TestOutput"));
 		}
 	}
 }

@@ -20,9 +20,10 @@ namespace PortableTestApp
 
 		static void Main(string[] args)
 		{
-			MyPropStatic = 0;
-			var v = "Hello World!" + value;
-			Console.WriteLine("Hello World!" + value);
+			//MyPropStatic = 0;
+			var v = "Hello World!";
+			v = null;
+			//Console.WriteLine("Hello World!" + value);
 		}
 	}
 }

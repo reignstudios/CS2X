@@ -22,3 +22,9 @@ Roslyn compiler from NuGet (Install or Update these ONLY): https://gist.github.c
 To uninstall all packaged for clean updates
 * Open in VS: "Tools->NuGet Package Manager->Package Manager Consonle"
 * Run command: get-package | uninstall-package -removedependencies -force
+
+<<< Common Roslyn SemanticModel Methods >>>
+* GetOperation: Gets a multitude of data such as ISymbol, ConstantValue, etc
+* GetDeclaredSymbol: Gets ISymbol for Declaration Syntax
+* GetSymbolInfo: Gets ISymbol for Reference Syntax
+* GetTypeInfo: Gets ITypeSymbol for Reference Syntax
