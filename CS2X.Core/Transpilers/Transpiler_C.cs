@@ -144,6 +144,7 @@ namespace CS2X.Core.Transpilers
 			using (var stream = new FileStream(Path.Combine(outputPath, "_StringLiterals.h"), FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (stringLiteralWriter = new StreamWriterEx(stream))
 			{
+				WriteHeaderInfo(stringLiteralWriter);
 				stringLiteralWriter.WriteLine("#pragma once");
 				stringLiteralWriter.WriteLine();
 				foreach (var project in solution.projects)
@@ -191,15 +192,20 @@ namespace CS2X.Core.Transpilers
 			return transpiledProject;
 		}
 
-		private void WriteProject(Project project)
+		private void WriteHeaderInfo(StreamWriterEx writer)
 		{
-			this.project = project;
-			if (project.type == ProjectTypes.Dll) writer.WriteLine("#pragma once");
-
-			// writer info
 			writer.WriteLine("/* ############################### */");
 			writer.WriteLine($"/* Generated with CS2X v{Utils.GetAssemblyInfoVersion()} */");
 			writer.WriteLine("/* ############################### */");
+		}
+
+		private void WriteProject(Project project)
+		{
+			this.project = project;
+
+			// writer info
+			WriteHeaderInfo(writer);
+			if (project.type == ProjectTypes.Dll) writer.WriteLine("#pragma once");
 
 			// include std libraries
 			if (project.isCoreLib)

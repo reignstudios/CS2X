@@ -22,8 +22,13 @@ namespace PortableTestApp
 		{
 			//MyPropStatic = 0;
 			var v = "Hello World!";
-			v = null;
+			v = GetValue(v.GetType().ToString());
 			//Console.WriteLine("Hello World!" + value);
+		}
+
+		static string GetValue(object o)
+		{
+			return o.ToString();
 		}
 	}
 }
