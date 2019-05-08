@@ -411,6 +411,7 @@ namespace CS2X.Core.Transpilers
 		{
 			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return;
+			if (method.AssociatedSymbol is IPropertySymbol && IsAutoProperty((IPropertySymbol)method.AssociatedSymbol)) return;
 
 			// skip if method is native extern
 			foreach (var attribute in method.GetAttributes())
@@ -515,7 +516,7 @@ namespace CS2X.Core.Transpilers
 							{
 								var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
 								if (syntax.Body != null) WriteBody(syntax.Body);
-								//else // TODO: get backing field
+								else throw new NotImplementedException("This should never be hit");
 							}
 							else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
 							{
@@ -813,9 +814,9 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IPropertySymbol)
 			{
 				var property = (IPropertySymbol)symbolInfo.Symbol;
-				if (IsAutoProperty(property))
+				if (IsAutoProperty(property, out var field))
 				{
-					throw new NotImplementedException("TODO");
+					writer.Write(GetFieldFullName(field));
 				}
 				else
 				{
@@ -852,27 +853,9 @@ namespace CS2X.Core.Transpilers
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression.Expression);
 			var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
-			//if (expression.Expression is InvocationExpressionSyntax)
 			if (nameSymbolInfo.Symbol is IMethodSymbol)
 			{
-				//var e = (InvocationExpressionSyntax)expression.Expression;
-				//WriteExpression(e.Expression);
-				//writer.Write('(');
-				//WriteCaller(expression);
-				//if (e.ArgumentList.Arguments.Count != 0) writer.Write(", ");
-				//WriteArgumentList(e.ArgumentList);
-				//writer.Write(')');
-				
 				WriteExpression(expression.Name);
-
-				//WriteExpression(expression.Expression);
-				//var symbolInfo = semanticModel.GetSymbolInfo(expression.Expression);
-				//var methodInvoke = (IMethodSymbol)symbolInfo.Symbol;
-				//if (methodInvoke.ReturnType.IsReferenceType) writer.Write("->");
-				//else writer.Write('.');
-				//WriteExpression(expression.Name);
-				//if (method.Name == "ToString")
-				//{ }
 			}
 			else if (nameSymbolInfo.Symbol is IPropertySymbol)
 			{
@@ -887,7 +870,7 @@ namespace CS2X.Core.Transpilers
 					WriteExpression(expression.Expression);
 				}
 			}
-			else if (expression.Expression is IdentifierNameSyntax)
+			/*else if (expression.Expression is IdentifierNameSyntax)
 			{
 				var e = (IdentifierNameSyntax)expression.Expression;
 				//var symbolInfo = semanticModel.GetSymbolInfo(e);
@@ -925,11 +908,11 @@ namespace CS2X.Core.Transpilers
 					else writer.Write('.');
 				}
 				WriteExpression(expression.Name);
-			}
+			}*/
 			else
 			{
 				throw new NotSupportedException("Unsupported MemberAccessExpression: " + expression.ToString());
-				//WriteExpression(expression.Expression);
+				//WriteExpression(expression.Name);
 			}
 		}
 

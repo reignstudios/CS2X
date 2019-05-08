@@ -82,9 +82,12 @@ namespace CS2X.Core.Transpilers
 			if (name.Contains('.')) name = name.Replace('.', '_');
 		}
 
-		protected bool IsAutoProperty(IPropertySymbol property)
+		protected bool IsAutoProperty(IPropertySymbol property) { return IsAutoProperty(property, out _); }
+		protected bool IsAutoProperty(IPropertySymbol property, out IFieldSymbol field)
 		{
-			return property.GetMethod == null && property.SetMethod == null;
+			var members = property.ContainingType.GetMembers();
+			field = (IFieldSymbol)members.FirstOrDefault(x => x.Kind == SymbolKind.Field && ((IFieldSymbol)x).AssociatedSymbol == property);
+			return field != null;
 		}
 
 		protected bool IsEmptyType(ITypeSymbol type, bool staticsDontCount = true)
