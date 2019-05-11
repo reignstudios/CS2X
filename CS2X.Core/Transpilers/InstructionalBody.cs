@@ -12,13 +12,15 @@ namespace CS2X.Core.Transpilers
 	{
 		public class Local
 		{
+			public readonly BlockSyntax block;
 			public readonly VariableDeclaratorSyntax variable;
 			public readonly ILocalSymbol local;
 			public readonly ITypeSymbol type;
 			public readonly string name;
 
-			public Local(VariableDeclaratorSyntax variable, ILocalSymbol local, ITypeSymbol type, string name)
+			public Local(BlockSyntax block, VariableDeclaratorSyntax variable, ILocalSymbol local, ITypeSymbol type, string name)
 			{
+				this.block = block;
 				this.variable = variable;
 				this.local = local;
 				this.type = type;

@@ -118,6 +118,7 @@ namespace CS2X.Core.Transpilers
 		private IMethodSymbol method;// active method
 		private SemanticModel semanticModel;// active semantic model for a method
 		private StreamWriterEx writer, stringLiteralWriter;
+		private BlockSyntax block;// active body block
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
 
@@ -643,15 +644,49 @@ namespace CS2X.Core.Transpilers
 		#region Method Body / Syntax Instructions
 		private void WriteBody(BlockSyntax body)
 		{
+			var origBlock = block;
+			block = body;
 			foreach (var statement in body.Statements)
 			{
 				WriteStatment(statement);
 			}
+			block = origBlock;
 		}
 
 		private void WriteStatment(StatementSyntax statement)
 		{
-			if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
+			if (statement is BlockSyntax)
+			{
+				writer.WriteLinePrefix('{');
+				writer.AddTab();
+				using (var stream = new MemoryStream())
+				using (var subInstructionalBody = new InstructionalBody(stream, writer))
+				{
+					subInstructionalBody.locals.AddRange(instructionalBody.locals);// copy parent block locals
+					var origWriter = writer;
+					var origInstructionalBody = instructionalBody;
+					writer = subInstructionalBody;
+					instructionalBody = subInstructionalBody;
+
+					// write body
+					WriteBody((BlockSyntax)statement);
+
+					// write define locals
+					writer = origWriter;
+					instructionalBody = origInstructionalBody;
+					foreach (var local in subInstructionalBody.locals)
+					{
+						if (local.block == (BlockSyntax)statement)// only write locals part of this block
+						{
+							writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
+						}
+					}
+				}
+				writer.RemoveTab();
+				writer.WriteLinePrefix('}');
+				return;// return so we don't write line end
+			}
+			else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
 			else if (statement is ExpressionStatementSyntax) ExpressionStatement((ExpressionStatementSyntax)statement);
 			else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
 			else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
@@ -679,7 +714,7 @@ namespace CS2X.Core.Transpilers
 			foreach (var variable in statement.Declaration.Variables)
 			{
 				var localSymbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(variable);
-				var local = new InstructionalBody.Local(variable, localSymbol, typeInfo.Type, $"l_{variable.Identifier.ValueText}_{instructionalBody.locals.Count}");
+				var local = new InstructionalBody.Local(block, variable, localSymbol, typeInfo.Type, $"l_{variable.Identifier.ValueText}_{instructionalBody.locals.Count}");
 				instructionalBody.locals.Add(local);
 				if (variable.Initializer != null)
 				{
@@ -727,6 +762,11 @@ namespace CS2X.Core.Transpilers
 			{
 				var accessExpression = (MemberAccessExpressionSyntax)expression;
 				expression = accessExpression.Expression;
+			}
+			else if (expression is IdentifierNameSyntax && expression.Parent is MemberAccessExpressionSyntax)
+			{
+				WriteCaller((MemberAccessExpressionSyntax)expression.Parent);
+				return;
 			}
 			else
 			{
@@ -808,20 +848,46 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IFieldSymbol)
 			{
 				var field = (IFieldSymbol)symbolInfo.Symbol;
-				if (!field.IsStatic) writer.Write($"self->{GetFieldFullName(field)}");
-				else writer.Write(GetFieldFullName(field));
+				if (!field.IsStatic)
+				{
+					WriteCaller(expression);
+					writer.Write("->");
+					writer.Write(GetFieldFullName(field));
+				}
+				else
+				{
+					writer.Write(GetFieldFullName(field));
+				}
 			}
 			else if (symbolInfo.Symbol is IPropertySymbol)
 			{
 				var property = (IPropertySymbol)symbolInfo.Symbol;
 				if (IsAutoProperty(property, out var field))
 				{
-					writer.Write(GetFieldFullName(field));
+					if (!property.IsStatic)
+					{
+						WriteCaller(expression);
+						writer.Write("->");
+						writer.Write(GetFieldFullName(field));
+					}
+					else
+					{
+						writer.Write(GetFieldFullName(field));
+					}
 				}
 				else
 				{
-					if (!property.IsStatic) writer.Write($"{GetMethodFullName(property.GetMethod)}(self)");
-					else writer.Write($"{GetMethodFullName(property.GetMethod)}()");
+					if (!property.IsStatic)
+					{
+						writer.Write(GetMethodFullName(property.GetMethod));
+						writer.Write('(');
+						WriteCaller(expression);
+						writer.Write(')');
+					}
+					else
+					{
+						writer.Write($"{GetMethodFullName(property.GetMethod)}()");
+					}
 				}
 			}
 			else if (symbolInfo.Symbol is IMethodSymbol)
@@ -851,7 +917,7 @@ namespace CS2X.Core.Transpilers
 
 		private void MemberAccessExpression(MemberAccessExpressionSyntax expression)
 		{
-			var symbolInfo = semanticModel.GetSymbolInfo(expression.Expression);
+			//var symbolInfo = semanticModel.GetSymbolInfo(expression.Expression);
 			var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
 			if (nameSymbolInfo.Symbol is IMethodSymbol)
 			{
@@ -859,60 +925,15 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (nameSymbolInfo.Symbol is IPropertySymbol)
 			{
-				var property = (IPropertySymbol)nameSymbolInfo.Symbol;
-				if (!IsAutoProperty(property))
-				{
-					WriteExpression(expression.Name);
-				}
-				else
-				{
-					bool isStaticTypeAccess = symbolInfo.Symbol is ITypeSymbol && symbolInfo.Symbol.IsStatic;
-					WriteExpression(expression.Expression);
-				}
-			}
-			/*else if (expression.Expression is IdentifierNameSyntax)
-			{
-				var e = (IdentifierNameSyntax)expression.Expression;
-				//var symbolInfo = semanticModel.GetSymbolInfo(e);
-				bool isStaticTypeAccess = symbolInfo.Symbol is ITypeSymbol && symbolInfo.Symbol.IsStatic;
-
-				//var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
-				//if (nameSymbolInfo.Symbol is IPropertySymbol)
-				//{
-				//	var property = (IPropertySymbol)nameSymbolInfo.Symbol;
-				//	if (!IsAutoProperty(property))
-				//	{
-				//		writer.Write($"{GetMethodFullName(property.GetMethod)}(");
-				//		if (!isStaticTypeAccess)
-				//		{
-				//			WriteCaller(expression);
-				//		}
-				//		writer.Write(')');
-				//		return;
-				//	}
-				//}
-
-				if (!isStaticTypeAccess) WriteExpression(expression.Expression);
-
-				ITypeSymbol type;
-				if (symbolInfo.Symbol is ITypeSymbol) type = (ITypeSymbol)symbolInfo.Symbol;
-				else if (symbolInfo.Symbol is ILocalSymbol) type = ((ILocalSymbol)symbolInfo.Symbol).Type;
-				else if (symbolInfo.Symbol is IParameterSymbol) type = ((IParameterSymbol)symbolInfo.Symbol).Type;
-				else if (symbolInfo.Symbol is IFieldSymbol) type = ((IFieldSymbol)symbolInfo.Symbol).Type;
-				//else if (symbolInfo.Symbol is IPropertySymbol) type = ((IPropertySymbol)symbolInfo.Symbol).Type;// TODO: validate how this should work
-				else throw new NotSupportedException("Unsupported member access symbol: " + symbolInfo.Symbol.GetType());
-
-				if (!isStaticTypeAccess)
-				{
-					if (type.IsReferenceType) writer.Write("->");
-					else writer.Write('.');
-				}
 				WriteExpression(expression.Name);
-			}*/
+			}
+			else if (nameSymbolInfo.Symbol is IFieldSymbol)
+			{
+				WriteExpression(expression.Name);
+			}
 			else
 			{
 				throw new NotSupportedException("Unsupported MemberAccessExpression: " + expression.ToString());
-				//WriteExpression(expression.Name);
 			}
 		}
 

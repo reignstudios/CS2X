@@ -18,9 +18,16 @@ namespace PortableTestApp
 		public static int MyPropStatic { get; private set; }
 		private static string value;
 
-		void Foo()
+		void Foo(Program p)
 		{
 			MyProp = 123;
+			int i2 = 55;
+			{
+				var i = p.abcStatic + i2;
+			}
+			{
+				var i = p.abcStatic + i2;
+			}
 		}
 
 		static void Main(string[] args)
