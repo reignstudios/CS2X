@@ -12,29 +12,54 @@ namespace PortableTestApp
 
 	class Program
 	{
-		public static int abc;
-		public int abcStatic;
-		public int MyProp { get; private set; }
-		public static int MyPropStatic { get; private set; }
+		public int abc;
+		public static int abcStatic;
+
+		public int MyAutoProp { get; private set; }
+		public static int MyAutoPropStatic { get; private set; }
+
+		private int _MyProp;
+		public int MyProp
+		{
+			get { return _MyProp; }
+			set { _MyProp = value; }
+		}
+
+		private static int _MyPropStatic;
+		public static int MyPropStatic
+		{
+			get { return _MyPropStatic; }
+			set { _MyPropStatic = value; }
+		}
+
 		private static string value;
+
+		void Foo2()
+		{
+			MyProp = 123;
+			int i = MyProp;
+
+			MyPropStatic = 321;
+			int i2 = MyPropStatic;
+		}
 
 		void Foo(Program p)
 		{
-			MyProp = 123;
+			MyAutoProp = 123;
 			int i2 = 55;
 			{
-				var i = p.abcStatic + i2;
+				var i = abc + i2;
 			}
 			{
-				var i = p.abcStatic + i2;
+				var i = i2 + p.abc;
 			}
 		}
 
 		static void Main(string[] args)
 		{
-			//MyPropStatic = 0;
+			Program.MyAutoPropStatic = 0;
 			var v = "Hello World!";
-			v = MyPropStatic.ToString();
+			v = MyAutoPropStatic.ToString();
 			v = GetValue(v.GetType().ToString());
 			//Console.WriteLine("Hello World!" + value);
 		}

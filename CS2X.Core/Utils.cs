@@ -61,6 +61,11 @@ namespace CS2X.Core
 	{
 		public bool enabled { get; private set; }
 
+		public Enabler(bool enabled)
+		{
+			this.enabled = enabled;
+		}
+
 		public Enabler Enable()
 		{
 			enabled = true;

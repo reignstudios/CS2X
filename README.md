@@ -20,7 +20,9 @@ This project will focus on transpiling a C# subset for writing CPU and GPU progr
 * javaScript
 * Python
 * Java
+* Kotlin
 * ActionScript
+* Custom: Plugin system
 
 ### GPU targets
 * HLSL (DirectX Shader Assembly Language) [D3D9.0c +]
@@ -31,12 +33,21 @@ This project will focus on transpiling a C# subset for writing CPU and GPU progr
 * PSSL (PlayStation Shader Language) [PS4]
 * MSL (Metal Shading Language) [macOS / iOS]
 * AGAL (Adobe Pixel Bender and Adobe Graphics Assembly Language)
+* Custom: Plugin system
 
 ## Primary Project libraries
 * CS2X.Core: .NET transpiler lib
 * CS2X.CLI: CLI interface for CS2X.Core
 * CS2X.Analyzer: C# syntax analyzer to limit unsuported features.
 * CS2X.CoreLib: Portable CoreLib subset
+
+## How does it basically work?
+* C89
+	* All '.dll' files get built to a '.h' header file and '.exe' gets built to a '.c' source file.
+	* String literals accross all binaries get merged into a '_StringLiterals.h' file.
+	* String literals embedded devices, cartridges, etc can be stored in program memory / ROM to save ram.
+	* All GC methods are prefixed as 'CS2X_GC_' allowing any built-in or custom GC backend.
+* Other: TODO
 
 ## Building
 * Prerequisites

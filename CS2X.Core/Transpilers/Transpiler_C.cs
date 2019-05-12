@@ -917,7 +917,7 @@ namespace CS2X.Core.Transpilers
 
 		private void MemberAccessExpression(MemberAccessExpressionSyntax expression)
 		{
-			//var symbolInfo = semanticModel.GetSymbolInfo(expression.Expression);
+			// expression.Expression is the caller and will be writen from the WriteCaller method
 			var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
 			if (nameSymbolInfo.Symbol is IMethodSymbol)
 			{
@@ -949,6 +949,27 @@ namespace CS2X.Core.Transpilers
 
 		private void AssignmentExpression(AssignmentExpressionSyntax expression)
 		{
+			// check if special property assignment is needed
+			if (expression.Left is IdentifierNameSyntax)
+			{
+				var symbolInfo = semanticModel.GetSymbolInfo(expression.Left);
+				var property = symbolInfo.Symbol as IPropertySymbol;
+				if (property != null && !IsAutoProperty(property))
+				{
+					writer.Write(GetMethodFullName(property.SetMethod));
+					writer.Write('(');
+					if (!property.IsStatic)
+					{
+						WriteCaller(expression.Left);
+						writer.Write(", ");
+					}
+					WriteExpression(expression.Right);
+					writer.Write(')');
+					return;
+				}
+			}
+
+			// normal assignment
 			WriteExpression(expression.Left);
 			writer.Write(" = ");
 			WriteExpression(expression.Right);
@@ -1116,7 +1137,7 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		private Enabler allowTypePrefix = new Enabler();
+		private Enabler allowTypePrefix = new Enabler(true);
 		protected override string GetTypeFullName(ITypeSymbol type)
 		{
 			if (IsPrimitiveType(type))
