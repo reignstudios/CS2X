@@ -10,7 +10,25 @@ namespace PortableTestApp
 		}
 	}
 
-	class Program
+	/*interface MyInterface
+	{
+		void MyVirtMethod();
+	}
+
+	abstract class MyAbstractClass : MyInterface
+	{
+		public abstract void MyVirtMethod();
+	}
+
+	class MyBaseClass : MyAbstractClass
+	{
+		public override void MyVirtMethod()
+		{
+			Console.WriteLine("MyBaseClass");
+		}
+	}*/
+
+	class Program// : MyBaseClass
 	{
 		public int abc;
 		public static int abcStatic;
@@ -33,6 +51,12 @@ namespace PortableTestApp
 		}
 
 		private static string value;
+
+		/*public override void MyVirtMethod()
+		{
+			Console.WriteLine("Program");
+			base.MyVirtMethod();
+		}*/
 
 		void Foo2()
 		{
@@ -61,7 +85,7 @@ namespace PortableTestApp
 			var v = "Hello World!";
 			v = MyAutoPropStatic.ToString();
 			v = GetValue(v.GetType().ToString());
-			//Console.WriteLine("Hello World!" + value);
+			Console.WriteLine("Hello World!" + value);
 		}
 
 		static string GetValue(object o)

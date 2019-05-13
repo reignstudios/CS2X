@@ -745,6 +745,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is IdentifierNameSyntax) WriteIdentifierName((IdentifierNameSyntax)expression);
 			else if (expression is MemberAccessExpressionSyntax) MemberAccessExpression((MemberAccessExpressionSyntax)expression);
 			else if (expression is ObjectCreationExpressionSyntax) ObjectCreationExpression((ObjectCreationExpressionSyntax)expression);
+			else if (expression is StackAllocArrayCreationExpressionSyntax) StackAllocArrayCreationExpression((StackAllocArrayCreationExpressionSyntax)expression);
 			else if (expression is AssignmentExpressionSyntax) AssignmentExpression((AssignmentExpressionSyntax)expression);
 			else if (expression is PrefixUnaryExpressionSyntax) PrefixUnaryExpression((PrefixUnaryExpressionSyntax)expression);
 			else if (expression is InvocationExpressionSyntax) InvocationExpression((InvocationExpressionSyntax)expression);
@@ -752,6 +753,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is BinaryExpressionSyntax) BinaryExpression((BinaryExpressionSyntax)expression);
 			else if (expression is CastExpressionSyntax) CastExpression((CastExpressionSyntax)expression);
 			else if (expression is ThisExpressionSyntax) ThisExpression((ThisExpressionSyntax)expression);
+			else if (expression is ElementAccessExpressionSyntax) ElementAccessExpression((ElementAccessExpressionSyntax)expression);
 			else if (expression is ParenthesizedExpressionSyntax) ParenthesizedExpression((ParenthesizedExpressionSyntax)expression);
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
@@ -947,6 +949,14 @@ namespace CS2X.Core.Transpilers
 			writer.Write(')');
 		}
 
+		private void StackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax expression)
+		{
+			var typeInfo = semanticModel.GetTypeInfo(expression.Type);
+			if (!(typeInfo.Type is IPointerTypeSymbol)) throw new NotImplementedException("stackalloc is not pointer type");
+			var ptrType = (IPointerTypeSymbol)typeInfo.Type;
+			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}))");
+		}
+
 		private void AssignmentExpression(AssignmentExpressionSyntax expression)
 		{
 			// check if special property assignment is needed
@@ -1098,6 +1108,13 @@ namespace CS2X.Core.Transpilers
 		private void ThisExpression(ThisExpressionSyntax expression)
 		{
 			writer.Write("self");
+		}
+
+		private void ElementAccessExpression(ElementAccessExpressionSyntax expression)
+		{
+			writer.Write('[');
+			WriteExpression(expression.Expression);
+			writer.Write(']');
 		}
 
 		private void ParenthesizedExpression(ParenthesizedExpressionSyntax expression)
