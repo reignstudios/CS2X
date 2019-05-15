@@ -198,6 +198,52 @@ namespace CS2X.Core.Transpilers
 			return index;
 		}
 
+		protected int GetVirtualMethodOverloadIndex(IMethodSymbol method)
+		{
+			if (!method.IsVirtual) throw new Exception("Method must be virtual: " + method.FullName());
+			if (method.OverriddenMethod != null)
+			{
+				return GetVirtualMethodOverloadIndex(method.OverriddenMethod);
+			}
+			else
+			{
+				bool found = false;
+				int index = 0;
+				foreach (var member in method.ContainingType.GetMembers())
+				{
+					var memberMethod = member as IMethodSymbol;
+					if (memberMethod == null) continue;
+					if (method == memberMethod)
+					{
+						found = true;
+						break;
+					}
+					if (method.Name == memberMethod.Name) ++index;
+				}
+
+				if (!found) throw new Exception("Failed to find virtual method index (this should never happen)");
+				return index;
+			}
+		}
+
+		protected List<IMethodSymbol> GetOrderedVirtualMethods(INamedTypeSymbol type)//, bool ignoreSystemObjectVirtuals)
+		{
+			var virtualMethodList = new List<IMethodSymbol>();
+			var baseType = type.BaseType;
+			do
+			{
+				//if (ignoreSystemObjectVirtuals && baseType.ContainingNamespace != null && baseType.ContainingNamespace.Name == "System" && baseType.Name == "Object") break;
+				foreach (IMethodSymbol method in baseType.GetMembers().Where(x => x.Kind == SymbolKind.Method).Reverse())
+				{
+					if (!method.IsVirtual || method.IsOverride) continue;
+					virtualMethodList.Add(method);
+				}
+				baseType = baseType.BaseType;
+			} while (baseType != null);
+
+			return virtualMethodList;
+		}
+
 		protected bool IsInternalCall(IMethodSymbol method)
 		{
 			foreach (var a in method.GetAttributes())

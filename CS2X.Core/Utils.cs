@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -81,6 +82,32 @@ namespace CS2X.Core
 		public void Dispose()
 		{
 			enabled = !enabled;
+		}
+	}
+
+	static class ISymbolExt
+	{
+		public static string FullName(this ISymbol symbol)
+		{
+			var fullName = new StringBuilder(symbol.Name);
+			while (symbol != null)
+			{
+				if (symbol.ContainingType != null)
+				{
+					symbol = symbol.ContainingType;
+					fullName.Insert(0, symbol.Name + '.');
+				}
+				else if (symbol.ContainingNamespace != null)
+				{
+					symbol = symbol.ContainingNamespace;
+					fullName.Insert(0, symbol.Name + '.');
+				}
+				else
+				{
+					symbol = null;
+				}
+			}
+			return fullName.ToString();
 		}
 	}
 }

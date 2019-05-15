@@ -246,11 +246,25 @@ namespace CS2X.Core.Transpilers
 			// forward declare types
 			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Torward declare Types */");
+			writer.WriteLine("/* Forward declare Types */");
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes) WriteType(type, false);
 
-			// forward declare types
+			// type definitions
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Type definitions */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var type in project.allTypes) WriteType(type, true);
+
+			// runtime type definitions
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Runtime Types */");
+			writer.WriteLine("/* =============================== */");
+			var runtimeType = project.compilation.GetTypeByMetadataName("System.RuntimeType");
+			foreach (var type in project.allTypes) WriteRuntimeType(type, runtimeType);
+
+			// forward declare methods
 			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Forward decalre Methods */");
@@ -264,14 +278,7 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			// types
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Type definitions */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes) WriteType(type, true);
-
-			// methods
+			// method definitions
 			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Method definitions */");
@@ -325,6 +332,27 @@ namespace CS2X.Core.Transpilers
 		#endregion
 
 		#region Type Writers
+		private void WriteRuntimeType(INamedTypeSymbol type, INamedTypeSymbol runtimeType)
+		{
+			if (type.SpecialType == SpecialType.System_Void) return;
+
+			string runtimeTypeName = GetRuntimeTypeFullName(type);
+			writer.WriteLine($"typedef struct {runtimeTypeName}");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)} runtimeType;");
+			var virtualMethods = GetOrderedVirtualMethods(type);
+			foreach (var method in virtualMethods)
+			{
+				int vTableIndex = GetVirtualMethodOverloadIndex(method);
+				string methodName = method.Name;
+				ParseImplementationDetail(ref methodName);
+				writer.WriteLinePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*vTabel_{methodName}_{vTableIndex})();");
+			}
+			writer.RemoveTab();
+			writer.WriteLine($"}} {runtimeTypeName};");
+		}
+
 		private void WriteType(INamedTypeSymbol type, bool writeBody)
 		{
 			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return;
@@ -1152,6 +1180,11 @@ namespace CS2X.Core.Transpilers
 				case SpecialType.System_UIntPtr: return "uintptr_t";
 				default: throw new NotImplementedException("Unsupported primitive: " + type.SpecialType);
 			}
+		}
+
+		private string GetRuntimeTypeFullName(ITypeSymbol type)
+		{
+			return GetTypeFullName(type) + "_RTTYPE";
 		}
 
 		private Enabler allowTypePrefix = new Enabler(true);
