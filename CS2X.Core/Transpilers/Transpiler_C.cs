@@ -255,17 +255,22 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Type definitions */");
 			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes) WriteType(type, true);
+			foreach (var type in project.allTypes)
+			{
+				if (WriteType(type, true)) writer.WriteLine();
+			}
 
 			// runtime type definitions
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Runtime Types */");
 			writer.WriteLine("/* =============================== */");
 			var runtimeType = project.compilation.GetTypeByMetadataName("System.RuntimeType");
-			foreach (var type in project.allTypes) WriteRuntimeType(type, runtimeType);
+			foreach (var type in project.allTypes)
+			{
+				if (WriteRuntimeType(type, runtimeType)) writer.WriteLine();
+			}
 
 			// forward declare methods
-			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Forward decalre Methods */");
 			writer.WriteLine("/* =============================== */");
@@ -288,9 +293,22 @@ namespace CS2X.Core.Transpilers
 				if (type.TypeKind == TypeKind.Interface) continue;
 				foreach (var method in type.GetMembers())
 				{
-					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
+					if (method is IMethodSymbol && WriteMethod((IMethodSymbol)method, true)) writer.WriteLine();
 				}
 			}
+
+			// entry point
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Entry Point */");
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("int main()");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix("CS2X_GC_Init();");
+
+			writer.WriteLinePrefix("CS2X_GC_Collect();");
+			writer.RemoveTab();
+			writer.WriteLine('}');
 		}
 
 		private int GetStringMemorySize(string value)
@@ -312,8 +330,8 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			// write System.Object header
-			WriteBinary(new byte[(int)options.ptrSize]);
+			// write runtime type header
+			for (int i = 0; i != (int)options.ptrSize; ++i) result.Append("0,");
 
 			// write string length
 			WriteBinary(BitConverter.GetBytes(value.Length));
@@ -332,9 +350,9 @@ namespace CS2X.Core.Transpilers
 		#endregion
 
 		#region Type Writers
-		private void WriteRuntimeType(INamedTypeSymbol type, INamedTypeSymbol runtimeType)
+		private bool WriteRuntimeType(INamedTypeSymbol type, INamedTypeSymbol runtimeType)
 		{
-			if (type.SpecialType == SpecialType.System_Void) return;
+			if (type.SpecialType == SpecialType.System_Void) return false;
 
 			string runtimeTypeName = GetRuntimeTypeFullName(type);
 			writer.WriteLine($"typedef struct {runtimeTypeName}");
@@ -344,6 +362,7 @@ namespace CS2X.Core.Transpilers
 			var virtualMethods = GetOrderedVirtualMethods(type);
 			foreach (var method in virtualMethods)
 			{
+				if (method.IsStatic) throw new NotSupportedException("Virtual static method not supported: " + method.Name);
 				int vTableIndex = GetVirtualMethodOverloadIndex(method);
 				string methodName = method.Name;
 				ParseImplementationDetail(ref methodName);
@@ -351,11 +370,23 @@ namespace CS2X.Core.Transpilers
 			}
 			writer.RemoveTab();
 			writer.WriteLine($"}} {runtimeTypeName};");
+			writer.WriteLine($"{runtimeTypeName} {GetRuntimeTypeObjFullName(type)};");
+
+			writer.Write($"int8_t {GetRuntimeTypeMetadataFullName(type)}_Name[{GetStringMemorySize(type.Name)}] = ");
+			writer.Write(StringToLiteral(type.Name));
+			writer.WriteLine(';');
+
+			string fullName = type.FullName();
+			writer.Write($"int8_t {GetRuntimeTypeMetadataFullName(type)}_FullName[{GetStringMemorySize(fullName)}] = ");
+			writer.Write(StringToLiteral(fullName));
+			writer.WriteLine(';');
+
+			return true;
 		}
 
-		private void WriteType(INamedTypeSymbol type, bool writeBody)
+		private bool WriteType(INamedTypeSymbol type, bool writeBody)
 		{
-			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return;
+			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return false;
 
 			if (!writeBody)
 			{
@@ -384,7 +415,8 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (type.TypeKind == TypeKind.Enum) 
 			{
-				foreach (var member in type.GetMembers())
+				var members = type.GetMembers();
+				foreach (var member in members)
 				{
 					if (!member.IsStatic) continue;
 					if (member is IFieldSymbol)
@@ -393,7 +425,7 @@ namespace CS2X.Core.Transpilers
 						writer.WriteLine($"#define {GetFieldFullName(field)} {field.ConstantValue.ToString()}");
 					}
 				}
-				return;
+				return members.Length != 0;
 			}
 			else if(!IsEmptyType(type))
 			{
@@ -429,6 +461,8 @@ namespace CS2X.Core.Transpilers
 					if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
 				}
 			}
+
+			return true;
 		}
 
 		private void WriteField(IFieldSymbol field)
@@ -436,11 +470,11 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix($"{GetTypeFullNameRef(field.Type)} {GetFieldFullName(field)};");
 		}
 
-		private void WriteMethod(IMethodSymbol method, bool writeBody)
+		private bool WriteMethod(IMethodSymbol method, bool writeBody)
 		{
 			this.method = method;
-			if (method.ContainingType.SpecialType == SpecialType.System_Void) return;
-			if (method.AssociatedSymbol is IPropertySymbol && IsAutoProperty((IPropertySymbol)method.AssociatedSymbol)) return;
+			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
+			if (method.AssociatedSymbol is IPropertySymbol && IsAutoProperty((IPropertySymbol)method.AssociatedSymbol)) return false;
 
 			// skip if method is native extern
 			foreach (var attribute in method.GetAttributes())
@@ -448,7 +482,7 @@ namespace CS2X.Core.Transpilers
 				var type = attribute.AttributeClass;
 				if (type.ContainingNamespace.Name == "CS2X" && type.Name == "NativeExternAttribute")
 				{
-					return;
+					return false;
 				}
 			}
 
@@ -656,6 +690,8 @@ namespace CS2X.Core.Transpilers
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}
+
+			return true;
 		}
 		
 		private void WriteParameters(ImmutableArray<IParameterSymbol> parameters)
@@ -1185,6 +1221,16 @@ namespace CS2X.Core.Transpilers
 		private string GetRuntimeTypeFullName(ITypeSymbol type)
 		{
 			return GetTypeFullName(type) + "_RTTYPE";
+		}
+
+		private string GetRuntimeTypeObjFullName(ITypeSymbol type)
+		{
+			return GetRuntimeTypeFullName(type) + "_OBJ";
+		}
+
+		private string GetRuntimeTypeMetadataFullName(ITypeSymbol type)
+		{
+			return GetRuntimeTypeFullName(type) + "_RTTYPE_METADATA";
 		}
 
 		private Enabler allowTypePrefix = new Enabler(true);
