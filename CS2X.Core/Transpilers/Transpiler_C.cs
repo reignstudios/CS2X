@@ -203,6 +203,8 @@ namespace CS2X.Core.Transpilers
 		private void WriteProject(Project project)
 		{
 			this.project = project;
+			var runtimeType = project.compilation.GetTypeByMetadataName("System.RuntimeType");
+			var stringType = project.compilation.GetSpecialType(SpecialType.System_String);
 
 			// writer info
 			WriteHeaderInfo(writer);
@@ -248,7 +250,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Forward declare Types */");
 			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes) WriteType(type, false);
+			foreach (var type in project.allTypes) WriteType(type, runtimeType, false);
 
 			// type definitions
 			writer.WriteLine();
@@ -257,14 +259,13 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes)
 			{
-				if (WriteType(type, true)) writer.WriteLine();
+				if (WriteType(type, runtimeType, true)) writer.WriteLine();
 			}
 
 			// runtime type definitions
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Runtime Types */");
 			writer.WriteLine("/* =============================== */");
-			var runtimeType = project.compilation.GetTypeByMetadataName("System.RuntimeType");
 			foreach (var type in project.allTypes)
 			{
 				if (WriteRuntimeType(type, runtimeType)) writer.WriteLine();
@@ -297,7 +298,71 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
+			// init library
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Init Library */");
+			writer.WriteLine("/* =============================== */");
+			string assemblyName = project.roslynProject.AssemblyName;
+			ParseImplementationDetail(ref assemblyName);
+			writer.WriteLine($"void CS2X_InitLib_{assemblyName}()");
+			writer.WriteLine('{');
+			writer.AddTab();
+
+			if (project.references.Count != 0)
+			{
+				writer.WriteLinePrefix("/* Init references */");
+				foreach (var reference in project.references)
+				{
+					string refAssemblyName = reference.roslynProject.AssemblyName;
+					ParseImplementationDetail(ref refAssemblyName);
+					writer.WriteLinePrefix($"CS2X_InitLib_{refAssemblyName}();");
+				}
+				writer.WriteLine();
+			}
+
+			writer.WriteLinePrefix("/* Init runtime type objects */");
+			foreach (var type in project.allTypes)
+			{
+				string obj = GetRuntimeTypeObjFullName(type);
+				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
+				writer.WriteLinePrefix($"{obj}.runtimeType.CS2X_RuntimeType = &{obj};");
+			}
+
+			writer.WriteLine();
+			writer.WriteLinePrefix("/* Init runtime type metadata / string literals */");
+			string stringTypeName = GetTypeFullNameRef(stringType);
+			var stringRuntimeType = GetRuntimeTypeObjFullName(stringType);
+			foreach (var type in project.allTypes)
+			{
+				string metadata = GetRuntimeTypeMetadataFullName(type);
+				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeType};");
+				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_FullName)->CS2X_RuntimeType = &{stringRuntimeType};");
+			}
+
+			writer.WriteLine();
+			writer.WriteLinePrefix("/* Init runtime type vtabel */");
+			foreach (var type in project.allTypes)
+			{
+				// TODO
+			}
+
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
+			// init string literals
+			writer.WriteLine();
+			writer.WriteLine("void CS2X_InitStringLiterals()");
+			writer.WriteLine('{');
+			writer.AddTab();
+			foreach (var literal in stringLiterals)
+			{
+				writer.WriteLinePrefix($"(({stringTypeName}){literal.Value})->CS2X_RuntimeType = &{stringRuntimeType};");
+			}
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
 			// entry point
+			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Entry Point */");
 			writer.WriteLine("/* =============================== */");
@@ -305,8 +370,10 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine('{');
 			writer.AddTab();
 			writer.WriteLinePrefix("CS2X_GC_Init();");
-
+			writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
+			writer.WriteLinePrefix("CS2X_InitStringLiterals();");
 			writer.WriteLinePrefix("CS2X_GC_Collect();");
+			writer.WriteLinePrefix("return 0;");
 			writer.RemoveTab();
 			writer.WriteLine('}');
 		}
@@ -384,7 +451,7 @@ namespace CS2X.Core.Transpilers
 			return true;
 		}
 
-		private bool WriteType(INamedTypeSymbol type, bool writeBody)
+		private bool WriteType(INamedTypeSymbol type, INamedTypeSymbol runtimeType, bool writeBody)
 		{
 			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return false;
 
@@ -400,17 +467,18 @@ namespace CS2X.Core.Transpilers
 				}
 				else
 				{
-					if (IsEmptyType(type))
+					if (type.IsReferenceType || !IsEmptyType(type))
+					{
+						writer.WriteLine(string.Format("typedef struct {0} {0};", GetTypeFullName(type)));
+					}
+					else
 					{
 						string ptr;
 						if (type.IsValueType) ptr = "*";
 						else ptr = string.Empty;
 						writer.WriteLine($"typedef void{ptr} {GetTypeFullName(type)};");
 					}
-					else
-					{
-						writer.WriteLine(string.Format("typedef struct {0} {0};", GetTypeFullName(type)));
-					}
+					
 				}
 			}
 			else if (type.TypeKind == TypeKind.Enum) 
@@ -427,7 +495,7 @@ namespace CS2X.Core.Transpilers
 				}
 				return members.Length != 0;
 			}
-			else if(!IsEmptyType(type))
+			else if(type.IsReferenceType || !IsEmptyType(type))
 			{
 				// get all types that should write non-static fields
 				var fieldTypeList = new List<INamedTypeSymbol>();
@@ -443,6 +511,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"struct {GetTypeFullName(type)}");
 				writer.WriteLine('{');
 				writer.AddTab();
+				if (type.IsReferenceType) writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)}* CS2X_RuntimeType;");
 				foreach (var subType in fieldTypeList)
 				{
 					foreach (var member in subType.GetMembers())
