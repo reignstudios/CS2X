@@ -45,8 +45,8 @@ This project will focus on transpiling a C# subset for writing CPU and GPU progr
 * C89
 	* All '.dll' files get built to a '.h' header file and '.exe' gets built to a '.c' source file.
 	* String literals accross all binaries get merged into a '_StringLiterals.h' file.
-	* String literals embedded devices, cartridges, etc can be stored in program memory / ROM to save ram.
-	* All GC methods are prefixed as 'CS2X_GC_' allowing any built-in or custom GC backend.
+	* String literals on embedded devices, cartridges, etc can be stored in program memory / ROM to save ram.
+	* All GC methods are agnostic allowing any built-in or custom GC backend.
 * Other: TODO
 
 ## Building
