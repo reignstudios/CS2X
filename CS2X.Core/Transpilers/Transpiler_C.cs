@@ -343,7 +343,13 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix("/* Init runtime type vtabel */");
 			foreach (var type in project.allTypes)
 			{
-				// TODO
+				string obj = GetRuntimeTypeObjFullName(type);
+				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
+				foreach (var method in orderedVirtualMethods)
+				{
+					var highestMethod = FindHighestVirtualMethodSlot(type, method);
+					writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
+				}
 			}
 
 			writer.RemoveTab();
@@ -430,10 +436,7 @@ namespace CS2X.Core.Transpilers
 			foreach (var method in virtualMethods)
 			{
 				if (method.IsStatic) throw new NotSupportedException("Virtual static method not supported: " + method.Name);
-				int vTableIndex = GetVirtualMethodOverloadIndex(method);
-				string methodName = method.Name;
-				ParseImplementationDetail(ref methodName);
-				writer.WriteLinePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*vTabel_{methodName}_{vTableIndex})();");
+				writer.WriteLinePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetVTableMethodFullName(method)})();");
 			}
 			writer.RemoveTab();
 			writer.WriteLine($"}} {runtimeTypeName};");
@@ -1383,6 +1386,15 @@ namespace CS2X.Core.Transpilers
 			{
 				return $"m_{GetTypeFullName(method.ContainingType)}_{base.GetMethodFullName(method)}_{GetMethodOverloadIndex(method)}";
 			}
+		}
+
+		private string GetVTableMethodFullName(IMethodSymbol method)
+		{
+			if (!method.IsVirtual) throw new NotSupportedException("Non virtual method has no vtable method name: " + method.FullName());
+			int vTableIndex = GetVirtualMethodOverloadIndex(method);
+			string methodName = method.Name;
+			ParseImplementationDetail(ref methodName);
+			return $"vTable_{methodName}_{vTableIndex}";
 		}
 
 		protected override string GetContainingTypeDelimiter()

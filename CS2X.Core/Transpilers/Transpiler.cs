@@ -244,6 +244,24 @@ namespace CS2X.Core.Transpilers
 			return virtualMethodList;
 		}
 
+		protected IMethodSymbol FindHighestVirtualMethodSlot(INamedTypeSymbol type, IMethodSymbol rootSlotMethod)
+		{
+			var baseType = type;
+			do
+			{
+				foreach (var member in baseType.GetMembers())
+				{
+					if (member.Kind != SymbolKind.Method || !member.IsVirtual) continue;
+					var method = (IMethodSymbol)member;
+					if (method == rootSlotMethod || method.OverriddenMethod == rootSlotMethod) return method;
+				}
+
+				baseType = baseType.BaseType;
+			} while (baseType != null);
+
+			throw new Exception("Failed to find highest virtual method slot (this should never happen)");
+		}
+
 		protected bool IsInternalCall(IMethodSymbol method)
 		{
 			foreach (var a in method.GetAttributes())
