@@ -200,7 +200,7 @@ namespace CS2X.Core.Transpilers
 
 		protected int GetVirtualMethodOverloadIndex(IMethodSymbol method)
 		{
-			if (!method.IsVirtual) throw new Exception("Method must be virtual: " + method.FullName());
+			if (!method.IsVirtual && !method.IsAbstract) throw new Exception("Method must be virtual: " + method.FullName());
 			if (method.OverriddenMethod != null)
 			{
 				return GetVirtualMethodOverloadIndex(method.OverriddenMethod);
@@ -226,17 +226,16 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		protected List<IMethodSymbol> GetOrderedVirtualMethods(INamedTypeSymbol type)//, bool ignoreSystemObjectVirtuals)
+		protected List<IMethodSymbol> GetOrderedVirtualMethods(INamedTypeSymbol type)
 		{
 			var virtualMethodList = new List<IMethodSymbol>();
-			var baseType = type.BaseType;
+			var baseType = type;
 			do
 			{
-				//if (ignoreSystemObjectVirtuals && baseType.ContainingNamespace != null && baseType.ContainingNamespace.Name == "System" && baseType.Name == "Object") break;
 				foreach (IMethodSymbol method in baseType.GetMembers().Where(x => x.Kind == SymbolKind.Method).Reverse())
 				{
-					if (!method.IsVirtual || method.IsOverride) continue;
-					virtualMethodList.Add(method);
+					if ((!method.IsVirtual && !method.IsAbstract) || method.IsOverride) continue;
+					virtualMethodList.Insert(0, method);
 				}
 				baseType = baseType.BaseType;
 			} while (baseType != null);
@@ -251,11 +250,10 @@ namespace CS2X.Core.Transpilers
 			{
 				foreach (var member in baseType.GetMembers())
 				{
-					if (member.Kind != SymbolKind.Method || !member.IsVirtual) continue;
+					if (member.Kind != SymbolKind.Method || (!member.IsVirtual && !member.IsAbstract)) continue;
 					var method = (IMethodSymbol)member;
 					if (method == rootSlotMethod || method.OverriddenMethod == rootSlotMethod) return method;
 				}
-
 				baseType = baseType.BaseType;
 			} while (baseType != null);
 

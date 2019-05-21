@@ -79,7 +79,7 @@ namespace PortableTestApp
 			}
 		}
 
-		static void Main(string[] args)
+		static void Main()//string[] args)
 		{
 			Program.MyAutoPropStatic = 0;
 			var v = "Hello World!";

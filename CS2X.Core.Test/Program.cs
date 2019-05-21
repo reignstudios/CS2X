@@ -28,8 +28,8 @@ namespace CS2X.Core.Test
 				stringLiteralMemoryLocation = Transpiler_C.StringLiteralMemoryLocation.GlobalProgramMemory_RAM
 			};
 			var transpiler = new Transpiler_C(solution, options);
-			transpiler.firstProjOnly = true;
-			transpiler.skipReferenced = true;
+			//transpiler.firstProjOnly = true;
+			//transpiler.skipReferenced = true;
 			transpiler.Transpile(Path.Combine(path, "TestOutput"));
 		}
 	}

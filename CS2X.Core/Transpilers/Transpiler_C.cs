@@ -323,6 +323,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix("/* Init runtime type objects */");
 			foreach (var type in project.allTypes)
 			{
+				if (type.SpecialType == SpecialType.System_Void) continue;
 				string obj = GetRuntimeTypeObjFullName(type);
 				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
 				writer.WriteLinePrefix($"{obj}.runtimeType.CS2X_RuntimeType = &{obj};");
@@ -334,6 +335,7 @@ namespace CS2X.Core.Transpilers
 			var stringRuntimeType = GetRuntimeTypeObjFullName(stringType);
 			foreach (var type in project.allTypes)
 			{
+				if (type.SpecialType == SpecialType.System_Void) continue;
 				string metadata = GetRuntimeTypeMetadataFullName(type);
 				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeType};");
 				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_FullName)->CS2X_RuntimeType = &{stringRuntimeType};");
@@ -343,6 +345,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix("/* Init runtime type vtabel */");
 			foreach (var type in project.allTypes)
 			{
+				if (type.SpecialType == SpecialType.System_Void) continue;
 				string obj = GetRuntimeTypeObjFullName(type);
 				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
 				foreach (var method in orderedVirtualMethods)
@@ -368,20 +371,25 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine('}');
 
 			// entry point
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Entry Point */");
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("int main()");
-			writer.WriteLine('{');
-			writer.AddTab();
-			writer.WriteLinePrefix("CS2X_GC_Init();");
-			writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
-			writer.WriteLinePrefix("CS2X_InitStringLiterals();");
-			writer.WriteLinePrefix("CS2X_GC_Collect();");
-			writer.WriteLinePrefix("return 0;");
-			writer.RemoveTab();
-			writer.WriteLine('}');
+			if (project.type == ProjectTypes.Exe)
+			{
+				writer.WriteLine();
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* Entry Point */");
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("int main()");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix("CS2X_GC_Init();");
+				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
+				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
+				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
+				writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");// TODO: add support for args
+				writer.WriteLinePrefix("CS2X_GC_Collect();");
+				writer.WriteLinePrefix("return 0;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
+			}
 		}
 
 		private int GetStringMemorySize(string value)
@@ -546,6 +554,7 @@ namespace CS2X.Core.Transpilers
 		{
 			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
+			if (method.IsAbstract) return false;
 			if (method.AssociatedSymbol is IPropertySymbol && IsAutoProperty((IPropertySymbol)method.AssociatedSymbol)) return false;
 
 			// skip if method is native extern
@@ -1031,7 +1040,16 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IMethodSymbol)
 			{
 				var method = (IMethodSymbol)symbolInfo.Symbol;
-				writer.Write($"{GetMethodFullName(method)}");
+				if (method.IsVirtual || method.IsAbstract)
+				{
+					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
+					WriteCaller(expression);
+					writer.Write($"->CS2X_RuntimeType)->{GetVTableMethodFullName(method)}");
+				}
+				else
+				{
+					writer.Write($"{GetMethodFullName(method)}");
+				}
 			}
 			else
 			{
@@ -1057,15 +1075,12 @@ namespace CS2X.Core.Transpilers
 		{
 			// expression.Expression is the caller and will be writen from the WriteCaller method
 			var nameSymbolInfo = semanticModel.GetSymbolInfo(expression.Name);
-			if (nameSymbolInfo.Symbol is IMethodSymbol)
-			{
-				WriteExpression(expression.Name);
-			}
-			else if (nameSymbolInfo.Symbol is IPropertySymbol)
-			{
-				WriteExpression(expression.Name);
-			}
-			else if (nameSymbolInfo.Symbol is IFieldSymbol)
+			if
+			(
+				nameSymbolInfo.Symbol is IMethodSymbol ||
+				nameSymbolInfo.Symbol is IPropertySymbol ||
+				nameSymbolInfo.Symbol is IFieldSymbol
+			)
 			{
 				WriteExpression(expression.Name);
 			}
@@ -1189,28 +1204,13 @@ namespace CS2X.Core.Transpilers
 						specialMethod = (IMethodSymbol)type.GetMembers().First(x => x is IMethodSymbol && x.Name == "Equals" && ((IMethodSymbol)x).Parameters.Length == 1 && ((IMethodSymbol)x).Parameters[0].Type.SpecialType == SpecialType.System_String);
 					}
 
-					if (specialMethod != null)
-					{
-						writer.Write(GetMethodFullName(specialMethod));
-						writer.Write('(');
-						//if (!leftString) writer.Write("ToString_vTableTODO(");// TODO: <<<<<<<< add ToString support for non string types
-						WriteExpression(expression.Left);
-						//if (!leftString) writer.Write(')');
-						writer.Write(", ");
-						//if (!rightString) writer.Write("ToString_vTableTODO(");
-						WriteExpression(expression.Right);
-						//if (!rightString) writer.Write(')');
-						writer.Write(')');
-					}
-					else
-					{
-						writer.Write(GetMethodFullName(operatorMethod));
-						writer.Write('(');
-						WriteExpression(expression.Left);
-						writer.Write(", ");
-						WriteExpression(expression.Right);
-						writer.Write(')');
-					}
+					if (specialMethod != null) writer.Write(GetMethodFullName(specialMethod));
+					else writer.Write(GetMethodFullName(operatorMethod));
+					writer.Write('(');
+					WriteExpression(expression.Left);
+					writer.Write(", ");
+					WriteExpression(expression.Right);
+					writer.Write(')');
 				}
 				else if (IsPrimitiveType(operatorMethod.Parameters[0].Type) && IsPrimitiveType(operatorMethod.Parameters[1].Type))
 				{
@@ -1390,7 +1390,7 @@ namespace CS2X.Core.Transpilers
 
 		private string GetVTableMethodFullName(IMethodSymbol method)
 		{
-			if (!method.IsVirtual) throw new NotSupportedException("Non virtual method has no vtable method name: " + method.FullName());
+			if (!method.IsVirtual && !method.IsAbstract) throw new NotSupportedException("Non virtual method has no vtable method name: " + method.FullName());
 			int vTableIndex = GetVirtualMethodOverloadIndex(method);
 			string methodName = method.Name;
 			ParseImplementationDetail(ref methodName);
