@@ -203,8 +203,6 @@ namespace CS2X.Core.Transpilers
 		private void WriteProject(Project project)
 		{
 			this.project = project;
-			var runtimeType = project.compilation.GetTypeByMetadataName("System.RuntimeType");
-			var stringType = project.compilation.GetSpecialType(SpecialType.System_String);
 
 			// writer info
 			WriteHeaderInfo(writer);
@@ -250,7 +248,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Forward declare Types */");
 			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes) WriteType(type, runtimeType, false);
+			foreach (var type in project.allTypes) WriteType(type, false);
 
 			// type definitions
 			writer.WriteLine();
@@ -259,7 +257,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes)
 			{
-				if (WriteType(type, runtimeType, true)) writer.WriteLine();
+				if (WriteType(type, true)) writer.WriteLine();
 			}
 
 			// runtime type definitions
@@ -268,7 +266,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes)
 			{
-				if (WriteRuntimeType(type, runtimeType)) writer.WriteLine();
+				if (WriteRuntimeType(type)) writer.WriteLine();
 			}
 
 			// forward declare methods
@@ -431,7 +429,7 @@ namespace CS2X.Core.Transpilers
 		#endregion
 
 		#region Type Writers
-		private bool WriteRuntimeType(INamedTypeSymbol type, INamedTypeSymbol runtimeType)
+		private bool WriteRuntimeType(INamedTypeSymbol type)
 		{
 			if (type.SpecialType == SpecialType.System_Void) return false;
 
@@ -444,7 +442,11 @@ namespace CS2X.Core.Transpilers
 			foreach (var method in virtualMethods)
 			{
 				if (method.IsStatic) throw new NotSupportedException("Virtual static method not supported: " + method.Name);
-				writer.WriteLinePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetVTableMethodFullName(method)})();");
+				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetVTableMethodFullName(method)})(");
+				writer.Write($"{GetTypeFullName(method.ContainingType)}* self");
+				if (method.Parameters.Length != 0) writer.Write(", ");
+				WriteParameters(method.Parameters);
+				writer.WriteLine(");");
 			}
 			writer.RemoveTab();
 			writer.WriteLine($"}} {runtimeTypeName};");
@@ -462,7 +464,7 @@ namespace CS2X.Core.Transpilers
 			return true;
 		}
 
-		private bool WriteType(INamedTypeSymbol type, INamedTypeSymbol runtimeType, bool writeBody)
+		private bool WriteType(INamedTypeSymbol type, bool writeBody)
 		{
 			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return false;
 
@@ -903,7 +905,7 @@ namespace CS2X.Core.Transpilers
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
-		private void WriteCaller(ExpressionSyntax expression)
+		private ExpressionSyntax GetCaller(ExpressionSyntax expression)
 		{
 			if (expression is MemberAccessExpressionSyntax)
 			{
@@ -912,8 +914,7 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (expression is IdentifierNameSyntax && expression.Parent is MemberAccessExpressionSyntax)
 			{
-				WriteCaller((MemberAccessExpressionSyntax)expression.Parent);
-				return;
+				return GetCaller((MemberAccessExpressionSyntax)expression.Parent);
 			}
 			else
 			{
@@ -921,7 +922,13 @@ namespace CS2X.Core.Transpilers
 				if (symbolInfo.Symbol.ContainingType == method.ContainingType) expression = SyntaxFactory.ThisExpression();
 			}
 
-			WriteExpression(expression);
+			return expression;
+		}
+
+		private void WriteCaller(ExpressionSyntax expression)
+		{
+			var caller = GetCaller(expression);
+			WriteExpression(caller);
 		}
 
 		private void WriteLiteralExpression(LiteralExpressionSyntax expression)
@@ -1042,9 +1049,19 @@ namespace CS2X.Core.Transpilers
 				var method = (IMethodSymbol)symbolInfo.Symbol;
 				if (method.IsVirtual || method.IsAbstract)
 				{
-					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
-					WriteCaller(expression);
-					writer.Write($"->CS2X_RuntimeType)->{GetVTableMethodFullName(method)}");
+					var caller = GetCaller(expression);
+					var type = semanticModel.GetTypeInfo(caller).Type;
+					if (type != null && type.IsValueType)
+					{
+						writer.Write($"{GetRuntimeTypeObjFullName(type)}.");
+					}
+					else
+					{
+						writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
+						WriteCaller(expression);
+						writer.Write($"->CS2X_RuntimeType)->");
+					}
+					writer.Write(GetVTableMethodFullName(method));
 				}
 				else
 				{

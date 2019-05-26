@@ -12,10 +12,15 @@ namespace CS2X.Core.Transpilers
 	public abstract class Transpiler
 	{
 		public readonly Solution solution;
+		protected INamedTypeSymbol runtimeType, stringType, objectType;
 
 		public Transpiler(Solution solution)
 		{
 			this.solution = solution;
+			var coreLibProject = solution.coreLibProject;
+			runtimeType = coreLibProject.compilation.GetTypeByMetadataName("System.RuntimeType");
+			stringType = coreLibProject.compilation.GetSpecialType(SpecialType.System_String);
+			objectType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Object);
 		}
 
 		public abstract void Transpile(string outputPath);
@@ -172,14 +177,14 @@ namespace CS2X.Core.Transpilers
 			return false;
 		}
 
-		protected int GetBaseTypeCount(ITypeSymbol type)
+		protected int GetBaseTypeCount(INamedTypeSymbol type)
 		{
 			int count = 0;
 			var baseType = type.BaseType;
 			while (baseType != null)
 			{
 				++count;
-				baseType = baseType.BaseType;
+				baseType = GetBaseType(baseType);
 			}
 			return count;
 		}
@@ -229,15 +234,20 @@ namespace CS2X.Core.Transpilers
 		protected List<IMethodSymbol> GetOrderedVirtualMethods(INamedTypeSymbol type)
 		{
 			var virtualMethodList = new List<IMethodSymbol>();
-			var baseType = type;
-			do
+			void AddVirtualMethods(INamedTypeSymbol namedType)
 			{
-				foreach (IMethodSymbol method in baseType.GetMembers().Where(x => x.Kind == SymbolKind.Method).Reverse())
+				foreach (IMethodSymbol method in namedType.GetMembers().Where(x => x.Kind == SymbolKind.Method).Reverse())
 				{
 					if ((!method.IsVirtual && !method.IsAbstract) || method.IsOverride) continue;
 					virtualMethodList.Insert(0, method);
 				}
-				baseType = baseType.BaseType;
+			}
+
+			var baseType = type;
+			do
+			{
+				AddVirtualMethods(baseType);
+				baseType = GetBaseType(baseType);
 			} while (baseType != null);
 
 			return virtualMethodList;
@@ -254,10 +264,29 @@ namespace CS2X.Core.Transpilers
 					var method = (IMethodSymbol)member;
 					if (method == rootSlotMethod || method.OverriddenMethod == rootSlotMethod) return method;
 				}
-				baseType = baseType.BaseType;
+				baseType = GetBaseType(baseType);
 			} while (baseType != null);
 
-			throw new Exception("Failed to find highest virtual method slot (this should never happen)");
+			throw new Exception("Failed to find highest virtual method slot");
+		}
+
+		protected INamedTypeSymbol GetBaseType(INamedTypeSymbol type)
+		{
+			if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Interface) return null;
+			var baseType = type.BaseType;
+			if (baseType == null)
+			{
+				if (type.Interfaces.Length == 1) baseType = type.Interfaces[0];
+				else if (type.Interfaces.Length > 1) throw new NotSupportedException("Multiple interfaces are not supported on type: " + type.FullName());
+				else if (type.TypeKind == TypeKind.Interface) baseType = objectType;
+			}
+			else if (type.Interfaces.Length != 0)
+			{
+				if (type.Interfaces.Length > 1) throw new NotSupportedException("Multiple interfaces are not supported on type: " + type.FullName());
+				else if (baseType == objectType) baseType = type.Interfaces[0];
+				else throw new NotSupportedException("Interfaces are not supported on type as it already has a base type: " + type.FullName());
+			}
+			return baseType;
 		}
 
 		protected bool IsInternalCall(IMethodSymbol method)

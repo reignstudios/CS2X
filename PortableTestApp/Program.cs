@@ -81,11 +81,19 @@ namespace PortableTestApp
 
 		static void Main()//string[] args)
 		{
+			//object blaa = MyAutoPropStatic;// boxing
 			Program.MyAutoPropStatic = 0;
 			var v = "Hello World!";
 			v = MyAutoPropStatic.ToString();
 			v = GetValue(v.GetType().ToString());
 			Console.WriteLine("Hello World!" + value);
+
+			//foreach (var i in "asdfas")// requires IL System.String::get_Chars(int32)
+			/*var a = new int[123];
+			foreach (var i in a)
+			{
+				
+			}*/
 		}
 
 		static string GetValue(object o)

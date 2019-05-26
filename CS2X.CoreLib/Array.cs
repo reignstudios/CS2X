@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace System
 {
-	public abstract class Array : ICollection//, IEnumerable, IList, IStructuralComparable, IStructuralEquatable, ICloneable
+	public abstract class Array// : ICollection//, IEnumerable, IList, IStructuralComparable, IStructuralEquatable, ICloneable
 	{
 		public IEnumerator GetEnumerator()
 		{
@@ -22,6 +22,6 @@ namespace System
             get;
         }
 
-		int ICollection.Count { get { return Length; } }
+		//int ICollection.Count { get { return Length; } }
 	}
 }

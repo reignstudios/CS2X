@@ -1,6 +1,6 @@
 namespace System.Collections
 {
-	public class Stack : ICollection, IEnumerable
+	public class Stack : IEnumerable
 	{
 		public int Count
 		{

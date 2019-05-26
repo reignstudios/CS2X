@@ -1,6 +1,6 @@
 namespace System.Collections
 {
-	public class Queue : ICollection, IEnumerable
+	public class Queue : IEnumerable
 	{
 		public int Count
 		{

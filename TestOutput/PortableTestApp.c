@@ -34,7 +34,7 @@ t_System_String* f_PortableTestApp_Program_value;
 typedef struct t_PortableTestApp_Program_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)();
+	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
 } t_PortableTestApp_Program_RTTYPE;
 t_PortableTestApp_Program_RTTYPE t_PortableTestApp_Program_RTTYPE_OBJ;
 int8_t t_PortableTestApp_Program_RTTYPE_RTTYPE_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,80,0,114,0,111,0,103,0,114,0,97,0,109,0,0,0};
@@ -43,7 +43,6 @@ int8_t t_PortableTestApp_Program_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0,
 typedef struct t_PortableTestApp_MyNamespace_MyEnum_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)();
 } t_PortableTestApp_MyNamespace_MyEnum_RTTYPE;
 t_PortableTestApp_MyNamespace_MyEnum_RTTYPE t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_OBJ;
 int8_t t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
@@ -116,7 +115,7 @@ void m_PortableTestApp_Program_Main_0()
 	t_System_String* l_v_0;
 	f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField = 0;
 	l_v_0 = StringLiteral_1;
-	l_v_0 = ((t_System_Object_RTTYPE*)f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField->CS2X_RuntimeType)->vTable_ToString_0(f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField);
+	l_v_0 = int32_t_RTTYPE_OBJ.vTable_ToString_0(f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField);
 	l_v_0 = m_PortableTestApp_Program_GetValue_0(((t_System_Object_RTTYPE*)m_System_Object_GetType_0(l_v_0)->CS2X_RuntimeType)->vTable_ToString_0(m_System_Object_GetType_0(l_v_0)));
 	m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_1, f_PortableTestApp_Program_value));
 }
@@ -161,7 +160,6 @@ void CS2X_InitLib_PortableTestApp()
 
 	/* Init runtime type vtabel */
 	t_PortableTestApp_Program_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 }
 
 void CS2X_InitStringLiterals()

@@ -16,6 +16,7 @@ namespace CS2X.Core
 		private readonly bool isProjFileName;
 
 		public IReadOnlyList<Project> projects { get; private set; }
+		public Project coreLibProject { get; private set; }
 
 		static Solution()
 		{
@@ -52,6 +53,7 @@ namespace CS2X.Core
 				{
 					var proj = new Project(this, csProj);
 					projects.Add(proj);
+					if (proj.isCoreLib) coreLibProject = proj;
 				}
 
 				this.projects = projects;
