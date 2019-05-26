@@ -54,9 +54,8 @@ Zero performance loss. C# code will generate in a manner as if hand written in t
 * Structs are not part of the object system as they are in the .NET runtime.
 	* No auto boxing for value types are supported (.NET has many easy to fall in syntax performance pitfalls here).
 	* System.Object can never be set to a 'struct' type.
-	* System.Object virtual methods 
-	* Stuff like 'MyStruct.GetType()' is compile time generated.
-	* Stuff like 'MyStruct.ToString()' is compile time converted to 'MyStructType.vTable_ToString()'
+	* Virtuals like 'MyStruct.GetType()' is compile time generated.
+	* Virtuals like 'MyStruct.ToString()' is compile time converted to 'MyStructType.vTable_ToString()'
 * Interfaces are considered abstract classes.
 	* Zero casting overhead.
 	* Forced in the same single inheritance chain model an abstract class is.
