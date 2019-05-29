@@ -11,5 +11,10 @@ namespace System
 		//{
 		//	return Number.FormatInt32(m_value, null, null);
 		//}
+
+		public new string ToString()
+		{
+			return string.Empty;
+		}
 	}
 }

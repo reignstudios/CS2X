@@ -99,6 +99,7 @@ namespace CS2X.Core
 				}
 				else if (symbol.ContainingNamespace != null)
 				{
+					if (symbol.ContainingNamespace.IsGlobalNamespace) break;
 					symbol = symbol.ContainingNamespace;
 					fullName.Insert(0, symbol.Name + '.');
 				}

@@ -28,6 +28,11 @@ namespace PortableTestApp
 		}
 	}*/
 
+	enum MyEnum
+	{
+		A, B, C
+	}
+
 	class Program// : MyBaseClass
 	{
 		public int abc;
@@ -51,6 +56,7 @@ namespace PortableTestApp
 		}
 
 		private static string value;
+		private static MyEnum myEnum;
 
 		/*public override void MyVirtMethod()
 		{
@@ -85,6 +91,7 @@ namespace PortableTestApp
 			Program.MyAutoPropStatic = 0;
 			var v = "Hello World!";
 			v = MyAutoPropStatic.ToString();
+			//v = myEnum.ToString();// TODO
 			v = GetValue(v.GetType().ToString());
 			Console.WriteLine("Hello World!" + value);
 

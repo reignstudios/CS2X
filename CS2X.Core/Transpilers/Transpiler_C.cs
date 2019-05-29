@@ -1049,18 +1049,9 @@ namespace CS2X.Core.Transpilers
 				var method = (IMethodSymbol)symbolInfo.Symbol;
 				if (method.IsVirtual || method.IsAbstract)
 				{
-					var caller = GetCaller(expression);
-					var type = semanticModel.GetTypeInfo(caller).Type;
-					if (type != null && type.IsValueType)
-					{
-						writer.Write($"{GetRuntimeTypeObjFullName(type)}.");
-					}
-					else
-					{
-						writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
-						WriteCaller(expression);
-						writer.Write($"->CS2X_RuntimeType)->");
-					}
+					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
+					WriteCaller(expression);
+					writer.Write($"->CS2X_RuntimeType)->");
 					writer.Write(GetVTableMethodFullName(method));
 				}
 				else
@@ -1161,11 +1152,36 @@ namespace CS2X.Core.Transpilers
 
 		private void InvocationExpression(InvocationExpressionSyntax expression)
 		{
-			WriteExpression(expression.Expression);
-			writer.Write('(');
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
-			if (!symbolInfo.Symbol.IsStatic)
+			var method = (IMethodSymbol)symbolInfo.Symbol;
+			bool isCallerValueType = false;
+			ITypeSymbol callerType = null;
+			if (!method.IsStatic)
 			{
+				var caller = GetCaller(expression.Expression);
+				if (!(caller is ThisExpressionSyntax))
+				{
+					callerType = semanticModel.GetTypeInfo(caller).Type;
+					isCallerValueType = callerType.IsValueType;
+					if (callerType.TypeKind == TypeKind.Enum) throw new NotImplementedException("Enum meta data not yet supported: " + expression.ToFullString());
+					if (callerType.IsValueType && callerType != method.ContainingType) throw new NotImplementedException("Special method invoke not yet supported: " + expression.ToFullString());
+				}
+			}
+			
+			if (method.IsVirtual || method.IsAbstract)
+			{
+				if (callerType.IsValueType) throw new NotSupportedException($"Virtual methods cannot be used on structs: {callerType.FullName()}->{method.FullName()}");
+				else WriteExpression(expression.Expression);
+			}
+			else
+			{
+				WriteExpression(expression.Expression);
+			}
+			
+			writer.Write('(');
+			if (!method.IsStatic)
+			{
+				if (isCallerValueType) writer.Write('&');
 				WriteCaller(expression.Expression);
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}

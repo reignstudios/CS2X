@@ -7,6 +7,7 @@
 /* Forward declare Types */
 /* =============================== */
 typedef struct t_PortableTestApp_Program t_PortableTestApp_Program;
+typedef int32_t t_PortableTestApp_MyEnum;
 typedef int32_t t_PortableTestApp_MyNamespace_MyEnum;
 
 /* =============================== */
@@ -23,6 +24,11 @@ int32_t f_PortableTestApp_Program_abcStatic;
 int32_t f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField;
 int32_t f_PortableTestApp_Program__MyPropStatic;
 t_System_String* f_PortableTestApp_Program_value;
+t_PortableTestApp_MyEnum f_PortableTestApp_Program_myEnum;
+
+#define f_PortableTestApp_MyEnum_A 0
+#define f_PortableTestApp_MyEnum_B 1
+#define f_PortableTestApp_MyEnum_C 2
 
 #define f_PortableTestApp_MyNamespace_MyEnum_A 0
 #define f_PortableTestApp_MyNamespace_MyEnum_B 1
@@ -38,7 +44,15 @@ typedef struct t_PortableTestApp_Program_RTTYPE
 } t_PortableTestApp_Program_RTTYPE;
 t_PortableTestApp_Program_RTTYPE t_PortableTestApp_Program_RTTYPE_OBJ;
 int8_t t_PortableTestApp_Program_RTTYPE_RTTYPE_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,80,0,114,0,111,0,103,0,114,0,97,0,109,0,0,0};
-int8_t t_PortableTestApp_Program_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0,0,0,0,0,24,0,0,0,46,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,80,0,114,0,111,0,103,0,114,0,97,0,109,0,0,0};
+int8_t t_PortableTestApp_Program_RTTYPE_RTTYPE_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,80,0,114,0,111,0,103,0,114,0,97,0,109,0,0,0};
+
+typedef struct t_PortableTestApp_MyEnum_RTTYPE
+{
+	t_System_RuntimeType runtimeType;
+} t_PortableTestApp_MyEnum_RTTYPE;
+t_PortableTestApp_MyEnum_RTTYPE t_PortableTestApp_MyEnum_RTTYPE_OBJ;
+int8_t t_PortableTestApp_MyEnum_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
+int8_t t_PortableTestApp_MyEnum_RTTYPE_RTTYPE_METADATA_FullName[58] = {0,0,0,0,0,0,0,0,22,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
 
 typedef struct t_PortableTestApp_MyNamespace_MyEnum_RTTYPE
 {
@@ -46,7 +60,7 @@ typedef struct t_PortableTestApp_MyNamespace_MyEnum_RTTYPE
 } t_PortableTestApp_MyNamespace_MyEnum_RTTYPE;
 t_PortableTestApp_MyNamespace_MyEnum_RTTYPE t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_OBJ;
 int8_t t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
-int8_t t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_RTTYPE_METADATA_FullName[84] = {0,0,0,0,0,0,0,0,35,0,0,0,46,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,77,0,121,0,78,0,97,0,109,0,101,0,115,0,112,0,97,0,99,0,101,0,46,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
+int8_t t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_RTTYPE_METADATA_FullName[82] = {0,0,0,0,0,0,0,0,34,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,77,0,121,0,78,0,97,0,109,0,101,0,115,0,112,0,97,0,99,0,101,0,46,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
 
 /* =============================== */
 /* Forward decalre Methods */
@@ -60,6 +74,7 @@ void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_Portable
 void m_PortableTestApp_Program_Main_0();
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o);
 t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0();
+t_PortableTestApp_MyEnum m_PortableTestApp_MyEnum__ctor_0();
 t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor_0();
 
 /* =============================== */
@@ -115,7 +130,7 @@ void m_PortableTestApp_Program_Main_0()
 	t_System_String* l_v_0;
 	f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField = 0;
 	l_v_0 = StringLiteral_1;
-	l_v_0 = int32_t_RTTYPE_OBJ.vTable_ToString_0(f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField);
+	l_v_0 = m_int32_t_ToString_0(&f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField);
 	l_v_0 = m_PortableTestApp_Program_GetValue_0(((t_System_Object_RTTYPE*)m_System_Object_GetType_0(l_v_0)->CS2X_RuntimeType)->vTable_ToString_0(m_System_Object_GetType_0(l_v_0)));
 	m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_1, f_PortableTestApp_Program_value));
 }
@@ -130,6 +145,12 @@ t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0()
 	t_PortableTestApp_Program* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_PortableTestApp_Program));
 	return self;
+}
+
+t_PortableTestApp_MyEnum m_PortableTestApp_MyEnum__ctor_0()
+{
+	t_PortableTestApp_MyEnum selfObj = {0};
+	return selfObj;
 }
 
 t_PortableTestApp_MyNamespace_MyEnum m_PortableTestApp_MyNamespace_MyEnum__ctor_0()
@@ -149,12 +170,16 @@ void CS2X_InitLib_PortableTestApp()
 	/* Init runtime type objects */
 	memset(&t_PortableTestApp_Program_RTTYPE_OBJ, 0, sizeof(t_PortableTestApp_Program_RTTYPE));
 	t_PortableTestApp_Program_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_PortableTestApp_Program_RTTYPE_OBJ;
+	memset(&t_PortableTestApp_MyEnum_RTTYPE_OBJ, 0, sizeof(t_PortableTestApp_MyEnum_RTTYPE));
+	t_PortableTestApp_MyEnum_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_PortableTestApp_MyEnum_RTTYPE_OBJ;
 	memset(&t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_OBJ, 0, sizeof(t_PortableTestApp_MyNamespace_MyEnum_RTTYPE));
 	t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_OBJ;
 
 	/* Init runtime type metadata / string literals */
 	((t_System_String*)t_PortableTestApp_Program_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_PortableTestApp_Program_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
+	((t_System_String*)t_PortableTestApp_MyEnum_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
+	((t_System_String*)t_PortableTestApp_MyEnum_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 

@@ -272,7 +272,12 @@ namespace CS2X.Core.Transpilers
 
 		protected INamedTypeSymbol GetBaseType(INamedTypeSymbol type)
 		{
-			if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Interface) return null;
+			if (type.TypeKind == TypeKind.Struct || type.TypeKind == TypeKind.Enum)
+			{
+				if (type.Interfaces.Length != 0) throw new NotSupportedException("Structs cannot inherit from interfaces");
+				return null;
+			}
+			if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Interface) throw new NotSupportedException("Unsupported type kind: " + type.TypeKind);
 			var baseType = type.BaseType;
 			if (baseType == null)
 			{
