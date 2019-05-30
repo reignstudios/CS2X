@@ -53,10 +53,10 @@ This project will focus on transpiling a C# subset for writing CPU and GPU progr
 Zero performance loss. C# code will generate in a manner as if hand written in the target language for the most part. To accomplish this we think of the C# syntax as a C like language extension with minimal overhead if you will. This means a couple key things.
 * Structs are not part of the object system as they are in the .NET runtime.
 	* No auto boxing for value types are supported (.NET has many easy to fall in syntax performance pitfalls here).
-	* System.Object can never be set to a 'struct' type.
-	* Virtuals like 'MyStruct.GetType()' is compile time generated.
-	* Virtuals like 'MyStruct.ToString()' is compile time converted to 'MyStructType.vTable_ToString()'
-* Interfaces are considered abstract classes.
+	* System.Object can never be set to a 'struct' or 'enum' type.
+	* Virtuals like 'MyStruct.GetType()' give compile time errors.
+	* Virtuals like 'MyEnum.ToString()' are compile time generated metadata methods.
+* Interfaces are considered limited abstract classes.
 	* Zero casting overhead.
 	* Forced in the same single inheritance chain model an abstract class is.
 	* Either a base class or interface can be used as a base class not both.
