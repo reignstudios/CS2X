@@ -349,7 +349,8 @@ namespace CS2X.Core.Transpilers
 				foreach (var method in orderedVirtualMethods)
 				{
 					var highestMethod = FindHighestVirtualMethodSlot(type, method);
-					writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
+					if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
+					else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = 0;");
 				}
 			}
 

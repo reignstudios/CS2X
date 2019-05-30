@@ -273,7 +273,7 @@ namespace CS2X.Core.Transpilers
 			{
 				foreach (var member in baseType.GetMembers())
 				{
-					if (member.Kind != SymbolKind.Method || (!member.IsVirtual && !member.IsAbstract)) continue;
+					if (member.Kind != SymbolKind.Method || (!member.IsOverride && !member.IsVirtual && !member.IsAbstract)) continue;
 					var method = (IMethodSymbol)member;
 					if (method == rootSlotMethod || method.OverriddenMethod == rootSlotMethod) return method;
 				}
