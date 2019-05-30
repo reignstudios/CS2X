@@ -867,8 +867,12 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
 		{
-			writer.WritePrefix("return ");
-			WriteExpression(statement.Expression);
+			writer.WritePrefix("return");
+			if (statement.Expression != null)
+			{
+				writer.Write(' ');
+				WriteExpression(statement.Expression);
+			}
 		}
 
 		private void ExpressionStatement(ExpressionStatementSyntax statement)
@@ -1013,6 +1017,21 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteIdentifierName(IdentifierNameSyntax expression)
 		{
+			void WriteMethodInvoke(IMethodSymbol method)
+			{
+				if (IsVirtualMethod(method))
+				{
+					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
+					WriteCaller(expression);
+					writer.Write($"->CS2X_RuntimeType)->");
+					writer.Write(GetVTableMethodFullName(method));
+				}
+				else
+				{
+					writer.Write(GetMethodFullName(method));
+				}
+			}
+
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
 			if (symbolInfo.Symbol is ILocalSymbol)
 			{
@@ -1059,7 +1078,7 @@ namespace CS2X.Core.Transpilers
 				{
 					if (!property.IsStatic)
 					{
-						writer.Write(GetMethodFullName(property.GetMethod));
+						WriteMethodInvoke(property.GetMethod);
 						writer.Write('(');
 						WriteCaller(expression);
 						writer.Write(')');
@@ -1073,17 +1092,7 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IMethodSymbol)
 			{
 				var method = (IMethodSymbol)symbolInfo.Symbol;
-				if (IsVirtualMethod(method))
-				{
-					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
-					WriteCaller(expression);
-					writer.Write($"->CS2X_RuntimeType)->");
-					writer.Write(GetVTableMethodFullName(method));
-				}
-				else
-				{
-					writer.Write($"{GetMethodFullName(method)}");
-				}
+				WriteMethodInvoke(method);
 			}
 			else
 			{
@@ -1136,10 +1145,12 @@ namespace CS2X.Core.Transpilers
 
 		private void StackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax expression)
 		{
+			var arrayType = (ArrayTypeSyntax)expression.Type;
 			var typeInfo = semanticModel.GetTypeInfo(expression.Type);
 			if (!(typeInfo.Type is IPointerTypeSymbol)) throw new NotImplementedException("stackalloc is not pointer type");
 			var ptrType = (IPointerTypeSymbol)typeInfo.Type;
-			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}))");
+			object length = semanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);// fixed arrays should always support this form
+			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * {length})");
 		}
 
 		private void AssignmentExpression(AssignmentExpressionSyntax expression)

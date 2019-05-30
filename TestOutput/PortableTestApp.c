@@ -128,6 +128,8 @@ void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_Portable
 void m_PortableTestApp_Program_Main_0()
 {
 	t_System_String* l_v_0;
+	m_System_Console_WriteLine_0(StringLiteral_1);
+	return;
 	f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField = 0;
 	l_v_0 = StringLiteral_1;
 	l_v_0 = m_int32_t_ToString_0(&f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField);

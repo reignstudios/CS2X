@@ -87,6 +87,7 @@ namespace PortableTestApp
 
 		static void Main()//string[] args)
 		{
+			Console.WriteLine("Hello World!");return;
 			//object blaa = MyAutoPropStatic;// boxing
 			Program.MyAutoPropStatic = 0;
 			var v = "Hello World!";

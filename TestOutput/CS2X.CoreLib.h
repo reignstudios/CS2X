@@ -1719,7 +1719,7 @@ char m_System_CLSCompliantAttribute_get_IsCompliant_0(t_System_CLSCompliantAttri
 void m_System_Console_Write_0(t_System_String* p_s)
 {
 	char16_t* l_printBuff_0;
-	l_printBuff_0 = alloca(sizeof(char16_t));
+	l_printBuff_0 = alloca(sizeof(char16_t) * 2);
 	l_printBuff_0[1] = 0x0000;
 ;
 }
@@ -1831,7 +1831,7 @@ t_System_Type* m_System_Object_GetType_0(t_System_Object* self)
 
 t_System_String* m_System_Object_ToString_0(t_System_Object* self)
 {
-	return m_System_Type_get_FullName_0(m_System_Object_GetType_0(self));
+	return ((t_System_Type_RTTYPE*)m_System_Object_GetType_0(self)->CS2X_RuntimeType)->vTable_get_FullName_0(m_System_Object_GetType_0(self));
 }
 
 t_System_Object* m_System_Object__ctor_0()
