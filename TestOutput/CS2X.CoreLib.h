@@ -1508,6 +1508,7 @@ t_System_EventArgs* m_System_EventArgs__ctor_0();
 t_System_Exception* m_System_Exception__ctor_0();
 t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message);
 t_System_Exception* m_System_Exception_get_InnerException_0(t_System_Exception* self);
+t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self);
 t_System_String* m_System_Exception_get_StackTrace_0(t_System_Exception* self);
 t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0();
 t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0();
@@ -1777,6 +1778,11 @@ t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message)
 t_System_Exception* m_System_Exception_get_InnerException_0(t_System_Exception* self)
 {
 	return 0;
+}
+
+t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self)
+{
+	return self->f__Message_k__BackingField_1;
 }
 
 t_System_String* m_System_Exception_get_StackTrace_0(t_System_Exception* self)

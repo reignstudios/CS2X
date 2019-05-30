@@ -557,7 +557,12 @@ namespace CS2X.Core.Transpilers
 			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
 			if (method.IsAbstract) return false;
-			if (method.AssociatedSymbol is IPropertySymbol && IsAutoProperty((IPropertySymbol)method.AssociatedSymbol)) return false;
+			bool isVirtualAutoPropertyMethod = false;
+			if (IsAutoPropertyMethod(method, out var virtualAutoProperty, out var virtualAutoPropertyField))
+			{
+				if (!method.IsVirtual) return false;
+				isVirtualAutoPropertyMethod = true;
+			}
 
 			// skip if method is native extern
 			foreach (var attribute in method.GetAttributes())
@@ -661,8 +666,22 @@ namespace CS2X.Core.Transpilers
 							else if (syntaxDeclaration is AccessorDeclarationSyntax)
 							{
 								var syntax = (AccessorDeclarationSyntax)syntaxDeclaration;
-								if (syntax.Body != null) WriteBody(syntax.Body);
-								else throw new NotImplementedException("This should never be hit");
+								if (syntax.Body != null)
+								{
+									WriteBody(syntax.Body);
+								}
+								else if (isVirtualAutoPropertyMethod)
+								{
+									string caller = string.Empty;
+									if (!method.IsStatic) caller = "self->";
+									if (method.MethodKind == MethodKind.PropertyGet) writer.WriteLinePrefix($"return {caller}{GetFieldFullName(virtualAutoPropertyField)};");
+									else if (method.MethodKind == MethodKind.PropertySet) writer.WriteLinePrefix($"{caller}{GetFieldFullName(virtualAutoPropertyField)} = {GetParameterFullName(method.Parameters[0])};");
+									else throw new NotImplementedException("Virtual auto property method kind is invalid: " + method.MethodKind);
+								}
+								else
+								{
+									throw new NotImplementedException("AccessorDeclarationSyntax body was null and not a virtual auto property (This should never be hit)");
+								}
 							}
 							else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
 							{

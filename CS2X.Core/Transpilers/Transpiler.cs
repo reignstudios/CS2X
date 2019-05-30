@@ -95,6 +95,19 @@ namespace CS2X.Core.Transpilers
 			return field != null;
 		}
 
+		protected bool IsAutoPropertyMethod(IMethodSymbol method) { return IsAutoPropertyMethod(method, out _, out _); }
+		protected bool IsAutoPropertyMethod(IMethodSymbol method, out IPropertySymbol property, out IFieldSymbol field)
+		{
+			field = null;
+			if (method.MethodKind != MethodKind.PropertyGet && method.MethodKind != MethodKind.PropertySet)
+			{
+				property = null;
+				return false;
+			}
+			property = method.AssociatedSymbol as IPropertySymbol;
+			return property != null && IsAutoProperty((IPropertySymbol)method.AssociatedSymbol, out field);
+		}
+
 		protected bool IsEmptyType(ITypeSymbol type, bool staticsDontCount = true)
 		{
 			var currentType = type;
