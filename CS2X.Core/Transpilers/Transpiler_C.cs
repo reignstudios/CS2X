@@ -357,21 +357,22 @@ namespace CS2X.Core.Transpilers
 			writer.RemoveTab();
 			writer.WriteLine('}');
 
-			// init string literals
-			writer.WriteLine();
-			writer.WriteLine("void CS2X_InitStringLiterals()");
-			writer.WriteLine('{');
-			writer.AddTab();
-			foreach (var literal in stringLiterals)
-			{
-				writer.WriteLinePrefix($"(({stringTypeName}){literal.Value})->CS2X_RuntimeType = &{stringRuntimeType};");
-			}
-			writer.RemoveTab();
-			writer.WriteLine('}');
-
-			// entry point
+			// exe only
 			if (project.type == ProjectTypes.Exe)
 			{
+				// init string literals
+				writer.WriteLine();
+				writer.WriteLine("void CS2X_InitStringLiterals()");
+				writer.WriteLine('{');
+				writer.AddTab();
+				foreach (var literal in stringLiterals)
+				{
+					writer.WriteLinePrefix($"(({stringTypeName}){literal.Value})->CS2X_RuntimeType = &{stringRuntimeType};");
+				}
+				writer.RemoveTab();
+				writer.WriteLine('}');
+
+				// entry point
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Entry Point */");
@@ -989,7 +990,11 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (expression.IsKind(SyntaxKind.CharacterLiteralExpression))
 			{
-				writer.Write($"'{expression.Token.ValueText}'");
+				byte[] data;
+				if (options.endianness == Endianness.Little) data = Encoding.Unicode.GetBytes(expression.Token.ValueText);
+				else if (options.endianness == Endianness.Big) data = Encoding.BigEndianUnicode.GetBytes(expression.Token.ValueText);
+				else throw new NotImplementedException("Char endiannes not implemented: " + options.endianness);
+				writer.Write($"0x{BitConverter.ToString(data).Replace("-","")}");
 			}
 			else if (expression.IsKind(SyntaxKind.TrueLiteralExpression))
 			{
@@ -1301,8 +1306,14 @@ namespace CS2X.Core.Transpilers
 
 		private void ElementAccessExpression(ElementAccessExpressionSyntax expression)
 		{
-			writer.Write('[');
 			WriteExpression(expression.Expression);
+			writer.Write('[');
+			var lastArg = expression.ArgumentList.Arguments.Last();
+			foreach (var arg in expression.ArgumentList.Arguments)
+			{
+				WriteExpression(arg.Expression);
+				if (arg != lastArg) writer.Write(',');
+			}
 			writer.Write(']');
 		}
 

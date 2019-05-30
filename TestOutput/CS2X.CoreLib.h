@@ -1720,7 +1720,7 @@ void m_System_Console_Write_0(t_System_String* p_s)
 {
 	char16_t* l_printBuff_0;
 	l_printBuff_0 = alloca(sizeof(char16_t));
-	[l_printBuff_0] = ' ';
+	l_printBuff_0[1] = 0x0000;
 ;
 }
 
@@ -3122,9 +3122,4 @@ void CS2X_InitLib_CS2X_CoreLib()
 	t_System_Collections_IEnumerator_RTTYPE_OBJ.vTable_Reset_0 = 0;
 	t_System_ComponentModel_IContainer_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_ComponentModel_IContainer_RTTYPE_OBJ.vTable_Dispose_0 = 0;
-}
-
-void CS2X_InitStringLiterals()
-{
-	((t_System_String*)StringLiteral_0)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 }
