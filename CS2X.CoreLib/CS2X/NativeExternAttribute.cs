@@ -5,7 +5,7 @@ namespace CS2X
 	[Flags]
 	public enum NativeExternTarget
 	{
-		C
+		C = 1
 	}
 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]

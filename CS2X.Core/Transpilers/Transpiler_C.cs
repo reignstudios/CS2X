@@ -562,16 +562,17 @@ namespace CS2X.Core.Transpilers
 			bool isVirtualAutoPropertyMethod = false;
 			if (IsAutoPropertyMethod(method, out var virtualAutoProperty, out var virtualAutoPropertyField))
 			{
-				if (!method.IsVirtual) return false;
+				if (!IsVirtualMethod(method)) return false;
 				isVirtualAutoPropertyMethod = true;
 			}
 
 			// skip if method is native extern
-			foreach (var attribute in method.GetAttributes())
+			if (method.IsExtern)
 			{
-				var type = attribute.AttributeClass;
-				if (type.ContainingNamespace.Name == "CS2X" && type.Name == "NativeExternAttribute")
+				var nativeExternAttribute = GetNativeExternAttribute(method);
+				if (nativeExternAttribute != null)
 				{
+					if (!nativeExternAttribute.ConstructorArguments.Any(x => ((int)x.Value & 1) == 1)) throw new NotImplementedException("NativeExternTarget not set for 'C' on method: " + method.FullName());
 					return false;
 				}
 			}
@@ -1072,7 +1073,7 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IMethodSymbol)
 			{
 				var method = (IMethodSymbol)symbolInfo.Symbol;
-				if (method.IsVirtual || method.IsAbstract)
+				if (IsVirtualMethod(method))
 				{
 					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
 					WriteCaller(expression);
@@ -1179,7 +1180,7 @@ namespace CS2X.Core.Transpilers
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
 			var method = (IMethodSymbol)symbolInfo.Symbol;
-			bool isCallerValueType = false;
+			bool isCallerValueType = false, isStaticExternCMethod = false;
 			ITypeSymbol callerType = null;
 			if (!method.IsStatic)
 			{
@@ -1192,15 +1193,31 @@ namespace CS2X.Core.Transpilers
 					if (callerType.IsValueType && callerType != method.ContainingType) throw new NotImplementedException("Special method invoke not yet supported: " + expression.ToFullString());
 				}
 			}
-			
-			if (method.IsVirtual || method.IsAbstract)
+			else if (method.IsExtern)
 			{
-				if (callerType.IsValueType) throw new NotSupportedException($"Virtual methods cannot be used on structs: {callerType.FullName()}->{method.FullName()}");
-				else WriteExpression(expression.Expression);
+				var nativeExternAttribute = GetNativeExternAttribute(method);
+				if (nativeExternAttribute != null)
+				{
+					isStaticExternCMethod = true;
+					writer.Write(method.Name);
+				}
+				else if (!IsInternalCall(method))
+				{
+					throw new NotSupportedException("Unsupported extern method invoke: " + method.FullName());
+				}
 			}
-			else
+
+			if (!isStaticExternCMethod)
 			{
-				WriteExpression(expression.Expression);
+				if (IsVirtualMethod(method))
+				{
+					if (callerType.IsValueType) throw new NotSupportedException($"Virtual methods cannot be used on structs: {callerType.FullName()}->{method.FullName()}");
+					else WriteExpression(expression.Expression);
+				}
+				else
+				{
+					WriteExpression(expression.Expression);
+				}
 			}
 			
 			writer.Write('(');
@@ -1454,7 +1471,7 @@ namespace CS2X.Core.Transpilers
 
 		private string GetVTableMethodFullName(IMethodSymbol method)
 		{
-			if (!method.IsVirtual && !method.IsAbstract) throw new NotSupportedException("Non virtual method has no vtable method name: " + method.FullName());
+			if (!IsVirtualMethod(method)) throw new NotSupportedException("Non virtual method has no vtable method name: " + method.FullName());
 			int vTableIndex = GetVirtualMethodOverloadIndex(method);
 			string methodName = method.Name;
 			ParseImplementationDetail(ref methodName);

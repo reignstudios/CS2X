@@ -279,8 +279,12 @@ namespace CS2X.Core.Transpilers
 				}
 				baseType = GetBaseType(baseType);
 			} while (baseType != null);
-
 			throw new Exception("Failed to find highest virtual method slot");
+		}
+
+		protected bool IsVirtualMethod(IMethodSymbol method)
+		{
+			return method.IsOverride || method.IsVirtual || method.IsAbstract;
 		}
 
 		protected INamedTypeSymbol GetBaseType(INamedTypeSymbol type)
@@ -323,6 +327,16 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 			return false;
+		}
+
+		protected AttributeData GetNativeExternAttribute(ISymbol symbol)
+		{
+			foreach (var attribute in symbol.GetAttributes())
+			{
+				var type = attribute.AttributeClass;
+				if (type.ContainingNamespace.Name == "CS2X" && type.Name == "NativeExternAttribute") return attribute;
+			}
+			return null;
 		}
 	}
 }

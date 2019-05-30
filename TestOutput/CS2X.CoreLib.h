@@ -591,7 +591,7 @@ struct t_System_ComponentModel_IContainer
 #define f_System_Runtime_InteropServices_LayoutKind_Explicit 2
 #define f_System_Runtime_InteropServices_LayoutKind_Auto 3
 
-#define f_CS2X_NativeExternTarget_C 0
+#define f_CS2X_NativeExternTarget_C 1
 
 /* =============================== */
 /* Runtime Types */
@@ -1693,7 +1693,7 @@ void m_System_Buffer_MemoryCopy_0(void* p_source, void* p_destination, int64_t p
 void m_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t p_destinationSizeInBytes, uint64_t p_sourceBytesToCopy)
 {
 ;
-	m_System_Buffer_memcpy_0(p_destination, p_source, (void*)p_sourceBytesToCopy);
+	memcpy(p_destination, p_source, (void*)p_sourceBytesToCopy);
 }
 
 t_System_CancelEventArgs* m_System_CancelEventArgs__ctor_0()
