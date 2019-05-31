@@ -822,8 +822,10 @@ namespace CS2X.Core.Transpilers
 			block = origBlock;
 		}
 
+		private StatementSyntax lastStatement;// used to check if line end char is needed
 		private void WriteStatment(StatementSyntax statement)
 		{
+			lastStatement = statement;
 			if (statement is BlockSyntax)
 			{
 				writer.WriteLinePrefix('{');
@@ -853,16 +855,18 @@ namespace CS2X.Core.Transpilers
 				}
 				writer.RemoveTab();
 				writer.WriteLinePrefix('}');
+				lastStatement = statement;// set us back to the last statement
 				return;// return so we don't write line end
 			}
 			else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
 			else if (statement is ExpressionStatementSyntax) ExpressionStatement((ExpressionStatementSyntax)statement);
 			else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
 			else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
+			else if (statement is WhileStatementSyntax) WhileStatement((WhileStatementSyntax)statement);
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
-			writer.WriteLine(';');
+			if (!(lastStatement is BlockSyntax)) writer.WriteLine(';');
 		}
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
@@ -881,10 +885,10 @@ namespace CS2X.Core.Transpilers
 			WriteExpression(statement.Expression);
 		}
 
-		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
+		private void WriteLocalDeclaration(VariableDeclarationSyntax declaration)
 		{
-			var typeInfo = semanticModel.GetTypeInfo(statement.Declaration.Type);
-			foreach (var variable in statement.Declaration.Variables)
+			var typeInfo = semanticModel.GetTypeInfo(declaration.Type);
+			foreach (var variable in declaration.Variables)
 			{
 				var localSymbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(variable);
 				var local = new InstructionalBody.Local(block, variable, localSymbol, typeInfo.Type, $"l_{variable.Identifier.ValueText}_{instructionalBody.locals.Count}");
@@ -897,14 +901,29 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
+		{
+			WriteLocalDeclaration(statement.Declaration);
+		}
+
 		private void IfStatement(IfStatementSyntax statement)
 		{
 			// TODO
 		}
 
+		private void WhileStatement(WhileStatementSyntax statement)
+		{
+			writer.WritePrefix("while (");
+			WriteExpression(statement.Condition);
+			writer.WriteLine(')');
+			WriteStatment(statement.Statement);
+		}
+
 		private void FixedStatement(FixedStatementSyntax statement)
 		{
-			// TODO
+			WriteLocalDeclaration(statement.Declaration);
+			writer.WriteLine(';');
+			WriteStatment(statement.Statement);
 		}
 
 		private void ThrowStatement(ThrowStatementSyntax statement)
@@ -921,6 +940,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is StackAllocArrayCreationExpressionSyntax) StackAllocArrayCreationExpression((StackAllocArrayCreationExpressionSyntax)expression);
 			else if (expression is AssignmentExpressionSyntax) AssignmentExpression((AssignmentExpressionSyntax)expression);
 			else if (expression is PrefixUnaryExpressionSyntax) PrefixUnaryExpression((PrefixUnaryExpressionSyntax)expression);
+			else if (expression is PostfixUnaryExpressionSyntax) PostfixUnaryExpression((PostfixUnaryExpressionSyntax)expression);
 			else if (expression is InvocationExpressionSyntax) InvocationExpression((InvocationExpressionSyntax)expression);
 			else if (expression is ConditionalExpressionSyntax) ConditionalExpression((ConditionalExpressionSyntax)expression);
 			else if (expression is BinaryExpressionSyntax) BinaryExpression((BinaryExpressionSyntax)expression);
@@ -928,6 +948,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is ThisExpressionSyntax) ThisExpression((ThisExpressionSyntax)expression);
 			else if (expression is ElementAccessExpressionSyntax) ElementAccessExpression((ElementAccessExpressionSyntax)expression);
 			else if (expression is ParenthesizedExpressionSyntax) ParenthesizedExpression((ParenthesizedExpressionSyntax)expression);
+			else if (expression is SizeOfExpressionSyntax) SizeOfExpression((SizeOfExpressionSyntax)expression);
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
@@ -1187,6 +1208,12 @@ namespace CS2X.Core.Transpilers
 			WriteExpression(expression.Operand);
 		}
 
+		private void PostfixUnaryExpression(PostfixUnaryExpressionSyntax expression)
+		{
+			WriteExpression(expression.Operand);
+			writer.Write(expression.OperatorToken.Text);
+		}
+
 		private void InvocationExpression(InvocationExpressionSyntax expression)
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
@@ -1264,7 +1291,7 @@ namespace CS2X.Core.Transpilers
 			{
 				var operatorMethod = (IMethodSymbol)symbolInfo.Symbol;
 				var type = operatorMethod.ContainingType;
-				if (type.SpecialType == SpecialType.System_String)
+				if (type != null && type.SpecialType == SpecialType.System_String)
 				{
 					IMethodSymbol specialMethod = null;
 					if
@@ -1298,7 +1325,11 @@ namespace CS2X.Core.Transpilers
 					WriteExpression(expression.Right);
 					writer.Write(')');
 				}
-				else if (IsPrimitiveType(operatorMethod.Parameters[0].Type) && IsPrimitiveType(operatorMethod.Parameters[1].Type))
+				else if
+				(
+					(IsPrimitiveType(operatorMethod.Parameters[0].Type) || operatorMethod.Parameters[0].Type is IPointerTypeSymbol) &&
+					(IsPrimitiveType(operatorMethod.Parameters[1].Type) || operatorMethod.Parameters[1].Type is IPointerTypeSymbol)
+				)
 				{
 					WriteExpression(expression.Left);
 					writer.Write($" {expression.OperatorToken.ValueText} ");
@@ -1350,6 +1381,12 @@ namespace CS2X.Core.Transpilers
 			writer.Write('(');
 			WriteExpression(expression.Expression);
 			writer.Write(')');
+		}
+
+		private void SizeOfExpression(SizeOfExpressionSyntax expression)
+		{
+			var type = semanticModel.GetTypeInfo(expression.Type).Type;
+			writer.Write($"sizeof({GetTypeFullName(type)})");
 		}
 		#endregion
 

@@ -1719,9 +1719,20 @@ char m_System_CLSCompliantAttribute_get_IsCompliant_0(t_System_CLSCompliantAttri
 void m_System_Console_Write_0(t_System_String* p_s)
 {
 	char16_t* l_printBuff_0;
+	char16_t* l_ptr_1;
 	l_printBuff_0 = alloca(sizeof(char16_t) * 2);
 	l_printBuff_0[1] = 0x0000;
-;
+	l_ptr_1 = &p_s->f__firstChar_1;
+	{
+		char16_t* l_ptrOffset_2;
+		l_ptrOffset_2 = l_ptr_1;
+		while (*l_ptrOffset_2 != 0x0000)
+		{
+			l_printBuff_0[0] = *l_ptrOffset_2;
+			wprintf(l_printBuff_0);
+			l_ptrOffset_2++;
+		}
+	}
 }
 
 void m_System_Console_WriteLine_0(t_System_String* p_s)
@@ -1924,8 +1935,14 @@ char m_System_String_IsNullOrEmpty_0(t_System_String* p_value)
 
 void m_System_String_FillStringChecked_0(t_System_String* p_dest, int32_t p_destPos, t_System_String* p_src)
 {
+	char16_t* l_pDest_0;
+	char16_t* l_pSrc_1;
 ;
-;
+	l_pDest_0 = &p_dest->f__firstChar_1;
+	l_pSrc_1 = &p_src->f__firstChar_1;
+	{
+		memcpy(l_pDest_0 + p_destPos, l_pSrc_1, (void*)(m_System_String_get_Length_0(p_src) * sizeof(char16_t)));
+	}
 }
 
 t_System_String* m_System_String_Concat_0(t_System_String* p_str0, t_System_String* p_str1)
