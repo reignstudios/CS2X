@@ -1,6 +1,6 @@
 namespace System.Collections
 {
-	public class ArrayList : IEnumerable
+	public class ArrayList// : IEnumerable
 	{
 		public int Count
 		{
@@ -10,9 +10,9 @@ namespace System.Collections
 			}
 		}
 
-		public IEnumerator GetEnumerator()
-		{
-			return null;
-		}
+		//public IEnumerator GetEnumerator()
+		//{
+		//	return null;
+		//}
 	}
 }

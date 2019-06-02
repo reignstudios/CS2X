@@ -197,7 +197,7 @@ namespace CS2X.Core.Transpilers
 			while (baseType != null)
 			{
 				++count;
-				baseType = GetBaseType(baseType);
+				baseType = baseType.BaseType;
 			}
 			return count;
 		}
@@ -218,7 +218,7 @@ namespace CS2X.Core.Transpilers
 
 		protected int GetVirtualMethodOverloadIndex(IMethodSymbol method)
 		{
-			if (!method.IsVirtual && !method.IsAbstract) throw new Exception("Method must be virtual: " + method.FullName());
+			if (!IsVirtualMethod(method)) throw new Exception("Method must be virtual: " + method.FullName());
 			if (method.OverriddenMethod != null)
 			{
 				return GetVirtualMethodOverloadIndex(method.OverriddenMethod);
@@ -260,7 +260,7 @@ namespace CS2X.Core.Transpilers
 			do
 			{
 				AddVirtualMethods(baseType);
-				baseType = GetBaseType(baseType);
+				baseType = baseType.BaseType;
 			} while (baseType != null);
 
 			return virtualMethodList;
@@ -277,7 +277,7 @@ namespace CS2X.Core.Transpilers
 					var method = (IMethodSymbol)member;
 					if (method == rootSlotMethod || method.OverriddenMethod == rootSlotMethod) return method;
 				}
-				baseType = GetBaseType(baseType);
+				baseType = baseType.BaseType;
 			} while (baseType != null);
 			throw new Exception("Failed to find highest virtual method slot");
 		}
@@ -285,30 +285,6 @@ namespace CS2X.Core.Transpilers
 		protected bool IsVirtualMethod(IMethodSymbol method)
 		{
 			return method.IsOverride || method.IsVirtual || method.IsAbstract;
-		}
-
-		protected INamedTypeSymbol GetBaseType(INamedTypeSymbol type)
-		{
-			if (type.TypeKind == TypeKind.Struct || type.TypeKind == TypeKind.Enum)
-			{
-				if (type.Interfaces.Length != 0) throw new NotSupportedException("Structs cannot inherit from interfaces");
-				return null;
-			}
-			if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Interface) throw new NotSupportedException("Unsupported type kind: " + type.TypeKind);
-			var baseType = type.BaseType;
-			if (baseType == null)
-			{
-				if (type.Interfaces.Length == 1) baseType = type.Interfaces[0];
-				else if (type.Interfaces.Length > 1) throw new NotSupportedException("Multiple interfaces are not supported on type: " + type.FullName());
-				else if (type.TypeKind == TypeKind.Interface) baseType = objectType;
-			}
-			else if (type.Interfaces.Length != 0)
-			{
-				if (type.Interfaces.Length > 1) throw new NotSupportedException("Multiple interfaces are not supported on type: " + type.FullName());
-				else if (baseType == objectType) baseType = type.Interfaces[0];
-				else throw new NotSupportedException("Interfaces are not supported on type as it already has a base type: " + type.FullName());
-			}
-			return baseType;
 		}
 
 		protected bool IsInternalCall(IMethodSymbol method)

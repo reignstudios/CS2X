@@ -322,6 +322,7 @@ namespace CS2X.Core.Transpilers
 			foreach (var type in project.allTypes)
 			{
 				if (type.SpecialType == SpecialType.System_Void) continue;
+				if (type.TypeKind == TypeKind.Interface) continue;
 				string obj = GetRuntimeTypeObjFullName(type);
 				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
 				writer.WriteLinePrefix($"{obj}.runtimeType.CS2X_RuntimeType = &{obj};");
@@ -334,6 +335,7 @@ namespace CS2X.Core.Transpilers
 			foreach (var type in project.allTypes)
 			{
 				if (type.SpecialType == SpecialType.System_Void) continue;
+				if (type.TypeKind == TypeKind.Interface) continue;
 				string metadata = GetRuntimeTypeMetadataFullName(type);
 				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeType};");
 				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_FullName)->CS2X_RuntimeType = &{stringRuntimeType};");
@@ -344,6 +346,7 @@ namespace CS2X.Core.Transpilers
 			foreach (var type in project.allTypes)
 			{
 				if (type.SpecialType == SpecialType.System_Void) continue;
+				if (type.TypeKind == TypeKind.Interface) continue;
 				string obj = GetRuntimeTypeObjFullName(type);
 				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
 				foreach (var method in orderedVirtualMethods)
@@ -434,6 +437,7 @@ namespace CS2X.Core.Transpilers
 		private bool WriteRuntimeType(INamedTypeSymbol type)
 		{
 			if (type.SpecialType == SpecialType.System_Void) return false;
+			if (type.TypeKind == TypeKind.Interface) return false;
 
 			string runtimeTypeName = GetRuntimeTypeFullName(type);
 			writer.WriteLine($"typedef struct {runtimeTypeName}");
@@ -445,7 +449,7 @@ namespace CS2X.Core.Transpilers
 			{
 				if (method.IsStatic) throw new NotSupportedException("Virtual static method not supported: " + method.Name);
 				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetVTableMethodFullName(method)})(");
-				writer.Write($"{GetTypeFullName(method.ContainingType)}* self");
+				writer.Write($"{GetTypeFullName(type)}* self");
 				if (method.Parameters.Length != 0) writer.Write(", ");
 				WriteParameters(method.Parameters);
 				writer.WriteLine(");");
@@ -469,6 +473,7 @@ namespace CS2X.Core.Transpilers
 		private bool WriteType(INamedTypeSymbol type, bool writeBody)
 		{
 			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return false;
+			if (type.TypeKind == TypeKind.Interface) return false;
 
 			if (!writeBody)
 			{
@@ -617,6 +622,7 @@ namespace CS2X.Core.Transpilers
 						string ptr = string.Empty;
 						if (IsEmptyType(type)) ptr = "*";
 						writer.WriteLinePrefix($"self = {GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}{ptr}));");
+						writer.WriteLinePrefix($"self->CS2X_RuntimeType = &{GetRuntimeTypeObjFullName(type)};");
 					}
 					else if (method.IsImplicitlyDeclared)
 					{
@@ -1419,8 +1425,14 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+		private void CheckType(ITypeSymbol type)
+		{
+			if (type.TypeKind == TypeKind.Interface) throw new NotSupportedException("Interfaces are not valid runtime types");
+		}
+
 		private string GetRuntimeTypeFullName(ITypeSymbol type)
 		{
+			CheckType(type);
 			return GetTypeFullName(type) + "_RTTYPE";
 		}
 
@@ -1437,6 +1449,7 @@ namespace CS2X.Core.Transpilers
 		private Enabler allowTypePrefix = new Enabler(true);
 		protected override string GetTypeFullName(ITypeSymbol type)
 		{
+			CheckType(type);
 			if (IsPrimitiveType(type))
 			{
 				return GetPrimitiveName(type);

@@ -10,23 +10,28 @@ namespace PortableTestApp
 		}
 	}
 
-	/*interface MyInterface
+	interface MyInterface
 	{
 		void MyVirtMethod();
+		void MyFoo();
 	}
 
 	abstract class MyAbstractClass : MyInterface
 	{
 		public abstract void MyVirtMethod();
+		public void MyFoo()
+		{
+			Console.Write("MyAbstractClass::MyFoo");
+		}
 	}
 
 	class MyBaseClass : MyAbstractClass
 	{
 		public override void MyVirtMethod()
 		{
-			Console.WriteLine("MyBaseClass");
+			Console.Write("MyBaseClass::MyVirtMethod");
 		}
-	}*/
+	}
 
 	enum MyEnum
 	{
@@ -87,7 +92,11 @@ namespace PortableTestApp
 
 		static void Main()//string[] args)
 		{
-			Console.Write("Hello World!");return;
+			var m = (MyAbstractClass)new MyBaseClass();
+			m.MyVirtMethod();
+			m.MyFoo();
+			return;
+			//Console.Write("Hello World!");return;
 			//object blaa = MyAutoPropStatic;// boxing
 			Program.MyAutoPropStatic = 0;
 			var v = "Hello World!";

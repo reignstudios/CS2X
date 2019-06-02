@@ -86,11 +86,6 @@ typedef struct t_System_Decimal t_System_Decimal;
 typedef void* t_System_RuntimeFieldHandle;
 typedef struct t_System_RuntimeTypeHandle t_System_RuntimeTypeHandle;
 typedef struct t_System_Collections_DictionaryEntry t_System_Collections_DictionaryEntry;
-typedef void t_System_ICloneable;
-typedef void t_System_IDisposable;
-typedef void t_System_Collections_IEnumerable;
-typedef void t_System_Collections_IEnumerator;
-typedef void t_System_ComponentModel_IContainer;
 typedef int32_t t_System_AttributeTargets;
 typedef int32_t t_System_ComponentModel_EditorBrowsableState;
 typedef int32_t t_System_Reflection_MethodImplAttributes;
@@ -508,31 +503,6 @@ struct t_System_Collections_DictionaryEntry
 	t_System_Object* f__Value_k__BackingField_2;
 };
 
-struct t_System_ICloneable
-{
-	t_System_RuntimeType* CS2X_RuntimeType;
-};
-
-struct t_System_IDisposable
-{
-	t_System_RuntimeType* CS2X_RuntimeType;
-};
-
-struct t_System_Collections_IEnumerable
-{
-	t_System_RuntimeType* CS2X_RuntimeType;
-};
-
-struct t_System_Collections_IEnumerator
-{
-	t_System_RuntimeType* CS2X_RuntimeType;
-};
-
-struct t_System_ComponentModel_IContainer
-{
-	t_System_RuntimeType* CS2X_RuntimeType;
-};
-
 #define f_System_AttributeTargets_Assembly 1
 #define f_System_AttributeTargets_Module 2
 #define f_System_AttributeTargets_Class 4
@@ -599,7 +569,7 @@ struct t_System_ComponentModel_IContainer
 typedef struct t_System_Array_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Array* self);
 } t_System_Array_RTTYPE;
 t_System_Array_RTTYPE t_System_Array_RTTYPE_OBJ;
 int8_t t_System_Array_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,65,0,114,0,114,0,97,0,121,0,0,0};
@@ -608,7 +578,7 @@ int8_t t_System_Array_RTTYPE_RTTYPE_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,
 typedef struct t_System_Attribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Attribute* self);
 } t_System_Attribute_RTTYPE;
 t_System_Attribute_RTTYPE t_System_Attribute_RTTYPE_OBJ;
 int8_t t_System_Attribute_RTTYPE_RTTYPE_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -617,7 +587,7 @@ int8_t t_System_Attribute_RTTYPE_RTTYPE_METADATA_FullName[46] = {0,0,0,0,0,0,0,0
 typedef struct t_System_AttributeUsageAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_AttributeUsageAttribute* self);
 } t_System_AttributeUsageAttribute_RTTYPE;
 t_System_AttributeUsageAttribute_RTTYPE t_System_AttributeUsageAttribute_RTTYPE_OBJ;
 int8_t t_System_AttributeUsageAttribute_RTTYPE_RTTYPE_METADATA_Name[60] = {0,0,0,0,0,0,0,0,23,0,0,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,85,0,115,0,97,0,103,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -626,7 +596,7 @@ int8_t t_System_AttributeUsageAttribute_RTTYPE_RTTYPE_METADATA_FullName[74] = {0
 typedef struct t_System_BitConverter_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_BitConverter* self);
 } t_System_BitConverter_RTTYPE;
 t_System_BitConverter_RTTYPE t_System_BitConverter_RTTYPE_OBJ;
 int8_t t_System_BitConverter_RTTYPE_RTTYPE_METADATA_Name[38] = {0,0,0,0,0,0,0,0,12,0,0,0,66,0,105,0,116,0,67,0,111,0,110,0,118,0,101,0,114,0,116,0,101,0,114,0,0,0};
@@ -635,7 +605,7 @@ int8_t t_System_BitConverter_RTTYPE_RTTYPE_METADATA_FullName[52] = {0,0,0,0,0,0,
 typedef struct t_System_Buffer_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Buffer* self);
 } t_System_Buffer_RTTYPE;
 t_System_Buffer_RTTYPE t_System_Buffer_RTTYPE_OBJ;
 int8_t t_System_Buffer_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,66,0,117,0,102,0,102,0,101,0,114,0,0,0};
@@ -644,7 +614,7 @@ int8_t t_System_Buffer_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13
 typedef struct t_System_CancelEventArgs_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_CancelEventArgs* self);
 } t_System_CancelEventArgs_RTTYPE;
 t_System_CancelEventArgs_RTTYPE t_System_CancelEventArgs_RTTYPE_OBJ;
 int8_t t_System_CancelEventArgs_RTTYPE_RTTYPE_METADATA_Name[44] = {0,0,0,0,0,0,0,0,15,0,0,0,67,0,97,0,110,0,99,0,101,0,108,0,69,0,118,0,101,0,110,0,116,0,65,0,114,0,103,0,115,0,0,0};
@@ -653,7 +623,7 @@ int8_t t_System_CancelEventArgs_RTTYPE_RTTYPE_METADATA_FullName[58] = {0,0,0,0,0
 typedef struct t_System_CLSCompliantAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_CLSCompliantAttribute* self);
 } t_System_CLSCompliantAttribute_RTTYPE;
 t_System_CLSCompliantAttribute_RTTYPE t_System_CLSCompliantAttribute_RTTYPE_OBJ;
 int8_t t_System_CLSCompliantAttribute_RTTYPE_RTTYPE_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,67,0,76,0,83,0,67,0,111,0,109,0,112,0,108,0,105,0,97,0,110,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -662,7 +632,7 @@ int8_t t_System_CLSCompliantAttribute_RTTYPE_RTTYPE_METADATA_FullName[70] = {0,0
 typedef struct t_System_Console_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Console* self);
 } t_System_Console_RTTYPE;
 t_System_Console_RTTYPE t_System_Console_RTTYPE_OBJ;
 int8_t t_System_Console_RTTYPE_RTTYPE_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,67,0,111,0,110,0,115,0,111,0,108,0,101,0,0,0};
@@ -671,7 +641,7 @@ int8_t t_System_Console_RTTYPE_RTTYPE_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,1
 typedef struct t_System_Delegate_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Delegate* self);
 } t_System_Delegate_RTTYPE;
 t_System_Delegate_RTTYPE t_System_Delegate_RTTYPE_OBJ;
 int8_t t_System_Delegate_RTTYPE_RTTYPE_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0};
@@ -680,7 +650,7 @@ int8_t t_System_Delegate_RTTYPE_RTTYPE_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,
 typedef struct t_System_Enum_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Enum* self);
 } t_System_Enum_RTTYPE;
 t_System_Enum_RTTYPE t_System_Enum_RTTYPE_OBJ;
 int8_t t_System_Enum_RTTYPE_RTTYPE_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,69,0,110,0,117,0,109,0,0,0};
@@ -689,7 +659,7 @@ int8_t t_System_Enum_RTTYPE_RTTYPE_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0
 typedef struct t_System_Environment_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Environment* self);
 } t_System_Environment_RTTYPE;
 t_System_Environment_RTTYPE t_System_Environment_RTTYPE_OBJ;
 int8_t t_System_Environment_RTTYPE_RTTYPE_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,69,0,110,0,118,0,105,0,114,0,111,0,110,0,109,0,101,0,110,0,116,0,0,0};
@@ -698,7 +668,7 @@ int8_t t_System_Environment_RTTYPE_RTTYPE_METADATA_FullName[50] = {0,0,0,0,0,0,0
 typedef struct t_System_EventArgs_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_EventArgs* self);
 } t_System_EventArgs_RTTYPE;
 t_System_EventArgs_RTTYPE t_System_EventArgs_RTTYPE_OBJ;
 int8_t t_System_EventArgs_RTTYPE_RTTYPE_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,69,0,118,0,101,0,110,0,116,0,65,0,114,0,103,0,115,0,0,0};
@@ -707,7 +677,7 @@ int8_t t_System_EventArgs_RTTYPE_RTTYPE_METADATA_FullName[46] = {0,0,0,0,0,0,0,0
 typedef struct t_System_Exception_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Exception* self);
 	t_System_String* (*vTable_get_Message_0)(t_System_Exception* self);
 	t_System_String* (*vTable_get_StackTrace_0)(t_System_Exception* self);
 } t_System_Exception_RTTYPE;
@@ -718,7 +688,7 @@ int8_t t_System_Exception_RTTYPE_RTTYPE_METADATA_FullName[46] = {0,0,0,0,0,0,0,0
 typedef struct t_System_FlagsAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_FlagsAttribute* self);
 } t_System_FlagsAttribute_RTTYPE;
 t_System_FlagsAttribute_RTTYPE t_System_FlagsAttribute_RTTYPE_OBJ;
 int8_t t_System_FlagsAttribute_RTTYPE_RTTYPE_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,70,0,108,0,97,0,103,0,115,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -727,7 +697,7 @@ int8_t t_System_FlagsAttribute_RTTYPE_RTTYPE_METADATA_FullName[56] = {0,0,0,0,0,
 typedef struct t_System_GC_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_GC* self);
 } t_System_GC_RTTYPE;
 t_System_GC_RTTYPE t_System_GC_RTTYPE_OBJ;
 int8_t t_System_GC_RTTYPE_RTTYPE_METADATA_Name[18] = {0,0,0,0,0,0,0,0,2,0,0,0,71,0,67,0,0,0};
@@ -736,9 +706,9 @@ int8_t t_System_GC_RTTYPE_RTTYPE_METADATA_FullName[32] = {0,0,0,0,0,0,0,0,9,0,0,
 typedef struct t_System_IndexOutOfRangeException_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_String* (*vTable_get_Message_0)(t_System_Exception* self);
-	t_System_String* (*vTable_get_StackTrace_0)(t_System_Exception* self);
+	t_System_String* (*vTable_ToString_0)(t_System_IndexOutOfRangeException* self);
+	t_System_String* (*vTable_get_Message_0)(t_System_IndexOutOfRangeException* self);
+	t_System_String* (*vTable_get_StackTrace_0)(t_System_IndexOutOfRangeException* self);
 } t_System_IndexOutOfRangeException_RTTYPE;
 t_System_IndexOutOfRangeException_RTTYPE t_System_IndexOutOfRangeException_RTTYPE_OBJ;
 int8_t t_System_IndexOutOfRangeException_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,73,0,110,0,100,0,101,0,120,0,79,0,117,0,116,0,79,0,102,0,82,0,97,0,110,0,103,0,101,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0};
@@ -747,7 +717,7 @@ int8_t t_System_IndexOutOfRangeException_RTTYPE_RTTYPE_METADATA_FullName[76] = {
 typedef struct t_System_Math_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Math* self);
 } t_System_Math_RTTYPE;
 t_System_Math_RTTYPE t_System_Math_RTTYPE_OBJ;
 int8_t t_System_Math_RTTYPE_RTTYPE_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,77,0,97,0,116,0,104,0,0,0};
@@ -756,7 +726,7 @@ int8_t t_System_Math_RTTYPE_RTTYPE_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0
 typedef struct t_System_MathF_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_MathF* self);
 } t_System_MathF_RTTYPE;
 t_System_MathF_RTTYPE t_System_MathF_RTTYPE_OBJ;
 int8_t t_System_MathF_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,77,0,97,0,116,0,104,0,70,0,0,0};
@@ -765,7 +735,7 @@ int8_t t_System_MathF_RTTYPE_RTTYPE_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,
 typedef struct t_System_MulticastDelegate_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_MulticastDelegate* self);
 } t_System_MulticastDelegate_RTTYPE;
 t_System_MulticastDelegate_RTTYPE t_System_MulticastDelegate_RTTYPE_OBJ;
 int8_t t_System_MulticastDelegate_RTTYPE_RTTYPE_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,77,0,117,0,108,0,116,0,105,0,99,0,97,0,115,0,116,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0};
@@ -774,7 +744,7 @@ int8_t t_System_MulticastDelegate_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0
 typedef struct t_System_NonSerializedAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_NonSerializedAttribute* self);
 } t_System_NonSerializedAttribute_RTTYPE;
 t_System_NonSerializedAttribute_RTTYPE t_System_NonSerializedAttribute_RTTYPE_OBJ;
 int8_t t_System_NonSerializedAttribute_RTTYPE_RTTYPE_METADATA_Name[58] = {0,0,0,0,0,0,0,0,22,0,0,0,78,0,111,0,110,0,83,0,101,0,114,0,105,0,97,0,108,0,105,0,122,0,101,0,100,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -783,9 +753,9 @@ int8_t t_System_NonSerializedAttribute_RTTYPE_RTTYPE_METADATA_FullName[72] = {0,
 typedef struct t_System_NotSupportedException_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_String* (*vTable_get_Message_0)(t_System_Exception* self);
-	t_System_String* (*vTable_get_StackTrace_0)(t_System_Exception* self);
+	t_System_String* (*vTable_ToString_0)(t_System_NotSupportedException* self);
+	t_System_String* (*vTable_get_Message_0)(t_System_NotSupportedException* self);
+	t_System_String* (*vTable_get_StackTrace_0)(t_System_NotSupportedException* self);
 } t_System_NotSupportedException_RTTYPE;
 t_System_NotSupportedException_RTTYPE t_System_NotSupportedException_RTTYPE_OBJ;
 int8_t t_System_NotSupportedException_RTTYPE_RTTYPE_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,78,0,111,0,116,0,83,0,117,0,112,0,112,0,111,0,114,0,116,0,101,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0};
@@ -794,7 +764,7 @@ int8_t t_System_NotSupportedException_RTTYPE_RTTYPE_METADATA_FullName[70] = {0,0
 typedef struct t_System_Nullable_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Nullable* self);
 } t_System_Nullable_RTTYPE;
 t_System_Nullable_RTTYPE t_System_Nullable_RTTYPE_OBJ;
 int8_t t_System_Nullable_RTTYPE_RTTYPE_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,78,0,117,0,108,0,108,0,97,0,98,0,108,0,101,0,0,0};
@@ -803,7 +773,7 @@ int8_t t_System_Nullable_RTTYPE_RTTYPE_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,
 typedef struct t_System_Number_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Number* self);
 } t_System_Number_RTTYPE;
 t_System_Number_RTTYPE t_System_Number_RTTYPE_OBJ;
 int8_t t_System_Number_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,78,0,117,0,109,0,98,0,101,0,114,0,0,0};
@@ -821,7 +791,7 @@ int8_t t_System_Object_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13
 typedef struct t_System_ObsoleteAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_ObsoleteAttribute* self);
 } t_System_ObsoleteAttribute_RTTYPE;
 t_System_ObsoleteAttribute_RTTYPE t_System_ObsoleteAttribute_RTTYPE_OBJ;
 int8_t t_System_ObsoleteAttribute_RTTYPE_RTTYPE_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,79,0,98,0,115,0,111,0,108,0,101,0,116,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -830,7 +800,7 @@ int8_t t_System_ObsoleteAttribute_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0
 typedef struct t_System_ParamArrayAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_ParamArrayAttribute* self);
 } t_System_ParamArrayAttribute_RTTYPE;
 t_System_ParamArrayAttribute_RTTYPE t_System_ParamArrayAttribute_RTTYPE_OBJ;
 int8_t t_System_ParamArrayAttribute_RTTYPE_RTTYPE_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,80,0,97,0,114,0,97,0,109,0,65,0,114,0,114,0,97,0,121,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -839,11 +809,11 @@ int8_t t_System_ParamArrayAttribute_RTTYPE_RTTYPE_METADATA_FullName[66] = {0,0,0
 typedef struct t_System_RuntimeType_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_String* (*vTable_get_Name_0)(t_System_Reflection_MemberInfo* self);
-	t_System_Type* (*vTable_get_BaseType_0)(t_System_Type* self);
-	t_System_String* (*vTable_get_FullName_0)(t_System_Type* self);
-	t_System_RuntimeTypeHandle (*vTable_get_TypeHandle_0)(t_System_Type* self);
+	t_System_String* (*vTable_ToString_0)(t_System_RuntimeType* self);
+	t_System_String* (*vTable_get_Name_0)(t_System_RuntimeType* self);
+	t_System_Type* (*vTable_get_BaseType_0)(t_System_RuntimeType* self);
+	t_System_String* (*vTable_get_FullName_0)(t_System_RuntimeType* self);
+	t_System_RuntimeTypeHandle (*vTable_get_TypeHandle_0)(t_System_RuntimeType* self);
 } t_System_RuntimeType_RTTYPE;
 t_System_RuntimeType_RTTYPE t_System_RuntimeType_RTTYPE_OBJ;
 int8_t t_System_RuntimeType_RTTYPE_RTTYPE_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,84,0,121,0,112,0,101,0,0,0};
@@ -852,7 +822,7 @@ int8_t t_System_RuntimeType_RTTYPE_RTTYPE_METADATA_FullName[50] = {0,0,0,0,0,0,0
 typedef struct t_System_String_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_String* self);
 } t_System_String_RTTYPE;
 t_System_String_RTTYPE t_System_String_RTTYPE_OBJ;
 int8_t t_System_String_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,0,0};
@@ -861,7 +831,7 @@ int8_t t_System_String_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13
 typedef struct t_System_StringBuilder_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_StringBuilder* self);
 } t_System_StringBuilder_RTTYPE;
 t_System_StringBuilder_RTTYPE t_System_StringBuilder_RTTYPE_OBJ;
 int8_t t_System_StringBuilder_RTTYPE_RTTYPE_METADATA_Name[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0};
@@ -870,8 +840,8 @@ int8_t t_System_StringBuilder_RTTYPE_RTTYPE_METADATA_FullName[54] = {0,0,0,0,0,0
 typedef struct t_System_Type_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_String* (*vTable_get_Name_0)(t_System_Reflection_MemberInfo* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Type* self);
+	t_System_String* (*vTable_get_Name_0)(t_System_Type* self);
 	t_System_Type* (*vTable_get_BaseType_0)(t_System_Type* self);
 	t_System_String* (*vTable_get_FullName_0)(t_System_Type* self);
 	t_System_RuntimeTypeHandle (*vTable_get_TypeHandle_0)(t_System_Type* self);
@@ -883,11 +853,11 @@ int8_t t_System_Type_RTTYPE_RTTYPE_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0
 typedef struct t_System_TypeInfo_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_String* (*vTable_get_Name_0)(t_System_Reflection_MemberInfo* self);
-	t_System_Type* (*vTable_get_BaseType_0)(t_System_Type* self);
-	t_System_String* (*vTable_get_FullName_0)(t_System_Type* self);
-	t_System_RuntimeTypeHandle (*vTable_get_TypeHandle_0)(t_System_Type* self);
+	t_System_String* (*vTable_ToString_0)(t_System_TypeInfo* self);
+	t_System_String* (*vTable_get_Name_0)(t_System_TypeInfo* self);
+	t_System_Type* (*vTable_get_BaseType_0)(t_System_TypeInfo* self);
+	t_System_String* (*vTable_get_FullName_0)(t_System_TypeInfo* self);
+	t_System_RuntimeTypeHandle (*vTable_get_TypeHandle_0)(t_System_TypeInfo* self);
 } t_System_TypeInfo_RTTYPE;
 t_System_TypeInfo_RTTYPE t_System_TypeInfo_RTTYPE_OBJ;
 int8_t t_System_TypeInfo_RTTYPE_RTTYPE_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,84,0,121,0,112,0,101,0,73,0,110,0,102,0,111,0,0,0};
@@ -896,7 +866,7 @@ int8_t t_System_TypeInfo_RTTYPE_RTTYPE_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,
 typedef struct t_System_ValueType_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_ValueType* self);
 } t_System_ValueType_RTTYPE;
 t_System_ValueType_RTTYPE t_System_ValueType_RTTYPE_OBJ;
 int8_t t_System_ValueType_RTTYPE_RTTYPE_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,86,0,97,0,108,0,117,0,101,0,84,0,121,0,112,0,101,0,0,0};
@@ -905,7 +875,7 @@ int8_t t_System_ValueType_RTTYPE_RTTYPE_METADATA_FullName[46] = {0,0,0,0,0,0,0,0
 typedef struct t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self);
 } t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE;
 t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE_OBJ;
 int8_t t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE_RTTYPE_METADATA_Name[58] = {0,0,0,0,0,0,0,0,22,0,0,0,71,0,101,0,110,0,101,0,114,0,97,0,116,0,101,0,100,0,67,0,111,0,100,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -914,8 +884,7 @@ int8_t t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE_RTTYPE_METADATA_F
 typedef struct t_System_Collections_ArrayList_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_Collections_IEnumerator* (*vTable_GetEnumerator_0)(t_System_Collections_IEnumerable* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Collections_ArrayList* self);
 } t_System_Collections_ArrayList_RTTYPE;
 t_System_Collections_ArrayList_RTTYPE t_System_Collections_ArrayList_RTTYPE_OBJ;
 int8_t t_System_Collections_ArrayList_RTTYPE_RTTYPE_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,65,0,114,0,114,0,97,0,121,0,76,0,105,0,115,0,116,0,0,0};
@@ -924,8 +893,7 @@ int8_t t_System_Collections_ArrayList_RTTYPE_RTTYPE_METADATA_FullName[70] = {0,0
 typedef struct t_System_Collections_Queue_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_Collections_IEnumerator* (*vTable_GetEnumerator_0)(t_System_Collections_IEnumerable* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Collections_Queue* self);
 } t_System_Collections_Queue_RTTYPE;
 t_System_Collections_Queue_RTTYPE t_System_Collections_Queue_RTTYPE_OBJ;
 int8_t t_System_Collections_Queue_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,81,0,117,0,101,0,117,0,101,0,0,0};
@@ -934,8 +902,7 @@ int8_t t_System_Collections_Queue_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0
 typedef struct t_System_Collections_Stack_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_Collections_IEnumerator* (*vTable_GetEnumerator_0)(t_System_Collections_IEnumerable* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Collections_Stack* self);
 } t_System_Collections_Stack_RTTYPE;
 t_System_Collections_Stack_RTTYPE t_System_Collections_Stack_RTTYPE_OBJ;
 int8_t t_System_Collections_Stack_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,83,0,116,0,97,0,99,0,107,0,0,0};
@@ -944,7 +911,7 @@ int8_t t_System_Collections_Stack_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0
 typedef struct t_System_ComponentModel_BrowsableAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_ComponentModel_BrowsableAttribute* self);
 } t_System_ComponentModel_BrowsableAttribute_RTTYPE;
 t_System_ComponentModel_BrowsableAttribute_RTTYPE t_System_ComponentModel_BrowsableAttribute_RTTYPE_OBJ;
 int8_t t_System_ComponentModel_BrowsableAttribute_RTTYPE_RTTYPE_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,66,0,114,0,111,0,119,0,115,0,97,0,98,0,108,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -953,7 +920,7 @@ int8_t t_System_ComponentModel_BrowsableAttribute_RTTYPE_RTTYPE_METADATA_FullNam
 typedef struct t_System_ComponentModel_DependencyAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_ComponentModel_DependencyAttribute* self);
 } t_System_ComponentModel_DependencyAttribute_RTTYPE;
 t_System_ComponentModel_DependencyAttribute_RTTYPE t_System_ComponentModel_DependencyAttribute_RTTYPE_OBJ;
 int8_t t_System_ComponentModel_DependencyAttribute_RTTYPE_RTTYPE_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,68,0,101,0,112,0,101,0,110,0,100,0,101,0,110,0,99,0,121,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -962,7 +929,7 @@ int8_t t_System_ComponentModel_DependencyAttribute_RTTYPE_RTTYPE_METADATA_FullNa
 typedef struct t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_ComponentModel_EditorBrowsableAttribute* self);
 } t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE;
 t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE_OBJ;
 int8_t t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,69,0,100,0,105,0,116,0,111,0,114,0,66,0,114,0,111,0,119,0,115,0,97,0,98,0,108,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -971,7 +938,7 @@ int8_t t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE_RTTYPE_METADATA_F
 typedef struct t_System_Diagnostics_ConditionalAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Diagnostics_ConditionalAttribute* self);
 } t_System_Diagnostics_ConditionalAttribute_RTTYPE;
 t_System_Diagnostics_ConditionalAttribute_RTTYPE t_System_Diagnostics_ConditionalAttribute_RTTYPE_OBJ;
 int8_t t_System_Diagnostics_ConditionalAttribute_RTTYPE_RTTYPE_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,67,0,111,0,110,0,100,0,105,0,116,0,105,0,111,0,110,0,97,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -980,7 +947,7 @@ int8_t t_System_Diagnostics_ConditionalAttribute_RTTYPE_RTTYPE_METADATA_FullName
 typedef struct t_System_Diagnostics_Debug_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Diagnostics_Debug* self);
 } t_System_Diagnostics_Debug_RTTYPE;
 t_System_Diagnostics_Debug_RTTYPE t_System_Diagnostics_Debug_RTTYPE_OBJ;
 int8_t t_System_Diagnostics_Debug_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,68,0,101,0,98,0,117,0,103,0,0,0};
@@ -989,7 +956,7 @@ int8_t t_System_Diagnostics_Debug_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0
 typedef struct t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* self);
 } t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE;
 t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE_OBJ;
 int8_t t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,83,0,117,0,112,0,112,0,114,0,101,0,115,0,115,0,77,0,101,0,115,0,115,0,97,0,103,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -998,7 +965,7 @@ int8_t t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE_RTTYPE_
 typedef struct t_System_Globalization_CultureInfo_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Globalization_CultureInfo* self);
 } t_System_Globalization_CultureInfo_RTTYPE;
 t_System_Globalization_CultureInfo_RTTYPE t_System_Globalization_CultureInfo_RTTYPE_OBJ;
 int8_t t_System_Globalization_CultureInfo_RTTYPE_RTTYPE_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,67,0,117,0,108,0,116,0,117,0,114,0,101,0,73,0,110,0,102,0,111,0,0,0};
@@ -1007,7 +974,7 @@ int8_t t_System_Globalization_CultureInfo_RTTYPE_RTTYPE_METADATA_FullName[78] = 
 typedef struct t_System_Globalization_NumberFormatInfo_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Globalization_NumberFormatInfo* self);
 } t_System_Globalization_NumberFormatInfo_RTTYPE;
 t_System_Globalization_NumberFormatInfo_RTTYPE t_System_Globalization_NumberFormatInfo_RTTYPE_OBJ;
 int8_t t_System_Globalization_NumberFormatInfo_RTTYPE_RTTYPE_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,78,0,117,0,109,0,98,0,101,0,114,0,70,0,111,0,114,0,109,0,97,0,116,0,73,0,110,0,102,0,111,0,0,0};
@@ -1016,7 +983,7 @@ int8_t t_System_Globalization_NumberFormatInfo_RTTYPE_RTTYPE_METADATA_FullName[8
 typedef struct t_System_Reflection_AssemblyCompanyAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyCompanyAttribute* self);
 } t_System_Reflection_AssemblyCompanyAttribute_RTTYPE;
 t_System_Reflection_AssemblyCompanyAttribute_RTTYPE t_System_Reflection_AssemblyCompanyAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyCompanyAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,67,0,111,0,109,0,112,0,97,0,110,0,121,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1025,7 +992,7 @@ int8_t t_System_Reflection_AssemblyCompanyAttribute_RTTYPE_RTTYPE_METADATA_FullN
 typedef struct t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyConfigurationAttribute* self);
 } t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE;
 t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE_RTTYPE_METADATA_Name[74] = {0,0,0,0,0,0,0,0,30,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,67,0,111,0,110,0,102,0,105,0,103,0,117,0,114,0,97,0,116,0,105,0,111,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1034,7 +1001,7 @@ int8_t t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE_RTTYPE_METADATA
 typedef struct t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyCopyrightAttribute* self);
 } t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE;
 t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE_RTTYPE_METADATA_Name[66] = {0,0,0,0,0,0,0,0,26,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,67,0,111,0,112,0,121,0,114,0,105,0,103,0,104,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1043,7 +1010,7 @@ int8_t t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE_RTTYPE_METADATA_Ful
 typedef struct t_System_Reflection_AssemblyCultureAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyCultureAttribute* self);
 } t_System_Reflection_AssemblyCultureAttribute_RTTYPE;
 t_System_Reflection_AssemblyCultureAttribute_RTTYPE t_System_Reflection_AssemblyCultureAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyCultureAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,67,0,117,0,108,0,116,0,117,0,114,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1052,7 +1019,7 @@ int8_t t_System_Reflection_AssemblyCultureAttribute_RTTYPE_RTTYPE_METADATA_FullN
 typedef struct t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyDelaySignAttribute* self);
 } t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE;
 t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE_RTTYPE_METADATA_Name[66] = {0,0,0,0,0,0,0,0,26,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,68,0,101,0,108,0,97,0,121,0,83,0,105,0,103,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1061,7 +1028,7 @@ int8_t t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE_RTTYPE_METADATA_Ful
 typedef struct t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyDescriptionAttribute* self);
 } t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE;
 t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE_RTTYPE_METADATA_Name[70] = {0,0,0,0,0,0,0,0,28,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,68,0,101,0,115,0,99,0,114,0,105,0,112,0,116,0,105,0,111,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1070,7 +1037,7 @@ int8_t t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE_RTTYPE_METADATA_F
 typedef struct t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyFileVersionAttribute* self);
 } t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE;
 t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE_RTTYPE_METADATA_Name[70] = {0,0,0,0,0,0,0,0,28,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,70,0,105,0,108,0,101,0,86,0,101,0,114,0,115,0,105,0,111,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1079,7 +1046,7 @@ int8_t t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE_RTTYPE_METADATA_F
 typedef struct t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyInformationalVersionAttribute* self);
 } t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE;
 t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE_RTTYPE_METADATA_Name[88] = {0,0,0,0,0,0,0,0,37,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,73,0,110,0,102,0,111,0,114,0,109,0,97,0,116,0,105,0,111,0,110,0,97,0,108,0,86,0,101,0,114,0,115,0,105,0,111,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1088,7 +1055,7 @@ int8_t t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE_RTTYPE_M
 typedef struct t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyKeyFileAttribute* self);
 } t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE;
 t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,75,0,101,0,121,0,70,0,105,0,108,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1097,7 +1064,7 @@ int8_t t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE_RTTYPE_METADATA_FullN
 typedef struct t_System_Reflection_AssemblyProductAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyProductAttribute* self);
 } t_System_Reflection_AssemblyProductAttribute_RTTYPE;
 t_System_Reflection_AssemblyProductAttribute_RTTYPE t_System_Reflection_AssemblyProductAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyProductAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,80,0,114,0,111,0,100,0,117,0,99,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1106,7 +1073,7 @@ int8_t t_System_Reflection_AssemblyProductAttribute_RTTYPE_RTTYPE_METADATA_FullN
 typedef struct t_System_Reflection_AssemblyTitleAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyTitleAttribute* self);
 } t_System_Reflection_AssemblyTitleAttribute_RTTYPE;
 t_System_Reflection_AssemblyTitleAttribute_RTTYPE t_System_Reflection_AssemblyTitleAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyTitleAttribute_RTTYPE_RTTYPE_METADATA_Name[58] = {0,0,0,0,0,0,0,0,22,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,84,0,105,0,116,0,108,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1115,7 +1082,7 @@ int8_t t_System_Reflection_AssemblyTitleAttribute_RTTYPE_RTTYPE_METADATA_FullNam
 typedef struct t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyTrademarkAttribute* self);
 } t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE;
 t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE_RTTYPE_METADATA_Name[66] = {0,0,0,0,0,0,0,0,26,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,84,0,114,0,97,0,100,0,101,0,109,0,97,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1124,7 +1091,7 @@ int8_t t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE_RTTYPE_METADATA_Ful
 typedef struct t_System_Reflection_AssemblyVersionAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_AssemblyVersionAttribute* self);
 } t_System_Reflection_AssemblyVersionAttribute_RTTYPE;
 t_System_Reflection_AssemblyVersionAttribute_RTTYPE t_System_Reflection_AssemblyVersionAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_AssemblyVersionAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,65,0,115,0,115,0,101,0,109,0,98,0,108,0,121,0,86,0,101,0,114,0,115,0,105,0,111,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1133,7 +1100,7 @@ int8_t t_System_Reflection_AssemblyVersionAttribute_RTTYPE_RTTYPE_METADATA_FullN
 typedef struct t_System_Reflection_DefaultMemberAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_DefaultMemberAttribute* self);
 } t_System_Reflection_DefaultMemberAttribute_RTTYPE;
 t_System_Reflection_DefaultMemberAttribute_RTTYPE t_System_Reflection_DefaultMemberAttribute_RTTYPE_OBJ;
 int8_t t_System_Reflection_DefaultMemberAttribute_RTTYPE_RTTYPE_METADATA_Name[58] = {0,0,0,0,0,0,0,0,22,0,0,0,68,0,101,0,102,0,97,0,117,0,108,0,116,0,77,0,101,0,109,0,98,0,101,0,114,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1142,7 +1109,7 @@ int8_t t_System_Reflection_DefaultMemberAttribute_RTTYPE_RTTYPE_METADATA_FullNam
 typedef struct t_System_Reflection_MemberInfo_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_MemberInfo* self);
 	t_System_String* (*vTable_get_Name_0)(t_System_Reflection_MemberInfo* self);
 } t_System_Reflection_MemberInfo_RTTYPE;
 t_System_Reflection_MemberInfo_RTTYPE t_System_Reflection_MemberInfo_RTTYPE_OBJ;
@@ -1152,7 +1119,7 @@ int8_t t_System_Reflection_MemberInfo_RTTYPE_RTTYPE_METADATA_FullName[70] = {0,0
 typedef struct t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* self);
 } t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE;
 t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE_OBJ;
 int8_t t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE_RTTYPE_METADATA_Name[66] = {0,0,0,0,0,0,0,0,26,0,0,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,71,0,101,0,110,0,101,0,114,0,97,0,116,0,101,0,100,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1161,7 +1128,7 @@ int8_t t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE_RTTYP
 typedef struct t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_IndexerNameAttribute* self);
 } t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE;
 t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE_OBJ;
 int8_t t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE_RTTYPE_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,73,0,110,0,100,0,101,0,120,0,101,0,114,0,78,0,97,0,109,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1170,7 +1137,7 @@ int8_t t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE_RTTYPE_META
 typedef struct t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_IntrinsicAttribute* self);
 } t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE;
 t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE_OBJ;
 int8_t t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE_RTTYPE_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,73,0,110,0,116,0,114,0,105,0,110,0,115,0,105,0,99,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1179,7 +1146,7 @@ int8_t t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE_RTTYPE_METADA
 typedef struct t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_MethodImplAttribute* self);
 } t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE;
 t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_OBJ;
 int8_t t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_RTTYPE_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1188,7 +1155,7 @@ int8_t t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_RTTYPE_METAD
 typedef struct t_System_Runtime_CompilerServices_RuntimeHelpers_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_RuntimeHelpers* self);
 } t_System_Runtime_CompilerServices_RuntimeHelpers_RTTYPE;
 t_System_Runtime_CompilerServices_RuntimeHelpers_RTTYPE t_System_Runtime_CompilerServices_RuntimeHelpers_RTTYPE_OBJ;
 int8_t t_System_Runtime_CompilerServices_RuntimeHelpers_RTTYPE_RTTYPE_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,72,0,101,0,108,0,112,0,101,0,114,0,115,0,0,0};
@@ -1197,7 +1164,7 @@ int8_t t_System_Runtime_CompilerServices_RuntimeHelpers_RTTYPE_RTTYPE_METADATA_F
 typedef struct t_System_Runtime_InteropServices_OutAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_InteropServices_OutAttribute* self);
 } t_System_Runtime_InteropServices_OutAttribute_RTTYPE;
 t_System_Runtime_InteropServices_OutAttribute_RTTYPE t_System_Runtime_InteropServices_OutAttribute_RTTYPE_OBJ;
 int8_t t_System_Runtime_InteropServices_OutAttribute_RTTYPE_RTTYPE_METADATA_Name[38] = {0,0,0,0,0,0,0,0,12,0,0,0,79,0,117,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1206,7 +1173,7 @@ int8_t t_System_Runtime_InteropServices_OutAttribute_RTTYPE_RTTYPE_METADATA_Full
 typedef struct t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_InteropServices_StructLayoutAttribute* self);
 } t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE;
 t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_OBJ;
 int8_t t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_RTTYPE_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,83,0,116,0,114,0,117,0,99,0,116,0,76,0,97,0,121,0,111,0,117,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1215,7 +1182,7 @@ int8_t t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_RTTYPE_META
 typedef struct t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_Versioning_TargetFrameworkAttribute* self);
 } t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE;
 t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE_OBJ;
 int8_t t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,84,0,97,0,114,0,103,0,101,0,116,0,70,0,114,0,97,0,109,0,101,0,119,0,111,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1224,7 +1191,7 @@ int8_t t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE_RTTYPE_METADA
 typedef struct t_CS2X_NativeExternAttribute_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
+	t_System_String* (*vTable_ToString_0)(t_CS2X_NativeExternAttribute* self);
 } t_CS2X_NativeExternAttribute_RTTYPE;
 t_CS2X_NativeExternAttribute_RTTYPE t_CS2X_NativeExternAttribute_RTTYPE_OBJ;
 int8_t t_CS2X_NativeExternAttribute_RTTYPE_RTTYPE_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
@@ -1233,6 +1200,7 @@ int8_t t_CS2X_NativeExternAttribute_RTTYPE_RTTYPE_METADATA_FullName[66] = {0,0,0
 typedef struct char_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(char* self);
 } char_RTTYPE;
 char_RTTYPE char_RTTYPE_OBJ;
 int8_t char_RTTYPE_RTTYPE_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,66,0,111,0,111,0,108,0,101,0,97,0,110,0,0,0};
@@ -1241,6 +1209,7 @@ int8_t char_RTTYPE_RTTYPE_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0
 typedef struct uint8_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(uint8_t* self);
 } uint8_t_RTTYPE;
 uint8_t_RTTYPE uint8_t_RTTYPE_OBJ;
 int8_t uint8_t_RTTYPE_RTTYPE_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,66,0,121,0,116,0,101,0,0,0};
@@ -1249,6 +1218,7 @@ int8_t uint8_t_RTTYPE_RTTYPE_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,8
 typedef struct char16_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(char16_t* self);
 } char16_t_RTTYPE;
 char16_t_RTTYPE char16_t_RTTYPE_OBJ;
 int8_t char16_t_RTTYPE_RTTYPE_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,67,0,104,0,97,0,114,0,0,0};
@@ -1257,6 +1227,7 @@ int8_t char16_t_RTTYPE_RTTYPE_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,
 typedef struct t_System_Decimal_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_Decimal* self);
 } t_System_Decimal_RTTYPE;
 t_System_Decimal_RTTYPE t_System_Decimal_RTTYPE_OBJ;
 int8_t t_System_Decimal_RTTYPE_RTTYPE_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,68,0,101,0,99,0,105,0,109,0,97,0,108,0,0,0};
@@ -1265,6 +1236,7 @@ int8_t t_System_Decimal_RTTYPE_RTTYPE_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,1
 typedef struct double_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(double* self);
 } double_RTTYPE;
 double_RTTYPE double_RTTYPE_OBJ;
 int8_t double_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,68,0,111,0,117,0,98,0,108,0,101,0,0,0};
@@ -1273,6 +1245,7 @@ int8_t double_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83
 typedef struct int16_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(int16_t* self);
 } int16_t_RTTYPE;
 int16_t_RTTYPE int16_t_RTTYPE_OBJ;
 int8_t int16_t_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,49,0,54,0,0,0};
@@ -1281,6 +1254,7 @@ int8_t int16_t_RTTYPE_RTTYPE_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,8
 typedef struct int32_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(int32_t* self);
 } int32_t_RTTYPE;
 int32_t_RTTYPE int32_t_RTTYPE_OBJ;
 int8_t int32_t_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,51,0,50,0,0,0};
@@ -1289,6 +1263,7 @@ int8_t int32_t_RTTYPE_RTTYPE_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,8
 typedef struct int64_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(int64_t* self);
 } int64_t_RTTYPE;
 int64_t_RTTYPE int64_t_RTTYPE_OBJ;
 int8_t int64_t_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,54,0,52,0,0,0};
@@ -1297,6 +1272,7 @@ int8_t int64_t_RTTYPE_RTTYPE_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,8
 typedef struct intptr_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(intptr_t* self);
 } intptr_t_RTTYPE;
 intptr_t_RTTYPE intptr_t_RTTYPE_OBJ;
 int8_t intptr_t_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0};
@@ -1305,6 +1281,7 @@ int8_t intptr_t_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,
 typedef struct t_System_RuntimeFieldHandle_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_RuntimeFieldHandle* self);
 } t_System_RuntimeFieldHandle_RTTYPE;
 t_System_RuntimeFieldHandle_RTTYPE t_System_RuntimeFieldHandle_RTTYPE_OBJ;
 int8_t t_System_RuntimeFieldHandle_RTTYPE_RTTYPE_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,70,0,105,0,101,0,108,0,100,0,72,0,97,0,110,0,100,0,108,0,101,0,0,0};
@@ -1313,6 +1290,7 @@ int8_t t_System_RuntimeFieldHandle_RTTYPE_RTTYPE_METADATA_FullName[64] = {0,0,0,
 typedef struct t_System_RuntimeTypeHandle_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_RuntimeTypeHandle* self);
 } t_System_RuntimeTypeHandle_RTTYPE;
 t_System_RuntimeTypeHandle_RTTYPE t_System_RuntimeTypeHandle_RTTYPE_OBJ;
 int8_t t_System_RuntimeTypeHandle_RTTYPE_RTTYPE_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,84,0,121,0,112,0,101,0,72,0,97,0,110,0,100,0,108,0,101,0,0,0};
@@ -1321,6 +1299,7 @@ int8_t t_System_RuntimeTypeHandle_RTTYPE_RTTYPE_METADATA_FullName[62] = {0,0,0,0
 typedef struct int8_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(int8_t* self);
 } int8_t_RTTYPE;
 int8_t_RTTYPE int8_t_RTTYPE_OBJ;
 int8_t int8_t_RTTYPE_RTTYPE_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,83,0,66,0,121,0,116,0,101,0,0,0};
@@ -1329,6 +1308,7 @@ int8_t int8_t_RTTYPE_RTTYPE_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83
 typedef struct float_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(float* self);
 } float_RTTYPE;
 float_RTTYPE float_RTTYPE_OBJ;
 int8_t float_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,83,0,105,0,110,0,103,0,108,0,101,0,0,0};
@@ -1337,6 +1317,7 @@ int8_t float_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,
 typedef struct uint16_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(uint16_t* self);
 } uint16_t_RTTYPE;
 uint16_t_RTTYPE uint16_t_RTTYPE_OBJ;
 int8_t uint16_t_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,85,0,73,0,110,0,116,0,49,0,54,0,0,0};
@@ -1345,6 +1326,7 @@ int8_t uint16_t_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,
 typedef struct uint32_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(uint32_t* self);
 } uint32_t_RTTYPE;
 uint32_t_RTTYPE uint32_t_RTTYPE_OBJ;
 int8_t uint32_t_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,85,0,73,0,110,0,116,0,51,0,50,0,0,0};
@@ -1353,6 +1335,7 @@ int8_t uint32_t_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,
 typedef struct uint64_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(uint64_t* self);
 } uint64_t_RTTYPE;
 uint64_t_RTTYPE uint64_t_RTTYPE_OBJ;
 int8_t uint64_t_RTTYPE_RTTYPE_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,85,0,73,0,110,0,116,0,54,0,52,0,0,0};
@@ -1361,6 +1344,7 @@ int8_t uint64_t_RTTYPE_RTTYPE_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,
 typedef struct uintptr_t_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(uintptr_t* self);
 } uintptr_t_RTTYPE;
 uintptr_t_RTTYPE uintptr_t_RTTYPE_OBJ;
 int8_t uintptr_t_RTTYPE_RTTYPE_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,85,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0};
@@ -1369,66 +1353,16 @@ int8_t uintptr_t_RTTYPE_RTTYPE_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0
 typedef struct t_System_Collections_DictionaryEntry_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_Collections_DictionaryEntry* self);
 } t_System_Collections_DictionaryEntry_RTTYPE;
 t_System_Collections_DictionaryEntry_RTTYPE t_System_Collections_DictionaryEntry_RTTYPE_OBJ;
 int8_t t_System_Collections_DictionaryEntry_RTTYPE_RTTYPE_METADATA_Name[44] = {0,0,0,0,0,0,0,0,15,0,0,0,68,0,105,0,99,0,116,0,105,0,111,0,110,0,97,0,114,0,121,0,69,0,110,0,116,0,114,0,121,0,0,0};
 int8_t t_System_Collections_DictionaryEntry_RTTYPE_RTTYPE_METADATA_FullName[82] = {0,0,0,0,0,0,0,0,34,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,115,0,46,0,68,0,105,0,99,0,116,0,105,0,111,0,110,0,97,0,114,0,121,0,69,0,110,0,116,0,114,0,121,0,0,0};
 
-typedef struct t_System_ICloneable_RTTYPE
-{
-	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_Object* (*vTable_Clone_0)(t_System_ICloneable* self);
-} t_System_ICloneable_RTTYPE;
-t_System_ICloneable_RTTYPE t_System_ICloneable_RTTYPE_OBJ;
-int8_t t_System_ICloneable_RTTYPE_RTTYPE_METADATA_Name[34] = {0,0,0,0,0,0,0,0,10,0,0,0,73,0,67,0,108,0,111,0,110,0,101,0,97,0,98,0,108,0,101,0,0,0};
-int8_t t_System_ICloneable_RTTYPE_RTTYPE_METADATA_FullName[48] = {0,0,0,0,0,0,0,0,17,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,67,0,108,0,111,0,110,0,101,0,97,0,98,0,108,0,101,0,0,0};
-
-typedef struct t_System_IDisposable_RTTYPE
-{
-	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	void (*vTable_Dispose_0)(t_System_IDisposable* self);
-} t_System_IDisposable_RTTYPE;
-t_System_IDisposable_RTTYPE t_System_IDisposable_RTTYPE_OBJ;
-int8_t t_System_IDisposable_RTTYPE_RTTYPE_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,73,0,68,0,105,0,115,0,112,0,111,0,115,0,97,0,98,0,108,0,101,0,0,0};
-int8_t t_System_IDisposable_RTTYPE_RTTYPE_METADATA_FullName[50] = {0,0,0,0,0,0,0,0,18,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,68,0,105,0,115,0,112,0,111,0,115,0,97,0,98,0,108,0,101,0,0,0};
-
-typedef struct t_System_Collections_IEnumerable_RTTYPE
-{
-	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_Collections_IEnumerator* (*vTable_GetEnumerator_0)(t_System_Collections_IEnumerable* self);
-} t_System_Collections_IEnumerable_RTTYPE;
-t_System_Collections_IEnumerable_RTTYPE t_System_Collections_IEnumerable_RTTYPE_OBJ;
-int8_t t_System_Collections_IEnumerable_RTTYPE_RTTYPE_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,73,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,98,0,108,0,101,0,0,0};
-int8_t t_System_Collections_IEnumerable_RTTYPE_RTTYPE_METADATA_FullName[74] = {0,0,0,0,0,0,0,0,30,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,115,0,46,0,73,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,98,0,108,0,101,0,0,0};
-
-typedef struct t_System_Collections_IEnumerator_RTTYPE
-{
-	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	t_System_Object* (*vTable_get_Current_0)(t_System_Collections_IEnumerator* self);
-	char (*vTable_MoveNext_0)(t_System_Collections_IEnumerator* self);
-	void (*vTable_Reset_0)(t_System_Collections_IEnumerator* self);
-} t_System_Collections_IEnumerator_RTTYPE;
-t_System_Collections_IEnumerator_RTTYPE t_System_Collections_IEnumerator_RTTYPE_OBJ;
-int8_t t_System_Collections_IEnumerator_RTTYPE_RTTYPE_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,73,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,0,0};
-int8_t t_System_Collections_IEnumerator_RTTYPE_RTTYPE_METADATA_FullName[74] = {0,0,0,0,0,0,0,0,30,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,115,0,46,0,73,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,0,0};
-
-typedef struct t_System_ComponentModel_IContainer_RTTYPE
-{
-	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_System_Object* self);
-	void (*vTable_Dispose_0)(t_System_IDisposable* self);
-} t_System_ComponentModel_IContainer_RTTYPE;
-t_System_ComponentModel_IContainer_RTTYPE t_System_ComponentModel_IContainer_RTTYPE_OBJ;
-int8_t t_System_ComponentModel_IContainer_RTTYPE_RTTYPE_METADATA_Name[34] = {0,0,0,0,0,0,0,0,10,0,0,0,73,0,67,0,111,0,110,0,116,0,97,0,105,0,110,0,101,0,114,0,0,0};
-int8_t t_System_ComponentModel_IContainer_RTTYPE_RTTYPE_METADATA_FullName[78] = {0,0,0,0,0,0,0,0,32,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,109,0,112,0,111,0,110,0,101,0,110,0,116,0,77,0,111,0,100,0,101,0,108,0,46,0,73,0,67,0,111,0,110,0,116,0,97,0,105,0,110,0,101,0,114,0,0,0};
-
 typedef struct t_System_AttributeTargets_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_AttributeTargets* self);
 } t_System_AttributeTargets_RTTYPE;
 t_System_AttributeTargets_RTTYPE t_System_AttributeTargets_RTTYPE_OBJ;
 int8_t t_System_AttributeTargets_RTTYPE_RTTYPE_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,84,0,97,0,114,0,103,0,101,0,116,0,115,0,0,0};
@@ -1437,6 +1371,7 @@ int8_t t_System_AttributeTargets_RTTYPE_RTTYPE_METADATA_FullName[60] = {0,0,0,0,
 typedef struct t_System_ComponentModel_EditorBrowsableState_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_ComponentModel_EditorBrowsableState* self);
 } t_System_ComponentModel_EditorBrowsableState_RTTYPE;
 t_System_ComponentModel_EditorBrowsableState_RTTYPE t_System_ComponentModel_EditorBrowsableState_RTTYPE_OBJ;
 int8_t t_System_ComponentModel_EditorBrowsableState_RTTYPE_RTTYPE_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,69,0,100,0,105,0,116,0,111,0,114,0,66,0,114,0,111,0,119,0,115,0,97,0,98,0,108,0,101,0,83,0,116,0,97,0,116,0,101,0,0,0};
@@ -1445,6 +1380,7 @@ int8_t t_System_ComponentModel_EditorBrowsableState_RTTYPE_RTTYPE_METADATA_FullN
 typedef struct t_System_Reflection_MethodImplAttributes_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_Reflection_MethodImplAttributes* self);
 } t_System_Reflection_MethodImplAttributes_RTTYPE;
 t_System_Reflection_MethodImplAttributes_RTTYPE t_System_Reflection_MethodImplAttributes_RTTYPE_OBJ;
 int8_t t_System_Reflection_MethodImplAttributes_RTTYPE_RTTYPE_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,115,0,0,0};
@@ -1453,6 +1389,7 @@ int8_t t_System_Reflection_MethodImplAttributes_RTTYPE_RTTYPE_METADATA_FullName[
 typedef struct t_System_Runtime_CompilerServices_MethodCodeType_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_MethodCodeType* self);
 } t_System_Runtime_CompilerServices_MethodCodeType_RTTYPE;
 t_System_Runtime_CompilerServices_MethodCodeType_RTTYPE t_System_Runtime_CompilerServices_MethodCodeType_RTTYPE_OBJ;
 int8_t t_System_Runtime_CompilerServices_MethodCodeType_RTTYPE_RTTYPE_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,67,0,111,0,100,0,101,0,84,0,121,0,112,0,101,0,0,0};
@@ -1461,6 +1398,7 @@ int8_t t_System_Runtime_CompilerServices_MethodCodeType_RTTYPE_RTTYPE_METADATA_F
 typedef struct t_System_Runtime_CompilerServices_MethodImplOptions_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_MethodImplOptions* self);
 } t_System_Runtime_CompilerServices_MethodImplOptions_RTTYPE;
 t_System_Runtime_CompilerServices_MethodImplOptions_RTTYPE t_System_Runtime_CompilerServices_MethodImplOptions_RTTYPE_OBJ;
 int8_t t_System_Runtime_CompilerServices_MethodImplOptions_RTTYPE_RTTYPE_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,79,0,112,0,116,0,105,0,111,0,110,0,115,0,0,0};
@@ -1469,6 +1407,7 @@ int8_t t_System_Runtime_CompilerServices_MethodImplOptions_RTTYPE_RTTYPE_METADAT
 typedef struct t_System_Runtime_InteropServices_LayoutKind_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_InteropServices_LayoutKind* self);
 } t_System_Runtime_InteropServices_LayoutKind_RTTYPE;
 t_System_Runtime_InteropServices_LayoutKind_RTTYPE t_System_Runtime_InteropServices_LayoutKind_RTTYPE_OBJ;
 int8_t t_System_Runtime_InteropServices_LayoutKind_RTTYPE_RTTYPE_METADATA_Name[34] = {0,0,0,0,0,0,0,0,10,0,0,0,76,0,97,0,121,0,111,0,117,0,116,0,75,0,105,0,110,0,100,0,0,0};
@@ -1477,6 +1416,7 @@ int8_t t_System_Runtime_InteropServices_LayoutKind_RTTYPE_RTTYPE_METADATA_FullNa
 typedef struct t_CS2X_NativeExternTarget_RTTYPE
 {
 	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_CS2X_NativeExternTarget* self);
 } t_CS2X_NativeExternTarget_RTTYPE;
 t_CS2X_NativeExternTarget_RTTYPE t_CS2X_NativeExternTarget_RTTYPE_OBJ;
 int8_t t_CS2X_NativeExternTarget_RTTYPE_RTTYPE_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,84,0,97,0,114,0,103,0,101,0,116,0,0,0};
@@ -1485,7 +1425,6 @@ int8_t t_CS2X_NativeExternTarget_RTTYPE_RTTYPE_METADATA_FullName[60] = {0,0,0,0,
 /* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
-t_System_Collections_IEnumerator* m_System_Array_GetEnumerator_0(t_System_Array* self);
 int32_t m_System_Array_get_Length_0(t_System_Array* self);
 int64_t m_System_Array_get_LongLength_0(t_System_Array* self);
 t_System_Array* m_System_Array__ctor_0();
@@ -1548,13 +1487,10 @@ t_System_CodeDom_Compiler_GeneratedCodeAttribute* m_System_CodeDom_Compiler_Gene
 t_System_String* m_System_CodeDom_Compiler_GeneratedCodeAttribute_get_Tool_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self);
 t_System_String* m_System_CodeDom_Compiler_GeneratedCodeAttribute_get_Version_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self);
 int32_t m_System_Collections_ArrayList_get_Count_0(t_System_Collections_ArrayList* self);
-t_System_Collections_IEnumerator* m_System_Collections_ArrayList_GetEnumerator_0(t_System_Collections_ArrayList* self);
 t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0();
 int32_t m_System_Collections_Queue_get_Count_0(t_System_Collections_Queue* self);
-t_System_Collections_IEnumerator* m_System_Collections_Queue_GetEnumerator_0(t_System_Collections_Queue* self);
 t_System_Collections_Queue* m_System_Collections_Queue__ctor_0();
 int32_t m_System_Collections_Stack_get_Count_0(t_System_Collections_Stack* self);
-t_System_Collections_IEnumerator* m_System_Collections_Stack_GetEnumerator_0(t_System_Collections_Stack* self);
 t_System_Collections_Stack* m_System_Collections_Stack__ctor_0();
 t_System_ComponentModel_BrowsableAttribute* m_System_ComponentModel_BrowsableAttribute__ctor_0();
 t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyAttribute__ctor_0();
@@ -1640,11 +1576,6 @@ t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0();
 /* =============================== */
 /* Method definitions */
 /* =============================== */
-t_System_Collections_IEnumerator* m_System_Array_GetEnumerator_0(t_System_Array* self)
-{
-	return 0;
-}
-
 int32_t m_System_Array_get_Length_0(t_System_Array* self)
 {
 }
@@ -1657,6 +1588,7 @@ t_System_Array* m_System_Array__ctor_0()
 {
 	t_System_Array* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Array*));
+	self->CS2X_RuntimeType = &t_System_Array_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1664,6 +1596,7 @@ t_System_Attribute* m_System_Attribute__ctor_0()
 {
 	t_System_Attribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Attribute*));
+	self->CS2X_RuntimeType = &t_System_Attribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1671,6 +1604,7 @@ t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_Sys
 {
 	t_System_AttributeUsageAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_AttributeUsageAttribute));
+	self->CS2X_RuntimeType = &t_System_AttributeUsageAttribute_RTTYPE_OBJ;
 	self->f__attributeTarget_2 = p_validOn;
 	return self;
 }
@@ -1700,6 +1634,7 @@ t_System_CancelEventArgs* m_System_CancelEventArgs__ctor_0()
 {
 	t_System_CancelEventArgs* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_CancelEventArgs*));
+	self->CS2X_RuntimeType = &t_System_CancelEventArgs_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1707,6 +1642,7 @@ t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(char p_is
 {
 	t_System_CLSCompliantAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_CLSCompliantAttribute));
+	self->CS2X_RuntimeType = &t_System_CLSCompliantAttribute_RTTYPE_OBJ;
 	self->f__isCompliant_2 = p_isCompliant;
 	return self;
 }
@@ -1749,6 +1685,7 @@ t_System_Delegate* m_System_Delegate__ctor_0()
 {
 	t_System_Delegate* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Delegate*));
+	self->CS2X_RuntimeType = &t_System_Delegate_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1756,6 +1693,7 @@ t_System_Enum* m_System_Enum__ctor_0()
 {
 	t_System_Enum* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Enum*));
+	self->CS2X_RuntimeType = &t_System_Enum_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1768,6 +1706,7 @@ t_System_EventArgs* m_System_EventArgs__ctor_0()
 {
 	t_System_EventArgs* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_EventArgs*));
+	self->CS2X_RuntimeType = &t_System_EventArgs_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1775,6 +1714,7 @@ t_System_Exception* m_System_Exception__ctor_0()
 {
 	t_System_Exception* self;
 	self = CS2X_GC_New(sizeof(t_System_Exception));
+	self->CS2X_RuntimeType = &t_System_Exception_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1782,6 +1722,7 @@ t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message)
 {
 	t_System_Exception* self;
 	self = CS2X_GC_New(sizeof(t_System_Exception));
+	self->CS2X_RuntimeType = &t_System_Exception_RTTYPE_OBJ;
 	self->f__Message_k__BackingField_1 = p_message;
 	return self;
 }
@@ -1805,6 +1746,7 @@ t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0()
 {
 	t_System_FlagsAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_FlagsAttribute*));
+	self->CS2X_RuntimeType = &t_System_FlagsAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1812,6 +1754,7 @@ t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0()
 {
 	t_System_IndexOutOfRangeException* self;
 	self = CS2X_GC_New(sizeof(t_System_IndexOutOfRangeException));
+	self->CS2X_RuntimeType = &t_System_IndexOutOfRangeException_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1819,6 +1762,7 @@ t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0()
 {
 	t_System_MulticastDelegate* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_MulticastDelegate*));
+	self->CS2X_RuntimeType = &t_System_MulticastDelegate_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1826,6 +1770,7 @@ t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0()
 {
 	t_System_NonSerializedAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_NonSerializedAttribute*));
+	self->CS2X_RuntimeType = &t_System_NonSerializedAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1833,6 +1778,7 @@ t_System_NotSupportedException* m_System_NotSupportedException__ctor_0()
 {
 	t_System_NotSupportedException* self;
 	self = CS2X_GC_New(sizeof(t_System_NotSupportedException));
+	self->CS2X_RuntimeType = &t_System_NotSupportedException_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1849,6 +1795,7 @@ t_System_Object* m_System_Object__ctor_0()
 {
 	t_System_Object* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Object*));
+	self->CS2X_RuntimeType = &t_System_Object_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1856,6 +1803,7 @@ t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_0()
 {
 	t_System_ObsoleteAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_ObsoleteAttribute));
+	self->CS2X_RuntimeType = &t_System_ObsoleteAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1863,6 +1811,7 @@ t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_1(t_System_String* 
 {
 	t_System_ObsoleteAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_ObsoleteAttribute));
+	self->CS2X_RuntimeType = &t_System_ObsoleteAttribute_RTTYPE_OBJ;
 	self->f__message_2 = p_message;
 	return self;
 }
@@ -1871,6 +1820,7 @@ t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_2(t_System_String* 
 {
 	t_System_ObsoleteAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_ObsoleteAttribute));
+	self->CS2X_RuntimeType = &t_System_ObsoleteAttribute_RTTYPE_OBJ;
 	self->f__message_2 = p_message;
 	self->f__error_2 = p_error;
 	return self;
@@ -1890,6 +1840,7 @@ t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0()
 {
 	t_System_ParamArrayAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_ParamArrayAttribute*));
+	self->CS2X_RuntimeType = &t_System_ParamArrayAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -1917,6 +1868,7 @@ t_System_RuntimeType* m_System_RuntimeType__ctor_0()
 {
 	t_System_RuntimeType* self;
 	self = CS2X_GC_New(sizeof(t_System_RuntimeType));
+	self->CS2X_RuntimeType = &t_System_RuntimeType_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2000,6 +1952,7 @@ t_System_String* m_System_String__ctor_0()
 {
 	t_System_String* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_String));
+	self->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2007,6 +1960,7 @@ t_System_StringBuilder* m_System_StringBuilder__ctor_0()
 {
 	t_System_StringBuilder* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_StringBuilder*));
+	self->CS2X_RuntimeType = &t_System_StringBuilder_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2023,6 +1977,7 @@ t_System_Type* m_System_Type__ctor_0()
 {
 	t_System_Type* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Type*));
+	self->CS2X_RuntimeType = &t_System_Type_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2030,6 +1985,7 @@ t_System_TypeInfo* m_System_TypeInfo__ctor_0()
 {
 	t_System_TypeInfo* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_TypeInfo*));
+	self->CS2X_RuntimeType = &t_System_TypeInfo_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2037,6 +1993,7 @@ t_System_ValueType* m_System_ValueType__ctor_0()
 {
 	t_System_ValueType* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_ValueType*));
+	self->CS2X_RuntimeType = &t_System_ValueType_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2044,6 +2001,7 @@ t_System_CodeDom_Compiler_GeneratedCodeAttribute* m_System_CodeDom_Compiler_Gene
 {
 	t_System_CodeDom_Compiler_GeneratedCodeAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_CodeDom_Compiler_GeneratedCodeAttribute));
+	self->CS2X_RuntimeType = &t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE_OBJ;
 	self->f__tool_2 = p_tool;
 	self->f__version_2 = p_version;
 	return self;
@@ -2064,15 +2022,11 @@ int32_t m_System_Collections_ArrayList_get_Count_0(t_System_Collections_ArrayLis
 	return 0;
 }
 
-t_System_Collections_IEnumerator* m_System_Collections_ArrayList_GetEnumerator_0(t_System_Collections_ArrayList* self)
-{
-	return 0;
-}
-
 t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0()
 {
 	t_System_Collections_ArrayList* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Collections_ArrayList*));
+	self->CS2X_RuntimeType = &t_System_Collections_ArrayList_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2081,15 +2035,11 @@ int32_t m_System_Collections_Queue_get_Count_0(t_System_Collections_Queue* self)
 	return 0;
 }
 
-t_System_Collections_IEnumerator* m_System_Collections_Queue_GetEnumerator_0(t_System_Collections_Queue* self)
-{
-	return 0;
-}
-
 t_System_Collections_Queue* m_System_Collections_Queue__ctor_0()
 {
 	t_System_Collections_Queue* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Collections_Queue*));
+	self->CS2X_RuntimeType = &t_System_Collections_Queue_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2098,15 +2048,11 @@ int32_t m_System_Collections_Stack_get_Count_0(t_System_Collections_Stack* self)
 	return 0;
 }
 
-t_System_Collections_IEnumerator* m_System_Collections_Stack_GetEnumerator_0(t_System_Collections_Stack* self)
-{
-	return 0;
-}
-
 t_System_Collections_Stack* m_System_Collections_Stack__ctor_0()
 {
 	t_System_Collections_Stack* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Collections_Stack*));
+	self->CS2X_RuntimeType = &t_System_Collections_Stack_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2114,6 +2060,7 @@ t_System_ComponentModel_BrowsableAttribute* m_System_ComponentModel_BrowsableAtt
 {
 	t_System_ComponentModel_BrowsableAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_ComponentModel_BrowsableAttribute*));
+	self->CS2X_RuntimeType = &t_System_ComponentModel_BrowsableAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2121,6 +2068,7 @@ t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyA
 {
 	t_System_ComponentModel_DependencyAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_ComponentModel_DependencyAttribute*));
+	self->CS2X_RuntimeType = &t_System_ComponentModel_DependencyAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2128,6 +2076,7 @@ t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_Editor
 {
 	t_System_ComponentModel_EditorBrowsableAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_ComponentModel_EditorBrowsableAttribute));
+	self->CS2X_RuntimeType = &t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE_OBJ;
 	self->f__browsableState_2 = p_state;
 	return self;
 }
@@ -2141,6 +2090,7 @@ t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttri
 {
 	t_System_Diagnostics_ConditionalAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Diagnostics_ConditionalAttribute));
+	self->CS2X_RuntimeType = &t_System_Diagnostics_ConditionalAttribute_RTTYPE_OBJ;
 	self->f__conditionString_2 = p_conditionString;
 	return self;
 }
@@ -2154,6 +2104,7 @@ t_System_Diagnostics_Debug* m_System_Diagnostics_Debug__ctor_0()
 {
 	t_System_Diagnostics_Debug* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Diagnostics_Debug*));
+	self->CS2X_RuntimeType = &t_System_Diagnostics_Debug_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2161,6 +2112,7 @@ t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* m_System_Diagnostics
 {
 	t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute*));
+	self->CS2X_RuntimeType = &t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2168,6 +2120,7 @@ t_System_Globalization_CultureInfo* m_System_Globalization_CultureInfo__ctor_0()
 {
 	t_System_Globalization_CultureInfo* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Globalization_CultureInfo*));
+	self->CS2X_RuntimeType = &t_System_Globalization_CultureInfo_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2175,6 +2128,7 @@ t_System_Globalization_NumberFormatInfo* m_System_Globalization_NumberFormatInfo
 {
 	t_System_Globalization_NumberFormatInfo* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Globalization_NumberFormatInfo*));
+	self->CS2X_RuntimeType = &t_System_Globalization_NumberFormatInfo_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2182,6 +2136,7 @@ t_System_Reflection_AssemblyCompanyAttribute* m_System_Reflection_AssemblyCompan
 {
 	t_System_Reflection_AssemblyCompanyAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyCompanyAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyCompanyAttribute_RTTYPE_OBJ;
 	self->f__company_2 = p_company;
 	return self;
 }
@@ -2195,6 +2150,7 @@ t_System_Reflection_AssemblyConfigurationAttribute* m_System_Reflection_Assembly
 {
 	t_System_Reflection_AssemblyConfigurationAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyConfigurationAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE_OBJ;
 	self->f__configuration_2 = p_configuration;
 	return self;
 }
@@ -2208,6 +2164,7 @@ t_System_Reflection_AssemblyCopyrightAttribute* m_System_Reflection_AssemblyCopy
 {
 	t_System_Reflection_AssemblyCopyrightAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyCopyrightAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE_OBJ;
 	self->f__copyright_2 = p_copyright;
 	return self;
 }
@@ -2221,6 +2178,7 @@ t_System_Reflection_AssemblyCultureAttribute* m_System_Reflection_AssemblyCultur
 {
 	t_System_Reflection_AssemblyCultureAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyCultureAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyCultureAttribute_RTTYPE_OBJ;
 	self->f__culture_2 = p_culture;
 	return self;
 }
@@ -2234,6 +2192,7 @@ t_System_Reflection_AssemblyDelaySignAttribute* m_System_Reflection_AssemblyDela
 {
 	t_System_Reflection_AssemblyDelaySignAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Reflection_AssemblyDelaySignAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE_OBJ;
 	self->f__delaySign_2 = p_delaySign;
 	return self;
 }
@@ -2247,6 +2206,7 @@ t_System_Reflection_AssemblyDescriptionAttribute* m_System_Reflection_AssemblyDe
 {
 	t_System_Reflection_AssemblyDescriptionAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyDescriptionAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE_OBJ;
 	self->f__description_2 = p_description;
 	return self;
 }
@@ -2260,6 +2220,7 @@ t_System_Reflection_AssemblyFileVersionAttribute* m_System_Reflection_AssemblyFi
 {
 	t_System_Reflection_AssemblyFileVersionAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyFileVersionAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE_OBJ;
 	self->f__version_2 = p_version;
 	return self;
 }
@@ -2273,6 +2234,7 @@ t_System_Reflection_AssemblyInformationalVersionAttribute* m_System_Reflection_A
 {
 	t_System_Reflection_AssemblyInformationalVersionAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyInformationalVersionAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE_OBJ;
 	self->f__informationalVersion_2 = p_informationalVersion;
 	return self;
 }
@@ -2286,6 +2248,7 @@ t_System_Reflection_AssemblyKeyFileAttribute* m_System_Reflection_AssemblyKeyFil
 {
 	t_System_Reflection_AssemblyKeyFileAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyKeyFileAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE_OBJ;
 	self->f__keyFile_2 = p_keyFile;
 	return self;
 }
@@ -2299,6 +2262,7 @@ t_System_Reflection_AssemblyProductAttribute* m_System_Reflection_AssemblyProduc
 {
 	t_System_Reflection_AssemblyProductAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyProductAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyProductAttribute_RTTYPE_OBJ;
 	self->f__product_2 = p_product;
 	return self;
 }
@@ -2312,6 +2276,7 @@ t_System_Reflection_AssemblyTitleAttribute* m_System_Reflection_AssemblyTitleAtt
 {
 	t_System_Reflection_AssemblyTitleAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyTitleAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyTitleAttribute_RTTYPE_OBJ;
 	self->f__title_2 = p_title;
 	return self;
 }
@@ -2325,6 +2290,7 @@ t_System_Reflection_AssemblyTrademarkAttribute* m_System_Reflection_AssemblyTrad
 {
 	t_System_Reflection_AssemblyTrademarkAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyTrademarkAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE_OBJ;
 	self->f__trademark_2 = p_trademark;
 	return self;
 }
@@ -2338,6 +2304,7 @@ t_System_Reflection_AssemblyVersionAttribute* m_System_Reflection_AssemblyVersio
 {
 	t_System_Reflection_AssemblyVersionAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyVersionAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyVersionAttribute_RTTYPE_OBJ;
 	self->f__version_2 = p_version;
 	return self;
 }
@@ -2351,6 +2318,7 @@ t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAtt
 {
 	t_System_Reflection_DefaultMemberAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Reflection_DefaultMemberAttribute));
+	self->CS2X_RuntimeType = &t_System_Reflection_DefaultMemberAttribute_RTTYPE_OBJ;
 	self->f__memberName_2 = p_memberName;
 	return self;
 }
@@ -2364,6 +2332,7 @@ t_System_Reflection_MemberInfo* m_System_Reflection_MemberInfo__ctor_0()
 {
 	t_System_Reflection_MemberInfo* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Reflection_MemberInfo*));
+	self->CS2X_RuntimeType = &t_System_Reflection_MemberInfo_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2371,6 +2340,7 @@ t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_C
 {
 	t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_CompilerGeneratedAttribute*));
+	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2378,6 +2348,7 @@ t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_Compile
 {
 	t_System_Runtime_CompilerServices_IndexerNameAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_IndexerNameAttribute*));
+	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2385,6 +2356,7 @@ t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerS
 {
 	t_System_Runtime_CompilerServices_IntrinsicAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_IntrinsicAttribute*));
+	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2392,6 +2364,7 @@ t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_Compiler
 {
 	t_System_Runtime_CompilerServices_MethodImplAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_MethodImplAttribute));
+	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_OBJ;
 	self->f__Value_k__BackingField_2 = p_methodImplOptions;
 	return self;
 }
@@ -2400,6 +2373,7 @@ t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_Compiler
 {
 	t_System_Runtime_CompilerServices_MethodImplAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_MethodImplAttribute));
+	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_OBJ;
 	self->f__Value_k__BackingField_2 = (t_System_Runtime_CompilerServices_MethodImplOptions)p_value;
 	return self;
 }
@@ -2408,6 +2382,7 @@ t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_Compiler
 {
 	t_System_Runtime_CompilerServices_MethodImplAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_MethodImplAttribute));
+	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2415,6 +2390,7 @@ t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_
 {
 	t_System_Runtime_InteropServices_OutAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_InteropServices_OutAttribute*));
+	self->CS2X_RuntimeType = &t_System_Runtime_InteropServices_OutAttribute_RTTYPE_OBJ;
 	return self;
 }
 
@@ -2422,6 +2398,7 @@ t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_Interop
 {
 	t_System_Runtime_InteropServices_StructLayoutAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_InteropServices_StructLayoutAttribute));
+	self->CS2X_RuntimeType = &t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_OBJ;
 	self->f__Value_k__BackingField_2 = p_layoutKind;
 	return self;
 }
@@ -2430,6 +2407,7 @@ t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_Interop
 {
 	t_System_Runtime_InteropServices_StructLayoutAttribute* self;
 	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_InteropServices_StructLayoutAttribute));
+	self->CS2X_RuntimeType = &t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_OBJ;
 	self->f__Value_k__BackingField_2 = (t_System_Runtime_InteropServices_LayoutKind)p_layoutKind;
 	return self;
 }
@@ -2438,6 +2416,7 @@ t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versionin
 {
 	t_System_Runtime_Versioning_TargetFrameworkAttribute* self;
 	self = CS2X_GC_New(sizeof(t_System_Runtime_Versioning_TargetFrameworkAttribute));
+	self->CS2X_RuntimeType = &t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE_OBJ;
 	self->f__FrameworkName_k__BackingField_2 = p_frameworkName;
 	return self;
 }
@@ -2446,6 +2425,7 @@ t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_Native
 {
 	t_CS2X_NativeExternAttribute* self;
 	self = CS2X_GC_New(sizeof(t_CS2X_NativeExternAttribute));
+	self->CS2X_RuntimeType = &t_CS2X_NativeExternAttribute_RTTYPE_OBJ;
 	self->f_target_2 = p_target;
 	self->f_methodName_2 = p_methodName;
 	return self;
@@ -2813,16 +2793,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	uintptr_t_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &uintptr_t_RTTYPE_OBJ;
 	memset(&t_System_Collections_DictionaryEntry_RTTYPE_OBJ, 0, sizeof(t_System_Collections_DictionaryEntry_RTTYPE));
 	t_System_Collections_DictionaryEntry_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_System_Collections_DictionaryEntry_RTTYPE_OBJ;
-	memset(&t_System_ICloneable_RTTYPE_OBJ, 0, sizeof(t_System_ICloneable_RTTYPE));
-	t_System_ICloneable_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_System_ICloneable_RTTYPE_OBJ;
-	memset(&t_System_IDisposable_RTTYPE_OBJ, 0, sizeof(t_System_IDisposable_RTTYPE));
-	t_System_IDisposable_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_System_IDisposable_RTTYPE_OBJ;
-	memset(&t_System_Collections_IEnumerable_RTTYPE_OBJ, 0, sizeof(t_System_Collections_IEnumerable_RTTYPE));
-	t_System_Collections_IEnumerable_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_System_Collections_IEnumerable_RTTYPE_OBJ;
-	memset(&t_System_Collections_IEnumerator_RTTYPE_OBJ, 0, sizeof(t_System_Collections_IEnumerator_RTTYPE));
-	t_System_Collections_IEnumerator_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_System_Collections_IEnumerator_RTTYPE_OBJ;
-	memset(&t_System_ComponentModel_IContainer_RTTYPE_OBJ, 0, sizeof(t_System_ComponentModel_IContainer_RTTYPE));
-	t_System_ComponentModel_IContainer_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_System_ComponentModel_IContainer_RTTYPE_OBJ;
 	memset(&t_System_AttributeTargets_RTTYPE_OBJ, 0, sizeof(t_System_AttributeTargets_RTTYPE));
 	t_System_AttributeTargets_RTTYPE_OBJ.runtimeType.CS2X_RuntimeType = &t_System_AttributeTargets_RTTYPE_OBJ;
 	memset(&t_System_ComponentModel_EditorBrowsableState_RTTYPE_OBJ, 0, sizeof(t_System_ComponentModel_EditorBrowsableState_RTTYPE));
@@ -3011,16 +2981,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)uintptr_t_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_System_Collections_DictionaryEntry_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_System_Collections_DictionaryEntry_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_ICloneable_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_ICloneable_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_IDisposable_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_IDisposable_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_Collections_IEnumerable_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_Collections_IEnumerable_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_Collections_IEnumerator_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_Collections_IEnumerator_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_ComponentModel_IContainer_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
-	((t_System_String*)t_System_ComponentModel_IContainer_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_System_AttributeTargets_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_System_AttributeTargets_RTTYPE_RTTYPE_METADATA_FullName)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)t_System_ComponentModel_EditorBrowsableState_RTTYPE_RTTYPE_METADATA_Name)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
@@ -3089,11 +3049,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	t_System_ValueType_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_Collections_ArrayList_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_Collections_ArrayList_RTTYPE_OBJ.vTable_GetEnumerator_0 = 0;
 	t_System_Collections_Queue_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_Collections_Queue_RTTYPE_OBJ.vTable_GetEnumerator_0 = 0;
 	t_System_Collections_Stack_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_Collections_Stack_RTTYPE_OBJ.vTable_GetEnumerator_0 = 0;
 	t_System_ComponentModel_BrowsableAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_ComponentModel_DependencyAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
@@ -3127,16 +3084,29 @@ void CS2X_InitLib_CS2X_CoreLib()
 	t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_CS2X_NativeExternAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_ICloneable_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_ICloneable_RTTYPE_OBJ.vTable_Clone_0 = 0;
-	t_System_IDisposable_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_IDisposable_RTTYPE_OBJ.vTable_Dispose_0 = 0;
-	t_System_Collections_IEnumerable_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_Collections_IEnumerable_RTTYPE_OBJ.vTable_GetEnumerator_0 = 0;
-	t_System_Collections_IEnumerator_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_Collections_IEnumerator_RTTYPE_OBJ.vTable_get_Current_0 = 0;
-	t_System_Collections_IEnumerator_RTTYPE_OBJ.vTable_MoveNext_0 = 0;
-	t_System_Collections_IEnumerator_RTTYPE_OBJ.vTable_Reset_0 = 0;
-	t_System_ComponentModel_IContainer_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	t_System_ComponentModel_IContainer_RTTYPE_OBJ.vTable_Dispose_0 = 0;
+	char_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	uint8_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	char16_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_Decimal_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	double_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	int16_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	int32_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	int64_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	intptr_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_RuntimeFieldHandle_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_RuntimeTypeHandle_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	int8_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	float_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	uint16_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	uint32_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	uint64_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	uintptr_t_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_Collections_DictionaryEntry_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_AttributeTargets_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_ComponentModel_EditorBrowsableState_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_Reflection_MethodImplAttributes_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_Runtime_CompilerServices_MethodCodeType_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_Runtime_CompilerServices_MethodImplOptions_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_System_Runtime_InteropServices_LayoutKind_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	t_CS2X_NativeExternTarget_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 }

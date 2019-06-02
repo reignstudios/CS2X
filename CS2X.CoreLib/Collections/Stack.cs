@@ -1,6 +1,6 @@
 namespace System.Collections
 {
-	public class Stack : IEnumerable
+	public class Stack// : IEnumerable
 	{
 		public int Count
 		{
@@ -10,9 +10,9 @@ namespace System.Collections
 			}
 		}
 
-		public IEnumerator GetEnumerator()
-		{
-			return null;
-		}
+		//public IEnumerator GetEnumerator()
+		//{
+		//	return null;
+		//}
 	}
 }

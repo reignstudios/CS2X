@@ -5,10 +5,10 @@ namespace System
 {
 	public abstract class Array// : ICollection//, IEnumerable, IList, IStructuralComparable, IStructuralEquatable, ICloneable
 	{
-		public IEnumerator GetEnumerator()
-		{
-			return null;
-		}
+		//public IEnumerator GetEnumerator()
+		//{
+		//	return null;
+		//}
 
 		public extern int Length
         {
