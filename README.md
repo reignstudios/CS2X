@@ -5,7 +5,7 @@ Transpiles a C# subset to non .NET languages, platforms, runtimes and enviroment
 If you're looking for IL2X: https://github.com/reignstudios/IL2X
 
 ## Goals
-This project will focus on transpiling a C# subset for writing CPU and GPU programs.
+This project will focus on transpiling a C# subset with a modified type system for writing CPU and GPU programs.
 * Custom Standard lib(s) for various targets.
 * Documentation
 
