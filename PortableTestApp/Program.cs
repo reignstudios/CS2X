@@ -38,7 +38,7 @@ namespace PortableTestApp
 		A, B, C
 	}
 
-	class Program// : MyBaseClass
+	class Program
 	{
 		public int abc;
 		public static int abcStatic;
@@ -62,12 +62,6 @@ namespace PortableTestApp
 
 		private static string value;
 		private static MyEnum myEnum;
-
-		/*public override void MyVirtMethod()
-		{
-			Console.WriteLine("Program");
-			base.MyVirtMethod();
-		}*/
 
 		void Foo2()
 		{
@@ -108,11 +102,11 @@ namespace PortableTestApp
 			Console.WriteLine("Hello World!" + value);
 
 			//foreach (var i in "asdfas")// requires IL System.String::get_Chars(int32)
-			/*var a = new int[123];
-			foreach (var i in a)
-			{
+			//var a = new int[123];
+			//foreach (var i in a)
+			//{
 				
-			}*/
+			//}
 		}
 
 		static string GetValue(object o)
