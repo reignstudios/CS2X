@@ -1046,7 +1046,7 @@ namespace CS2X.Core.Transpilers
 		{
 			void WriteMethodInvoke(IMethodSymbol method)
 			{
-				if (IsVirtualMethod(method))
+				if (IsVirtualMethod(method) && !(method.IsOverride && method.ContainingType.IsSealed))
 				{
 					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
 					WriteCaller(expression);

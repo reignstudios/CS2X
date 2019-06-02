@@ -191,16 +191,19 @@ void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_Portable
 
 void m_PortableTestApp_Program_Main_0()
 {
-	t_PortableTestApp_MyAbstractClass* l_m_0;
-	t_System_String* l_v_1;
-	l_m_0 = (t_PortableTestApp_MyAbstractClass*)m_PortableTestApp_MyBaseClass__ctor_0();
-	((t_PortableTestApp_MyAbstractClass_RTTYPE*)l_m_0->CS2X_RuntimeType)->vTable_MyVirtMethod_0(l_m_0);
+	t_PortableTestApp_MyBaseClass* l_m_0;
+	t_PortableTestApp_MyAbstractClass* l_m2_1;
+	t_System_String* l_v_2;
+	l_m_0 = m_PortableTestApp_MyBaseClass__ctor_0();
+	m_PortableTestApp_MyBaseClass_MyVirtMethod_0(l_m_0);
+	l_m2_1 = (t_PortableTestApp_MyAbstractClass*)l_m_0;
+	((t_PortableTestApp_MyAbstractClass_RTTYPE*)l_m2_1->CS2X_RuntimeType)->vTable_MyVirtMethod_0(l_m2_1);
 	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_0);
 	return;
 	f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField = 0;
-	l_v_1 = StringLiteral_3;
-	l_v_1 = m_int32_t_ToString_0(&f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField);
-	l_v_1 = m_PortableTestApp_Program_GetValue_0(((t_System_Object_RTTYPE*)m_System_Object_GetType_0(l_v_1)->CS2X_RuntimeType)->vTable_ToString_0(m_System_Object_GetType_0(l_v_1)));
+	l_v_2 = StringLiteral_3;
+	l_v_2 = m_int32_t_ToString_0(&f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField);
+	l_v_2 = m_PortableTestApp_Program_GetValue_0(((t_System_Object_RTTYPE*)m_System_Object_GetType_0(l_v_2)->CS2X_RuntimeType)->vTable_ToString_0(m_System_Object_GetType_0(l_v_2)));
 	m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_3, f_PortableTestApp_Program_value));
 }
 

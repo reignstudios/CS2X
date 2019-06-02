@@ -25,7 +25,7 @@ namespace PortableTestApp
 		}
 	}
 
-	class MyBaseClass : MyAbstractClass
+	sealed class MyBaseClass : MyAbstractClass
 	{
 		public override void MyVirtMethod()
 		{
@@ -92,8 +92,10 @@ namespace PortableTestApp
 
 		static void Main()//string[] args)
 		{
-			var m = (MyAbstractClass)new MyBaseClass();
+			var m = new MyBaseClass();
 			m.MyVirtMethod();
+			var m2 = (MyAbstractClass)m;
+			m2.MyVirtMethod();
 			m.MyFoo();
 			return;
 			//Console.Write("Hello World!");return;
