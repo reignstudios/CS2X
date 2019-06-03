@@ -973,8 +973,18 @@ namespace CS2X.Core.Transpilers
 		{
 			writer.WritePrefix("while (");
 			WriteExpression(statement.Condition);
-			writer.WriteLine(')');
-			WriteStatement(statement.Statement);
+			if (statement.Statement is BlockSyntax)
+			{
+				writer.WriteLine(')');
+				WriteStatement(statement.Statement);
+			}
+			else
+			{
+				writer.WriteLine(") ");
+				writer.disablePrefix = true;
+				WriteStatement(statement.Statement);
+				writer.disablePrefix = false;
+			}
 		}
 
 		private void BreakStatement(BreakStatementSyntax statement)
