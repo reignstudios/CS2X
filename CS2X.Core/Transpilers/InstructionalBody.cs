@@ -13,18 +13,21 @@ namespace CS2X.Core.Transpilers
 		public class Local
 		{
 			public readonly BlockSyntax block;
-			public readonly VariableDeclaratorSyntax variable;
-			public readonly ILocalSymbol local;
+			public readonly string identifier;
 			public readonly ITypeSymbol type;
 			public readonly string name;
 
-			public Local(BlockSyntax block, VariableDeclaratorSyntax variable, ILocalSymbol local, ITypeSymbol type, string name)
+			public Local(BlockSyntax block, string identifier, ITypeSymbol type, string name)
 			{
 				this.block = block;
-				this.variable = variable;
-				this.local = local;
+				this.identifier = identifier;
 				this.type = type;
 				this.name = name;
+			}
+
+			public bool Equals(string identifier, ITypeSymbol type)//, BlockSyntax block)
+			{
+				return this.identifier == identifier && this.type == type;// && this.block == block;
 			}
 		}
 

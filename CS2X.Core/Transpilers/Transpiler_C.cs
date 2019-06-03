@@ -912,6 +912,18 @@ namespace CS2X.Core.Transpilers
 		#endregion
 
 		#region Method Body / Syntax Instructions
+		private InstructionalBody.Local TryAddLocal(string identifier, ITypeSymbol type)
+		{
+			InstructionalBody.Local local = null;
+			local = instructionalBody.locals.FirstOrDefault(x => x.Equals(identifier, type));
+			if (local == null)
+			{
+				local = new InstructionalBody.Local(block, identifier, type, $"l_{identifier}_{instructionalBody.locals.Count}");
+				instructionalBody.locals.Add(local);
+			}
+			return local;
+		}
+
 		private void WriteBody(BlockSyntax body)
 		{
 			var origBlock = block;
@@ -923,14 +935,16 @@ namespace CS2X.Core.Transpilers
 			block = origBlock;
 		}
 
-		private StatementSyntax lastStatement;// used to check if line end char is needed
+		private delegate void BlockStartCallbackMethod();
+		private BlockStartCallbackMethod BlockStartCallback;
 		private void WriteStatement(StatementSyntax statement)
 		{
-			lastStatement = statement;
 			if (statement is BlockSyntax)
 			{
 				writer.WriteLinePrefix('{');
 				writer.AddTab();
+				BlockStartCallback?.Invoke();
+				BlockStartCallback = null;
 				using (var stream = new MemoryStream())
 				using (var subInstructionalBody = new InstructionalBody(stream, writer))
 				{
@@ -956,7 +970,6 @@ namespace CS2X.Core.Transpilers
 				}
 				writer.RemoveTab();
 				writer.WriteLinePrefix('}');
-				lastStatement = statement;// set us back to the last statement
 				return;// return so we don't write line end
 			}
 			else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
@@ -965,10 +978,12 @@ namespace CS2X.Core.Transpilers
 			else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
 			else if (statement is WhileStatementSyntax) WhileStatement((WhileStatementSyntax)statement);
 			else if (statement is ForStatementSyntax) ForStatement((ForStatementSyntax)statement);
+			else if (statement is ForEachStatementSyntax) ForEachStatement((ForEachStatementSyntax)statement);
 			else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
+			BlockStartCallback = null;
 		}
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
@@ -995,14 +1010,8 @@ namespace CS2X.Core.Transpilers
 			var last = declaration.Variables.LastOrDefault();
 			foreach (var variable in declaration.Variables)
 			{
-				var localSymbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(variable);
-				InstructionalBody.Local local = null;
-				local = instructionalBody.locals.FirstOrDefault(x => LocalsMatchSignature(x.local, localSymbol));
-				if (local == null)
-				{
-					local = new InstructionalBody.Local(block, variable, localSymbol, typeInfo.Type, $"l_{variable.Identifier.ValueText}_{instructionalBody.locals.Count}");
-					instructionalBody.locals.Add(local);
-				}
+				var type = semanticModel.GetTypeInfo(declaration.Type).Type;
+				var local = TryAddLocal(variable.Identifier.ValueText, type);
 				if (variable.Initializer != null)
 				{
 					writer.WritePrefix(local.name + " = ");
@@ -1010,6 +1019,22 @@ namespace CS2X.Core.Transpilers
 					if (!onlyWriteDelimiterIfNotLast) writer.Write(delimiter);
 					else if (variable != last) writer.Write(delimiter);
 				}
+			}
+		}
+
+		private void WriteFlowControlStatement(StatementSyntax statement, string multiLine, string singleLine)
+		{
+			if (statement is BlockSyntax)
+			{
+				writer.WriteLine(multiLine);
+				WriteStatement(statement);
+			}
+			else
+			{
+				writer.Write(singleLine);
+				writer.disablePrefix = true;
+				WriteStatement(statement);
+				writer.disablePrefix = false;
 			}
 		}
 
@@ -1023,52 +1048,15 @@ namespace CS2X.Core.Transpilers
 			if (statement.Statement == null) return;
 			writer.WritePrefix("if (");
 			WriteExpression(statement.Condition);
-			if (statement.Statement is BlockSyntax)
-			{
-				writer.WriteLine(')');
-				WriteStatement(statement.Statement);
-			}
-			else
-			{
-				writer.Write(") ");
-				writer.disablePrefix = true;
-				WriteStatement(statement.Statement);
-				writer.disablePrefix = false;
-			}
-			
-			if (statement.Else != null)
-			{
-				if (statement.Else.Statement is BlockSyntax)
-				{
-					writer.WriteLinePrefix("else");
-					WriteStatement(statement.Else.Statement);
-				}
-				else
-				{
-					writer.WritePrefix("else ");
-					writer.disablePrefix = true;
-					WriteStatement(statement.Else.Statement);
-					writer.disablePrefix = false;
-				}
-			}
+			WriteFlowControlStatement(statement.Statement, ")", ") ");
+			if (statement.Else != null) WriteFlowControlStatement(statement.Else.Statement, "else", "else ");
 		}
 
 		private void WhileStatement(WhileStatementSyntax statement)
 		{
 			writer.WritePrefix("while (");
 			WriteExpression(statement.Condition);
-			if (statement.Statement is BlockSyntax)
-			{
-				writer.WriteLine(')');
-				WriteStatement(statement.Statement);
-			}
-			else
-			{
-				writer.WriteLine(") ");
-				writer.disablePrefix = true;
-				WriteStatement(statement.Statement);
-				writer.disablePrefix = false;
-			}
+			WriteFlowControlStatement(statement.Statement, ")", ") ");
 		}
 
 		private void ForStatement(ForStatementSyntax statement)
@@ -1095,18 +1083,36 @@ namespace CS2X.Core.Transpilers
 			}
 
 			// statement
-			if (statement.Statement is BlockSyntax)
+			WriteFlowControlStatement(statement.Statement, ")", ") ");
+		}
+
+		private void ForEachStatement(ForEachStatementSyntax statement)
+		{
+			var collectionType = semanticModel.GetTypeInfo(statement.Expression).Type;
+			var localExpressionResult = TryAddLocal("er", collectionType);
+			writer.WritePrefix($"{localExpressionResult.name} = ");
+			WriteExpression(statement.Expression);
+			writer.WriteLine(';');
+
+			writer.WritePrefix("for (");
+
+			if (collectionType.Kind == SymbolKind.ArrayType) collectionType = arrayType;
+			var method = FindMethodByName(collectionType, "get_Count");
+
+			var localIterator = TryAddLocal("i", project.compilation.GetSpecialType(SpecialType.System_Int32));
+			writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(method)}(({GetTypeFullName(collectionType)}*){localExpressionResult.name}); ++{localIterator.name}");
+
+			void WriteLocal()
 			{
-				writer.WriteLine(')');
-				WriteStatement(statement.Statement);
+				var type = semanticModel.GetTypeInfo(statement.Type).Type;
+				var local = TryAddLocal(statement.Identifier.ValueText, type);
+				writer.WriteLinePrefix($"{local.name} = {localExpressionResult.name}[sizeof(size_t) + {localIterator.name}];");
 			}
-			else
-			{
-				writer.WriteLine(") ");
-				writer.disablePrefix = true;
-				WriteStatement(statement.Statement);
-				writer.disablePrefix = false;
-			}
+
+			BlockStartCallback = WriteLocal;
+
+			// statement
+			WriteFlowControlStatement(statement.Statement, ")", ") ");
 		}
 
 		private void BreakStatement(BreakStatementSyntax statement)
@@ -1262,7 +1268,7 @@ namespace CS2X.Core.Transpilers
 			if (symbolInfo.Symbol is ILocalSymbol)
 			{
 				var local = (ILocalSymbol)symbolInfo.Symbol;
-				var localObj = instructionalBody.locals.First(x => LocalsMatchSignature(x.local, local));
+				var localObj = instructionalBody.locals.First(x => x.Equals(expression.Identifier.ValueText, local.Type));
 				writer.Write(localObj.name);
 			}
 			else if (symbolInfo.Symbol is IParameterSymbol)

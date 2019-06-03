@@ -1387,6 +1387,7 @@ int8_t t_CS2X_NativeExternTarget_RTTYPE_RTTYPE_METADATA_FullName[60] = {0,0,0,0,
 /* =============================== */
 int32_t m_System_Array_get_Length_0(t_System_Array* self);
 int64_t m_System_Array_get_LongLength_0(t_System_Array* self);
+int32_t m_System_Array_get_Count_0(t_System_Array* self);
 t_System_Array* m_System_Array__ctor_0();
 t_System_Attribute* m_System_Attribute__ctor_0();
 t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_System_AttributeTargets p_validOn);
@@ -1537,6 +1538,11 @@ int32_t m_System_Array_get_Length_0(t_System_Array* self)
 int64_t m_System_Array_get_LongLength_0(t_System_Array* self)
 {
 	return (int64_t)(*(size_t*)self);
+}
+
+int32_t m_System_Array_get_Count_0(t_System_Array* self)
+{
+	return m_System_Array_get_Length_0(self);
 }
 
 t_System_Array* m_System_Array__ctor_0()

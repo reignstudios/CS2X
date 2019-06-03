@@ -111,6 +111,7 @@ void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_Main_0();
+int32_t* m_PortableTestApp_Program_Ya_0();
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o);
 t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0();
 t_PortableTestApp_MyEnum m_PortableTestApp_MyEnum__ctor_0();
@@ -200,20 +201,34 @@ void m_PortableTestApp_Program_Main_0()
 	int32_t** l_a_0;
 	int32_t l_b_1;
 	int32_t l_c_2;
-	int32_t l_i_3;
-	int32_t l_i2_4;
+	int32_t** l_er_3;
+	int32_t l_i_4;
+	int32_t* l_aa_5;
+	int32_t l_i2_6;
 	l_a_0 = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 5);
 	l_a_0[sizeof(size_t) + 0] = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 3);
 	l_b_1 = m_System_Array_get_Length_0(l_a_0);
 	l_c_2 = m_System_Array_get_Length_0(l_a_0[sizeof(size_t) + 0]);
-	for (l_i_3 = 0, l_i2_4 = 0; l_i_3 != m_System_Array_get_Length_0(l_a_0) && l_i2_4 != 4; ++l_i_3, l_i2_4 = 2)
+	l_er_3 = l_a_0;
+	for (l_i_4 = 0; l_i_4 != m_System_Array_get_Count_0((t_System_Array*)l_er_3); ++l_i_4)
 	{
-		if (l_i_3 == l_i2_4) m_System_Console_Write_0(StringLiteral_3);
+		l_aa_5 = l_er_3[sizeof(size_t) + l_i_4];
+		m_System_Console_Write_0(StringLiteral_3);
+		if (l_aa_5[sizeof(size_t) + 0] == 88) break;
 	}
-	for (l_i_3 = 0; l_i_3 != m_System_Array_get_Length_0(l_a_0); ++l_i_3)
+	for (l_i_4 = 0, l_i2_6 = 0; l_i_4 != m_System_Array_get_Length_0(l_a_0) && l_i2_6 != 4; ++l_i_4, l_i2_6 = 2)
 	{
-		m_System_Console_Write_0(StringLiteral_4);
+		if (l_i_4 == l_i2_6) m_System_Console_Write_0(StringLiteral_4);
 	}
+	for (l_i_4 = 0; l_i_4 != m_System_Array_get_Length_0(l_a_0); ++l_i_4)
+	{
+		m_System_Console_Write_0(StringLiteral_5);
+	}
+}
+
+int32_t* m_PortableTestApp_Program_Ya_0()
+{
+	return 0;
 }
 
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o)
@@ -314,6 +329,7 @@ void CS2X_InitStringLiterals()
 	((t_System_String*)StringLiteral_2)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)StringLiteral_3)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)StringLiteral_4)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
+	((t_System_String*)StringLiteral_5)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 }
 
 /* =============================== */

@@ -22,6 +22,8 @@ namespace System
             get;
         }
 
+		internal int Count => Length;
+
 		//int ICollection.Count { get { return Length; } }
 	}
 }

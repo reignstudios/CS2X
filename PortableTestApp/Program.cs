@@ -116,10 +116,11 @@ namespace PortableTestApp
 			a[0] = new int[3];
 			int b = a.Length;
 			int c = a[0].Length;
-			//foreach (var i in a)
-			//{
-				//Console.Write("^");
-			//}
+			foreach (var aa in a)
+			{
+				Console.Write("^");
+				if (aa[0] == 88) break;
+			}
 
 			for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
 			{
@@ -130,6 +131,11 @@ namespace PortableTestApp
 			{
 				Console.Write("$");
 			}
+		}
+
+		static int[] Ya()
+		{
+			return null;
 		}
 
 		static string GetValue(object o)
