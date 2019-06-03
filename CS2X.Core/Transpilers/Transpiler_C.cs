@@ -337,8 +337,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Init Library */");
 			writer.WriteLine("/* =============================== */");
-			string assemblyName = project.roslynProject.AssemblyName;
-			ParseImplementationDetail(ref assemblyName);
+			string assemblyName = GetProjectNameFlat(project);
 			writer.WriteLine($"void CS2X_InitLib_{assemblyName}()");
 			writer.WriteLine('{');
 			writer.AddTab();
@@ -348,9 +347,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("/* Init references */");
 				foreach (var reference in project.references)
 				{
-					string refAssemblyName = reference.roslynProject.AssemblyName;
-					ParseImplementationDetail(ref refAssemblyName);
-					writer.WriteLinePrefix($"CS2X_InitLib_{refAssemblyName}();");
+					writer.WriteLinePrefix($"CS2X_InitLib_{GetProjectNameFlat(reference)}();");
 				}
 				writer.WriteLine();
 			}
@@ -405,6 +402,38 @@ namespace CS2X.Core.Transpilers
 			writer.RemoveTab();
 			writer.WriteLine('}');
 
+			// init static constructors
+			writer.WriteLine();
+			string staticConstructorInitMethod = $"CS2X_InvokeStaticConstructors_{assemblyName}";
+			writer.WriteLine($"void {staticConstructorInitMethod}()");
+			writer.WriteLine('{');
+			writer.AddTab();
+			if (project.references.Count != 0)
+			{
+				writer.WriteLinePrefix("/* Init references */");
+				foreach (var reference in project.references)
+				{
+					writer.WriteLinePrefix($"CS2X_InvokeStaticConstructors_{GetProjectNameFlat(reference)}();");
+				}
+				writer.WriteLine();
+			}
+
+			writer.WriteLinePrefix("/* Init this project */");
+			foreach (var type in project.allTypes)
+			{
+				if (type.TypeKind == TypeKind.Interface) continue;
+				foreach (var member in type.GetMembers())
+				{
+					if (member.Kind == SymbolKind.Method)
+					{
+						var method = (IMethodSymbol)member;
+						if (method.MethodKind == MethodKind.StaticConstructor) writer.WriteLinePrefix($"{GetMethodFullName(method)}();");
+					}
+				}
+			}
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
 			// exe only
 			if (project.type == ProjectTypes.Exe)
 			{
@@ -431,6 +460,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("CS2X_GC_Init();");
 				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
+				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
 				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
 				writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");// TODO: add support for args
 				writer.WriteLinePrefix("CS2X_GC_Collect();");

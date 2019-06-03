@@ -109,6 +109,7 @@ int32_t m_PortableTestApp_Program_get_MyPropStatic_0();
 void m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value);
 void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
+void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_Main_0();
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o);
 t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0();
@@ -187,6 +188,11 @@ void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_Portable
 		int32_t l_i_1;
 		l_i_1 = l_i2_0 + p_p->f_abc_1;
 	}
+}
+
+void m_PortableTestApp_Program__cctor_0()
+{
+	f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField = 555;
 }
 
 void m_PortableTestApp_Program_Main_0()
@@ -292,6 +298,15 @@ void CS2X_InitLib_PortableTestApp()
 	t_PortableTestApp_MyNamespace_MyEnum_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 }
 
+void CS2X_InvokeStaticConstructors_PortableTestApp()
+{
+	/* Init references */
+	CS2X_InvokeStaticConstructors_CS2X_CoreLib();
+
+	/* Init this project */
+	m_PortableTestApp_Program__cctor_0();
+}
+
 void CS2X_InitStringLiterals()
 {
 	((t_System_String*)StringLiteral_0)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
@@ -309,6 +324,7 @@ int main()
 	CS2X_GC_Init();
 	CS2X_InitLib_PortableTestApp();
 	CS2X_InitStringLiterals();
+	CS2X_InvokeStaticConstructors_PortableTestApp();
 	m_PortableTestApp_Program_Main_0();
 	CS2X_GC_Collect();
 	return 0;

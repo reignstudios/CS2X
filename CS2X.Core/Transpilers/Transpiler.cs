@@ -343,5 +343,12 @@ namespace CS2X.Core.Transpilers
 		{
 			return local1.Name == local2.Name && local1.Type == local2.Type;
 		}
+
+		protected string GetProjectNameFlat(Project project)
+		{
+			string refAssemblyName = project.roslynProject.AssemblyName;
+			ParseImplementationDetail(ref refAssemblyName);
+			return refAssemblyName;
+		}
 	}
 }

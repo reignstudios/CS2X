@@ -3321,3 +3321,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	t_System_Runtime_InteropServices_LayoutKind_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_CS2X_NativeExternTarget_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 }
+
+void CS2X_InvokeStaticConstructors_CS2X_CoreLib()
+{
+	/* Init this project */
+}
