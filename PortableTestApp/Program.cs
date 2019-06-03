@@ -113,7 +113,6 @@ namespace PortableTestApp
 			int c = a[0].Length;
 			//foreach (var i in a)
 			//for (int i = 0; i != a.Length; ++i)
-			//for (long i = 0; i != a.LongLength; ++i)
 			{
 				
 			}

@@ -21,6 +21,7 @@ namespace CS2X.Core.Test
 			var options = new Transpiler_C.Options()
 			{
 				gc = Transpiler_C.GC_Type.Boehm,
+				arrayLengthMemoryLocation = Transpiler_C.ArrayLengthMemoryLocation.AtPointer,
 				gcFolderPath = @"..\CS2X.Native",
 				ptrSize = Transpiler_C.Ptr_Size.Bit_64,
 				endianness = Transpiler_C.Endianness.Little,

@@ -195,9 +195,9 @@ void m_PortableTestApp_Program_Main_0()
 	int32_t l_b_1;
 	int32_t l_c_2;
 	l_a_0 = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 5);
-	l_a_0[sizeof(int32_t*) + 0] = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 3);
+	l_a_0[sizeof(size_t) + 0] = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 3);
 	l_b_1 = m_System_Array_get_Length_0(l_a_0);
-	l_c_2 = m_System_Array_get_Length_0(l_a_0[sizeof(int32_t*) + 0]);
+	l_c_2 = m_System_Array_get_Length_0(l_a_0[sizeof(size_t) + 0]);
 	{
 	}
 }

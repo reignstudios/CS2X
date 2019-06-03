@@ -17,6 +17,12 @@ namespace CS2X.Core.Transpilers
 		public enum GC_Type
 		{
 			/// <summary>
+			/// Disable the GC entirely. Not safe.
+			/// Good for super low memory and special embedded devices.
+			/// </summary>
+			Disabled,
+
+			/// <summary>
 			/// Modern platforms. Thread safe.
 			/// </summary>
 			Boehm,
@@ -62,6 +68,23 @@ namespace CS2X.Core.Transpilers
 			ReadonlyProgramMemory_AVR
 		}
 
+		public enum ArrayLengthMemoryLocation
+		{
+			/// <summary>
+			/// Stores the array length at a zero offset from your array's ptr
+			/// Array's are accessed like so: MyArray[sizeof(size_t) + MyIndex]
+			/// This is the default option
+			/// </summary>
+			AtPointer,
+
+			/// <summary>
+			/// Stores the array length behind your array's ptr with a negitive 'size_t' offset (aka its header)
+			/// Array's are accessed like so: MyArray[MyIndex] but MyArray.Length does pointer arithmetic instead
+			/// This method can be faster but only works with the GC disabled currently
+			/// </summary>
+			BeforePointer
+		}
+
 		public struct Options
 		{
 			/// <summary>
@@ -79,6 +102,11 @@ namespace CS2X.Core.Transpilers
 			/// Native pointer size in bits (native int)
 			/// </summary>
 			public Ptr_Size ptrSize;
+
+			/// <summary>
+			/// Array.Length memory location
+			/// </summary>
+			public ArrayLengthMemoryLocation arrayLengthMemoryLocation;
 
 			/// <summary>
 			/// CPU bit order
@@ -137,6 +165,12 @@ namespace CS2X.Core.Transpilers
 		: base(solution)
 		{
 			this.options = options;
+
+			// test compatibility matrix
+			if (options.gc == GC_Type.Boehm)
+			{
+				if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.BeforePointer) throw new NotSupportedException("Array length memory location must be 'AtPointer' for Boehm GC");
+			}
 		}
 
 		public override void Transpile(string outputPath)
@@ -598,8 +632,10 @@ namespace CS2X.Core.Transpilers
 			{
 				case MethodKind.Ordinary:
 				case MethodKind.Constructor:
+				case MethodKind.StaticConstructor:
 				case MethodKind.PropertyGet:
 				case MethodKind.PropertySet:
+				case MethodKind.UserDefinedOperator:
 					break;
 				default: throw new NotSupportedException("Unsupported method kind: " + method.MethodKind);
 			}
@@ -777,11 +813,21 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "get_Length")
 								{
-									writer.WriteLinePrefix($"return (int32_t)(*(size_t*)self);");
+									switch (options.arrayLengthMemoryLocation)
+									{
+										case ArrayLengthMemoryLocation.AtPointer: writer.WriteLinePrefix($"return (int32_t)(*(size_t*)self);"); break;
+										case ArrayLengthMemoryLocation.BeforePointer: writer.WriteLinePrefix($"return (int32_t)(*(size_t*)(--self));"); break;
+										default: throw new NotImplementedException("Unsupported array length memory location: " + options.arrayLengthMemoryLocation);
+									}
 								}
 								else if (method.Name == "get_LongLength")
 								{
-									writer.WriteLinePrefix($"return (int64_t)(*(size_t*)self);");
+									switch (options.arrayLengthMemoryLocation)
+									{
+										case ArrayLengthMemoryLocation.AtPointer: writer.WriteLinePrefix($"return (int64_t)(*(size_t*)self);"); break;
+										case ArrayLengthMemoryLocation.BeforePointer: writer.WriteLinePrefix($"return (int64_t)(*(size_t*)(--self));"); break;
+										default: throw new NotImplementedException("Unsupported array length memory location: " + options.arrayLengthMemoryLocation);
+									}
 								}
 								else
 								{
@@ -1480,12 +1526,7 @@ namespace CS2X.Core.Transpilers
 			WriteExpression(expression.Expression);
 			writer.Write('[');
 			var type = semanticModel.GetTypeInfo(expression.Expression).Type;
-			if (type.Kind == SymbolKind.ArrayType)
-			{
-				var arrayType = (IArrayTypeSymbol)type;
-				writer.Write($"sizeof({GetTypeFullName(arrayType.ElementType)}) + ");
-			}
-
+			if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer && type.Kind == SymbolKind.ArrayType) writer.Write("sizeof(size_t) + ");
 			var arguments = expression.ArgumentList.Arguments;
 			if (arguments.Count != 1) throw new NotSupportedException("Elements can only have one arg");
 			WriteExpression(arguments[0].Expression);
