@@ -12,13 +12,14 @@ namespace CS2X.Core.Transpilers
 	public abstract class Transpiler
 	{
 		public readonly Solution solution;
-		protected INamedTypeSymbol runtimeType, stringType, objectType;
+		protected INamedTypeSymbol runtimeType, typeType, stringType, objectType;
 
 		public Transpiler(Solution solution)
 		{
 			this.solution = solution;
 			var coreLibProject = solution.coreLibProject;
 			runtimeType = coreLibProject.compilation.GetTypeByMetadataName("System.RuntimeType");
+			typeType = coreLibProject.compilation.GetTypeByMetadataName("System.Type");
 			stringType = coreLibProject.compilation.GetSpecialType(SpecialType.System_String);
 			objectType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Object);
 		}
@@ -313,6 +314,29 @@ namespace CS2X.Core.Transpilers
 				if (type.ContainingNamespace.Name == "CS2X" && type.Name == "NativeExternAttribute") return attribute;
 			}
 			return null;
+		}
+
+		protected IFieldSymbol FindFieldByName(INamedTypeSymbol type, string fieldName)
+		{
+			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Field && x.Name == fieldName) as IFieldSymbol;
+		}
+
+		protected IPropertySymbol FindPropertyByName(INamedTypeSymbol type, string propertyName)
+		{
+			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Property && x.Name == propertyName) as IPropertySymbol;
+		}
+
+		protected IFieldSymbol FindAutoPropertyFieldByName(INamedTypeSymbol type, string propertyName)
+		{
+			var members = type.GetMembers();
+			var property = members.FirstOrDefault(x => x.Kind == SymbolKind.Property && x.Name == propertyName) as IPropertySymbol;
+			if (property == null) return null;
+			return members.FirstOrDefault(x => x.Kind == SymbolKind.Field && ((IFieldSymbol)x).AssociatedSymbol == property) as IFieldSymbol;
+		}
+
+		protected IMethodSymbol FindMethodByName(INamedTypeSymbol type, string methodName)
+		{
+			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName) as IMethodSymbol;
 		}
 	}
 }

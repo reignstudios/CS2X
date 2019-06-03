@@ -2,17 +2,17 @@
 
 namespace System
 {
-	internal sealed class RuntimeType : TypeInfo//, ICloneable
+	internal sealed class RuntimeType : Type//TypeInfo//, ICloneable
 	{
-		private Type _baseType;
-		public override Type BaseType => _baseType;
+		//private Type _baseType;
+		//public override Type BaseType => _baseType;
 
-		private string _name;
-		public override string Name => _name;
+		//private string _name;
+		//public override string Name => _name;
 
-		private string _fullName;
-		public override string FullName => _fullName;
+		//private string _fullName;
+		//public override string FullName => _fullName;
 
-		public override RuntimeTypeHandle TypeHandle => new RuntimeTypeHandle(this);
+		//public override RuntimeTypeHandle TypeHandle => new RuntimeTypeHandle(this);
 	}
 }

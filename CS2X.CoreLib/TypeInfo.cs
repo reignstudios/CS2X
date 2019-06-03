@@ -1,7 +1,7 @@
 ﻿namespace System
 {
-	public abstract class TypeInfo : Type//, IReflectableType
-	{
+	//public abstract class TypeInfo : Type//, IReflectableType
+	//{
 		
-	}
+	//}
 }

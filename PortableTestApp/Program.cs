@@ -86,22 +86,27 @@ namespace PortableTestApp
 
 		static void Main()//string[] args)
 		{
-			var m = new MyBaseClass();
-			m.MyVirtMethod();
-			var m2 = (MyAbstractClass)m;
-			m2.MyVirtMethod();
-			m.MyFoo();
-			return;
-			//Console.Write("Hello World!");return;
-			//object blaa = MyAutoPropStatic;// boxing
-			Program.MyAutoPropStatic = 0;
-			var v = "Hello World!";
-			v = MyAutoPropStatic.ToString();
-			//v = myEnum.ToString();// TODO
-			v = GetValue(v.GetType().ToString());
-			Console.WriteLine("Hello World!" + value);
+			//var m = new MyBaseClass();
+			//m.MyVirtMethod();
+			//var m2 = (MyAbstractClass)m;
+			//m2.MyVirtMethod();
+			//m.MyFoo();
+			//return;
 
-			//foreach (var i in "asdfas")// requires IL System.String::get_Chars(int32)
+			//Console.Write("Hello World!");
+			//return;
+
+			string value = typeof(int).ToString();
+			Console.WriteLine(value);
+
+			//Program.MyAutoPropStatic = 0;
+			//var v = "Hello World!";
+			//v = MyAutoPropStatic.ToString();
+			////v = myEnum.ToString();// TODO
+			//v = GetValue(v.GetType().ToString());
+			//Console.WriteLine("Hello World!" + value);
+
+			//foreach (var i in "asdfas")// requires method System.String::get_Chars(int32)
 			//var a = new int[123];
 			//foreach (var i in a)
 			//{

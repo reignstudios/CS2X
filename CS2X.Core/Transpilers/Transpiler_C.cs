@@ -204,6 +204,9 @@ namespace CS2X.Core.Transpilers
 		{
 			this.project = project;
 
+			string stringTypeName = GetTypeFullName(stringType);
+			string stringRuntimeTypeName = GetRuntimeTypeObjFullName(stringType);
+
 			// writer info
 			WriteHeaderInfo(writer);
 			if (project.type == ProjectTypes.Dll) writer.WriteLine("#pragma once");
@@ -319,6 +322,9 @@ namespace CS2X.Core.Transpilers
 			}
 
 			writer.WriteLinePrefix("/* Init runtime type objects */");
+			string baseTypeFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "BaseType"));
+			string nameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "Name"));
+			string fullNameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "FullName"));
 			foreach (var type in project.allTypes)
 			{
 				if (type.SpecialType == SpecialType.System_Void) continue;
@@ -326,19 +332,24 @@ namespace CS2X.Core.Transpilers
 				string obj = GetRuntimeTypeObjFullName(type);
 				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
 				writer.WriteLinePrefix($"{obj}.runtimeType.CS2X_RuntimeType = &{obj};");
+				if (type.BaseType != null) writer.WriteLinePrefix($"{obj}.runtimeType.{baseTypeFieldName} = &{GetRuntimeTypeObjFullName(type.BaseType)};");
+				else writer.WriteLinePrefix($"{obj}.runtimeType.{baseTypeFieldName} = 0;");
+				writer.WriteLinePrefix($"{obj}.runtimeType.{nameFieldName} = ({stringTypeName}*){GetRuntimeTypeMetadataFullName(type)}_Name;");
+				writer.WriteLinePrefix($"{obj}.runtimeType.{fullNameFieldName} = ({stringTypeName}*){GetRuntimeTypeMetadataFullName(type)}_FullName;");
 			}
 
-			writer.WriteLine();
-			writer.WriteLinePrefix("/* Init runtime type metadata / string literals */");
-			string stringTypeName = GetTypeFullNameRef(stringType);
-			var stringRuntimeType = GetRuntimeTypeObjFullName(stringType);
-			foreach (var type in project.allTypes)
+			if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.GlobalProgramMemory_RAM)
 			{
-				if (type.SpecialType == SpecialType.System_Void) continue;
-				if (type.TypeKind == TypeKind.Interface) continue;
-				string metadata = GetRuntimeTypeMetadataFullName(type);
-				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeType};");
-				writer.WriteLinePrefix($"(({stringTypeName}){metadata}_FullName)->CS2X_RuntimeType = &{stringRuntimeType};");
+				writer.WriteLine();
+				writer.WriteLinePrefix("/* Init runtime type metadata / string literals */");
+				foreach (var type in project.allTypes)
+				{
+					if (type.SpecialType == SpecialType.System_Void) continue;
+					if (type.TypeKind == TypeKind.Interface) continue;
+					string metadata = GetRuntimeTypeMetadataFullName(type);
+					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
+					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_FullName)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
+				}
 			}
 
 			writer.WriteLine();
@@ -370,7 +381,7 @@ namespace CS2X.Core.Transpilers
 				writer.AddTab();
 				foreach (var literal in stringLiterals)
 				{
-					writer.WriteLinePrefix($"(({stringTypeName}){literal.Value})->CS2X_RuntimeType = &{stringRuntimeType};");
+					writer.WriteLinePrefix($"(({stringTypeName}*){literal.Value})->CS2X_RuntimeType = &{stringRuntimeTypeName};");
 				}
 				writer.RemoveTab();
 				writer.WriteLine('}');
@@ -721,7 +732,7 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "GetType")
 								{
-									// TODO
+									writer.WriteLinePrefix("return (t_System_Type*)self->CS2X_RuntimeType;");
 								}
 								else
 								{
@@ -732,7 +743,9 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "GetTypeFromHandle")
 								{
-									// TODO
+									var handle = method.Parameters[0];
+									var field = (IFieldSymbol)handle.Type.GetMembers().First(x => x.Name == "m_type");
+									writer.WriteLinePrefix($"return {GetParameterFullName(handle)}.{GetFieldFullName(field)};");
 								}
 								else
 								{
@@ -743,11 +756,17 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "get_Length")
 								{
-									// TODO
+									var field = (IFieldSymbol)method.ContainingType.GetMembers().First(x => x.Name == "_stringLength");
+									writer.WriteLinePrefix($"return self->{GetFieldFullName(field)};");
 								}
 								else if (method.Name == "FastAllocateString")
 								{
-									// TODO
+									var field = (IFieldSymbol)method.ContainingType.GetMembers().First(x => x.Name == "_stringLength");
+									string lengthName = GetParameterFullName(method.Parameters[0]);
+									writer.WriteLinePrefix($"{GetTypeFullName(method.ContainingType)}* result = CS2X_GC_NewAtomic(sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * {lengthName}));");
+									writer.WriteLinePrefix($"result->CS2X_RuntimeType = &{GetRuntimeTypeObjFullName(method.ContainingType)};");
+									writer.WriteLinePrefix($"result->{GetFieldFullName(field)} = {lengthName};");
+									writer.WriteLinePrefix("return result;");
 								}
 								else
 								{
@@ -758,11 +777,11 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "get_Length")
 								{
-									// TODO
+									writer.WriteLinePrefix($"return (int32_t)(*(size_t*)self);");
 								}
 								else if (method.Name == "get_LongLength")
 								{
-									// TODO
+									writer.WriteLinePrefix($"return (int64_t)(*(size_t*)self);");
 								}
 								else
 								{
@@ -955,6 +974,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is ElementAccessExpressionSyntax) ElementAccessExpression((ElementAccessExpressionSyntax)expression);
 			else if (expression is ParenthesizedExpressionSyntax) ParenthesizedExpression((ParenthesizedExpressionSyntax)expression);
 			else if (expression is SizeOfExpressionSyntax) SizeOfExpression((SizeOfExpressionSyntax)expression);
+			else if (expression is TypeOfExpressionSyntax) TypeOfExpression((TypeOfExpressionSyntax)expression);
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
@@ -1048,9 +1068,18 @@ namespace CS2X.Core.Transpilers
 			{
 				if (IsVirtualMethod(method) && !(method.IsOverride && method.ContainingType.IsSealed))
 				{
-					writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
-					WriteCaller(expression);
-					writer.Write($"->CS2X_RuntimeType)->");
+					var caller = GetCaller(expression);
+					if (caller is TypeOfExpressionSyntax)
+					{
+						WriteCaller(expression);
+						writer.Write("->");
+					}
+					else
+					{
+						writer.Write($"(({GetRuntimeTypeFullName(method.ContainingType)}*)");
+						WriteCaller(expression);
+						writer.Write("->CS2X_RuntimeType)->");
+					}
 					writer.Write(GetVTableMethodFullName(method));
 				}
 				else
@@ -1229,12 +1258,15 @@ namespace CS2X.Core.Transpilers
 			if (!method.IsStatic)
 			{
 				var caller = GetCaller(expression.Expression);
-				if (!(caller is ThisExpressionSyntax))
+				if (caller is ThisExpressionSyntax) callerType = method.ContainingType;
+				else callerType = semanticModel.GetTypeInfo(caller).Type;
+				isCallerValueType = callerType.IsValueType;
+
+				if (callerType.TypeKind == TypeKind.Enum) throw new NotImplementedException("Enum meta data not yet supported: " + expression.ToFullString());
+				if (callerType.IsValueType)
 				{
-					callerType = semanticModel.GetTypeInfo(caller).Type;
-					isCallerValueType = callerType.IsValueType;
-					if (callerType.TypeKind == TypeKind.Enum) throw new NotImplementedException("Enum meta data not yet supported: " + expression.ToFullString());
-					if (callerType.IsValueType && callerType != method.ContainingType) throw new NotImplementedException("Special method invoke not yet supported: " + expression.ToFullString());
+					if (method.ContainingType == objectType) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
+					if (IsVirtualMethod(method)) throw new NotSupportedException("ValueType virtual invoke not supported: " + expression.ToFullString());
 				}
 			}
 			else if (method.IsExtern)
@@ -1393,6 +1425,12 @@ namespace CS2X.Core.Transpilers
 		{
 			var type = semanticModel.GetTypeInfo(expression.Type).Type;
 			writer.Write($"sizeof({GetTypeFullName(type)})");
+		}
+
+		private void TypeOfExpression(TypeOfExpressionSyntax expression)
+		{
+			var type = semanticModel.GetTypeInfo(expression.Type).Type;
+			writer.Write($"(&{GetRuntimeTypeObjFullName(type)})");
 		}
 		#endregion
 
