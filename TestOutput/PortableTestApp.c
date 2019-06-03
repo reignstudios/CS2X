@@ -194,11 +194,19 @@ void m_PortableTestApp_Program_Main_0()
 	int32_t** l_a_0;
 	int32_t l_b_1;
 	int32_t l_c_2;
+	int32_t l_i_3;
+	int32_t l_i2_4;
 	l_a_0 = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 5);
 	l_a_0[sizeof(size_t) + 0] = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 3);
 	l_b_1 = m_System_Array_get_Length_0(l_a_0);
 	l_c_2 = m_System_Array_get_Length_0(l_a_0[sizeof(size_t) + 0]);
+	for (l_i_3 = 0, l_i2_4 = 0; l_i_3 != m_System_Array_get_Length_0(l_a_0) && l_i2_4 != 4; ++l_i_3, l_i2_4 = 2)
 	{
+		if (l_i_3 == l_i2_4) m_System_Console_Write_0(StringLiteral_3);
+	}
+	for (l_i_3 = 0; l_i_3 != m_System_Array_get_Length_0(l_a_0); ++l_i_3)
+	{
+		m_System_Console_Write_0(StringLiteral_4);
 	}
 }
 
@@ -289,6 +297,8 @@ void CS2X_InitStringLiterals()
 	((t_System_String*)StringLiteral_0)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)StringLiteral_1)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)StringLiteral_2)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
+	((t_System_String*)StringLiteral_3)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
+	((t_System_String*)StringLiteral_4)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 }
 
 /* =============================== */

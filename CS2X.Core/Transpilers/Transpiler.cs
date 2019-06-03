@@ -338,5 +338,10 @@ namespace CS2X.Core.Transpilers
 		{
 			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName) as IMethodSymbol;
 		}
+
+		protected bool LocalsMatchSignature(ILocalSymbol local1, ILocalSymbol local2)
+		{
+			return local1.Name == local2.Name && local1.Type == local2.Type;
+		}
 	}
 }

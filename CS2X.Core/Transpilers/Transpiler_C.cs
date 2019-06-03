@@ -934,6 +934,7 @@ namespace CS2X.Core.Transpilers
 			else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
 			else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
 			else if (statement is WhileStatementSyntax) WhileStatement((WhileStatementSyntax)statement);
+			else if (statement is ForStatementSyntax) ForStatement((ForStatementSyntax)statement);
 			else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
@@ -958,26 +959,33 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine(';');
 		}
 
-		private void WriteLocalDeclaration(VariableDeclarationSyntax declaration)
+		private void WriteLocalDeclaration(VariableDeclarationSyntax declaration, string delimiter, bool onlyWriteDelimiterIfNotLast)
 		{
 			var typeInfo = semanticModel.GetTypeInfo(declaration.Type);
+			var last = declaration.Variables.LastOrDefault();
 			foreach (var variable in declaration.Variables)
 			{
 				var localSymbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(variable);
-				var local = new InstructionalBody.Local(block, variable, localSymbol, typeInfo.Type, $"l_{variable.Identifier.ValueText}_{instructionalBody.locals.Count}");
-				instructionalBody.locals.Add(local);
+				InstructionalBody.Local local = null;
+				local = instructionalBody.locals.FirstOrDefault(x => LocalsMatchSignature(x.local, localSymbol));
+				if (local == null)
+				{
+					local = new InstructionalBody.Local(block, variable, localSymbol, typeInfo.Type, $"l_{variable.Identifier.ValueText}_{instructionalBody.locals.Count}");
+					instructionalBody.locals.Add(local);
+				}
 				if (variable.Initializer != null)
 				{
 					writer.WritePrefix(local.name + " = ");
 					WriteExpression(variable.Initializer.Value);
+					if (!onlyWriteDelimiterIfNotLast) writer.Write(delimiter);
+					else if (variable != last) writer.Write(delimiter);
 				}
 			}
 		}
 
 		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
 		{
-			WriteLocalDeclaration(statement.Declaration);
-			writer.WriteLine(';');
+			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false);
 		}
 
 		private void IfStatement(IfStatementSyntax statement)
@@ -1033,6 +1041,44 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+		private void ForStatement(ForStatementSyntax statement)
+		{
+			if (statement.Initializers.Count != 0) throw new NotSupportedException("'for' statement initializers are not supported");
+
+			// variable initialization
+			writer.WritePrefix("for (");
+			writer.disablePrefix = true;
+			WriteLocalDeclaration(statement.Declaration, ", ", true);
+			writer.disablePrefix = false;
+			writer.Write("; ");
+
+			// condition
+			WriteExpression(statement.Condition);
+			writer.Write("; ");
+
+			// incrementors
+			var lastIncrementor = statement.Incrementors.LastOrDefault();
+			foreach (var i in statement.Incrementors)
+			{
+				WriteExpression(i);
+				if (i != lastIncrementor) writer.Write(", ");
+			}
+
+			// statement
+			if (statement.Statement is BlockSyntax)
+			{
+				writer.WriteLine(')');
+				WriteStatement(statement.Statement);
+			}
+			else
+			{
+				writer.WriteLine(") ");
+				writer.disablePrefix = true;
+				WriteStatement(statement.Statement);
+				writer.disablePrefix = false;
+			}
+		}
+
 		private void BreakStatement(BreakStatementSyntax statement)
 		{
 			writer.WriteLinePrefix("break;");
@@ -1040,8 +1086,7 @@ namespace CS2X.Core.Transpilers
 
 		private void FixedStatement(FixedStatementSyntax statement)
 		{
-			WriteLocalDeclaration(statement.Declaration);
-			writer.WriteLine(';');
+			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false);
 			WriteStatement(statement.Statement);
 		}
 
@@ -1187,7 +1232,7 @@ namespace CS2X.Core.Transpilers
 			if (symbolInfo.Symbol is ILocalSymbol)
 			{
 				var local = (ILocalSymbol)symbolInfo.Symbol;
-				var localObj = instructionalBody.locals.First(x => x.local == local);
+				var localObj = instructionalBody.locals.First(x => LocalsMatchSignature(x.local, local));
 				writer.Write(localObj.name);
 			}
 			else if (symbolInfo.Symbol is IParameterSymbol)

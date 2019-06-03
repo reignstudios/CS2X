@@ -112,9 +112,14 @@ namespace PortableTestApp
 			int b = a.Length;
 			int c = a[0].Length;
 			//foreach (var i in a)
-			//for (int i = 0; i != a.Length; ++i)
+			for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
 			{
-				
+				if (i == i2) Console.Write("*");
+			}
+
+			for (int i = 0; i != a.Length; ++i)
+			{
+				Console.Write("$");
 			}
 		}
 
