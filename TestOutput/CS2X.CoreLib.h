@@ -1581,7 +1581,9 @@ void m_System_Buffer_MemoryCopy_0(void* p_source, void* p_destination, int64_t p
 
 void m_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t p_destinationSizeInBytes, uint64_t p_sourceBytesToCopy)
 {
-;
+	if (p_sourceBytesToCopy > p_destinationSizeInBytes)
+	{
+	}
 	memcpy(p_destination, p_source, (void*)p_sourceBytesToCopy);
 }
 
@@ -1610,18 +1612,22 @@ char m_System_CLSCompliantAttribute_get_IsCompliant_0(t_System_CLSCompliantAttri
 void m_System_Console_Write_0(t_System_String* p_s)
 {
 	char16_t* l_printBuff_0;
-	char16_t* l_ptr_1;
+	int32_t l_count_1;
+	char16_t* l_ptr_2;
 	l_printBuff_0 = alloca(sizeof(char16_t) * 2);
 	l_printBuff_0[1] = 0x0000;
-	l_ptr_1 = &p_s->f__firstChar_1;
+	l_count_1 = 0;
+	l_ptr_2 = &p_s->f__firstChar_1;
 	{
-		char16_t* l_ptrOffset_2;
-		l_ptrOffset_2 = l_ptr_1;
-		while (*l_ptrOffset_2 != 0x0000)
+		char16_t* l_ptrOffset_3;
+		l_ptrOffset_3 = l_ptr_2;
+		while (*l_ptrOffset_3 != 0x0000)
 		{
-			l_printBuff_0[0] = *l_ptrOffset_2;
+			if (l_count_1 == m_System_String_get_Length_0(p_s)) break;
+			l_printBuff_0[0] = *l_ptrOffset_3;
 			wprintf(l_printBuff_0);
-			l_ptrOffset_2++;
+			++l_ptrOffset_3;
+			++l_count_1;
 		}
 	}
 }
@@ -1823,14 +1829,17 @@ t_System_String* m_System_String_FastAllocateString_0(int32_t p_length)
 
 char m_System_String_IsNullOrEmpty_0(t_System_String* p_value)
 {
-	return (m_System_String_Equals_0(p_value, 0) || 0 >= (uint32_t)m_System_String_get_Length_0(p_value)) ? 1 : 0;
+	return (p_value == 0 || 0 >= (uint32_t)m_System_String_get_Length_0(p_value)) ? 1 : 0;
 }
 
 void m_System_String_FillStringChecked_0(t_System_String* p_dest, int32_t p_destPos, t_System_String* p_src)
 {
 	char16_t* l_pDest_0;
 	char16_t* l_pSrc_1;
-;
+	if (m_System_String_get_Length_0(p_src) > m_System_String_get_Length_0(p_dest) - p_destPos)
+	{
+		;
+	}
 	l_pDest_0 = &p_dest->f__firstChar_1;
 	l_pSrc_1 = &p_src->f__firstChar_1;
 	{
@@ -1842,8 +1851,18 @@ t_System_String* m_System_String_Concat_0(t_System_String* p_str0, t_System_Stri
 {
 	int32_t l_str0Length_0;
 	t_System_String* l_result_1;
-;
-;
+	if (m_System_String_IsNullOrEmpty_0(p_str0))
+	{
+		if (m_System_String_IsNullOrEmpty_0(p_str1))
+		{
+			return f_System_String_Empty;
+		}
+		return p_str1;
+	}
+	if (m_System_String_IsNullOrEmpty_0(p_str1))
+	{
+		return p_str0;
+	}
 	l_str0Length_0 = m_System_String_get_Length_0(p_str0);
 	l_result_1 = m_System_String_FastAllocateString_0(l_str0Length_0 + m_System_String_get_Length_0(p_str1));
 	m_System_String_FillStringChecked_0(l_result_1, 0, p_str0);
@@ -1855,9 +1874,18 @@ t_System_String* m_System_String_Concat_1(t_System_String* p_str0, t_System_Stri
 {
 	int32_t l_totalLength_0;
 	t_System_String* l_result_1;
-;
-;
-;
+	if (m_System_String_IsNullOrEmpty_0(p_str0))
+	{
+		return m_System_String_Concat_0(p_str1, p_str2);
+	}
+	if (m_System_String_IsNullOrEmpty_0(p_str1))
+	{
+		return m_System_String_Concat_0(p_str0, p_str2);
+	}
+	if (m_System_String_IsNullOrEmpty_0(p_str2))
+	{
+		return m_System_String_Concat_0(p_str0, p_str1);
+	}
 	l_totalLength_0 = m_System_String_get_Length_0(p_str0) + m_System_String_get_Length_0(p_str1) + m_System_String_get_Length_0(p_str2);
 	l_result_1 = m_System_String_FastAllocateString_0(l_totalLength_0);
 	m_System_String_FillStringChecked_0(l_result_1, 0, p_str0);
@@ -1870,10 +1898,22 @@ t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_Stri
 {
 	int32_t l_totalLength_0;
 	t_System_String* l_result_1;
-;
-;
-;
-;
+	if (m_System_String_IsNullOrEmpty_0(p_str0))
+	{
+		return m_System_String_Concat_1(p_str1, p_str2, p_str3);
+	}
+	if (m_System_String_IsNullOrEmpty_0(p_str1))
+	{
+		return m_System_String_Concat_1(p_str0, p_str2, p_str3);
+	}
+	if (m_System_String_IsNullOrEmpty_0(p_str2))
+	{
+		return m_System_String_Concat_1(p_str0, p_str1, p_str3);
+	}
+	if (m_System_String_IsNullOrEmpty_0(p_str3))
+	{
+		return m_System_String_Concat_1(p_str0, p_str1, p_str2);
+	}
 	l_totalLength_0 = m_System_String_get_Length_0(p_str0) + m_System_String_get_Length_0(p_str1) + m_System_String_get_Length_0(p_str2) + m_System_String_get_Length_0(p_str3);
 	l_result_1 = m_System_String_FastAllocateString_0(l_totalLength_0);
 	m_System_String_FillStringChecked_0(l_result_1, 0, p_str0);
@@ -1885,7 +1925,7 @@ t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_Stri
 
 char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value)
 {
-;
+	if (m_System_String_get_Length_0(self) != m_System_String_get_Length_0(p_value)) return 0;
 	return 1;
 }
 

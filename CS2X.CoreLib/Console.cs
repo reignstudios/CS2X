@@ -15,14 +15,17 @@ namespace System
 			// This is a hack and later needs to use encoding
 			char* printBuff = stackalloc char[2];
 			printBuff[1] = '\0';
+			int count = 0;
 			fixed (char* ptr = &s._firstChar)
 			{
 				char* ptrOffset = ptr;
 				while (*ptrOffset != '\0')
 				{
+					if (count == s.Length) break;
 					printBuff[0] = *ptrOffset;
 					wprintf(printBuff);
-					ptrOffset++;
+					++ptrOffset;
+					++count;
 				}
 			}
 		}

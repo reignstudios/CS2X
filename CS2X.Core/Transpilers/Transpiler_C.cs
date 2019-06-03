@@ -842,13 +842,13 @@ namespace CS2X.Core.Transpilers
 			block = body;
 			foreach (var statement in body.Statements)
 			{
-				WriteStatment(statement);
+				WriteStatement(statement);
 			}
 			block = origBlock;
 		}
 
 		private StatementSyntax lastStatement;// used to check if line end char is needed
-		private void WriteStatment(StatementSyntax statement)
+		private void WriteStatement(StatementSyntax statement)
 		{
 			lastStatement = statement;
 			if (statement is BlockSyntax)
@@ -888,10 +888,10 @@ namespace CS2X.Core.Transpilers
 			else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
 			else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
 			else if (statement is WhileStatementSyntax) WhileStatement((WhileStatementSyntax)statement);
+			else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
-			if (!(lastStatement is BlockSyntax)) writer.WriteLine(';');
 		}
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
@@ -902,12 +902,14 @@ namespace CS2X.Core.Transpilers
 				writer.Write(' ');
 				WriteExpression(statement.Expression);
 			}
+			writer.WriteLine(';');
 		}
 
 		private void ExpressionStatement(ExpressionStatementSyntax statement)
 		{
 			writer.WritePrefix();
 			WriteExpression(statement.Expression);
+			writer.WriteLine(';');
 		}
 
 		private void WriteLocalDeclaration(VariableDeclarationSyntax declaration)
@@ -929,11 +931,42 @@ namespace CS2X.Core.Transpilers
 		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
 		{
 			WriteLocalDeclaration(statement.Declaration);
+			writer.WriteLine(';');
 		}
 
 		private void IfStatement(IfStatementSyntax statement)
 		{
-			// TODO
+			if (statement.Statement == null) return;
+			writer.WritePrefix("if (");
+			WriteExpression(statement.Condition);
+			if (statement.Statement is BlockSyntax)
+			{
+				writer.WriteLine(')');
+				WriteStatement(statement.Statement);
+			}
+			else
+			{
+				writer.Write(") ");
+				writer.disablePrefix = true;
+				WriteStatement(statement.Statement);
+				writer.disablePrefix = false;
+			}
+			
+			if (statement.Else != null)
+			{
+				if (statement.Else.Statement is BlockSyntax)
+				{
+					writer.WriteLinePrefix("else");
+					WriteStatement(statement.Else.Statement);
+				}
+				else
+				{
+					writer.WritePrefix("else ");
+					writer.disablePrefix = true;
+					WriteStatement(statement.Else.Statement);
+					writer.disablePrefix = false;
+				}
+			}
 		}
 
 		private void WhileStatement(WhileStatementSyntax statement)
@@ -941,19 +974,24 @@ namespace CS2X.Core.Transpilers
 			writer.WritePrefix("while (");
 			WriteExpression(statement.Condition);
 			writer.WriteLine(')');
-			WriteStatment(statement.Statement);
+			WriteStatement(statement.Statement);
+		}
+
+		private void BreakStatement(BreakStatementSyntax statement)
+		{
+			writer.WriteLinePrefix("break;");
 		}
 
 		private void FixedStatement(FixedStatementSyntax statement)
 		{
 			WriteLocalDeclaration(statement.Declaration);
 			writer.WriteLine(';');
-			WriteStatment(statement.Statement);
+			WriteStatement(statement.Statement);
 		}
 
 		private void ThrowStatement(ThrowStatementSyntax statement)
 		{ 
-			// TODO
+			writer.WriteLinePrefix(';');// TODO
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)
@@ -1352,6 +1390,13 @@ namespace CS2X.Core.Transpilers
 						operatorMethod.Parameters[1].Type.SpecialType == SpecialType.System_String
 					)
 					{
+						if (expression.Right.IsKind(SyntaxKind.NullLiteralExpression))
+						{
+							WriteExpression(expression.Left);
+							writer.Write($" {expression.OperatorToken.ValueText} ");
+							WriteExpression(expression.Right);
+							return;
+						}
 						specialMethod = (IMethodSymbol)type.GetMembers().First(x => x is IMethodSymbol && x.Name == "Equals" && ((IMethodSymbol)x).Parameters.Length == 1 && ((IMethodSymbol)x).Parameters[0].Type.SpecialType == SpecialType.System_String);
 					}
 

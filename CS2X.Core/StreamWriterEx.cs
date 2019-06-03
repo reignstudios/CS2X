@@ -11,7 +11,7 @@ namespace System.IO
 	{
 		public StreamWriterEx next, prev;
 		public string prefix = string.Empty;
-		public bool disableWrite;
+		public bool disableWrite, disablePrefix;
 
 		public StreamWriterEx(Stream stream)
 		: base(stream)
@@ -75,12 +75,14 @@ namespace System.IO
 
 		public void WritePrefix(string value)
 		{
-			Write(prefix + value);
+			if (!disablePrefix) Write(prefix + value);
+			else Write(value);
 		}
 
 		public void WritePrefix(char value)
 		{
-			Write(prefix + value);
+			if (!disablePrefix) Write(prefix + value);
+			else Write(value);
 		}
 
 		public void WriteLinePrefix()
@@ -90,12 +92,14 @@ namespace System.IO
 
 		public void WriteLinePrefix(string value)
 		{
-			WriteLine(prefix + value);
+			if (!disablePrefix) WriteLine(prefix + value);
+			else WriteLine(value);
 		}
 
 		public void WriteLinePrefix(char value)
 		{
-			WriteLine(prefix + value);
+			if (!disablePrefix) WriteLine(prefix + value);
+			else WriteLine(value);
 		}
 	}
 }
