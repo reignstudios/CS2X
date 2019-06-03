@@ -31,6 +31,7 @@ void* CS2X_GC_NewAtomic(size_t size)
 void* CS2X_GC_NewArray(size_t elementSize, size_t length)
 {
 	void* ptr = CS2X_GC_New(sizeof(size_t) + (elementSize * length));
+	if (ptr == 0) exit(-1);
 	*((size_t*)ptr) = length;
 	return ptr;
 }
@@ -38,6 +39,7 @@ void* CS2X_GC_NewArray(size_t elementSize, size_t length)
 void* CS2X_GC_NewArrayAtomic(size_t elementSize, size_t length)
 {
 	void* ptr = CS2X_GC_NewAtomic(sizeof(size_t) + (elementSize * length));
+	if (ptr == 0) exit(-1);
 	*((size_t*)ptr) = length;
 	return ptr;
 }

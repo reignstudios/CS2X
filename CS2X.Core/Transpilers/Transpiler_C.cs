@@ -1010,6 +1010,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is IdentifierNameSyntax) WriteIdentifierName((IdentifierNameSyntax)expression);
 			else if (expression is MemberAccessExpressionSyntax) MemberAccessExpression((MemberAccessExpressionSyntax)expression);
 			else if (expression is ObjectCreationExpressionSyntax) ObjectCreationExpression((ObjectCreationExpressionSyntax)expression);
+			else if (expression is ArrayCreationExpressionSyntax) ArrayCreationExpression((ArrayCreationExpressionSyntax)expression);
 			else if (expression is StackAllocArrayCreationExpressionSyntax) StackAllocArrayCreationExpression((StackAllocArrayCreationExpressionSyntax)expression);
 			else if (expression is AssignmentExpressionSyntax) AssignmentExpression((AssignmentExpressionSyntax)expression);
 			else if (expression is PrefixUnaryExpressionSyntax) PrefixUnaryExpression((PrefixUnaryExpressionSyntax)expression);
@@ -1245,16 +1246,34 @@ namespace CS2X.Core.Transpilers
 			writer.Write('(');
 			WriteArgumentList(expression.ArgumentList);
 			writer.Write(')');
+			if (expression.Initializer != null) throw new NotImplementedException("TODO: support new initializer in statements only");
+		}
+
+		private void ArrayCreationExpression(ArrayCreationExpressionSyntax expression)
+		{
+			var arrayType = expression.Type;
+			var type = semanticModel.GetTypeInfo(arrayType.ElementType).Type;
+			foreach (var rank in arrayType.RankSpecifiers)
+			{
+				if (rank.Sizes.Count != 1) throw new NotSupportedException("Array creation only supports single rank size");
+			}
+			object length = semanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
+			writer.Write($"{GetNewArrayMethod(type)}(sizeof({GetTypeFullName(type)}), {length})");
+			if (expression.Initializer != null) throw new NotImplementedException("TODO: support array initializer in statements only");
 		}
 
 		private void StackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax expression)
 		{
+			if (!(expression.Type is ArrayTypeSyntax)) throw new NotSupportedException("stackalloc only supports array types");
 			var arrayType = (ArrayTypeSyntax)expression.Type;
 			var typeInfo = semanticModel.GetTypeInfo(expression.Type);
 			if (!(typeInfo.Type is IPointerTypeSymbol)) throw new NotImplementedException("stackalloc is not pointer type");
 			var ptrType = (IPointerTypeSymbol)typeInfo.Type;
+			if (arrayType.RankSpecifiers.Count != 1) throw new NotSupportedException("stackalloc only supports single rank");
+			if (arrayType.RankSpecifiers[0].Sizes.Count != 1) throw new NotSupportedException("stackalloc only supports single rank size");
 			object length = semanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);// fixed arrays should always support this form
 			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * {length})");
+			if (expression.Initializer != null) throw new NotImplementedException("TODO: support stackalloc initializer in statements only");
 		}
 
 		private void AssignmentExpression(AssignmentExpressionSyntax expression)
@@ -1460,12 +1479,16 @@ namespace CS2X.Core.Transpilers
 		{
 			WriteExpression(expression.Expression);
 			writer.Write('[');
-			var lastArg = expression.ArgumentList.Arguments.Last();
-			foreach (var arg in expression.ArgumentList.Arguments)
+			var type = semanticModel.GetTypeInfo(expression.Expression).Type;
+			if (type.Kind == SymbolKind.ArrayType)
 			{
-				WriteExpression(arg.Expression);
-				if (arg != lastArg) writer.Write(',');
+				var arrayType = (IArrayTypeSymbol)type;
+				writer.Write($"sizeof({GetTypeFullName(arrayType.ElementType)}) + ");
 			}
+
+			var arguments = expression.ArgumentList.Arguments;
+			if (arguments.Count != 1) throw new NotSupportedException("Elements can only have one arg");
+			WriteExpression(arguments[0].Expression);
 			writer.Write(']');
 		}
 
@@ -1494,6 +1517,12 @@ namespace CS2X.Core.Transpilers
 		{
 			if (IsAtomicType(type)) return "CS2X_GC_NewAtomic";
 			else return "CS2X_GC_New";
+		}
+
+		private string GetNewArrayMethod(ITypeSymbol type)
+		{
+			if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomic";
+			else return "CS2X_GC_NewArray";
 		}
 
 		private string GetPrimitiveName(ITypeSymbol type)
@@ -1543,13 +1572,23 @@ namespace CS2X.Core.Transpilers
 		protected override string GetTypeFullName(ITypeSymbol type)
 		{
 			CheckType(type);
-			if (IsPrimitiveType(type))
+			if (type.SpecialType == SpecialType.System_Void)
+			{
+				return "void";
+			}
+			else if (IsPrimitiveType(type))
 			{
 				return GetPrimitiveName(type);
 			}
-			else if (type.SpecialType == SpecialType.System_Void)
+			else if (type.Kind == SymbolKind.ArrayType)
 			{
-				return "void";
+				var arrayType = (IArrayTypeSymbol)type;
+				return GetTypeFullName(arrayType.ElementType) + '*';
+			}
+			else if (type.Kind == SymbolKind.PointerType)
+			{
+				var arrayType = (IPointerTypeSymbol)type;
+				return GetTypeFullName(arrayType.PointedAtType) + '*';
 			}
 			else
 			{
@@ -1563,13 +1602,13 @@ namespace CS2X.Core.Transpilers
 			string ptr = string.Empty;
 			while (true)
 			{
-				if (type is IArrayTypeSymbol)
+				if (type .Kind == SymbolKind.ArrayType)
 				{
 					ptr += "*";
 					var t = (IArrayTypeSymbol)type;
 					type = t.ElementType;
 				}
-				else if (type is IPointerTypeSymbol)
+				else if (type.Kind == SymbolKind.PointerType)
 				{
 					ptr += "*";
 					var t = (IPointerTypeSymbol)type;

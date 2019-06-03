@@ -191,9 +191,15 @@ void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_Portable
 
 void m_PortableTestApp_Program_Main_0()
 {
-	t_System_String* l_value_0;
-	l_value_0 = (&int32_t_RTTYPE_OBJ)->vTable_ToString_0((&int32_t_RTTYPE_OBJ));
-	m_System_Console_WriteLine_0(l_value_0);
+	int32_t** l_a_0;
+	int32_t l_b_1;
+	int32_t l_c_2;
+	l_a_0 = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 5);
+	l_a_0[sizeof(int32_t*) + 0] = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 3);
+	l_b_1 = m_System_Array_get_Length_0(l_a_0);
+	l_c_2 = m_System_Array_get_Length_0(l_a_0[sizeof(int32_t*) + 0]);
+	{
+	}
 }
 
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o)

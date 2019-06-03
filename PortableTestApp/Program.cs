@@ -96,8 +96,8 @@ namespace PortableTestApp
 			//Console.Write("Hello World!");
 			//return;
 
-			string value = typeof(int).ToString();
-			Console.WriteLine(value);
+			//string value = typeof(int).ToString();
+			//Console.WriteLine(value);
 
 			//Program.MyAutoPropStatic = 0;
 			//var v = "Hello World!";
@@ -107,11 +107,16 @@ namespace PortableTestApp
 			//Console.WriteLine("Hello World!" + value);
 
 			//foreach (var i in "asdfas")// requires method System.String::get_Chars(int32)
-			//var a = new int[123];
+			var a = new int[5][];
+			a[0] = new int[3];
+			int b = a.Length;
+			int c = a[0].Length;
 			//foreach (var i in a)
-			//{
+			//for (int i = 0; i != a.Length; ++i)
+			//for (long i = 0; i != a.LongLength; ++i)
+			{
 				
-			//}
+			}
 		}
 
 		static string GetValue(object o)
