@@ -1,4 +1,4 @@
-﻿/*//#define BIT64
+﻿//#define BIT64
 
 using System;
 
@@ -182,8 +182,10 @@ namespace RayTraceBenchmark
 			Sphere obj = null;
 
 			// search the scene for nearest intersection
-			foreach(var o in scene.Objects)
+			//foreach (var o in scene.Objects)
+			for (int i = 0; i != scene.Objects.Length; ++i)
 			{
+				var o = scene.Objects[i];
 				var distance = Num.MaxValue;
 				if (Sphere.Intersect(o, ray, out distance))
 				{
@@ -210,8 +212,10 @@ namespace RayTraceBenchmark
 			Vec3 color = Vec3.Zero;
 			var reflection_ratio = obj.Reflection;
 
-			foreach(var l in scene.Lights)
+			//foreach (var l in scene.Lights)
+			for (int i = 0; i != scene.Lights.Length; ++i)
 			{
+				var l = scene.Lights[i];
 				var light_direction = Vec3.Normalize(l.Position - point_of_hit);
 				Ray r;
 				r.Org = point_of_hit + (normal * 1e-5f);
@@ -219,8 +223,10 @@ namespace RayTraceBenchmark
 
 				// go through the scene check whether we're blocked from the lights
 				bool blocked = false;
-				foreach (var o in scene.Objects)
+				//foreach (var o in scene.Objects)
+				for (int i2 = 0; i2 != scene.Objects.Length; ++i2)
 				{
+					var o = scene.Objects[i2];
 					if (Sphere.Intersect(o, r))
 					{
 						blocked = true;
@@ -325,16 +331,24 @@ namespace RayTraceBenchmark
 		{
 			// create objects
 			var scene = new Scene();
-			scene.Objects = new Sphere[]
-			{
-				new Sphere(new Vec3(0.0f, -10002.0f, -20.0f), 10000, new Vec3(.8f, .8f, .8f)),
-				new Sphere(new Vec3(0.0f, 2.0f, -20.0f), 4, new Vec3(.8f, .5f, .5f), 0.5f),
-				new Sphere(new Vec3(5.0f, 0.0f, -15.0f), 2, new Vec3(.3f, .8f, .8f), 0.2f),
-				new Sphere(new Vec3(-5.0f, 0.0f, -15.0f), 2, new Vec3(.3f, .5f, .8f), 0.2f),
-				new Sphere(new Vec3(-2.0f, -1.0f, -10.0f), 1, new Vec3(.1f, .1f, .1f), 0.1f, 0.8f)
-			};
+			//scene.Objects = new Sphere[]
+			//{
+			//	new Sphere(new Vec3(0.0f, -10002.0f, -20.0f), 10000, new Vec3(.8f, .8f, .8f)),
+			//	new Sphere(new Vec3(0.0f, 2.0f, -20.0f), 4, new Vec3(.8f, .5f, .5f), 0.5f),
+			//	new Sphere(new Vec3(5.0f, 0.0f, -15.0f), 2, new Vec3(.3f, .8f, .8f), 0.2f),
+			//	new Sphere(new Vec3(-5.0f, 0.0f, -15.0f), 2, new Vec3(.3f, .5f, .8f), 0.2f),
+			//	new Sphere(new Vec3(-2.0f, -1.0f, -10.0f), 1, new Vec3(.1f, .1f, .1f), 0.1f, 0.8f)
+			//};
+			scene.Objects = new Sphere[5];
+			scene.Objects[0] = new Sphere(new Vec3(0.0f, -10002.0f, -20.0f), 10000, new Vec3(.8f, .8f, .8f));
+			scene.Objects[1] = new Sphere(new Vec3(0.0f, 2.0f, -20.0f), 4, new Vec3(.8f, .5f, .5f), 0.5f);
+			scene.Objects[2] = new Sphere(new Vec3(5.0f, 0.0f, -15.0f), 2, new Vec3(.3f, .8f, .8f), 0.2f);
+			scene.Objects[3] = new Sphere(new Vec3(-5.0f, 0.0f, -15.0f), 2, new Vec3(.3f, .5f, .8f), 0.2f);
+			scene.Objects[4] = new Sphere(new Vec3(-2.0f, -1.0f, -10.0f), 1, new Vec3(.1f, .1f, .1f), 0.1f, 0.8f);
 
-			scene.Lights = new Light[]{new Light(new Vec3(-10, 20, 30), new Vec3(2, 2, 2))};
+			//scene.Lights = new Light[]{new Light(new Vec3(-10, 20, 30), new Vec3(2, 2, 2))};
+			scene.Lights = new Light[1];
+			scene.Lights[0] = new Light(new Vec3(-10, 20, 30), new Vec3(2, 2, 2));
 			
 			int pixelsLength = Benchmark.Width * Benchmark.Height * 3;
 			byte[] pixels = new byte[pixelsLength];
@@ -393,4 +407,3 @@ namespace RayTraceBenchmark
 		}
 	}
 }
-*/

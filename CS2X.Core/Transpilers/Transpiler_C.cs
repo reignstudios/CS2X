@@ -747,7 +747,8 @@ namespace CS2X.Core.Transpilers
 							else if (syntaxDeclaration is ConstructorDeclarationSyntax)
 							{
 								var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
-								WriteBody(syntax.Body);
+								if (syntax.Body != null) WriteBody(syntax.Body);
+								else throw new NotSupportedException("Cunstructor body cannot be emtpy: " + syntax.ToString());
 							}
 							else if (syntaxDeclaration is AccessorDeclarationSyntax)
 							{
@@ -775,6 +776,12 @@ namespace CS2X.Core.Transpilers
 								writer.WritePrefix("return ");
 								WriteExpression(syntax.Expression);
 								writer.WriteLine(';');
+							}
+							else if (syntaxDeclaration is OperatorDeclarationSyntax)
+							{
+								var syntax = (OperatorDeclarationSyntax)syntaxDeclaration;
+								if (syntax.Body != null) WriteBody(syntax.Body);
+								else throw new NotSupportedException("Operator body cannot be emtpy: " + syntax.ToString());
 							}
 							else
 							{
@@ -881,7 +888,11 @@ namespace CS2X.Core.Transpilers
 				}
 				else if (method.MethodKind == MethodKind.Constructor)
 				{
-					// do nothing...
+					// TODO
+				}
+				else if (method.MethodKind == MethodKind.StaticConstructor)
+				{
+					// TODO
 				}
 				else
 				{
@@ -1088,7 +1099,8 @@ namespace CS2X.Core.Transpilers
 
 		private void ForEachStatement(ForEachStatementSyntax statement)
 		{
-			var collectionType = semanticModel.GetTypeInfo(statement.Expression).Type;
+			throw new NotImplementedException("TODO");
+			/*var collectionType = semanticModel.GetTypeInfo(statement.Expression).Type;
 			var localExpressionResult = TryAddLocal("er", collectionType);
 			writer.WritePrefix($"{localExpressionResult.name} = ");
 			WriteExpression(statement.Expression);
@@ -1112,7 +1124,7 @@ namespace CS2X.Core.Transpilers
 			BlockStartCallback = WriteLocal;
 
 			// statement
-			WriteFlowControlStatement(statement.Statement, ")", ") ");
+			WriteFlowControlStatement(statement.Statement, ")", ") ");*/
 		}
 
 		private void BreakStatement(BreakStatementSyntax statement)
@@ -1174,10 +1186,21 @@ namespace CS2X.Core.Transpilers
 			return expression;
 		}
 
-		private void WriteCaller(ExpressionSyntax expression)
+		private ExpressionSyntax WriteCaller(ExpressionSyntax expression)
 		{
 			var caller = GetCaller(expression);
 			WriteExpression(caller);
+			return caller;
+		}
+
+		private ITypeSymbol GetCallerType(ExpressionSyntax callerExpression, ExpressionSyntax expression)
+		{
+			if (callerExpression is ThisExpressionSyntax)
+			{
+				var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+				return symbol.ContainingType;
+			}
+			return semanticModel.GetTypeInfo(callerExpression).Type;
 		}
 
 		private void WriteLiteralExpression(LiteralExpressionSyntax expression)
@@ -1214,7 +1237,7 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (expression.IsKind(SyntaxKind.NumericLiteralExpression))
 			{
-				writer.Write(expression.Token.ValueText);
+				writer.Write(GetFormatedPrimitiveValue(expression.Token.Value));
 			}
 			else if (expression.IsKind(SyntaxKind.CharacterLiteralExpression))
 			{
@@ -1281,8 +1304,10 @@ namespace CS2X.Core.Transpilers
 				var field = (IFieldSymbol)symbolInfo.Symbol;
 				if (!field.IsStatic)
 				{
-					WriteCaller(expression);
-					writer.Write("->");
+					var caller = WriteCaller(expression);
+					var type = GetCallerType(caller, expression);
+					if (type.IsReferenceType || caller is ThisExpressionSyntax) writer.Write("->");
+					else writer.Write('.');
 					writer.Write(GetFieldFullName(field));
 				}
 				else
@@ -1297,8 +1322,10 @@ namespace CS2X.Core.Transpilers
 				{
 					if (!property.IsStatic)
 					{
-						WriteCaller(expression);
-						writer.Write("->");
+						var caller = WriteCaller(expression);
+						var type = GetCallerType(caller, expression);
+						if (type.IsReferenceType || caller is ThisExpressionSyntax) writer.Write("->");
+						else writer.Write('.');
 						writer.Write(GetFieldFullName(field));
 					}
 					else
@@ -1364,7 +1391,7 @@ namespace CS2X.Core.Transpilers
 				throw new NotSupportedException("Unsupported MemberAccessExpression: " + expression.ToString());
 			}
 		}
-
+		
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
@@ -1372,6 +1399,27 @@ namespace CS2X.Core.Transpilers
 			writer.Write(GetMethodFullName(method));
 			writer.Write('(');
 			WriteArgumentList(expression.ArgumentList);
+			if (expression.ArgumentList.Arguments.Count != method.Parameters.Length)// optional parameters
+			{
+				if (expression.ArgumentList.Arguments.Count > method.Parameters.Length) throw new Exception("Method argument count is larger than parameter count");
+				int start = method.Parameters.Length - (method.Parameters.Length - expression.ArgumentList.Arguments.Count);
+				writer.Write(", ");
+				for (int i = start; i != method.Parameters.Length; ++i)
+				{
+					var parameter = method.Parameters[i];
+					if (parameter.HasExplicitDefaultValue) 
+					{
+						writer.Write(GetFormatedPrimitiveValue(parameter.ExplicitDefaultValue));
+					}
+					else
+					{
+						var reference = parameter.DeclaringSyntaxReferences.First();
+						var syntaxDeclaration = (ParameterSyntax)reference.GetSyntax();
+						WriteExpression(syntaxDeclaration.Default.Value);
+					}
+					if (i != method.Parameters.Length - 1) writer.Write(", ");
+				}
+			}
 			writer.Write(')');
 			if (expression.Initializer != null) throw new NotImplementedException("TODO: support new initializer in statements only");
 		}
@@ -1384,8 +1432,9 @@ namespace CS2X.Core.Transpilers
 			{
 				if (rank.Sizes.Count != 1) throw new NotSupportedException("Array creation only supports single rank size");
 			}
-			object length = semanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
-			writer.Write($"{GetNewArrayMethod(type)}(sizeof({GetTypeFullName(type)}), {length})");
+			writer.Write($"{GetNewArrayMethod(type)}(sizeof({GetTypeFullName(type)}), ");
+			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
+			writer.Write(')');
 			if (expression.Initializer != null) throw new NotImplementedException("TODO: support array initializer in statements only");
 		}
 
@@ -1398,8 +1447,9 @@ namespace CS2X.Core.Transpilers
 			var ptrType = (IPointerTypeSymbol)typeInfo.Type;
 			if (arrayType.RankSpecifiers.Count != 1) throw new NotSupportedException("stackalloc only supports single rank");
 			if (arrayType.RankSpecifiers[0].Sizes.Count != 1) throw new NotSupportedException("stackalloc only supports single rank size");
-			object length = semanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);// fixed arrays should always support this form
-			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * {length})");
+			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * ");
+			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// fixed arrays should always support this form
+			writer.Write(')');
 			if (expression.Initializer != null) throw new NotImplementedException("TODO: support stackalloc initializer in statements only");
 		}
 
@@ -1433,6 +1483,23 @@ namespace CS2X.Core.Transpilers
 
 		private void PrefixUnaryExpression(PrefixUnaryExpressionSyntax expression)
 		{
+			if (expression.OperatorToken.Text == "-")
+			{
+				var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+				if (symbol != null && symbol is IMethodSymbol)
+				{
+					var method = (IMethodSymbol)symbol;
+					if (method.MethodKind != MethodKind.BuiltinOperator)
+					{
+						if (!method.IsStatic || method.MethodKind != MethodKind.UserDefinedOperator) throw new NotSupportedException("Unsupported prefix unary method: " + method.FullName());
+						writer.Write(GetMethodFullName(method));
+						writer.Write('(');
+						WriteExpression(expression.Operand);
+						writer.Write(')');
+						return;
+					}
+				}
+			}
 			writer.Write(expression.OperatorToken.Text);
 			WriteExpression(expression.Operand);
 		}
@@ -1645,6 +1712,18 @@ namespace CS2X.Core.Transpilers
 		{
 			if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomic";
 			else return "CS2X_GC_NewArray";
+		}
+
+		private string GetFormatedPrimitiveValue(object value)
+		{
+			string result = value.ToString();
+			var type = value.GetType();
+			if (type == typeof(float) || type == typeof(double))
+			{
+				if (!result.Contains('.') && !result.Contains('E')) result += ".0";
+				if (type == typeof(float)) result += 'f';
+			}
+			return result;
 		}
 
 		private string GetPrimitiveName(ITypeSymbol type)
