@@ -12,11 +12,12 @@ This project will focus on transpiling a C# subset with a modified type system f
 ### CPU targets
 * C89
 	* Native C performance
-	* C89: modern, legacy and embedded platforms (x86, MIPS, SPARK, RISC-V, 	PPC, AVR, etc)
+	* C89: modern, legacy and embedded platforms (x86, MIPS, SPARK, RISC-V, PPC, AVR, etc)
 	* CC65: 6502 platforms (Atari, C64, NES, Apple II, etc)
 	* SDCC: Many targets (ColecoVision, etc)
+* CPU agnostic byte code easily translatable to assembly instructions.
 * Assembly: CP1610 (Intellivision)
-* Retarget: Custom assembly targets via plugin system (FPGA CPU, 16bit 	bytes, etc)
+* Retarget: Custom assembly targets via plugin system (FPGA CPU, 16bit bytes, etc)
 * javaScript
 * Python
 * Java

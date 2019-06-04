@@ -257,14 +257,14 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchma
 	float l_rayNormDot_8;
 	float l_facing_9;
 	float l_fresneleffect_10;
-	l_nearest_0 = f_float_MaxValue;
+	l_nearest_0 = 3.402823E+38f;
 	l_obj_1 = 0;
 	for (l_i_2 = 0; l_i_2 != m_System_Array_get_Length_0(p_scene->f_Objects_1); ++l_i_2)
 	{
 		t_RayTraceBenchmark_Sphere* l_o_3;
 		float l_distance_4;
 		l_o_3 = p_scene->f_Objects_1[sizeof(size_t) + l_i_2];
-		l_distance_4 = f_float_MaxValue;
+		l_distance_4 = 3.402823E+38f;
 		if (m_RayTraceBenchmark_Sphere_Intersect_1(l_o_3, p_ray, l_distance_4))
 		{
 			if (l_distance_4 < l_nearest_0)
@@ -315,7 +315,7 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchma
 	l_rayNormDot_8 = m_RayTraceBenchmark_Vec3_Dot_0(p_ray.f_Dir_2, l_normal_4);
 	l_facing_9 = Max(0, -l_rayNormDot_8);
 	l_fresneleffect_10 = l_reflection_ratio_7 + ((1 - l_reflection_ratio_7) * Pow((1 - l_facing_9), 5));
-	if (p_depth < f_RayTraceBenchmark_Benchmark_maxDepth && l_reflection_ratio_7 > 0)
+	if (p_depth < 6 && l_reflection_ratio_7 > 0)
 	{
 		t_RayTraceBenchmark_Vec3 l_reflection_direction_11;
 		t_RayTraceBenchmark_Ray l_r_12;
@@ -326,7 +326,7 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchma
 		l_reflection_13 = m_RayTraceBenchmark_Benchmark_trace_0(l_r_12, p_scene, p_depth + 1);
 		l_color_6 = m_RayTraceBenchmark_Vec3_op_Multiply_1(l_reflection_13, l_fresneleffect_10);
 	}
-	if (p_depth < f_RayTraceBenchmark_Benchmark_maxDepth && (l_obj_1->f_Transparency_1 > 0))
+	if (p_depth < 6 && (l_obj_1->f_Transparency_1 > 0))
 	{
 		float l_ior_11;
 		float l_CE_12;
@@ -365,12 +365,12 @@ uint8_t* m_RayTraceBenchmark_Benchmark_Render_0(t_RayTraceBenchmark_Scene* p_sce
 	float l_w_2;
 	int32_t l_y_3;
 	l_eye_0 = f_RayTraceBenchmark_Vec3_Zero;
-	l_h_1 = Tan(((f_RayTraceBenchmark_Benchmark_fov / 360) * (2 * f_RayTraceBenchmark_Benchmark_PI)) / 2) * 2;
-	l_w_2 = l_h_1 * f_RayTraceBenchmark_Benchmark_Width / f_RayTraceBenchmark_Benchmark_Height;
-	for (l_y_3 = 0; l_y_3 != f_RayTraceBenchmark_Benchmark_Height; ++l_y_3)
+	l_h_1 = Tan(((45.0f / 360) * (2 * 3.141593f)) / 2) * 2;
+	l_w_2 = l_h_1 * 1280 / 720;
+	for (l_y_3 = 0; l_y_3 != 720; ++l_y_3)
 	{
 		int32_t l_x_4;
-		for (l_x_4 = 0; l_x_4 != f_RayTraceBenchmark_Benchmark_Width; ++l_x_4)
+		for (l_x_4 = 0; l_x_4 != 1280; ++l_x_4)
 		{
 			float l_xx_5;
 			float l_yy_6;
@@ -382,8 +382,8 @@ uint8_t* m_RayTraceBenchmark_Benchmark_Render_0(t_RayTraceBenchmark_Scene* p_sce
 			int32_t l_i_12;
 			l_xx_5 = l_x_4;
 			l_yy_6 = l_y_3;
-			l_ww_7 = f_RayTraceBenchmark_Benchmark_Width;
-			l_hh_8 = f_RayTraceBenchmark_Benchmark_Height;
+			l_ww_7 = 1280;
+			l_hh_8 = 720;
 			l_dir_9.f_X_2 = ((l_xx_5 - (l_ww_7 / 2.0f)) / l_ww_7) * l_w_2;
 			l_dir_9.f_Y_2 = (((l_hh_8 / 2.0f) - l_yy_6) / l_hh_8) * l_h_1;
 			l_dir_9.f_Z_2 = -1.0f;
@@ -391,7 +391,7 @@ uint8_t* m_RayTraceBenchmark_Benchmark_Render_0(t_RayTraceBenchmark_Scene* p_sce
 			l_r_10.f_Org_2 = l_eye_0;
 			l_r_10.f_Dir_2 = l_dir_9;
 			l_pixel_11 = m_RayTraceBenchmark_Benchmark_trace_0(l_r_10, p_scene, 0);
-			l_i_12 = (l_x_4 * 3) + (l_y_3 * f_RayTraceBenchmark_Benchmark_Width * 3);
+			l_i_12 = (l_x_4 * 3) + (l_y_3 * 1280 * 3);
 			p_pixels[sizeof(size_t) + l_i_12] = (uint8_t)Min(l_pixel_11.f_X_2 * 255, 255);
 			p_pixels[sizeof(size_t) + l_i_12 + 1] = (uint8_t)Min(l_pixel_11.f_Y_2 * 255, 255);
 			p_pixels[sizeof(size_t) + l_i_12 + 2] = (uint8_t)Min(l_pixel_11.f_Z_2 * 255, 255);
@@ -420,7 +420,7 @@ void m_RayTraceBenchmark_BenchmarkMain_Start_0()
 	l_scene_0->f_Objects_1[sizeof(size_t) + 4] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-2.0f, -1.0f, -10.0f), 1, m_RayTraceBenchmark_Vec3__ctor_0(0.1f, 0.1f, 0.1f), 0.1f, 0.8f);
 	l_scene_0->f_Lights_1 = CS2X_GC_NewArrayAtomic(sizeof(t_RayTraceBenchmark_Light), 1);
 	l_scene_0->f_Lights_1[sizeof(size_t) + 0] = m_RayTraceBenchmark_Light__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-10, 20, 30), m_RayTraceBenchmark_Vec3__ctor_0(2, 2, 2));
-	l_pixelsLength_1 = f_RayTraceBenchmark_Benchmark_Width * f_RayTraceBenchmark_Benchmark_Height * 3;
+	l_pixelsLength_1 = 1280 * 720 * 3;
 	l_pixels_2 = CS2X_GC_NewArrayAtomic(sizeof(uint8_t), l_pixelsLength_1);
 	m_System_Console_WriteLine_0(StringLiteral_1);
 	m_System_Console_WriteLine_0(StringLiteral_2);

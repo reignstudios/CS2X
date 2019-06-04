@@ -25,9 +25,9 @@ namespace CS2X.Core.Transpilers
 				this.name = name;
 			}
 
-			public bool Equals(string identifier, ITypeSymbol type)//, BlockSyntax block)
+			public bool Equals(string identifier, ITypeSymbol type)
 			{
-				return this.identifier == identifier && this.type == type;// && this.block == block;
+				return this.identifier == identifier && this.type == type;
 			}
 		}
 

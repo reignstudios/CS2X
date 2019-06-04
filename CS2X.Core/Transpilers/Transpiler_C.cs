@@ -1203,32 +1203,36 @@ namespace CS2X.Core.Transpilers
 			return semanticModel.GetTypeInfo(callerExpression).Type;
 		}
 
+		private string TryAddStringLiteral(string literalValue)
+		{
+			string literalName;
+			if (!stringLiterals.ContainsKey(literalValue))
+			{
+				literalName = "StringLiteral_" + stringLiterals.Count.ToString();
+				stringLiterals.Add(literalValue, literalName);
+				string value;
+				if (literalValue.Length > 64) value = literalValue.Substring(0, 64);
+				else value = literalValue;
+				if (value.Contains('\n')) value = value.Replace("\n", "/n");
+				if (value.Contains('\r')) value = value.Replace("\r", "/r");
+				stringLiteralWriter.WriteLine($"/* {value} */");
+				stringLiteralWriter.Write($"int8_t {literalName}[{GetStringMemorySize(literalValue)}] = ");
+				stringLiteralWriter.Write(StringToLiteral(literalValue));
+				stringLiteralWriter.WriteLine(';');
+			
+			}
+			else
+			{
+				literalName = stringLiterals[literalValue];
+			}
+			return literalName;
+		}
+
 		private void WriteLiteralExpression(LiteralExpressionSyntax expression)
 		{
 			if (expression.IsKind(SyntaxKind.StringLiteralExpression))
 			{
-				string literalName;
-				if (!stringLiterals.ContainsKey(expression.Token.ValueText))
-				{
-					// write new string literal to header
-					literalName = "StringLiteral_" + stringLiterals.Count.ToString();
-					stringLiterals.Add(expression.Token.ValueText, literalName);
-					string value;
-					if (expression.Token.ValueText.Length > 64) value = expression.Token.ValueText.Substring(0, 64);
-					else value = expression.Token.ValueText;
-					if (value.Contains('\n')) value = value.Replace("\n", "/n");
-					if (value.Contains('\r')) value = value.Replace("\r", "/r");
-					stringLiteralWriter.WriteLine($"/* {value} */");
-					stringLiteralWriter.Write($"int8_t {literalName}[{GetStringMemorySize(expression.Token.ValueText)}] = ");
-					stringLiteralWriter.Write(StringToLiteral(expression.Token.ValueText));
-					stringLiteralWriter.WriteLine(';');
-				}
-				else
-				{
-					// just get existing string literal
-					literalName = stringLiterals[expression.Token.ValueText];
-				}
-
+				string literalName = TryAddStringLiteral(expression.Token.ValueText);
 				writer.Write(literalName);
 			}
 			else if (expression.IsKind(SyntaxKind.NullLiteralExpression))
@@ -1237,7 +1241,7 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (expression.IsKind(SyntaxKind.NumericLiteralExpression))
 			{
-				writer.Write(GetFormatedPrimitiveValue(expression.Token.Value));
+				writer.Write(GetFormatedConstValue(expression.Token.Value));
 			}
 			else if (expression.IsKind(SyntaxKind.CharacterLiteralExpression))
 			{
@@ -1302,7 +1306,11 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IFieldSymbol)
 			{
 				var field = (IFieldSymbol)symbolInfo.Symbol;
-				if (!field.IsStatic)
+				if (field.IsConst)
+				{
+					writer.Write(GetFormatedConstValue(field.ConstantValue));
+				}
+				else if (!field.IsStatic)
 				{
 					var caller = WriteCaller(expression);
 					var type = GetCallerType(caller, expression);
@@ -1409,7 +1417,7 @@ namespace CS2X.Core.Transpilers
 					var parameter = method.Parameters[i];
 					if (parameter.HasExplicitDefaultValue) 
 					{
-						writer.Write(GetFormatedPrimitiveValue(parameter.ExplicitDefaultValue));
+						writer.Write(GetFormatedConstValue(parameter.ExplicitDefaultValue));
 					}
 					else
 					{
@@ -1714,7 +1722,7 @@ namespace CS2X.Core.Transpilers
 			else return "CS2X_GC_NewArray";
 		}
 
-		private string GetFormatedPrimitiveValue(object value)
+		private string GetFormatedConstValue(object value)
 		{
 			string result = value.ToString();
 			var type = value.GetType();
@@ -1722,6 +1730,10 @@ namespace CS2X.Core.Transpilers
 			{
 				if (!result.Contains('.') && !result.Contains('E')) result += ".0";
 				if (type == typeof(float)) result += 'f';
+			}
+			else if (type == typeof(string))
+			{
+				result = TryAddStringLiteral(value.ToString());
 			}
 			return result;
 		}
