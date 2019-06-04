@@ -139,6 +139,12 @@ namespace CS2X.Core.Transpilers
 
 		protected bool IsAtomicType(ITypeSymbol type)
 		{
+			if (type.Kind == SymbolKind.ArrayType)
+			{
+				var array = (IArrayTypeSymbol)type;
+				if (array.ElementType.IsReferenceType) return false;
+			}
+
 			var currentType = type;
 			while (currentType != null)
 			{

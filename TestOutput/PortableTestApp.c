@@ -142,7 +142,7 @@ int8_t t_RayTraceBenchmark_Ray_RTTYPE_RTTYPE_METADATA_FullName[56] = {0,0,0,0,0,
 t_RayTraceBenchmark_Sphere* m_RayTraceBenchmark_Sphere__ctor_0(t_RayTraceBenchmark_Vec3 p_c, float p_r, t_RayTraceBenchmark_Vec3 p_clr, float p_refl, float p_trans);
 t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Sphere_Normal_0(t_RayTraceBenchmark_Sphere* p_sphere, t_RayTraceBenchmark_Vec3 p_pos);
 char m_RayTraceBenchmark_Sphere_Intersect_0(t_RayTraceBenchmark_Sphere* p_sphere, t_RayTraceBenchmark_Ray p_ray);
-char m_RayTraceBenchmark_Sphere_Intersect_1(t_RayTraceBenchmark_Sphere* p_sphere, t_RayTraceBenchmark_Ray p_ray, float p_distance);
+char m_RayTraceBenchmark_Sphere_Intersect_1(t_RayTraceBenchmark_Sphere* p_sphere, t_RayTraceBenchmark_Ray p_ray, float* p_distance);
 t_RayTraceBenchmark_Light* m_RayTraceBenchmark_Light__ctor_0(t_RayTraceBenchmark_Vec3 p_position, t_RayTraceBenchmark_Vec3 p_color);
 t_RayTraceBenchmark_Scene* m_RayTraceBenchmark_Scene__ctor_0();
 t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchmark_Ray p_ray, t_RayTraceBenchmark_Scene* p_scene, int32_t p_depth);
@@ -203,7 +203,7 @@ char m_RayTraceBenchmark_Sphere_Intersect_0(t_RayTraceBenchmark_Sphere* p_sphere
 	return 1;
 }
 
-char m_RayTraceBenchmark_Sphere_Intersect_1(t_RayTraceBenchmark_Sphere* p_sphere, t_RayTraceBenchmark_Ray p_ray, float p_distance)
+char m_RayTraceBenchmark_Sphere_Intersect_1(t_RayTraceBenchmark_Sphere* p_sphere, t_RayTraceBenchmark_Ray p_ray, float* p_distance)
 {
 	t_RayTraceBenchmark_Vec3 l_l_0;
 	float l_a_1;
@@ -212,7 +212,7 @@ char m_RayTraceBenchmark_Sphere_Intersect_1(t_RayTraceBenchmark_Sphere* p_sphere
 	float l_c_4;
 	float l_near_5;
 	float l_far_6;
-	p_distance = 0;
+	(*p_distance) = 0;
 	l_l_0 = m_RayTraceBenchmark_Vec3_op_Subtraction_0(p_sphere->f_Center_1, p_ray.f_Org_2);
 	l_a_1 = m_RayTraceBenchmark_Vec3_Dot_0(l_l_0, p_ray.f_Dir_2);
 	if (l_a_1 < 0) return 0;
@@ -222,7 +222,7 @@ char m_RayTraceBenchmark_Sphere_Intersect_1(t_RayTraceBenchmark_Sphere* p_sphere
 	l_c_4 = sqrtf(l_r2_3 - l_b2_2);
 	l_near_5 = l_a_1 - l_c_4;
 	l_far_6 = l_a_1 + l_c_4;
-	p_distance = (l_near_5 < 0) ? l_far_6 : l_near_5;
+	(*p_distance) = (l_near_5 < 0) ? l_far_6 : l_near_5;
 	return 1;
 }
 
@@ -265,7 +265,7 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchma
 		float l_distance_4;
 		l_o_3 = p_scene->f_Objects_1[sizeof(size_t) + l_i_2];
 		l_distance_4 = 3.402823E+38f;
-		if (m_RayTraceBenchmark_Sphere_Intersect_1(l_o_3, p_ray, l_distance_4))
+		if (m_RayTraceBenchmark_Sphere_Intersect_1(l_o_3, p_ray, &l_distance_4))
 		{
 			if (l_distance_4 < l_nearest_0)
 			{

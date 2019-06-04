@@ -893,6 +893,7 @@ namespace CS2X.Core.Transpilers
 				else if (method.MethodKind == MethodKind.StaticConstructor)
 				{
 					// TODO
+					//var members = method.ContainingType.GetMembers();
 				}
 				else
 				{
@@ -910,13 +911,30 @@ namespace CS2X.Core.Transpilers
 
 			return true;
 		}
+
+		private bool IsParameterPassByRef(IParameterSymbol parameter)
+		{
+			switch (parameter.RefKind)
+			{
+				case RefKind.None: return false;
+				case RefKind.In: return false;//parameter.Type.IsValueType && !IsPrimitiveType(parameter.Type);// TODO: limit pass by 'in' to identifier expressions
+
+				case RefKind.Out:
+				case RefKind.Ref:
+					return true;
+
+				default: throw new NotSupportedException("Parameter ref kind not supported: " + parameter.RefKind);
+			}
+		}
 		
 		private void WriteParameters(ImmutableArray<IParameterSymbol> parameters)
 		{
 			var lastParameter = parameters.LastOrDefault();
 			foreach (var parameter in parameters)
 			{
-				writer.Write($"{GetTypeFullNameRef(parameter.Type)} {GetParameterFullName(parameter)}");
+				string ptr = string.Empty;
+				if (IsParameterPassByRef(parameter)) ptr = "*";
+				writer.Write($"{GetTypeFullNameRef(parameter.Type)}{ptr} {GetParameterFullName(parameter)}");
 				if (parameter != lastParameter) writer.Write(", ");
 			}
 		}
@@ -1301,7 +1319,8 @@ namespace CS2X.Core.Transpilers
 			else if (symbolInfo.Symbol is IParameterSymbol)
 			{
 				var parameter = (IParameterSymbol)symbolInfo.Symbol;
-				writer.Write(GetParameterFullName(parameter));
+				if (!IsParameterPassByRef(parameter)) writer.Write(GetParameterFullName(parameter));
+				else writer.Write($"(*{GetParameterFullName(parameter)})");
 			}
 			else if (symbolInfo.Symbol is IFieldSymbol)
 			{
@@ -1375,6 +1394,7 @@ namespace CS2X.Core.Transpilers
 				var lastArg = arguments.Last();
 				foreach (var arg in arguments)
 				{
+					if (arg.RefKindKeyword.Text == "out" || arg.RefKindKeyword.Text == "ref") writer.Write('&');
 					WriteExpression(arg.Expression);
 					if (arg != lastArg) writer.Write(", ");
 				}
@@ -1415,6 +1435,7 @@ namespace CS2X.Core.Transpilers
 				for (int i = start; i != method.Parameters.Length; ++i)
 				{
 					var parameter = method.Parameters[i];
+					if (!parameter.IsOptional) throw new Exception("Parameter is not optional: " + parameter);
 					if (parameter.HasExplicitDefaultValue) 
 					{
 						writer.Write(GetFormatedConstValue(parameter.ExplicitDefaultValue));
@@ -1423,6 +1444,7 @@ namespace CS2X.Core.Transpilers
 					{
 						var reference = parameter.DeclaringSyntaxReferences.First();
 						var syntaxDeclaration = (ParameterSyntax)reference.GetSyntax();
+						if (IsParameterPassByRef(parameter)) writer.Write('&');
 						WriteExpression(syntaxDeclaration.Default.Value);
 					}
 					if (i != method.Parameters.Length - 1) writer.Write(", ");
