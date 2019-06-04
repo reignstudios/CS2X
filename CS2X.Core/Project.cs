@@ -27,6 +27,7 @@ namespace CS2X.Core
 		
 		public CSharpCompilation compilation { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> allTypes { get; private set; }
+		public IReadOnlyList<INamedTypeSymbol> allTypesDependencyOrdered { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> classTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> structTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> interfaceTypes { get; private set; }
@@ -86,6 +87,35 @@ namespace CS2X.Core
 			allTypesList.AddRange(interfaceTypes);
 			allTypesList.AddRange(enumTypes);
 			allTypes = allTypesList;
+
+			// dependency sort all types
+			var allTypesDependencyOrderedList = new List<INamedTypeSymbol>();
+			foreach (var type in allTypesList)
+			{
+				int index = -1, i = 0;
+				foreach (var orderedType in allTypesDependencyOrderedList)
+				{
+					if (type.IsValueType)
+					{
+						foreach (var member in orderedType.GetMembers())
+						{
+							if (member.Kind != SymbolKind.Field) continue;
+							var field = (IFieldSymbol)member;
+							if (field.Type.FullName() == type.FullName())
+							{
+								index = i;
+								break;
+							}
+						}
+						if (index != -1) break;
+					}
+					++i;
+				}
+
+				if (index == -1) allTypesDependencyOrderedList.Add(type);
+				else allTypesDependencyOrderedList.Insert(index, type);
+			}
+			allTypesDependencyOrdered = allTypesDependencyOrderedList;
 		}
 
 		private void ParseNamespace(INamespaceSymbol namespaceSymbol)

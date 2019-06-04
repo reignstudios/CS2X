@@ -105,6 +105,23 @@ struct t_System_Attribute
 	t_System_RuntimeType* CS2X_RuntimeType;
 };
 
+#define f_System_AttributeTargets_Assembly 1
+#define f_System_AttributeTargets_Module 2
+#define f_System_AttributeTargets_Class 4
+#define f_System_AttributeTargets_Struct 8
+#define f_System_AttributeTargets_Enum 16
+#define f_System_AttributeTargets_Constructor 32
+#define f_System_AttributeTargets_Method 64
+#define f_System_AttributeTargets_Property 128
+#define f_System_AttributeTargets_Field 256
+#define f_System_AttributeTargets_Event 512
+#define f_System_AttributeTargets_Interface 1024
+#define f_System_AttributeTargets_Parameter 2048
+#define f_System_AttributeTargets_Delegate 4096
+#define f_System_AttributeTargets_ReturnValue 8192
+#define f_System_AttributeTargets_GenericParameter 16384
+#define f_System_AttributeTargets_All 32767
+
 struct t_System_AttributeUsageAttribute
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -304,6 +321,10 @@ struct t_System_ComponentModel_DependencyAttribute
 	t_System_RuntimeType* CS2X_RuntimeType;
 };
 
+#define f_System_ComponentModel_EditorBrowsableState_Always 0
+#define f_System_ComponentModel_EditorBrowsableState_Never 1
+#define f_System_ComponentModel_EditorBrowsableState_Advanced 2
+
 struct t_System_ComponentModel_EditorBrowsableAttribute
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -435,6 +456,21 @@ struct t_System_Runtime_CompilerServices_IntrinsicAttribute
 	t_System_RuntimeType* CS2X_RuntimeType;
 };
 
+#define f_System_Runtime_CompilerServices_MethodCodeType_IL 0
+#define f_System_Runtime_CompilerServices_MethodCodeType_Native 1
+#define f_System_Runtime_CompilerServices_MethodCodeType_OPTIL 2
+#define f_System_Runtime_CompilerServices_MethodCodeType_Runtime 3
+
+#define f_System_Runtime_CompilerServices_MethodImplOptions_Unmanaged 4
+#define f_System_Runtime_CompilerServices_MethodImplOptions_NoInlining 8
+#define f_System_Runtime_CompilerServices_MethodImplOptions_ForwardRef 16
+#define f_System_Runtime_CompilerServices_MethodImplOptions_Synchronized 32
+#define f_System_Runtime_CompilerServices_MethodImplOptions_NoOptimization 64
+#define f_System_Runtime_CompilerServices_MethodImplOptions_PreserveSig 128
+#define f_System_Runtime_CompilerServices_MethodImplOptions_AggressiveInlining 256
+#define f_System_Runtime_CompilerServices_MethodImplOptions_AggressiveOptimization 512
+#define f_System_Runtime_CompilerServices_MethodImplOptions_InternalCall 4096
+
 struct t_System_Runtime_CompilerServices_MethodImplAttribute
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -452,6 +488,10 @@ struct t_System_Runtime_InteropServices_OutAttribute
 	t_System_RuntimeType* CS2X_RuntimeType;
 };
 
+#define f_System_Runtime_InteropServices_LayoutKind_Sequential 0
+#define f_System_Runtime_InteropServices_LayoutKind_Explicit 2
+#define f_System_Runtime_InteropServices_LayoutKind_Auto 3
+
 struct t_System_Runtime_InteropServices_StructLayoutAttribute
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -466,6 +506,8 @@ struct t_System_Runtime_Versioning_TargetFrameworkAttribute
 	t_System_String* f__FrameworkDisplayName_k__BackingField_2;
 	t_System_String* f__FrameworkName_k__BackingField_2;
 };
+
+#define f_CS2X_NativeExternTarget_C 1
 
 struct t_CS2X_NativeExternAttribute
 {
@@ -494,27 +536,6 @@ struct t_System_Collections_DictionaryEntry
 	t_System_Object* f__Value_k__BackingField_2;
 };
 
-#define f_System_AttributeTargets_Assembly 1
-#define f_System_AttributeTargets_Module 2
-#define f_System_AttributeTargets_Class 4
-#define f_System_AttributeTargets_Struct 8
-#define f_System_AttributeTargets_Enum 16
-#define f_System_AttributeTargets_Constructor 32
-#define f_System_AttributeTargets_Method 64
-#define f_System_AttributeTargets_Property 128
-#define f_System_AttributeTargets_Field 256
-#define f_System_AttributeTargets_Event 512
-#define f_System_AttributeTargets_Interface 1024
-#define f_System_AttributeTargets_Parameter 2048
-#define f_System_AttributeTargets_Delegate 4096
-#define f_System_AttributeTargets_ReturnValue 8192
-#define f_System_AttributeTargets_GenericParameter 16384
-#define f_System_AttributeTargets_All 32767
-
-#define f_System_ComponentModel_EditorBrowsableState_Always 0
-#define f_System_ComponentModel_EditorBrowsableState_Never 1
-#define f_System_ComponentModel_EditorBrowsableState_Advanced 2
-
 #define f_System_Reflection_MethodImplAttributes_CodeTypeMask 3
 #define f_System_Reflection_MethodImplAttributes_IL 0
 #define f_System_Reflection_MethodImplAttributes_Native 1
@@ -532,27 +553,6 @@ struct t_System_Collections_DictionaryEntry
 #define f_System_Reflection_MethodImplAttributes_NoOptimization 64
 #define f_System_Reflection_MethodImplAttributes_AggressiveOptimization 512
 #define f_System_Reflection_MethodImplAttributes_MaxMethodImplVal 65535
-
-#define f_System_Runtime_CompilerServices_MethodCodeType_IL 0
-#define f_System_Runtime_CompilerServices_MethodCodeType_Native 1
-#define f_System_Runtime_CompilerServices_MethodCodeType_OPTIL 2
-#define f_System_Runtime_CompilerServices_MethodCodeType_Runtime 3
-
-#define f_System_Runtime_CompilerServices_MethodImplOptions_Unmanaged 4
-#define f_System_Runtime_CompilerServices_MethodImplOptions_NoInlining 8
-#define f_System_Runtime_CompilerServices_MethodImplOptions_ForwardRef 16
-#define f_System_Runtime_CompilerServices_MethodImplOptions_Synchronized 32
-#define f_System_Runtime_CompilerServices_MethodImplOptions_NoOptimization 64
-#define f_System_Runtime_CompilerServices_MethodImplOptions_PreserveSig 128
-#define f_System_Runtime_CompilerServices_MethodImplOptions_AggressiveInlining 256
-#define f_System_Runtime_CompilerServices_MethodImplOptions_AggressiveOptimization 512
-#define f_System_Runtime_CompilerServices_MethodImplOptions_InternalCall 4096
-
-#define f_System_Runtime_InteropServices_LayoutKind_Sequential 0
-#define f_System_Runtime_InteropServices_LayoutKind_Explicit 2
-#define f_System_Runtime_InteropServices_LayoutKind_Auto 3
-
-#define f_CS2X_NativeExternTarget_C 1
 
 /* =============================== */
 /* Runtime Types */

@@ -292,7 +292,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Type definitions */");
 			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes)
+			foreach (var type in project.allTypesDependencyOrdered)
 			{
 				if (WriteType(type, true)) writer.WriteLine();
 			}
@@ -1544,7 +1544,9 @@ namespace CS2X.Core.Transpilers
 				if (nativeExternAttribute != null)
 				{
 					isStaticExternCMethod = true;
-					writer.Write(method.Name);
+					var arg = nativeExternAttribute.ConstructorArguments[1];
+					if (arg.Value == null) writer.Write(method.Name);
+					else writer.Write(arg.Value.ToString());
 				}
 				else if (!IsInternalCall(method))
 				{
@@ -1641,8 +1643,9 @@ namespace CS2X.Core.Transpilers
 				}
 				else if
 				(
-					(IsPrimitiveType(operatorMethod.Parameters[0].Type) || operatorMethod.Parameters[0].Type is IPointerTypeSymbol) &&
-					(IsPrimitiveType(operatorMethod.Parameters[1].Type) || operatorMethod.Parameters[1].Type is IPointerTypeSymbol)
+					((IsPrimitiveType(operatorMethod.Parameters[0].Type) || operatorMethod.Parameters[0].Type is IPointerTypeSymbol) &&
+					(IsPrimitiveType(operatorMethod.Parameters[1].Type) || operatorMethod.Parameters[1].Type is IPointerTypeSymbol)) ||
+					(operatorMethod.IsImplicitlyDeclared)
 				)
 				{
 					WriteExpression(expression.Left);
