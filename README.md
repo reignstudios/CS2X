@@ -4,6 +4,9 @@
 Transpiles a C# subset to non .NET languages, platforms, runtimes and enviroments. (Powered by Roslyn)<br>
 If you're looking for IL2X: https://github.com/reignstudios/IL2X
 
+## WASM Demo
+http://reign-studios.com/wasm/cs2x/ray-trace-benchmark/cs2x.html
+
 ## Goals
 This project will focus on transpiling a C# subset with a modified type system for writing CPU and GPU programs.
 * Custom Standard lib(s) for various targets.
