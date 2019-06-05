@@ -16,10 +16,10 @@ namespace System
 		[NativeExtern(NativeExternTarget.C, "tan")]
         public static extern double Tan(double a);
 
-		[NativeExtern(NativeExternTarget.C, "max")]
+		[NativeExtern(NativeExternTarget.C, "fmax")]
 		public static extern float Max(float val1, float val2);
 
-		[NativeExtern(NativeExternTarget.C, "min")]
+		[NativeExtern(NativeExternTarget.C, "fmin")]
 		public static extern float Min(float val1, float val2);
 	}
 }

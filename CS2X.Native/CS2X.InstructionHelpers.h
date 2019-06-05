@@ -1,11 +1,11 @@
 #pragma once
-#include <limits.h>
-#include <setjmp.h>
-#include <process.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
+//#include <limits.h>
+//#include <setjmp.h>
+//#include <process.h>
+//
+//#ifdef _WIN32
+//#include <windows.h>
+//#endif
 
 // ================================
 // REF BACKUP: for try/catch/finally
@@ -144,8 +144,8 @@ void convert_utf16_to_utf32(const char16_t *input, size_t input_size, char32_t *
 /* ====================================== */
 /* C99 Exception helpers */
 /* ====================================== */
-__declspec(thread) jmp_buf CS2X_ThreadExceptionJmpBuff;
-__declspec(thread) void* CS2X_ThreadExceptionObject;
+//__declspec(thread) jmp_buf CS2X_ThreadExceptionJmpBuff;
+//__declspec(thread) void* CS2X_ThreadExceptionObject;
 
 /*#define IL2X_TRY(jmp, jmpLast, i) \
 	memcpy(jmpLast, IL2X_ThreadExceptionJmpBuff, sizeof(jmp_buf)); \
@@ -163,15 +163,15 @@ __declspec(thread) void* CS2X_ThreadExceptionObject;
 /* ====================================== */
 /* overflow helpers */
 /* ====================================== */
-char CS2X_AddOvf_Int32(int a, int b, int* result)
-{
-	if (a > INT_MAX - b)
-	{
-		return 0;
-	}
-	else
-	{
-		*result = a + b;
-		return 1;
-	}
-}
+//char CS2X_AddOvf_Int32(int a, int b, int* result)
+//{
+//	if (a > INT_MAX - b)
+//	{
+//		return 0;
+//	}
+//	else
+//	{
+//		*result = a + b;
+//		return 1;
+//	}
+//}

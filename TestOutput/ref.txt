@@ -1,0 +1,13 @@
+#include <time.h>
+
+float startTime = (float)clock() / CLOCKS_PER_SEC;
+	l_data_3 = m_RayTraceBenchmark_Benchmark_Render_0(l_scene_0, l_pixels_2);
+	float endTime = (float)clock() / CLOCKS_PER_SEC;
+	float timeElapsed = endTime - startTime;
+	wprintf(L"%f\n", timeElapsed);
+
+	uint8_t* buffer = l_data_3 + sizeof(size_t);
+	FILE* pFile = 0;
+	fopen_s(&pFile, "D:\\Dev\\Reign\\CS2X\\TestOutput\\PortableTestApp_VCPP\\x64\\Debug\\image_cs2x.rgb", "wb");
+	fwrite(buffer, sizeof(uint8_t), l_pixelsLength_1, pFile);
+	fclose(pFile);

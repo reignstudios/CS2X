@@ -1505,9 +1505,28 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
+			// check if we should invoke custom operator method
+			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			if (symbol != null && symbol.Kind == SymbolKind.Method && expression.OperatorToken.ValueText.Length == 2)
+			{
+				var method = (IMethodSymbol)symbol;
+				if (!method.IsImplicitlyDeclared)
+				{
+					WriteExpression(expression.Left);
+					writer.Write(" = ");
+					writer.Write(GetMethodFullName(method));
+					writer.Write('(');
+					WriteExpression(expression.Left);
+					writer.Write(", ");
+					WriteExpression(expression.Right);
+					writer.Write(')');
+					return;
+				}
+			}
+
 			// normal assignment
 			WriteExpression(expression.Left);
-			writer.Write(" = ");
+			writer.Write($" {expression.OperatorToken.ValueText} ");
 			WriteExpression(expression.Right);
 		}
 

@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <uchar.h>
 #include <locale.h>
-#include "..\CS2X.Native\CS2X.GC.Boehm.h"
+#include "..\CS2X.Native\CS2X.GC.Portable.h"
 #include "..\CS2X.Native\CS2X.InstructionHelpers.h"
 #include "_StringLiterals.h"
 

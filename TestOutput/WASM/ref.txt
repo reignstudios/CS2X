@@ -1,0 +1,7 @@
+<<< Invoke JS method example >>>
+extern void JS_DisplayRenderData(uint8_t* data, int dataLength);
+
+void Foo()
+{
+	JS_DisplayRenderData(l_data_3 + sizeof(size_t), l_pixelsLength_1);
+}

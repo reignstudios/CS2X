@@ -244,7 +244,7 @@ namespace RayTraceBenchmark
 			}
 
 			var rayNormDot = Vec3.Dot(ray.Dir, normal);
-			Num facing = Math.Max(0, -rayNormDot);
+			Num facing = MathF.Max(0, -rayNormDot);
 			//Num fresneleffect = reflection_ratio + ((1 - reflection_ratio) * (Num)Math.Pow((1 - facing), 5));
 			Num fresneleffect = reflection_ratio + ((1 - reflection_ratio) * MathF.Pow((1 - facing), 5));
 
@@ -307,9 +307,9 @@ namespace RayTraceBenchmark
 					r.Dir = dir;
 					var pixel = trace(r, scene, 0);
 					int i = (x*3) + (y*Width*3);
-					pixels[i] = (byte)Math.Min(pixel.X * 255, 255);
-					pixels[i+1] = (byte)Math.Min(pixel.Y * 255, 255);
-					pixels[i+2] = (byte)Math.Min(pixel.Z * 255, 255);
+					pixels[i] = (byte)MathF.Min(pixel.X * 255, 255);
+					pixels[i+1] = (byte)MathF.Min(pixel.Y * 255, 255);
+					pixels[i+2] = (byte)MathF.Min(pixel.Z * 255, 255);
 				}
 			}
 
