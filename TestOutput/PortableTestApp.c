@@ -534,6 +534,7 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Vec3__ctor_1()
 
 void m_RayTraceBenchmark_Vec3__cctor_0()
 {
+	f_RayTraceBenchmark_Vec3_Zero = m_RayTraceBenchmark_Vec3__ctor_1();
 }
 
 t_RayTraceBenchmark_Ray m_RayTraceBenchmark_Ray__ctor_0()

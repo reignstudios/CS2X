@@ -886,14 +886,32 @@ namespace CS2X.Core.Transpilers
 						throw new NotSupportedException("Unsupported method extern: " + method.Name);
 					}
 				}
-				else if (method.MethodKind == MethodKind.Constructor)
+				else if (method.MethodKind == MethodKind.Constructor || method.MethodKind == MethodKind.StaticConstructor)
 				{
-					// TODO
-				}
-				else if (method.MethodKind == MethodKind.StaticConstructor)
-				{
-					// TODO
-					//var members = method.ContainingType.GetMembers();
+					var members = method.ContainingType.GetMembers();
+					foreach (var member in members)
+					{
+						if (member.IsImplicitlyDeclared) continue;
+						if (!member.IsStatic && method.MethodKind != MethodKind.Constructor) continue;
+						if (member.IsStatic && method.MethodKind != MethodKind.StaticConstructor) continue;
+
+						if (member.Kind == SymbolKind.Field)
+						{
+							var field = (IFieldSymbol)member;
+							if (field.IsConst) continue;
+
+							var syntaxRef = field.DeclaringSyntaxReferences.FirstOrDefault();
+							var syntax = (VariableDeclaratorSyntax)syntaxRef.GetSyntax();
+							if (syntax.Initializer != null)
+							{
+								if (!field.IsStatic) writer.WritePrefix($"self->{GetFieldFullName(field)}");
+								else writer.WritePrefix(GetFieldFullName(field));
+								writer.Write(" = ");
+								WriteExpression(syntax.Initializer.Value);
+								writer.WriteLine(';');
+							}
+						}
+					}
 				}
 				else
 				{
