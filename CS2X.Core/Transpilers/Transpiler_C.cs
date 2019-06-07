@@ -1741,10 +1741,18 @@ namespace CS2X.Core.Transpilers
 
 		private void ElementAccessExpression(ElementAccessExpressionSyntax expression)
 		{
-			WriteExpression(expression.Expression);
-			writer.Write('[');
 			var type = semanticModel.GetTypeInfo(expression.Expression).Type;
-			if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer && type.Kind == SymbolKind.ArrayType) writer.Write("sizeof(size_t) + ");
+            if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer && type.Kind == SymbolKind.ArrayType)
+            {
+                writer.Write($"(({GetTypeFullNameRef(type)})(((size_t*)");
+                WriteExpression(expression.Expression);
+                writer.Write(") + 1))");
+            }
+			else
+            {
+                WriteExpression(expression.Expression);
+            }
+            writer.Write('[');
 			var arguments = expression.ArgumentList.Arguments;
 			if (arguments.Count != 1) throw new NotSupportedException("Elements can only have one arg");
 			WriteExpression(arguments[0].Expression);
@@ -1780,8 +1788,20 @@ namespace CS2X.Core.Transpilers
 
 		private string GetNewArrayMethod(ITypeSymbol type)
 		{
-			if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomic";
-			else return "CS2X_GC_NewArray";
+            if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer)
+            {
+			    if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomic";
+			    else return "CS2X_GC_NewArray";
+            }
+            else if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.BeforePointer)
+            {
+                if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomicHeader";
+                else return "CS2X_GC_NewArrayHeader";
+            }
+            else
+            {
+                throw new NotImplementedException("Unsupported new array length location: " + options.arrayLengthMemoryLocation);
+            }
 		}
 
 		private string GetFormatedConstValue(object value)

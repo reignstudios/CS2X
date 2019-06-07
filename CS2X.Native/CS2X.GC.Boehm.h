@@ -44,6 +44,20 @@ void* CS2X_GC_NewArrayAtomic(size_t elementSize, size_t length)
 	return ptr;
 }
 
+void* CS2X_GC_NewArrayHeader(size_t elementSize, size_t length)
+{
+	// TODO: GC settings needed!
+	size_t* ptr = CS2X_GC_NewArray(elementSize, length);
+	return ++ptr;
+}
+
+void* CS2X_GC_NewArrayAtomicHeader(size_t elementSize, size_t length)
+{
+	// TODO: GC settings needed!
+	size_t* ptr = CS2X_GC_NewArrayAtomic(elementSize, length);
+	return ++ptr;
+}
+
 void* CS2X_GC_Resize(void* object, size_t oldSize, size_t newSize)
 {
 	char* ptr = GC_realloc(object, newSize);

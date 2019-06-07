@@ -11,3 +11,6 @@ float startTime = (float)clock() / CLOCKS_PER_SEC;
 	fopen_s(&pFile, "D:\\Dev\\Reign\\CS2X\\TestOutput\\PortableTestApp_VCPP\\x64\\Debug\\image_cs2x.rgb", "wb");
 	fwrite(buffer, sizeof(uint8_t), l_pixelsLength_1, pFile);
 	fclose(pFile);
+
+
+.\magick.exe -depth 8 -size 1280x720 .\image_cs2x.rgb .\image_cs2x.png

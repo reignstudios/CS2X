@@ -263,7 +263,7 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchma
 	{
 		t_RayTraceBenchmark_Sphere* l_o_3;
 		float l_distance_4;
-		l_o_3 = p_scene->f_Objects_1[sizeof(size_t) + l_i_2];
+		l_o_3 = ((t_RayTraceBenchmark_Sphere**)(((size_t*)p_scene->f_Objects_1) + 1))[l_i_2];
 		l_distance_4 = 3.402823E+38f;
 		if (m_RayTraceBenchmark_Sphere_Intersect_1(l_o_3, p_ray, &l_distance_4))
 		{
@@ -292,7 +292,7 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchma
 		t_RayTraceBenchmark_Ray l_r_10;
 		char l_blocked_11;
 		int32_t l_i2_12;
-		l_l_8 = p_scene->f_Lights_1[sizeof(size_t) + l_i_2];
+		l_l_8 = ((t_RayTraceBenchmark_Light**)(((size_t*)p_scene->f_Lights_1) + 1))[l_i_2];
 		l_light_direction_9 = m_RayTraceBenchmark_Vec3_Normalize_0(m_RayTraceBenchmark_Vec3_op_Subtraction_0(l_l_8->f_Position_1, l_point_of_hit_3));
 		l_r_10.f_Org_2 = m_RayTraceBenchmark_Vec3_op_Addition_0(l_point_of_hit_3, (m_RayTraceBenchmark_Vec3_op_Multiply_1(l_normal_4, 1E-05f)));
 		l_r_10.f_Dir_2 = l_light_direction_9;
@@ -300,7 +300,7 @@ t_RayTraceBenchmark_Vec3 m_RayTraceBenchmark_Benchmark_trace_0(t_RayTraceBenchma
 		for (l_i2_12 = 0; l_i2_12 != m_System_Array_get_Length_0(p_scene->f_Objects_1); ++l_i2_12)
 		{
 			t_RayTraceBenchmark_Sphere* l_o_13;
-			l_o_13 = p_scene->f_Objects_1[sizeof(size_t) + l_i2_12];
+			l_o_13 = ((t_RayTraceBenchmark_Sphere**)(((size_t*)p_scene->f_Objects_1) + 1))[l_i2_12];
 			if (m_RayTraceBenchmark_Sphere_Intersect_0(l_o_13, l_r_10))
 			{
 				l_blocked_11 = 1;
@@ -392,9 +392,9 @@ uint8_t* m_RayTraceBenchmark_Benchmark_Render_0(t_RayTraceBenchmark_Scene* p_sce
 			l_r_10.f_Dir_2 = l_dir_9;
 			l_pixel_11 = m_RayTraceBenchmark_Benchmark_trace_0(l_r_10, p_scene, 0);
 			l_i_12 = (l_x_4 * 3) + (l_y_3 * 1280 * 3);
-			p_pixels[sizeof(size_t) + l_i_12] = (uint8_t)fminf(l_pixel_11.f_X_2 * 255, 255);
-			p_pixels[sizeof(size_t) + l_i_12 + 1] = (uint8_t)fminf(l_pixel_11.f_Y_2 * 255, 255);
-			p_pixels[sizeof(size_t) + l_i_12 + 2] = (uint8_t)fminf(l_pixel_11.f_Z_2 * 255, 255);
+			((uint8_t*)(((size_t*)p_pixels) + 1))[l_i_12] = (uint8_t)fminf(l_pixel_11.f_X_2 * 255, 255);
+			((uint8_t*)(((size_t*)p_pixels) + 1))[l_i_12 + 1] = (uint8_t)fminf(l_pixel_11.f_Y_2 * 255, 255);
+			((uint8_t*)(((size_t*)p_pixels) + 1))[l_i_12 + 2] = (uint8_t)fminf(l_pixel_11.f_Z_2 * 255, 255);
 		}
 	}
 	return p_pixels;
@@ -413,13 +413,13 @@ void m_RayTraceBenchmark_BenchmarkMain_Start_0()
 	uint8_t* l_data_3;
 	l_scene_0 = m_RayTraceBenchmark_Scene__ctor_0();
 	l_scene_0->f_Objects_1 = CS2X_GC_NewArrayAtomic(sizeof(t_RayTraceBenchmark_Sphere), 5);
-	l_scene_0->f_Objects_1[sizeof(size_t) + 0] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(0.0f, -10002.0f, -20.0f), 10000, m_RayTraceBenchmark_Vec3__ctor_0(0.8f, 0.8f, 0.8f), 0.0f, 0.0f);
-	l_scene_0->f_Objects_1[sizeof(size_t) + 1] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(0.0f, 2.0f, -20.0f), 4, m_RayTraceBenchmark_Vec3__ctor_0(0.8f, 0.5f, 0.5f), 0.5f, 0.0f);
-	l_scene_0->f_Objects_1[sizeof(size_t) + 2] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(5.0f, 0.0f, -15.0f), 2, m_RayTraceBenchmark_Vec3__ctor_0(0.3f, 0.8f, 0.8f), 0.2f, 0.0f);
-	l_scene_0->f_Objects_1[sizeof(size_t) + 3] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-5.0f, 0.0f, -15.0f), 2, m_RayTraceBenchmark_Vec3__ctor_0(0.3f, 0.5f, 0.8f), 0.2f, 0.0f);
-	l_scene_0->f_Objects_1[sizeof(size_t) + 4] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-2.0f, -1.0f, -10.0f), 1, m_RayTraceBenchmark_Vec3__ctor_0(0.1f, 0.1f, 0.1f), 0.1f, 0.8f);
+	((t_RayTraceBenchmark_Sphere**)(((size_t*)l_scene_0->f_Objects_1) + 1))[0] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(0.0f, -10002.0f, -20.0f), 10000, m_RayTraceBenchmark_Vec3__ctor_0(0.8f, 0.8f, 0.8f), 0.0f, 0.0f);
+	((t_RayTraceBenchmark_Sphere**)(((size_t*)l_scene_0->f_Objects_1) + 1))[1] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(0.0f, 2.0f, -20.0f), 4, m_RayTraceBenchmark_Vec3__ctor_0(0.8f, 0.5f, 0.5f), 0.5f, 0.0f);
+	((t_RayTraceBenchmark_Sphere**)(((size_t*)l_scene_0->f_Objects_1) + 1))[2] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(5.0f, 0.0f, -15.0f), 2, m_RayTraceBenchmark_Vec3__ctor_0(0.3f, 0.8f, 0.8f), 0.2f, 0.0f);
+	((t_RayTraceBenchmark_Sphere**)(((size_t*)l_scene_0->f_Objects_1) + 1))[3] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-5.0f, 0.0f, -15.0f), 2, m_RayTraceBenchmark_Vec3__ctor_0(0.3f, 0.5f, 0.8f), 0.2f, 0.0f);
+	((t_RayTraceBenchmark_Sphere**)(((size_t*)l_scene_0->f_Objects_1) + 1))[4] = m_RayTraceBenchmark_Sphere__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-2.0f, -1.0f, -10.0f), 1, m_RayTraceBenchmark_Vec3__ctor_0(0.1f, 0.1f, 0.1f), 0.1f, 0.8f);
 	l_scene_0->f_Lights_1 = CS2X_GC_NewArrayAtomic(sizeof(t_RayTraceBenchmark_Light), 1);
-	l_scene_0->f_Lights_1[sizeof(size_t) + 0] = m_RayTraceBenchmark_Light__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-10, 20, 30), m_RayTraceBenchmark_Vec3__ctor_0(2, 2, 2));
+	((t_RayTraceBenchmark_Light**)(((size_t*)l_scene_0->f_Lights_1) + 1))[0] = m_RayTraceBenchmark_Light__ctor_0(m_RayTraceBenchmark_Vec3__ctor_0(-10, 20, 30), m_RayTraceBenchmark_Vec3__ctor_0(2, 2, 2));
 	l_pixelsLength_1 = 1280 * 720 * 3;
 	l_pixels_2 = CS2X_GC_NewArrayAtomic(sizeof(uint8_t), l_pixelsLength_1);
 	m_System_Console_WriteLine_0(StringLiteral_1);
@@ -435,10 +435,10 @@ uint8_t* m_RayTraceBenchmark_BenchmarkMain_ConvertRGBToBGRA_0(uint8_t* p_rgb)
 	l_rgba_0 = CS2X_GC_NewArrayAtomic(sizeof(uint8_t), (m_System_Array_get_Length_0(p_rgb) / 3) * 4);
 	for (l_i_1 = 0, l_i2_2 = 0; l_i_1 != m_System_Array_get_Length_0(p_rgb); l_i_1 += 3, l_i2_2 += 4)
 	{
-		l_rgba_0[sizeof(size_t) + l_i2_2] = p_rgb[sizeof(size_t) + l_i_1 + 2];
-		l_rgba_0[sizeof(size_t) + l_i2_2 + 1] = p_rgb[sizeof(size_t) + l_i_1 + 1];
-		l_rgba_0[sizeof(size_t) + l_i2_2 + 2] = p_rgb[sizeof(size_t) + l_i_1];
-		l_rgba_0[sizeof(size_t) + l_i2_2 + 3] = 255;
+		((uint8_t*)(((size_t*)l_rgba_0) + 1))[l_i2_2] = ((uint8_t*)(((size_t*)p_rgb) + 1))[l_i_1 + 2];
+		((uint8_t*)(((size_t*)l_rgba_0) + 1))[l_i2_2 + 1] = ((uint8_t*)(((size_t*)p_rgb) + 1))[l_i_1 + 1];
+		((uint8_t*)(((size_t*)l_rgba_0) + 1))[l_i2_2 + 2] = ((uint8_t*)(((size_t*)p_rgb) + 1))[l_i_1];
+		((uint8_t*)(((size_t*)l_rgba_0) + 1))[l_i2_2 + 3] = 255;
 	}
 	return l_rgba_0;
 }
@@ -452,11 +452,11 @@ int32_t* m_RayTraceBenchmark_BenchmarkMain_ConvertRGBToBGRAInt_0(uint8_t* p_rgb)
 	for (l_i_1 = 0, l_i2_2 = 0; l_i_1 != m_System_Array_get_Length_0(p_rgb); l_i_1 += 3, l_i2_2 += 1)
 	{
 		int32_t l_color_3;
-		l_color_3 = p_rgb[sizeof(size_t) + l_i_1 + 2];
-		l_color_3 |= p_rgb[sizeof(size_t) + l_i_1 + 1] << 8;
-		l_color_3 |= p_rgb[sizeof(size_t) + l_i_1] << 16;
+		l_color_3 = ((uint8_t*)(((size_t*)p_rgb) + 1))[l_i_1 + 2];
+		l_color_3 |= ((uint8_t*)(((size_t*)p_rgb) + 1))[l_i_1 + 1] << 8;
+		l_color_3 |= ((uint8_t*)(((size_t*)p_rgb) + 1))[l_i_1] << 16;
 		l_color_3 |= 255 << 24;
-		l_rgba_0[sizeof(size_t) + l_i2_2] = l_color_3;
+		((int32_t*)(((size_t*)l_rgba_0) + 1))[l_i2_2] = l_color_3;
 	}
 	return l_rgba_0;
 }

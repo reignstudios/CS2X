@@ -31,6 +31,32 @@ void* CS2X_GC_NewAtomic(size_t size)
 
 void* CS2X_GC_NewArray(size_t elementSize, size_t length)
 {
+	void* ptr = CS2X_GC_New(sizeof(size_t) + (elementSize * length));
+	*((size_t*)ptr) = length;
+	return ptr;
+}
+
+void* CS2X_GC_NewArrayAtomic(size_t elementSize, size_t length)
+{
+	void* ptr = CS2X_GC_NewAtomic(sizeof(size_t) + (elementSize * length));
+	*((size_t*)ptr) = length;
+	return ptr;
+}
+
+void* CS2X_GC_NewArrayHeader(size_t elementSize, size_t length)
+{
+	size_t* ptr = CS2X_GC_NewArray(elementSize, length);
+	return ++ptr;
+}
+
+void* CS2X_GC_NewArrayAtomicHeader(size_t elementSize, size_t length)
+{
+	size_t* ptr = CS2X_GC_NewArrayAtomic(elementSize, length);
+	return ++ptr;
+}
+
+/*void* CS2X_GC_NewArray(size_t elementSize, size_t length)
+{
 	// TODO
 	size_t size = sizeof(size_t) + (elementSize * length);
 	void* ptr = malloc(size);
@@ -49,7 +75,7 @@ void* CS2X_GC_NewArrayAtomic(size_t elementSize, size_t length)
 	memset(ptr, 0, size);
 	*((size_t*)ptr) = length;
 	return ptr;
-}
+}*/
 
 void* CS2X_GC_Resize(void* object, size_t oldSize, size_t newSize)
 {
