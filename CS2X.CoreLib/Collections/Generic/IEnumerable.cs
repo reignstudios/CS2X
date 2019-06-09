@@ -1,7 +1,7 @@
 namespace System.Collections.Generic
 {
-	/*public interface IEnumerable<T>
-	{
-		IEnumerator<T> GetEnumerator();
+	/*public interface IEnumerable<T> : IEnumerable
+    {
+		new IEnumerator<T> GetEnumerator();
 	}*/
 }

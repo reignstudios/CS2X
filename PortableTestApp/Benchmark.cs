@@ -1,4 +1,4 @@
-﻿//#define BIT64
+﻿/*//#define BIT64
 
 using System;
 
@@ -407,3 +407,4 @@ namespace RayTraceBenchmark
 		}
 	}
 }
+*/

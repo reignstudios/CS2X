@@ -975,7 +975,13 @@ namespace CS2X.Core.Transpilers
 		{
 			var origBlock = block;
 			block = body;
-			foreach (var statement in body.Statements)
+
+            // write special pre block syntax
+            BlockStartCallback?.Invoke();
+            BlockStartCallback = null;
+
+            // write statements
+            foreach (var statement in body.Statements)
 			{
 				WriteStatement(statement);
 			}
@@ -990,8 +996,6 @@ namespace CS2X.Core.Transpilers
 			{
 				writer.WriteLinePrefix('{');
 				writer.AddTab();
-				BlockStartCallback?.Invoke();
-				BlockStartCallback = null;
 				using (var stream = new MemoryStream())
 				using (var subInstructionalBody = new InstructionalBody(stream, writer))
 				{
@@ -1001,8 +1005,8 @@ namespace CS2X.Core.Transpilers
 					writer = subInstructionalBody;
 					instructionalBody = subInstructionalBody;
 
-					// write body
-					WriteBody((BlockSyntax)statement);
+                    // write body
+                    WriteBody((BlockSyntax)statement);
 
 					// write define locals
 					writer = origWriter;
@@ -1017,7 +1021,6 @@ namespace CS2X.Core.Transpilers
 				}
 				writer.RemoveTab();
 				writer.WriteLinePrefix('}');
-				return;// return so we don't write line end
 			}
 			else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
 			else if (statement is ExpressionStatementSyntax) ExpressionStatement((ExpressionStatementSyntax)statement);
@@ -1030,8 +1033,8 @@ namespace CS2X.Core.Transpilers
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
-			BlockStartCallback = null;
-		}
+            BlockStartCallback = null;
+        }
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
 		{
@@ -1135,32 +1138,50 @@ namespace CS2X.Core.Transpilers
 
 		private void ForEachStatement(ForEachStatementSyntax statement)
 		{
-			throw new NotImplementedException("TODO");
-			/*var collectionType = semanticModel.GetTypeInfo(statement.Expression).Type;
-			var localExpressionResult = TryAddLocal("er", collectionType);
-			writer.WritePrefix($"{localExpressionResult.name} = ");
-			WriteExpression(statement.Expression);
-			writer.WriteLine(';');
+            var collectionType = semanticModel.GetTypeInfo(statement.Expression).Type;
+            if (collectionType.Kind == SymbolKind.ArrayType)
+            {
+                // get array object
+                InstructionalBody.Local localExpressionResult;
+                if (statement.Expression is IdentifierNameSyntax)
+                {
+                    var identifierName = (IdentifierNameSyntax)statement.Expression;
+                    var type = semanticModel.GetTypeInfo(identifierName).Type;
+                    localExpressionResult = instructionalBody.locals.First(x => x.Equals(identifierName.Identifier.ValueText, type));
+                }
+                else
+                {
+                    localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_ex", collectionType);
+                    writer.WritePrefix($"{localExpressionResult.name} = ");
+                    WriteExpression(statement.Expression);
+                    writer.WriteLine(';');
+                }
 
-			writer.WritePrefix("for (");
+                // get array length method
+                collectionType = arrayType;
+                var method = FindMethodByName(collectionType, "get_Length");
 
-			if (collectionType.Kind == SymbolKind.ArrayType) collectionType = arrayType;
-			var method = FindMethodByName(collectionType, "get_Count");
+                // write for statement
+                writer.WritePrefix("for (");
+                var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
+			    writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(method)}(({GetTypeFullName(collectionType)}*){localExpressionResult.name}); ++{localIterator.name}");
 
-			var localIterator = TryAddLocal("i", project.compilation.GetSpecialType(SpecialType.System_Int32));
-			writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(method)}(({GetTypeFullName(collectionType)}*){localExpressionResult.name}); ++{localIterator.name}");
+                // write 
+			    void WriteLocal()
+			    {
+				    var type = semanticModel.GetTypeInfo(statement.Type).Type;
+				    var local = TryAddLocal(statement.Identifier.ValueText, type);
+				    writer.WriteLinePrefix($"{local.name} = {localExpressionResult.name}[sizeof(size_t) + {localIterator.name}];");
+			    }
+			    BlockStartCallback = WriteLocal;
 
-			void WriteLocal()
-			{
-				var type = semanticModel.GetTypeInfo(statement.Type).Type;
-				var local = TryAddLocal(statement.Identifier.ValueText, type);
-				writer.WriteLinePrefix($"{local.name} = {localExpressionResult.name}[sizeof(size_t) + {localIterator.name}];");
-			}
-
-			BlockStartCallback = WriteLocal;
-
-			// statement
-			WriteFlowControlStatement(statement.Statement, ")", ") ");*/
+			    // statement
+			    WriteFlowControlStatement(statement.Statement, ")", ") ");
+            }
+            else
+            {
+                throw new NotImplementedException("TODO: add IEnumerable support");
+            }
 		}
 
 		private void BreakStatement(BreakStatementSyntax statement)

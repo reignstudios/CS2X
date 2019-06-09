@@ -1,4 +1,6 @@
-﻿/*using System;
+﻿using System;
+using System.Collections;
+//using System.Collections.Generic;
 
 namespace PortableTestApp
 {
@@ -98,8 +100,9 @@ namespace PortableTestApp
 			//m.MyFoo();
 			//return;
 
-			//Console.Write("Hello World!");
-			//return;
+			//Console.WriteLine("Hello World!");
+            //Console.WriteLine("Hello World!2");
+            //return;
 
 			//string value = typeof(int).ToString();
 			//Console.WriteLine(value);
@@ -112,25 +115,31 @@ namespace PortableTestApp
 			//Console.WriteLine("Hello World!" + value);
 
 			//foreach (var i in "asdfas")// requires method System.String::get_Chars(int32)
-			var a = new int[5][];
-			a[0] = new int[3];
-			int b = a.Length;
-			int c = a[0].Length;
-			foreach (var aa in a)
-			{
-				Console.Write("^");
-				if (aa[0] == 88) break;
-			}
+			var a = new int[5];
+			//a[0] = new int[3];
+			//int b = a.Length;
+			//int c = a[0].Length;
+            foreach (var aa in a)
+            {
+                Console.Write("^");
+                if (aa == 88) break;
+            }
 
-			for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
-			{
-				if (i == i2) Console.Write("*");
-			}
+   //         for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
+			//{
+			//	if (i == i2) Console.Write("*");
+			//}
 
-			for (int i = 0; i != a.Length; ++i)
-			{
-				Console.Write("$");
-			}
+			//for (int i = 0; i != a.Length; ++i)
+			//{
+			//	Console.Write("$");
+			//}
+
+            /*var es = new MyE();
+            foreach (var e in es)
+            {
+
+            }*/
 		}
 
 		static int[] Ya()
@@ -143,4 +152,57 @@ namespace PortableTestApp
 			return o.ToString();
 		}
 	}
-}*/
+
+    /*class MyE : IEnumerable<int>
+    {
+        public IEnumerator<int> GetEnumerator()
+        {
+            return new MyEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return null;
+        }
+    }
+
+    struct MyEnumerator : IEnumerator<int>
+    {
+        private int i;
+        private int[] collection;
+
+        public MyEnumerator(int[] collection)
+        {
+            i = 0;
+            this.collection = collection;
+        }
+
+        public void Dispose() { }
+
+        public int Current
+        {
+            get
+            {
+                return collection[i];
+            }
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        public bool MoveNext()
+        {
+            return false;
+        }
+
+        public void Reset()
+        {
+
+        }
+    }*/
+}
