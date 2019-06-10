@@ -971,14 +971,19 @@ namespace CS2X.Core.Transpilers
 			return local;
 		}
 
+		private delegate void BlockStartCallbackMethod();
+		private BlockStartCallbackMethod BlockStartCallback;
 		private void WriteBody(BlockSyntax body)
 		{
 			var origBlock = block;
 			block = body;
 
             // write special pre block syntax
-            BlockStartCallback?.Invoke();
-            BlockStartCallback = null;
+            if (BlockStartCallback != null)
+            {
+                BlockStartCallback();
+                BlockStartCallback = null;
+            }
 
             // write statements
             foreach (var statement in body.Statements)
@@ -988,8 +993,6 @@ namespace CS2X.Core.Transpilers
 			block = origBlock;
 		}
 
-		private delegate void BlockStartCallbackMethod();
-		private BlockStartCallbackMethod BlockStartCallback;
 		private void WriteStatement(StatementSyntax statement)
 		{
 			if (statement is BlockSyntax)
@@ -1223,8 +1226,15 @@ namespace CS2X.Core.Transpilers
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
+        struct CallerExpressionOverrideData
+        {
+            public ExpressionSyntax caller;
+            public ITypeSymbol type;
+        }
+        private Dictionary<ExpressionSyntax, CallerExpressionOverrideData> callerExpressionOverrides = new Dictionary<ExpressionSyntax, CallerExpressionOverrideData>();
 		private ExpressionSyntax GetCaller(ExpressionSyntax expression)
 		{
+            if (callerExpressionOverrides.ContainsKey(expression)) return callerExpressionOverrides[expression].caller;
 			if (expression is MemberAccessExpressionSyntax)
 			{
 				var accessExpression = (MemberAccessExpressionSyntax)expression;
@@ -1237,7 +1247,8 @@ namespace CS2X.Core.Transpilers
 			else
 			{
 				var symbolInfo = semanticModel.GetSymbolInfo(expression);
-				if (symbolInfo.Symbol.ContainingType == method.ContainingType) expression = SyntaxFactory.ThisExpression();
+                if (!symbolInfo.Symbol.IsStatic && symbolInfo.Symbol.ContainingType == method.ContainingType) expression = SyntaxFactory.ThisExpression();
+                else throw new NotImplementedException("Failed to find caller for expression: " + expression.ToFullString());
 			}
 
 			return expression;
@@ -1252,6 +1263,7 @@ namespace CS2X.Core.Transpilers
 
 		private ITypeSymbol GetCallerType(ExpressionSyntax callerExpression, ExpressionSyntax expression)
 		{
+            if (callerExpressionOverrides.ContainsKey(expression)) return callerExpressionOverrides[expression].type;
 			if (callerExpression is ThisExpressionSyntax)
 			{
 				var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
@@ -1322,6 +1334,7 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+        private Dictionary<IdentifierNameSyntax, ISymbol> identifierSymbolOverrides = new Dictionary<IdentifierNameSyntax, ISymbol>();
 		private void WriteIdentifierName(IdentifierNameSyntax expression)
 		{
 			void WriteMethodInvoke(IMethodSymbol method)
@@ -1348,22 +1361,24 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			var symbolInfo = semanticModel.GetSymbolInfo(expression);
-			if (symbolInfo.Symbol is ILocalSymbol)
+            ISymbol symbol;
+            if (identifierSymbolOverrides.ContainsKey(expression)) symbol = identifierSymbolOverrides[expression];
+			else symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			if (symbol is ILocalSymbol)
 			{
-				var local = (ILocalSymbol)symbolInfo.Symbol;
+				var local = (ILocalSymbol)symbol;
 				var localObj = instructionalBody.locals.First(x => x.Equals(expression.Identifier.ValueText, local.Type));
 				writer.Write(localObj.name);
 			}
-			else if (symbolInfo.Symbol is IParameterSymbol)
+			else if (symbol is IParameterSymbol)
 			{
-				var parameter = (IParameterSymbol)symbolInfo.Symbol;
+				var parameter = (IParameterSymbol)symbol;
 				if (!IsParameterPassByRef(parameter)) writer.Write(GetParameterFullName(parameter));
 				else writer.Write($"(*{GetParameterFullName(parameter)})");
 			}
-			else if (symbolInfo.Symbol is IFieldSymbol)
+			else if (symbol is IFieldSymbol)
 			{
-				var field = (IFieldSymbol)symbolInfo.Symbol;
+				var field = (IFieldSymbol)symbol;
 				if (field.IsConst)
 				{
 					writer.Write(GetFormatedConstValue(field.ConstantValue));
@@ -1381,9 +1396,9 @@ namespace CS2X.Core.Transpilers
 					writer.Write(GetFieldFullName(field));
 				}
 			}
-			else if (symbolInfo.Symbol is IPropertySymbol)
+			else if (symbol is IPropertySymbol)
 			{
-				var property = (IPropertySymbol)symbolInfo.Symbol;
+				var property = (IPropertySymbol)symbol;
 				if (IsAutoProperty(property, out var field))
 				{
 					if (!property.IsStatic)
@@ -1414,14 +1429,14 @@ namespace CS2X.Core.Transpilers
 					}
 				}
 			}
-			else if (symbolInfo.Symbol is IMethodSymbol)
+			else if (symbol is IMethodSymbol)
 			{
-				var method = (IMethodSymbol)symbolInfo.Symbol;
+				var method = (IMethodSymbol)symbol;
 				WriteMethodInvoke(method);
 			}
 			else
 			{
-				throw new NotSupportedException("IdentifierNameSyntax Symbol not supported: " + symbolInfo.Symbol.GetType());
+				throw new NotSupportedException("IdentifierNameSyntax Symbol not supported: " + symbol.GetType());
 			}
 		}
 
@@ -1490,7 +1505,51 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 			writer.Write(')');
-			if (expression.Initializer != null) throw new NotImplementedException("TODO: support new initializer in statements only");
+
+            // write initializer
+			if (expression.Initializer != null)
+            {
+                writer.WriteLine(';');
+                IdentifierNameSyntax identifier = null;
+                ExpressionSyntax caller;
+                ITypeSymbol type;
+                if (expression.Parent is AssignmentExpressionSyntax)
+                {
+                    var parent = (AssignmentExpressionSyntax)expression.Parent;
+                    caller = parent.Left;
+                    type = semanticModel.GetTypeInfo(parent.Left).Type;
+                }
+                else if (expression.Parent is EqualsValueClauseSyntax && expression.Parent.Parent is VariableDeclaratorSyntax)
+                {
+                    var parent = (VariableDeclaratorSyntax)expression.Parent.Parent;
+                    identifier = SyntaxFactory.IdentifierName(parent.Identifier);
+                    caller = identifier;
+                    if (!(parent.Parent is VariableDeclarationSyntax)) throw new NotSupportedException("Expected parent of VariableDeclarationSyntax: " + expression.ToFullString());
+                    var superParent = (VariableDeclarationSyntax)parent.Parent;
+                    type = semanticModel.GetTypeInfo(superParent.Type).Type;
+                    identifierSymbolOverrides[identifier] = semanticModel.GetDeclaredSymbol(parent);
+                }
+                else
+                {
+                    throw new NotSupportedException("Unsupported object creation initializer: " + expression.ToFullString());
+                }
+                
+                var last = expression.Initializer.Expressions.LastOrDefault();
+                foreach (AssignmentExpressionSyntax e in expression.Initializer.Expressions)
+                {
+                    writer.WritePrefix();
+                    callerExpressionOverrides[e.Left] = new CallerExpressionOverrideData()
+                    {
+                        caller = caller,
+                        type = type
+                    };
+                    WriteExpression(e);
+                    callerExpressionOverrides.Remove(e.Left);
+                   if (e != last) writer.WriteLine(';');
+                }
+
+                if (identifier != null) identifierSymbolOverrides.Remove(identifier);
+            }
 		}
 
 		private void ArrayCreationExpression(ArrayCreationExpressionSyntax expression)

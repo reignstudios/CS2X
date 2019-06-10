@@ -23,6 +23,9 @@ struct t_PortableTestApp_MyAbstractClass
 struct t_PortableTestApp_MyBaseClass
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f_b_2;
+	int32_t f_c_2;
+	int32_t f_d_2;
 };
 
 #define f_PortableTestApp_MyEnum_A 0
@@ -41,6 +44,7 @@ int32_t f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField;
 int32_t f_PortableTestApp_Program__MyPropStatic;
 t_System_String* f_PortableTestApp_Program_value;
 t_PortableTestApp_MyEnum f_PortableTestApp_Program_myEnum;
+t_PortableTestApp_MyBaseClass* f_PortableTestApp_Program_i2;
 
 #define f_PortableTestApp_MyNamespace_MyEnum_A 0
 #define f_PortableTestApp_MyNamespace_MyEnum_B 1
@@ -141,7 +145,7 @@ void m_PortableTestApp_MyBaseClass_MyVirtMethod_0(t_PortableTestApp_MyBaseClass*
 t_PortableTestApp_MyBaseClass* m_PortableTestApp_MyBaseClass__ctor_0()
 {
 	t_PortableTestApp_MyBaseClass* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_PortableTestApp_MyBaseClass*));
+	self = CS2X_GC_NewAtomic(sizeof(t_PortableTestApp_MyBaseClass));
 	self->CS2X_RuntimeType = &t_PortableTestApp_MyBaseClass_RTTYPE_OBJ;
 	return self;
 }
@@ -200,6 +204,7 @@ void m_PortableTestApp_Program_Main_0()
 {
 	int32_t* l_a_0;
 	int32_t l_aa_i_1;
+	t_PortableTestApp_MyBaseClass* l_i_2;
 	l_a_0 = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 5);
 	for (l_aa_i_1 = 0; l_aa_i_1 != m_System_Array_get_Length_0((t_System_Array*)l_a_0); ++l_aa_i_1)
 	{
@@ -208,6 +213,14 @@ void m_PortableTestApp_Program_Main_0()
 		m_System_Console_Write_0(StringLiteral_3);
 		if (l_aa_2 == 88) break;
 	}
+	f_PortableTestApp_Program_i2 = m_PortableTestApp_MyBaseClass__ctor_0();
+	f_PortableTestApp_Program_i2->f_b_2 = 44;
+	f_PortableTestApp_Program_i2->f_c_2 = 33;
+	f_PortableTestApp_Program_i2->f_d_2 = 66;
+	l_i_2 = m_PortableTestApp_MyBaseClass__ctor_0();
+	l_i_2->f_b_2 = 44;
+	l_i_2->f_c_2 = 33;
+	l_i_2->f_d_2 = 66;
 }
 
 int32_t* m_PortableTestApp_Program_Ya_0()

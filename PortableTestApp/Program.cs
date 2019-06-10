@@ -29,6 +29,8 @@ namespace PortableTestApp
 
 	sealed class MyBaseClass : MyAbstractClass
 	{
+        public int b, c, d;
+
 		public override void MyVirtMethod()
 		{
 			Console.Write("MyBaseClass::MyVirtMethod");
@@ -125,6 +127,20 @@ namespace PortableTestApp
                 if (aa == 88) break;
             }
 
+            i2 = new MyBaseClass()
+            {
+                b = 44,
+                c = 33,
+                d = 66
+            };
+
+            var i = new MyBaseClass()
+            {
+                b = 44,
+                c = 33,
+                d = 66
+            };
+
    //         for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
 			//{
 			//	if (i == i2) Console.Write("*");
@@ -141,7 +157,7 @@ namespace PortableTestApp
 
             }*/
 		}
-
+        static MyBaseClass i2;
 		static int[] Ya()
 		{
 			return null;
