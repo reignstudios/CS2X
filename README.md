@@ -18,9 +18,9 @@ This project will focus on transpiling a C# subset with a modified type system f
 	* C89: modern, legacy and embedded platforms (x86, MIPS, SPARK, RISC-V, PPC, AVR, etc)
 	* CC65: 6502 platforms (Atari, C64, NES, Apple II, etc)
 	* SDCC: Many targets (ColecoVision, etc)
-* Bytecode: CPU agnostic byte code easily translatable to assembly instructions.
-* Bytecode => Assembly: CP1610 (Intellivision)
-* Bytecode => Retarget: Custom assembly targets via plugin system (FPGA CPU, 16bit bytes, etc)
+* LLVM
+* LLVM IR => Assembly: CP1610 (Intellivision)
+* LLVM IR => Retarget: Custom assembly targets (FPGA CPU, 16bit bytes, etc)
 * Java
 * Kotlin
 * javaScript
