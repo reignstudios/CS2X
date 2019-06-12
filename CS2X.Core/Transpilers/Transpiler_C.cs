@@ -978,15 +978,15 @@ namespace CS2X.Core.Transpilers
 			var origBlock = block;
 			block = body;
 
-            // write special pre block syntax
-            if (BlockStartCallback != null)
-            {
-                BlockStartCallback();
-                BlockStartCallback = null;
-            }
+			// write special pre block syntax
+			if (BlockStartCallback != null)
+			{
+				BlockStartCallback();
+				BlockStartCallback = null;
+			}
 
-            // write statements
-            foreach (var statement in body.Statements)
+			// write statements
+			foreach (var statement in body.Statements)
 			{
 				WriteStatement(statement);
 			}
@@ -1008,8 +1008,8 @@ namespace CS2X.Core.Transpilers
 					writer = subInstructionalBody;
 					instructionalBody = subInstructionalBody;
 
-                    // write body
-                    WriteBody((BlockSyntax)statement);
+					// write body
+					WriteBody((BlockSyntax)statement);
 
 					// write define locals
 					writer = origWriter;
@@ -1036,8 +1036,8 @@ namespace CS2X.Core.Transpilers
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
-            BlockStartCallback = null;
-        }
+			BlockStartCallback = null;
+		}
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
 		{
@@ -1141,50 +1141,56 @@ namespace CS2X.Core.Transpilers
 
 		private void ForEachStatement(ForEachStatementSyntax statement)
 		{
-            var collectionType = semanticModel.GetTypeInfo(statement.Expression).Type;
-            if (collectionType.Kind == SymbolKind.ArrayType)
-            {
-                // get array object
-                InstructionalBody.Local localExpressionResult;
-                if (statement.Expression is IdentifierNameSyntax)
-                {
-                    var identifierName = (IdentifierNameSyntax)statement.Expression;
-                    var type = semanticModel.GetTypeInfo(identifierName).Type;
-                    localExpressionResult = instructionalBody.locals.First(x => x.Equals(identifierName.Identifier.ValueText, type));
-                }
-                else
-                {
-                    localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_ex", collectionType);
-                    writer.WritePrefix($"{localExpressionResult.name} = ");
-                    WriteExpression(statement.Expression);
-                    writer.WriteLine(';');
-                }
+			var collectionType = semanticModel.GetTypeInfo(statement.Expression).Type;
+			if (collectionType.Kind == SymbolKind.ArrayType)
+			{
+				// get array object
+				InstructionalBody.Local localExpressionResult;
+				if (statement.Expression is IdentifierNameSyntax)
+				{
+					var identifierName = (IdentifierNameSyntax)statement.Expression;
+					var type = semanticModel.GetTypeInfo(identifierName).Type;
+					localExpressionResult = instructionalBody.locals.First(x => x.Equals(identifierName.Identifier.ValueText, type));
+				}
+				else
+				{
+					localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_ex", collectionType);
+					writer.WritePrefix($"{localExpressionResult.name} = ");
+					WriteExpression(statement.Expression);
+					writer.WriteLine(';');
+				}
 
-                // get array length method
-                collectionType = arrayType;
-                var method = FindMethodByName(collectionType, "get_Length");
+				// get array length method
+				var method = FindMethodByName(arrayType, "get_Length");
 
-                // write for statement
-                writer.WritePrefix("for (");
-                var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
-			    writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(method)}(({GetTypeFullName(collectionType)}*){localExpressionResult.name}); ++{localIterator.name}");
+				// write for statement
+				writer.WritePrefix("for (");
+				var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
+				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(method)}(({GetTypeFullName(arrayType)}*){localExpressionResult.name}); ++{localIterator.name}");
 
-                // write 
-			    void WriteLocal()
-			    {
-				    var type = semanticModel.GetTypeInfo(statement.Type).Type;
-				    var local = TryAddLocal(statement.Identifier.ValueText, type);
-				    writer.WriteLinePrefix($"{local.name} = {localExpressionResult.name}[sizeof(size_t) + {localIterator.name}];");
-			    }
-			    BlockStartCallback = WriteLocal;
+				// write 
+				void WriteLocal()
+				{
+					var type = semanticModel.GetTypeInfo(statement.Type).Type;
+					var local = TryAddLocal(statement.Identifier.ValueText, type);
 
-			    // statement
-			    WriteFlowControlStatement(statement.Statement, ")", ") ");
-            }
-            else
-            {
-                throw new NotImplementedException("TODO: add IEnumerable support");
-            }
+					void writeExpression()
+					{
+						writer.Write(localExpressionResult.name);
+					}
+					writer.WritePrefix($"{local.name} = ");
+					WriteArrayElementAccessOffset(writeExpression, collectionType);
+					writer.WriteLine($"[{localIterator.name}];");
+				}
+				BlockStartCallback = WriteLocal;
+
+				// statement
+				WriteFlowControlStatement(statement.Statement, ")", ") ");
+			}
+			else
+			{
+				throw new NotImplementedException("TODO: add IEnumerable support");
+			}
 		}
 
 		private void BreakStatement(BreakStatementSyntax statement)
@@ -1226,15 +1232,8 @@ namespace CS2X.Core.Transpilers
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
-        struct CallerExpressionOverrideData
-        {
-            public ExpressionSyntax caller;
-            public ITypeSymbol type;
-        }
-        private Dictionary<ExpressionSyntax, CallerExpressionOverrideData> callerExpressionOverrides = new Dictionary<ExpressionSyntax, CallerExpressionOverrideData>();
 		private ExpressionSyntax GetCaller(ExpressionSyntax expression)
 		{
-            if (callerExpressionOverrides.ContainsKey(expression)) return callerExpressionOverrides[expression].caller;
 			if (expression is MemberAccessExpressionSyntax)
 			{
 				var accessExpression = (MemberAccessExpressionSyntax)expression;
@@ -1247,8 +1246,8 @@ namespace CS2X.Core.Transpilers
 			else
 			{
 				var symbolInfo = semanticModel.GetSymbolInfo(expression);
-                if (!symbolInfo.Symbol.IsStatic && symbolInfo.Symbol.ContainingType == method.ContainingType) expression = SyntaxFactory.ThisExpression();
-                else throw new NotImplementedException("Failed to find caller for expression: " + expression.ToFullString());
+				if (!symbolInfo.Symbol.IsStatic && symbolInfo.Symbol.ContainingType == method.ContainingType) expression = SyntaxFactory.ThisExpression();
+				else throw new NotImplementedException("Failed to find caller for expression: " + expression.ToFullString());
 			}
 
 			return expression;
@@ -1263,7 +1262,6 @@ namespace CS2X.Core.Transpilers
 
 		private ITypeSymbol GetCallerType(ExpressionSyntax callerExpression, ExpressionSyntax expression)
 		{
-            if (callerExpressionOverrides.ContainsKey(expression)) return callerExpressionOverrides[expression].type;
 			if (callerExpression is ThisExpressionSyntax)
 			{
 				var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
@@ -1334,7 +1332,6 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-        private Dictionary<IdentifierNameSyntax, ISymbol> identifierSymbolOverrides = new Dictionary<IdentifierNameSyntax, ISymbol>();
 		private void WriteIdentifierName(IdentifierNameSyntax expression)
 		{
 			void WriteMethodInvoke(IMethodSymbol method)
@@ -1361,9 +1358,7 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-            ISymbol symbol;
-            if (identifierSymbolOverrides.ContainsKey(expression)) symbol = identifierSymbolOverrides[expression];
-			else symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 			if (symbol is ILocalSymbol)
 			{
 				var local = (ILocalSymbol)symbol;
@@ -1500,56 +1495,53 @@ namespace CS2X.Core.Transpilers
 						var syntaxDeclaration = (ParameterSyntax)reference.GetSyntax();
 						if (IsParameterPassByRef(parameter)) writer.Write('&');
 						WriteExpression(syntaxDeclaration.Default.Value);
-					}
+					};
 					if (i != method.Parameters.Length - 1) writer.Write(", ");
 				}
 			}
 			writer.Write(')');
 
-            // write initializer
+			// write initializer
 			if (expression.Initializer != null)
-            {
-                writer.WriteLine(';');
-                IdentifierNameSyntax identifier = null;
-                ExpressionSyntax caller;
-                ITypeSymbol type;
-                if (expression.Parent is AssignmentExpressionSyntax)
-                {
-                    var parent = (AssignmentExpressionSyntax)expression.Parent;
-                    caller = parent.Left;
-                    type = semanticModel.GetTypeInfo(parent.Left).Type;
-                }
-                else if (expression.Parent is EqualsValueClauseSyntax && expression.Parent.Parent is VariableDeclaratorSyntax)
-                {
-                    var parent = (VariableDeclaratorSyntax)expression.Parent.Parent;
-                    identifier = SyntaxFactory.IdentifierName(parent.Identifier);
-                    caller = identifier;
-                    if (!(parent.Parent is VariableDeclarationSyntax)) throw new NotSupportedException("Expected parent of VariableDeclarationSyntax: " + expression.ToFullString());
-                    var superParent = (VariableDeclarationSyntax)parent.Parent;
-                    type = semanticModel.GetTypeInfo(superParent.Type).Type;
-                    identifierSymbolOverrides[identifier] = semanticModel.GetDeclaredSymbol(parent);
-                }
-                else
-                {
-                    throw new NotSupportedException("Unsupported object creation initializer: " + expression.ToFullString());
-                }
-                
-                var last = expression.Initializer.Expressions.LastOrDefault();
-                foreach (AssignmentExpressionSyntax e in expression.Initializer.Expressions)
-                {
-                    writer.WritePrefix();
-                    callerExpressionOverrides[e.Left] = new CallerExpressionOverrideData()
-                    {
-                        caller = caller,
-                        type = type
-                    };
-                    WriteExpression(e);
-                    callerExpressionOverrides.Remove(e.Left);
-                   if (e != last) writer.WriteLine(';');
-                }
+			{
+				writer.WriteLine(';');
+				IdentifierNameSyntax caller = null;
+				InstructionalBody.Local local = null;
+				ITypeSymbol type;
+				if (expression.Parent is AssignmentExpressionSyntax)
+				{
+					var parent = (AssignmentExpressionSyntax)expression.Parent;
+					caller = (IdentifierNameSyntax)parent.Left;
+					type = semanticModel.GetTypeInfo(parent.Left).Type;
+				}
+				else if (expression.Parent is EqualsValueClauseSyntax && expression.Parent.Parent is VariableDeclaratorSyntax)
+				{
+					var parent = (VariableDeclaratorSyntax)expression.Parent.Parent;
+					local = instructionalBody.locals.Find(x => x.identifier == parent.Identifier.ValueText);
+					type = local.type;
+				}
+				else
+				{
+					throw new NotSupportedException("Unsupported object creation initializer: " + expression.ToFullString());
+				}
+				
+				var last = expression.Initializer.Expressions.LastOrDefault();
+				foreach (AssignmentExpressionSyntax e in expression.Initializer.Expressions)
+				{
+					writer.WritePrefix();
+					if (local == null) WriteExpression(caller);
+					else writer.Write(local.name);
 
-                if (identifier != null) identifierSymbolOverrides.Remove(identifier);
-            }
+					var field = (IFieldSymbol)semanticModel.GetSymbolInfo(e.Left).Symbol;
+					if (type.IsReferenceType) writer.Write("->");
+					else writer.Write('.');
+					writer.Write(GetFieldFullName(field));
+
+					writer.Write(" = ");
+					WriteExpression(e.Right);
+					if (e != last) writer.WriteLine(';');
+				}
+			}
 		}
 
 		private void ArrayCreationExpression(ArrayCreationExpressionSyntax expression)
@@ -1563,7 +1555,47 @@ namespace CS2X.Core.Transpilers
 			writer.Write($"{GetNewArrayMethod(type)}(sizeof({GetTypeFullName(type)}), ");
 			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
 			writer.Write(')');
-			if (expression.Initializer != null) throw new NotImplementedException("TODO: support array initializer in statements only");
+
+			// write initializer
+			if (expression.Initializer != null)
+			{
+				writer.WriteLine(';');
+				IdentifierNameSyntax caller = null;
+				InstructionalBody.Local local = null;
+				if (expression.Parent is AssignmentExpressionSyntax)
+				{
+					var parent = (AssignmentExpressionSyntax)expression.Parent;
+					caller = (IdentifierNameSyntax)parent.Left;
+				}
+				else if (expression.Parent is EqualsValueClauseSyntax && expression.Parent.Parent is VariableDeclaratorSyntax)
+				{
+					var parent = (VariableDeclaratorSyntax)expression.Parent.Parent;
+					local = instructionalBody.locals.Find(x => x.identifier == parent.Identifier.ValueText);
+				}
+				else
+				{
+					throw new NotSupportedException("Unsupported array creation initializer: " + expression.ToFullString());
+				}
+
+				void writeExpression()
+				{
+					if (local == null) WriteExpression(caller);
+					else writer.Write(local.name);
+				}
+				
+				var typeArray = semanticModel.GetTypeInfo(arrayType).Type;
+				var last = expression.Initializer.Expressions.LastOrDefault();
+				int i = 0;
+				foreach (ExpressionSyntax e in expression.Initializer.Expressions)
+				{
+					writer.WritePrefix();
+					WriteArrayElementAccessOffset(writeExpression, typeArray);
+					writer.Write($"[{i}] = ");
+					WriteExpression(e);
+					if (e != last) writer.WriteLine(';');
+					++i;
+				}
+			}
 		}
 
 		private void StackAllocArrayCreationExpression(StackAllocArrayCreationExpressionSyntax expression)
@@ -1578,7 +1610,41 @@ namespace CS2X.Core.Transpilers
 			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * ");
 			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// fixed arrays should always support this form
 			writer.Write(')');
-			if (expression.Initializer != null) throw new NotImplementedException("TODO: support stackalloc initializer in statements only");
+			
+			// write initializer
+			if (expression.Initializer != null)
+			{
+				writer.WriteLine(';');
+				IdentifierNameSyntax caller = null;
+				InstructionalBody.Local local = null;
+				if (expression.Parent is AssignmentExpressionSyntax)
+				{
+					var parent = (AssignmentExpressionSyntax)expression.Parent;
+					caller = (IdentifierNameSyntax)parent.Left;
+				}
+				else if (expression.Parent is EqualsValueClauseSyntax && expression.Parent.Parent is VariableDeclaratorSyntax)
+				{
+					var parent = (VariableDeclaratorSyntax)expression.Parent.Parent;
+					local = instructionalBody.locals.Find(x => x.identifier == parent.Identifier.ValueText);
+				}
+				else
+				{
+					throw new NotSupportedException("Unsupported stackalloc initializer: " + expression.ToFullString());
+				}
+				
+				var last = expression.Initializer.Expressions.LastOrDefault();
+				int i = 0;
+				foreach (ExpressionSyntax e in expression.Initializer.Expressions)
+				{
+					writer.WritePrefix();
+					if (local == null) WriteExpression(caller);
+					else writer.Write(local.name);
+					writer.Write($"[{i}] = ");
+					WriteExpression(e);
+					if (e != last) writer.WriteLine(';');
+					++i;
+				}
+			}
 		}
 
 		private void AssignmentExpression(AssignmentExpressionSyntax expression)
@@ -1819,20 +1885,31 @@ namespace CS2X.Core.Transpilers
 			writer.Write("self");
 		}
 
+		private delegate void WriteArrayElementAccessOffsetCallback();
+		private void WriteArrayElementAccessOffset(WriteArrayElementAccessOffsetCallback writeExpressionCallback, ITypeSymbol type)
+		{
+			if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer && type.Kind == SymbolKind.ArrayType)
+			{
+				writer.Write($"(({GetTypeFullNameRef(type)})(((size_t*)");
+				writeExpressionCallback();
+				writer.Write(") + 1))");
+			}
+			else
+			{
+				writeExpressionCallback();
+			}
+		}
+
 		private void ElementAccessExpression(ElementAccessExpressionSyntax expression)
 		{
+			void writeExpression()
+			{
+				WriteExpression(expression.Expression);
+			}
+
 			var type = semanticModel.GetTypeInfo(expression.Expression).Type;
-            if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer && type.Kind == SymbolKind.ArrayType)
-            {
-                writer.Write($"(({GetTypeFullNameRef(type)})(((size_t*)");
-                WriteExpression(expression.Expression);
-                writer.Write(") + 1))");
-            }
-			else
-            {
-                WriteExpression(expression.Expression);
-            }
-            writer.Write('[');
+			WriteArrayElementAccessOffset(writeExpression, type);
+			writer.Write('[');
 			var arguments = expression.ArgumentList.Arguments;
 			if (arguments.Count != 1) throw new NotSupportedException("Elements can only have one arg");
 			WriteExpression(arguments[0].Expression);
@@ -1868,20 +1945,20 @@ namespace CS2X.Core.Transpilers
 
 		private string GetNewArrayMethod(ITypeSymbol type)
 		{
-            if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer)
-            {
-			    if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomic";
-			    else return "CS2X_GC_NewArray";
-            }
-            else if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.BeforePointer)
-            {
-                if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomicHeader";
-                else return "CS2X_GC_NewArrayHeader";
-            }
-            else
-            {
-                throw new NotImplementedException("Unsupported new array length location: " + options.arrayLengthMemoryLocation);
-            }
+			if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer)
+			{
+				if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomic";
+				else return "CS2X_GC_NewArray";
+			}
+			else if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.BeforePointer)
+			{
+				if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomicHeader";
+				else return "CS2X_GC_NewArrayHeader";
+			}
+			else
+			{
+				throw new NotImplementedException("Unsupported new array length location: " + options.arrayLengthMemoryLocation);
+			}
 		}
 
 		private string GetFormatedConstValue(object value)

@@ -205,11 +205,17 @@ void m_PortableTestApp_Program_Main_0()
 	int32_t* l_a_0;
 	int32_t l_aa_i_1;
 	t_PortableTestApp_MyBaseClass* l_i_2;
+	uint8_t* l_a2_3;
 	l_a_0 = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 5);
+	((int32_t*)(((size_t*)l_a_0) + 1))[0] = 1;
+	((int32_t*)(((size_t*)l_a_0) + 1))[1] = 2;
+	((int32_t*)(((size_t*)l_a_0) + 1))[2] = 3;
+	((int32_t*)(((size_t*)l_a_0) + 1))[3] = 4;
+	((int32_t*)(((size_t*)l_a_0) + 1))[4] = 5;
 	for (l_aa_i_1 = 0; l_aa_i_1 != m_System_Array_get_Length_0((t_System_Array*)l_a_0); ++l_aa_i_1)
 	{
 		int32_t l_aa_2;
-		l_aa_2 = l_a_0[sizeof(size_t) + l_aa_i_1];
+		l_aa_2 = ((int32_t*)(((size_t*)l_a_0) + 1))[l_aa_i_1];
 		m_System_Console_Write_0(StringLiteral_3);
 		if (l_aa_2 == 88) break;
 	}
@@ -221,6 +227,10 @@ void m_PortableTestApp_Program_Main_0()
 	l_i_2->f_b_2 = 44;
 	l_i_2->f_c_2 = 33;
 	l_i_2->f_d_2 = 66;
+	l_a2_3 = alloca(sizeof(uint8_t) * 3);
+	l_a2_3[0] = 1;
+	l_a2_3[1] = 2;
+	l_a2_3[2] = 3;
 }
 
 int32_t* m_PortableTestApp_Program_Ya_0()

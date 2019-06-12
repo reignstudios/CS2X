@@ -93,7 +93,7 @@ namespace PortableTestApp
 			MyAutoPropStatic = 555;
 		}
 
-		static void Main()//string[] args)
+		unsafe static void Main()//string[] args)
 		{
 			//var m = new MyBaseClass();
 			//m.MyVirtMethod();
@@ -117,7 +117,7 @@ namespace PortableTestApp
 			//Console.WriteLine("Hello World!" + value);
 
 			//foreach (var i in "asdfas")// requires method System.String::get_Chars(int32)
-			var a = new int[5];
+			var a = new int[5] {1, 2, 3, 4, 5};
 			//a[0] = new int[3];
 			//int b = a.Length;
 			//int c = a[0].Length;
@@ -141,6 +141,8 @@ namespace PortableTestApp
                 d = 66
             };
 
+			var a2 = stackalloc byte[3] { 1, 2, 3 };
+
    //         for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
 			//{
 			//	if (i == i2) Console.Write("*");
@@ -157,6 +159,7 @@ namespace PortableTestApp
 
             }*/
 		}
+
         static MyBaseClass i2;
 		static int[] Ya()
 		{
