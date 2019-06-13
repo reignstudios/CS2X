@@ -20,7 +20,7 @@ namespace CS2X.Core.Test
 			// transpile solution
 			var options = new Transpiler_C.Options()
 			{
-				gc = Transpiler_C.GC_Type.Portable,
+				gc = Transpiler_C.GC_Type.Dumby,
 				arrayLengthMemoryLocation = Transpiler_C.ArrayLengthMemoryLocation.AtPointer,
 				gcFolderPath = @"..\CS2X.Native",
 				ptrSize = Transpiler_C.Ptr_Size.Bit_64,

@@ -23,6 +23,12 @@ namespace CS2X.Core.Transpilers
 			Disabled,
 
 			/// <summary>
+			/// Allocates memory but doesn't scan or clean-up
+			/// Good for port testing
+			/// </summary>
+			Dumby,
+
+			/// <summary>
 			/// Modern platforms. Thread safe.
 			/// </summary>
 			Boehm,
@@ -260,14 +266,19 @@ namespace CS2X.Core.Transpilers
 				string gcFileName;
 				switch (options.gc)
 				{
+					case GC_Type.Disabled: gcFileName = null; break;
+					case GC_Type.Dumby: gcFileName = "CS2X.GC.Dumby"; break;
 					case GC_Type.Boehm: gcFileName = "CS2X.GC.Boehm"; break;
 					case GC_Type.Portable: gcFileName = "CS2X.GC.Portable"; break;
 					case GC_Type.Micro: gcFileName = "CS2X.GC.Micro"; break;
 					default: throw new Exception("Unsupported GC option: " + options.gc);
 				}
-					
-				gcFileName = Path.Combine(options.gcFolderPath, gcFileName);
-				writer.WriteLine($"#include \"{gcFileName}.h\"");
+				
+				if (gcFileName != null)
+				{
+					gcFileName = Path.Combine(options.gcFolderPath, gcFileName);
+					writer.WriteLine($"#include \"{gcFileName}.h\"");
+				}
 				writer.WriteLine($"#include \"{Path.Combine(options.gcFolderPath, "CS2X.InstructionHelpers.h")}\"");
 
 				// include string literals
