@@ -158,6 +158,20 @@ namespace PortableTestApp
             {
 
             }*/
+
+			try
+			{
+				FooThrow();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
+		}
+
+		static void FooThrow()
+		{
+			throw new Exception("My Exception!");
 		}
 
         static MyBaseClass i2;

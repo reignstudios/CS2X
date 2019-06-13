@@ -670,7 +670,6 @@ typedef struct t_System_Exception_RTTYPE
 	t_System_RuntimeType runtimeType;
 	t_System_String* (*vTable_ToString_0)(t_System_Exception* self);
 	t_System_String* (*vTable_get_Message_0)(t_System_Exception* self);
-	t_System_String* (*vTable_get_StackTrace_0)(t_System_Exception* self);
 } t_System_Exception_RTTYPE;
 t_System_Exception_RTTYPE t_System_Exception_RTTYPE_OBJ;
 int8_t t_System_Exception_RTTYPE_RTTYPE_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0};
@@ -699,7 +698,6 @@ typedef struct t_System_IndexOutOfRangeException_RTTYPE
 	t_System_RuntimeType runtimeType;
 	t_System_String* (*vTable_ToString_0)(t_System_IndexOutOfRangeException* self);
 	t_System_String* (*vTable_get_Message_0)(t_System_IndexOutOfRangeException* self);
-	t_System_String* (*vTable_get_StackTrace_0)(t_System_IndexOutOfRangeException* self);
 } t_System_IndexOutOfRangeException_RTTYPE;
 t_System_IndexOutOfRangeException_RTTYPE t_System_IndexOutOfRangeException_RTTYPE_OBJ;
 int8_t t_System_IndexOutOfRangeException_RTTYPE_RTTYPE_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,73,0,110,0,100,0,101,0,120,0,79,0,117,0,116,0,79,0,102,0,82,0,97,0,110,0,103,0,101,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0};
@@ -746,7 +744,6 @@ typedef struct t_System_NotSupportedException_RTTYPE
 	t_System_RuntimeType runtimeType;
 	t_System_String* (*vTable_ToString_0)(t_System_NotSupportedException* self);
 	t_System_String* (*vTable_get_Message_0)(t_System_NotSupportedException* self);
-	t_System_String* (*vTable_get_StackTrace_0)(t_System_NotSupportedException* self);
 } t_System_NotSupportedException_RTTYPE;
 t_System_NotSupportedException_RTTYPE t_System_NotSupportedException_RTTYPE_OBJ;
 int8_t t_System_NotSupportedException_RTTYPE_RTTYPE_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,78,0,111,0,116,0,83,0,117,0,112,0,112,0,111,0,114,0,116,0,101,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0};
@@ -1407,9 +1404,7 @@ t_System_String* m_System_Environment_get_NewLine_0();
 t_System_EventArgs* m_System_EventArgs__ctor_0();
 t_System_Exception* m_System_Exception__ctor_0();
 t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message);
-t_System_Exception* m_System_Exception_get_InnerException_0(t_System_Exception* self);
 t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self);
-t_System_String* m_System_Exception_get_StackTrace_0(t_System_Exception* self);
 t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0();
 t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0();
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0();
@@ -1694,19 +1689,9 @@ t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message)
 	return self;
 }
 
-t_System_Exception* m_System_Exception_get_InnerException_0(t_System_Exception* self)
-{
-	return 0;
-}
-
 t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self)
 {
 	return self->f__Message_k__BackingField_1;
-}
-
-t_System_String* m_System_Exception_get_StackTrace_0(t_System_Exception* self)
-{
-	return 0;
 }
 
 t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0()
@@ -1844,7 +1829,8 @@ void m_System_String_FillStringChecked_0(t_System_String* p_dest, int32_t p_dest
 	char16_t* l_pSrc_1;
 	if (m_System_String_get_Length_0(p_src) > m_System_String_get_Length_0(p_dest) - p_destPos)
 	{
-		;
+		CS2X_ThreadExceptionObject = m_System_IndexOutOfRangeException__ctor_0();
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* THROW */
 	}
 	l_pDest_0 = &p_dest->f__firstChar_1;
 	l_pSrc_1 = &p_src->f__firstChar_1;
@@ -3243,19 +3229,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	t_System_EventArgs_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_Exception_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_Exception_RTTYPE_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
-	t_System_Exception_RTTYPE_OBJ.vTable_get_StackTrace_0 = m_System_Exception_get_StackTrace_0;
 	t_System_FlagsAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_GC_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_IndexOutOfRangeException_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_IndexOutOfRangeException_RTTYPE_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
-	t_System_IndexOutOfRangeException_RTTYPE_OBJ.vTable_get_StackTrace_0 = m_System_Exception_get_StackTrace_0;
 	t_System_Math_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_MathF_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_MulticastDelegate_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_NonSerializedAttribute_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_NotSupportedException_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_NotSupportedException_RTTYPE_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
-	t_System_NotSupportedException_RTTYPE_OBJ.vTable_get_StackTrace_0 = m_System_Exception_get_StackTrace_0;
 	t_System_Nullable_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_Number_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	t_System_Object_RTTYPE_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;

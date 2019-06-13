@@ -115,6 +115,7 @@ void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_Main_0();
+void m_PortableTestApp_Program_FooThrow_0();
 int32_t* m_PortableTestApp_Program_Ya_0();
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o);
 t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0();
@@ -206,6 +207,9 @@ void m_PortableTestApp_Program_Main_0()
 	int32_t l_aa_i_1;
 	t_PortableTestApp_MyBaseClass* l_i_2;
 	uint8_t* l_a2_3;
+	jmp_buf CS2X_JMP_LAST_0;
+	jmp_buf CS2X_JMP_0;
+	int CS2X_IS_JMP_0;
 	l_a_0 = CS2X_GC_NewArrayAtomic(sizeof(int32_t), 5);
 	((int32_t*)(((size_t*)l_a_0) + 1))[0] = 1;
 	((int32_t*)(((size_t*)l_a_0) + 1))[1] = 2;
@@ -231,6 +235,26 @@ void m_PortableTestApp_Program_Main_0()
 	l_a2_3[0] = 1;
 	l_a2_3[1] = 2;
 	l_a2_3[2] = 3;
+	/* try */
+	memcpy(CS2X_JMP_LAST_0, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
+	CS2X_IS_JMP_0 = setjmp(CS2X_JMP_0);
+	if (CS2X_IS_JMP_0 == 0)
+	{
+		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_0, sizeof(jmp_buf));
+		m_PortableTestApp_Program_FooThrow_0();
+	}
+	else /* end try */
+	{
+		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
+		/* throw unhandled exception */
+		if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1);
+	}
+}
+
+void m_PortableTestApp_Program_FooThrow_0()
+{
+	CS2X_ThreadExceptionObject = m_System_Exception__ctor_1(StringLiteral_4);
+	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* THROW */
 }
 
 int32_t* m_PortableTestApp_Program_Ya_0()
@@ -335,6 +359,7 @@ void CS2X_InitStringLiterals()
 	((t_System_String*)StringLiteral_1)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)StringLiteral_2)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 	((t_System_String*)StringLiteral_3)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
+	((t_System_String*)StringLiteral_4)->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
 }
 
 /* =============================== */
@@ -342,6 +367,20 @@ void CS2X_InitStringLiterals()
 /* =============================== */
 int main()
 {
+	/* Init main thread unahandled exeption jump */
+	jmp_buf CS2X_UnhandledThreadExceptionBuff;
+	int result = setjmp(CS2X_UnhandledThreadExceptionBuff);
+	if (result != 0)
+	{
+		CS2X_DisplayErrorMessage("Unhandled Exception");
+		exit(-2);
+	}
+	else
+	{
+		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_UnhandledThreadExceptionBuff, sizeof(jmp_buf));
+	}
+
+	/* Init main thread unahandled exeption jump */
 	CS2X_GC_Init();
 	CS2X_InitLib_PortableTestApp();
 	CS2X_InitStringLiterals();

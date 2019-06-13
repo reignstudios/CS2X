@@ -31,13 +31,27 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		public List<Local> locals, expressionLocals;
+		public class SpecialLocal
+		{
+			public readonly BlockSyntax block;
+			public readonly string type, name;
+
+			public SpecialLocal(BlockSyntax block, string type, string name)
+			{
+				this.block = block;
+				this.type = type;
+				this.name = name;
+			}
+		}
+
+		public List<Local> locals;
+		public List<SpecialLocal> specialLocals;
 
 		public InstructionalBody(Stream stream, StreamWriterEx prev)
 		: base(stream, prev)
 		{
 			locals = new List<Local>();
-			expressionLocals = new List<Local>();
+			specialLocals = new List<SpecialLocal>();
 			if (prev != null) prefix = prev.prefix;
 		}
 	}

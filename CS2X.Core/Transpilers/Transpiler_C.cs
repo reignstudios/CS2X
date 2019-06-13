@@ -155,6 +155,7 @@ namespace CS2X.Core.Transpilers
 		private BlockSyntax block;// active body block
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
+		private int tryCatchNestingLevel;// used for special local name mangling
 
 		/// <summary>
 		/// For debugging only. Skips compiling references
@@ -468,6 +469,22 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("int main()");
 				writer.WriteLine('{');
 				writer.AddTab();
+
+				writer.WriteLinePrefix("/* Init main thread unahandled exeption jump */");
+				writer.WriteLinePrefix("jmp_buf CS2X_UnhandledThreadExceptionBuff;");
+				writer.WriteLinePrefix("int result = setjmp(CS2X_UnhandledThreadExceptionBuff);");
+				writer.WriteLinePrefix("if (result != 0)");
+				writer.WriteLinePrefix('{');
+				writer.WriteLinePrefix("\tCS2X_DisplayErrorMessage(\"Unhandled Exception\");");
+				writer.WriteLinePrefix("\texit(-2);");
+				writer.WriteLinePrefix('}');
+				writer.WriteLinePrefix("else");
+				writer.WriteLinePrefix('{');
+				writer.WriteLinePrefix("\tmemcpy(CS2X_ThreadExceptionJmpBuff, CS2X_UnhandledThreadExceptionBuff, sizeof(jmp_buf));");
+				writer.WriteLinePrefix('}');
+
+				writer.WriteLine();
+				writer.WriteLinePrefix("/* Init main thread unahandled exeption jump */");
 				writer.WriteLinePrefix("CS2X_GC_Init();");
 				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
@@ -701,6 +718,8 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine(')');
 				writer.WriteLine('{');
 				writer.AddTab();
+				tryCatchNestingLevel = 0;
+
 				if (method.MethodKind == MethodKind.Constructor)
 				{
 					var type = method.ContainingType;
@@ -804,6 +823,10 @@ namespace CS2X.Core.Transpilers
 							foreach (var local in instructionalBody.locals)
 							{
 								writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
+							}
+							foreach (var local in instructionalBody.specialLocals)
+							{
+								writer.WriteLinePrefix($"{local.type} {local.name};");
 							}
 						}
 					}
@@ -1032,6 +1055,13 @@ namespace CS2X.Core.Transpilers
 							writer.WriteLinePrefix($"{GetTypeFullNameRef(local.type)} {local.name};");
 						}
 					}
+					foreach (var local in subInstructionalBody.specialLocals)
+					{
+						if (local.block == (BlockSyntax)statement)// only write locals part of this block
+						{
+							writer.WriteLinePrefix($"{local.type} {local.name};");
+						}
+					}
 				}
 				writer.RemoveTab();
 				writer.WriteLinePrefix('}');
@@ -1045,6 +1075,7 @@ namespace CS2X.Core.Transpilers
 			else if (statement is ForEachStatementSyntax) ForEachStatement((ForEachStatementSyntax)statement);
 			else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
+			else if (statement is TryStatementSyntax) TryStatement((TryStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
 			BlockStartCallback = null;
@@ -1215,9 +1246,55 @@ namespace CS2X.Core.Transpilers
 			WriteStatement(statement.Statement);
 		}
 
+		private void TryStatement(TryStatementSyntax statement)
+		{
+			if (statement.Finally != null) throw new NotSupportedException("Finally blocks not supported: " + statement.ToFullString());
+			if (statement.Catches == null || statement.Catches.Count == 0) throw new NotSupportedException("No catach block after try: " + statement.ToFullString());
+
+			// add special locals
+			string jmpBuffLast = $"CS2X_JMP_LAST_{tryCatchNestingLevel}";
+			string jmpBuff = $"CS2X_JMP_{tryCatchNestingLevel}";
+			string isJmp = $"CS2X_IS_JMP_{tryCatchNestingLevel}";
+			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuffLast));
+			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuff));
+			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "int", isJmp));
+
+			// write try
+			writer.WriteLinePrefix("/* try */");
+			writer.WriteLinePrefix($"memcpy({jmpBuffLast}, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));");
+			writer.WriteLinePrefix($"{isJmp} = setjmp({jmpBuff});");
+			writer.WriteLinePrefix($"if ({isJmp} == 0)");
+			void WriteLocal()
+			{
+				writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuff}, sizeof(jmp_buf));");
+			}
+			BlockStartCallback = WriteLocal;
+			WriteStatement(statement.Block);
+
+			// write catches
+			writer.WriteLinePrefix("else /* end try */");
+			writer.WriteLinePrefix('{');
+			writer.AddTab();
+			writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuffLast}, sizeof(jmp_buf));");
+			foreach (var c in statement.Catches)
+			{
+				if (c.Filter != null) throw new NotSupportedException("Catch blocks do not support filters: " + c.ToFullString());
+				// TODO: check exception type and write blocks
+			}
+			writer.WriteLinePrefix("/* throw unhandled exception */");
+			writer.WriteLinePrefix("if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1);");
+			writer.RemoveTab();
+			writer.WriteLinePrefix('}');
+
+			++tryCatchNestingLevel;
+		}
+
 		private void ThrowStatement(ThrowStatementSyntax statement)
-		{ 
-			writer.WriteLinePrefix(';');// TODO
+		{
+			writer.WritePrefix("CS2X_ThreadExceptionObject = ");
+			WriteExpression(statement.Expression);
+			writer.WriteLine(';');
+			writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* THROW */");
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)
