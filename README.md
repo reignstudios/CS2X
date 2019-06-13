@@ -20,6 +20,7 @@ This project will focus on transpiling a C# subset with a modified type system f
 	* SDCC: Many targets (ColecoVision, etc)
 * LLVM
 * LLVM IR => Assembly: CP1610 (Intellivision)
+* LLVM IR => Assembly: Intel 8048 (Magnavox Odyssey 2 - if possible)
 * LLVM IR => Retarget: Custom assembly targets (FPGA CPU, 16bit bytes, etc)
 * Java
 * Kotlin
