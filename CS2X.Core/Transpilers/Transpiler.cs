@@ -346,6 +346,18 @@ namespace CS2X.Core.Transpilers
 			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName) as IMethodSymbol;
 		}
 
+		protected IMethodSymbol FindEmptyConstructor(ITypeSymbol type)
+		{
+			foreach (var member in type.GetMembers())
+			{
+				if (member.Kind != SymbolKind.Method) continue;
+				var method = (IMethodSymbol)member;
+				if (method.MethodKind != MethodKind.Constructor || method.Parameters.Length != 0) continue;
+				return method;
+			}
+			throw new Exception("Failed to find inferable constructor (should never happen)");
+		}
+
 		protected string GetProjectNameFlat(Project project)
 		{
 			string refAssemblyName = project.roslynProject.AssemblyName;

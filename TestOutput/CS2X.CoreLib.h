@@ -1385,41 +1385,41 @@ int8_t t_CS2X_NativeExternTarget_RTTYPE_RTTYPE_METADATA_FullName[60] = {0,0,0,0,
 int32_t m_System_Array_get_Length_0(t_System_Array* self);
 int64_t m_System_Array_get_LongLength_0(t_System_Array* self);
 int32_t m_System_Array_get_Count_0(t_System_Array* self);
-t_System_Array* m_System_Array__ctor_0();
-t_System_Attribute* m_System_Attribute__ctor_0();
-t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_System_AttributeTargets p_validOn);
+t_System_Array* m_System_Array__ctor_0(t_System_Array* self);
+t_System_Attribute* m_System_Attribute__ctor_0(t_System_Attribute* self);
+t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_System_AttributeUsageAttribute* self, t_System_AttributeTargets p_validOn);
 t_System_AttributeTargets m_System_AttributeUsageAttribute_get_ValidOn_0(t_System_AttributeUsageAttribute* self);
 int32_t m_System_BitConverter_SingleToInt32Bits_0(float p_value);
 void m_System_Buffer_MemoryCopy_0(void* p_source, void* p_destination, int64_t p_destinationSizeInBytes, int64_t p_sourceBytesToCopy);
 void m_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t p_destinationSizeInBytes, uint64_t p_sourceBytesToCopy);
-t_System_CancelEventArgs* m_System_CancelEventArgs__ctor_0();
-t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(char p_isCompliant);
+t_System_CancelEventArgs* m_System_CancelEventArgs__ctor_0(t_System_CancelEventArgs* self);
+t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(t_System_CLSCompliantAttribute* self, char p_isCompliant);
 char m_System_CLSCompliantAttribute_get_IsCompliant_0(t_System_CLSCompliantAttribute* self);
 void m_System_Console_Write_0(t_System_String* p_s);
 void m_System_Console_WriteLine_0(t_System_String* p_s);
 void m_System_Console_WriteLine_1();
-t_System_Delegate* m_System_Delegate__ctor_0();
-t_System_Enum* m_System_Enum__ctor_0();
+t_System_Delegate* m_System_Delegate__ctor_0(t_System_Delegate* self);
+t_System_Enum* m_System_Enum__ctor_0(t_System_Enum* self);
 t_System_String* m_System_Environment_get_NewLine_0();
-t_System_EventArgs* m_System_EventArgs__ctor_0();
-t_System_Exception* m_System_Exception__ctor_0();
-t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message);
+t_System_EventArgs* m_System_EventArgs__ctor_0(t_System_EventArgs* self);
+t_System_Exception* m_System_Exception__ctor_0(t_System_Exception* self);
+t_System_Exception* m_System_Exception__ctor_1(t_System_Exception* self, t_System_String* p_message);
 t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self);
-t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0();
-t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0();
-t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0();
-t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0();
-t_System_NotSupportedException* m_System_NotSupportedException__ctor_0();
+t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0(t_System_FlagsAttribute* self);
+t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0(t_System_IndexOutOfRangeException* self);
+t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_MulticastDelegate* self);
+t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0(t_System_NonSerializedAttribute* self);
+t_System_NotSupportedException* m_System_NotSupportedException__ctor_0(t_System_NotSupportedException* self, t_System_String* p_message);
 t_System_Type* m_System_Object_GetType_0(t_System_Object* self);
 t_System_String* m_System_Object_ToString_0(t_System_Object* self);
-t_System_Object* m_System_Object__ctor_0();
-t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_0();
-t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_1(t_System_String* p_message);
-t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_2(t_System_String* p_message, char p_error);
+t_System_Object* m_System_Object__ctor_0(t_System_Object* self);
+t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_0(t_System_ObsoleteAttribute* self);
+t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_1(t_System_ObsoleteAttribute* self, t_System_String* p_message);
+t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_2(t_System_ObsoleteAttribute* self, t_System_String* p_message, char p_error);
 char m_System_ObsoleteAttribute_get_IsError_0(t_System_ObsoleteAttribute* self);
 t_System_String* m_System_ObsoleteAttribute_get_Message_0(t_System_ObsoleteAttribute* self);
-t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0();
-t_System_RuntimeType* m_System_RuntimeType__ctor_0();
+t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0(t_System_ParamArrayAttribute* self);
+t_System_RuntimeType* m_System_RuntimeType__ctor_0(t_System_RuntimeType* self);
 int32_t m_System_String_get_Length_0(t_System_String* self);
 t_System_String* m_System_String_FastAllocateString_0(int32_t p_length);
 char m_System_String_IsNullOrEmpty_0(t_System_String* p_value);
@@ -1428,69 +1428,69 @@ t_System_String* m_System_String_Concat_0(t_System_String* p_str0, t_System_Stri
 t_System_String* m_System_String_Concat_1(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2);
 t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2, t_System_String* p_str3);
 char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value);
-t_System_String* m_System_String__ctor_0();
-t_System_StringBuilder* m_System_StringBuilder__ctor_0();
+t_System_String* m_System_String__ctor_0(t_System_String* self);
+t_System_StringBuilder* m_System_StringBuilder__ctor_0(t_System_StringBuilder* self);
 t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_handle);
-t_System_Type* m_System_Type__ctor_0();
-t_System_ValueType* m_System_ValueType__ctor_0();
-t_System_CodeDom_Compiler_GeneratedCodeAttribute* m_System_CodeDom_Compiler_GeneratedCodeAttribute__ctor_0(t_System_String* p_tool, t_System_String* p_version);
+t_System_Type* m_System_Type__ctor_0(t_System_Type* self);
+t_System_ValueType* m_System_ValueType__ctor_0(t_System_ValueType* self);
+t_System_CodeDom_Compiler_GeneratedCodeAttribute* m_System_CodeDom_Compiler_GeneratedCodeAttribute__ctor_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self, t_System_String* p_tool, t_System_String* p_version);
 t_System_String* m_System_CodeDom_Compiler_GeneratedCodeAttribute_get_Tool_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self);
 t_System_String* m_System_CodeDom_Compiler_GeneratedCodeAttribute_get_Version_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self);
 int32_t m_System_Collections_ArrayList_get_Count_0(t_System_Collections_ArrayList* self);
-t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0();
+t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0(t_System_Collections_ArrayList* self);
 int32_t m_System_Collections_Queue_get_Count_0(t_System_Collections_Queue* self);
-t_System_Collections_Queue* m_System_Collections_Queue__ctor_0();
+t_System_Collections_Queue* m_System_Collections_Queue__ctor_0(t_System_Collections_Queue* self);
 int32_t m_System_Collections_Stack_get_Count_0(t_System_Collections_Stack* self);
-t_System_Collections_Stack* m_System_Collections_Stack__ctor_0();
-t_System_ComponentModel_BrowsableAttribute* m_System_ComponentModel_BrowsableAttribute__ctor_0();
-t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyAttribute__ctor_0();
-t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_EditorBrowsableAttribute__ctor_0(t_System_ComponentModel_EditorBrowsableState p_state);
+t_System_Collections_Stack* m_System_Collections_Stack__ctor_0(t_System_Collections_Stack* self);
+t_System_ComponentModel_BrowsableAttribute* m_System_ComponentModel_BrowsableAttribute__ctor_0(t_System_ComponentModel_BrowsableAttribute* self);
+t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyAttribute__ctor_0(t_System_ComponentModel_DependencyAttribute* self);
+t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_EditorBrowsableAttribute__ctor_0(t_System_ComponentModel_EditorBrowsableAttribute* self, t_System_ComponentModel_EditorBrowsableState p_state);
 t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableAttribute_get_State_0(t_System_ComponentModel_EditorBrowsableAttribute* self);
-t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttribute__ctor_0(t_System_String* p_conditionString);
+t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttribute__ctor_0(t_System_Diagnostics_ConditionalAttribute* self, t_System_String* p_conditionString);
 t_System_String* m_System_Diagnostics_ConditionalAttribute_get_ConditionString_0(t_System_Diagnostics_ConditionalAttribute* self);
-t_System_Diagnostics_Debug* m_System_Diagnostics_Debug__ctor_0();
-t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* m_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute__ctor_0();
-t_System_Globalization_CultureInfo* m_System_Globalization_CultureInfo__ctor_0();
-t_System_Globalization_NumberFormatInfo* m_System_Globalization_NumberFormatInfo__ctor_0();
-t_System_Reflection_AssemblyCompanyAttribute* m_System_Reflection_AssemblyCompanyAttribute__ctor_0(t_System_String* p_company);
+t_System_Diagnostics_Debug* m_System_Diagnostics_Debug__ctor_0(t_System_Diagnostics_Debug* self);
+t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* m_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute__ctor_0(t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* self);
+t_System_Globalization_CultureInfo* m_System_Globalization_CultureInfo__ctor_0(t_System_Globalization_CultureInfo* self);
+t_System_Globalization_NumberFormatInfo* m_System_Globalization_NumberFormatInfo__ctor_0(t_System_Globalization_NumberFormatInfo* self);
+t_System_Reflection_AssemblyCompanyAttribute* m_System_Reflection_AssemblyCompanyAttribute__ctor_0(t_System_Reflection_AssemblyCompanyAttribute* self, t_System_String* p_company);
 t_System_String* m_System_Reflection_AssemblyCompanyAttribute_get_Company_0(t_System_Reflection_AssemblyCompanyAttribute* self);
-t_System_Reflection_AssemblyConfigurationAttribute* m_System_Reflection_AssemblyConfigurationAttribute__ctor_0(t_System_String* p_configuration);
+t_System_Reflection_AssemblyConfigurationAttribute* m_System_Reflection_AssemblyConfigurationAttribute__ctor_0(t_System_Reflection_AssemblyConfigurationAttribute* self, t_System_String* p_configuration);
 t_System_String* m_System_Reflection_AssemblyConfigurationAttribute_get_Configuration_0(t_System_Reflection_AssemblyConfigurationAttribute* self);
-t_System_Reflection_AssemblyCopyrightAttribute* m_System_Reflection_AssemblyCopyrightAttribute__ctor_0(t_System_String* p_copyright);
+t_System_Reflection_AssemblyCopyrightAttribute* m_System_Reflection_AssemblyCopyrightAttribute__ctor_0(t_System_Reflection_AssemblyCopyrightAttribute* self, t_System_String* p_copyright);
 t_System_String* m_System_Reflection_AssemblyCopyrightAttribute_get_Copyright_0(t_System_Reflection_AssemblyCopyrightAttribute* self);
-t_System_Reflection_AssemblyCultureAttribute* m_System_Reflection_AssemblyCultureAttribute__ctor_0(t_System_String* p_culture);
+t_System_Reflection_AssemblyCultureAttribute* m_System_Reflection_AssemblyCultureAttribute__ctor_0(t_System_Reflection_AssemblyCultureAttribute* self, t_System_String* p_culture);
 t_System_String* m_System_Reflection_AssemblyCultureAttribute_get_Culture_0(t_System_Reflection_AssemblyCultureAttribute* self);
-t_System_Reflection_AssemblyDelaySignAttribute* m_System_Reflection_AssemblyDelaySignAttribute__ctor_0(char p_delaySign);
+t_System_Reflection_AssemblyDelaySignAttribute* m_System_Reflection_AssemblyDelaySignAttribute__ctor_0(t_System_Reflection_AssemblyDelaySignAttribute* self, char p_delaySign);
 char m_System_Reflection_AssemblyDelaySignAttribute_get_DelaySign_0(t_System_Reflection_AssemblyDelaySignAttribute* self);
-t_System_Reflection_AssemblyDescriptionAttribute* m_System_Reflection_AssemblyDescriptionAttribute__ctor_0(t_System_String* p_description);
+t_System_Reflection_AssemblyDescriptionAttribute* m_System_Reflection_AssemblyDescriptionAttribute__ctor_0(t_System_Reflection_AssemblyDescriptionAttribute* self, t_System_String* p_description);
 t_System_String* m_System_Reflection_AssemblyDescriptionAttribute_get_Description_0(t_System_Reflection_AssemblyDescriptionAttribute* self);
-t_System_Reflection_AssemblyFileVersionAttribute* m_System_Reflection_AssemblyFileVersionAttribute__ctor_0(t_System_String* p_version);
+t_System_Reflection_AssemblyFileVersionAttribute* m_System_Reflection_AssemblyFileVersionAttribute__ctor_0(t_System_Reflection_AssemblyFileVersionAttribute* self, t_System_String* p_version);
 t_System_String* m_System_Reflection_AssemblyFileVersionAttribute_get_Version_0(t_System_Reflection_AssemblyFileVersionAttribute* self);
-t_System_Reflection_AssemblyInformationalVersionAttribute* m_System_Reflection_AssemblyInformationalVersionAttribute__ctor_0(t_System_String* p_informationalVersion);
+t_System_Reflection_AssemblyInformationalVersionAttribute* m_System_Reflection_AssemblyInformationalVersionAttribute__ctor_0(t_System_Reflection_AssemblyInformationalVersionAttribute* self, t_System_String* p_informationalVersion);
 t_System_String* m_System_Reflection_AssemblyInformationalVersionAttribute_get_InformationalVersion_0(t_System_Reflection_AssemblyInformationalVersionAttribute* self);
-t_System_Reflection_AssemblyKeyFileAttribute* m_System_Reflection_AssemblyKeyFileAttribute__ctor_0(t_System_String* p_keyFile);
+t_System_Reflection_AssemblyKeyFileAttribute* m_System_Reflection_AssemblyKeyFileAttribute__ctor_0(t_System_Reflection_AssemblyKeyFileAttribute* self, t_System_String* p_keyFile);
 t_System_String* m_System_Reflection_AssemblyKeyFileAttribute_get_KeyFile_0(t_System_Reflection_AssemblyKeyFileAttribute* self);
-t_System_Reflection_AssemblyProductAttribute* m_System_Reflection_AssemblyProductAttribute__ctor_0(t_System_String* p_product);
+t_System_Reflection_AssemblyProductAttribute* m_System_Reflection_AssemblyProductAttribute__ctor_0(t_System_Reflection_AssemblyProductAttribute* self, t_System_String* p_product);
 t_System_String* m_System_Reflection_AssemblyProductAttribute_get_Product_0(t_System_Reflection_AssemblyProductAttribute* self);
-t_System_Reflection_AssemblyTitleAttribute* m_System_Reflection_AssemblyTitleAttribute__ctor_0(t_System_String* p_title);
+t_System_Reflection_AssemblyTitleAttribute* m_System_Reflection_AssemblyTitleAttribute__ctor_0(t_System_Reflection_AssemblyTitleAttribute* self, t_System_String* p_title);
 t_System_String* m_System_Reflection_AssemblyTitleAttribute_get_Title_0(t_System_Reflection_AssemblyTitleAttribute* self);
-t_System_Reflection_AssemblyTrademarkAttribute* m_System_Reflection_AssemblyTrademarkAttribute__ctor_0(t_System_String* p_trademark);
+t_System_Reflection_AssemblyTrademarkAttribute* m_System_Reflection_AssemblyTrademarkAttribute__ctor_0(t_System_Reflection_AssemblyTrademarkAttribute* self, t_System_String* p_trademark);
 t_System_String* m_System_Reflection_AssemblyTrademarkAttribute_get_Trademark_0(t_System_Reflection_AssemblyTrademarkAttribute* self);
-t_System_Reflection_AssemblyVersionAttribute* m_System_Reflection_AssemblyVersionAttribute__ctor_0(t_System_String* p_version);
+t_System_Reflection_AssemblyVersionAttribute* m_System_Reflection_AssemblyVersionAttribute__ctor_0(t_System_Reflection_AssemblyVersionAttribute* self, t_System_String* p_version);
 t_System_String* m_System_Reflection_AssemblyVersionAttribute_get_Version_0(t_System_Reflection_AssemblyVersionAttribute* self);
-t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAttribute__ctor_0(t_System_String* p_memberName);
+t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAttribute__ctor_0(t_System_Reflection_DefaultMemberAttribute* self, t_System_String* p_memberName);
 t_System_String* m_System_Reflection_DefaultMemberAttribute_get_MemberName_0(t_System_Reflection_DefaultMemberAttribute* self);
-t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_CompilerServices_CompilerGeneratedAttribute__ctor_0();
-t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_CompilerServices_IndexerNameAttribute__ctor_0(t_System_String* p_indexerName);
-t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerServices_IntrinsicAttribute__ctor_0();
-t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions);
-t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_1(int16_t p_value);
-t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2();
-t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0();
-t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
-t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(int16_t p_layoutKind);
-t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_String* p_frameworkName);
-t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName);
+t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_CompilerServices_CompilerGeneratedAttribute__ctor_0(t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* self);
+t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_CompilerServices_IndexerNameAttribute__ctor_0(t_System_Runtime_CompilerServices_IndexerNameAttribute* self, t_System_String* p_indexerName);
+t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerServices_IntrinsicAttribute__ctor_0(t_System_Runtime_CompilerServices_IntrinsicAttribute* self);
+t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplAttribute* self, t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions);
+t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_1(t_System_Runtime_CompilerServices_MethodImplAttribute* self, int16_t p_value);
+t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2(t_System_Runtime_CompilerServices_MethodImplAttribute* self);
+t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self);
+t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
+t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(t_System_Runtime_InteropServices_StructLayoutAttribute* self, int16_t p_layoutKind);
+t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName);
+t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternAttribute* self, t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName);
 char m_char__ctor_0();
 uint8_t m_uint8_t__ctor_0();
 char16_t m_char16_t__ctor_0();
@@ -1525,6 +1525,31 @@ t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0();
 /* =============================== */
 /* Method definitions */
 /* =============================== */
+
+void* CS2X_AllocType(size_t size, t_System_RuntimeType* runtimeType)
+{
+	t_System_RuntimeType* ptr = CS2X_GC_New(sizeof(size));
+	ptr->CS2X_RuntimeType = runtimeType;
+	return ptr;
+}
+
+void* CS2X_AllocTypeAtomic(size_t size, t_System_RuntimeType* runtimeType)
+{
+	t_System_RuntimeType* ptr = CS2X_GC_NewAtomic(sizeof(size));
+	ptr->CS2X_RuntimeType = runtimeType;
+	return ptr;
+}
+char CS2X_IsType(t_System_RuntimeType* runtimeType, t_System_RuntimeType* isRuntimeType)
+{
+	t_System_RuntimeType* runtimeTypeBase = runtimeType;
+	while (runtimeTypeBase != 0)
+	{
+		if (runtimeTypeBase == isRuntimeType) return 1;
+		runtimeTypeBase = runtimeTypeBase->f__BaseType_k__BackingField_1;
+	}
+	return 0;
+}
+
 int32_t m_System_Array_get_Length_0(t_System_Array* self)
 {
 	return (int32_t)(*(size_t*)self);
@@ -1540,27 +1565,22 @@ int32_t m_System_Array_get_Count_0(t_System_Array* self)
 	return m_System_Array_get_Length_0(self);
 }
 
-t_System_Array* m_System_Array__ctor_0()
+t_System_Array* m_System_Array__ctor_0(t_System_Array* self)
 {
-	t_System_Array* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Array*));
-	self->CS2X_RuntimeType = &t_System_Array_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_Attribute* m_System_Attribute__ctor_0()
+t_System_Attribute* m_System_Attribute__ctor_0(t_System_Attribute* self)
 {
-	t_System_Attribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Attribute*));
-	self->CS2X_RuntimeType = &t_System_Attribute_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_System_AttributeTargets p_validOn)
+t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_System_AttributeUsageAttribute* self, t_System_AttributeTargets p_validOn)
 {
-	t_System_AttributeUsageAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_AttributeUsageAttribute));
-	self->CS2X_RuntimeType = &t_System_AttributeUsageAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
+	self->f__attributeTarget_2 = 32767;
 	self->f__attributeTarget_2 = p_validOn;
 	return self;
 }
@@ -1588,19 +1608,15 @@ void m_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t 
 	memcpy(p_destination, p_source, (void*)p_sourceBytesToCopy);
 }
 
-t_System_CancelEventArgs* m_System_CancelEventArgs__ctor_0()
+t_System_CancelEventArgs* m_System_CancelEventArgs__ctor_0(t_System_CancelEventArgs* self)
 {
-	t_System_CancelEventArgs* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_CancelEventArgs*));
-	self->CS2X_RuntimeType = &t_System_CancelEventArgs_RTTYPE_OBJ;
+	m_System_EventArgs__ctor_0(self);
 	return self;
 }
 
-t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(char p_isCompliant)
+t_System_CLSCompliantAttribute* m_System_CLSCompliantAttribute__ctor_0(t_System_CLSCompliantAttribute* self, char p_isCompliant)
 {
-	t_System_CLSCompliantAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_CLSCompliantAttribute));
-	self->CS2X_RuntimeType = &t_System_CLSCompliantAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__isCompliant_2 = p_isCompliant;
 	return self;
 }
@@ -1643,19 +1659,15 @@ void m_System_Console_WriteLine_1()
 	m_System_Console_Write_0(m_System_Environment_get_NewLine_0());
 }
 
-t_System_Delegate* m_System_Delegate__ctor_0()
+t_System_Delegate* m_System_Delegate__ctor_0(t_System_Delegate* self)
 {
-	t_System_Delegate* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Delegate*));
-	self->CS2X_RuntimeType = &t_System_Delegate_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_Enum* m_System_Enum__ctor_0()
+t_System_Enum* m_System_Enum__ctor_0(t_System_Enum* self)
 {
-	t_System_Enum* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Enum*));
-	self->CS2X_RuntimeType = &t_System_Enum_RTTYPE_OBJ;
+	m_System_ValueType__ctor_0(self);
 	return self;
 }
 
@@ -1664,27 +1676,21 @@ t_System_String* m_System_Environment_get_NewLine_0()
 	return StringLiteral_0;
 }
 
-t_System_EventArgs* m_System_EventArgs__ctor_0()
+t_System_EventArgs* m_System_EventArgs__ctor_0(t_System_EventArgs* self)
 {
-	t_System_EventArgs* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_EventArgs*));
-	self->CS2X_RuntimeType = &t_System_EventArgs_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_Exception* m_System_Exception__ctor_0()
+t_System_Exception* m_System_Exception__ctor_0(t_System_Exception* self)
 {
-	t_System_Exception* self;
-	self = CS2X_GC_New(sizeof(t_System_Exception));
-	self->CS2X_RuntimeType = &t_System_Exception_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_Exception* m_System_Exception__ctor_1(t_System_String* p_message)
+t_System_Exception* m_System_Exception__ctor_1(t_System_Exception* self, t_System_String* p_message)
 {
-	t_System_Exception* self;
-	self = CS2X_GC_New(sizeof(t_System_Exception));
-	self->CS2X_RuntimeType = &t_System_Exception_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	self->f__Message_k__BackingField_1 = p_message;
 	return self;
 }
@@ -1694,43 +1700,33 @@ t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self)
 	return self->f__Message_k__BackingField_1;
 }
 
-t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0()
+t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0(t_System_FlagsAttribute* self)
 {
-	t_System_FlagsAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_FlagsAttribute*));
-	self->CS2X_RuntimeType = &t_System_FlagsAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0()
+t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0(t_System_IndexOutOfRangeException* self)
 {
-	t_System_IndexOutOfRangeException* self;
-	self = CS2X_GC_New(sizeof(t_System_IndexOutOfRangeException));
-	self->CS2X_RuntimeType = &t_System_IndexOutOfRangeException_RTTYPE_OBJ;
+	m_System_Exception__ctor_0(self);
 	return self;
 }
 
-t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0()
+t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_MulticastDelegate* self)
 {
-	t_System_MulticastDelegate* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_MulticastDelegate*));
-	self->CS2X_RuntimeType = &t_System_MulticastDelegate_RTTYPE_OBJ;
+	m_System_Delegate__ctor_0(self);
 	return self;
 }
 
-t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0()
+t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0(t_System_NonSerializedAttribute* self)
 {
-	t_System_NonSerializedAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_NonSerializedAttribute*));
-	self->CS2X_RuntimeType = &t_System_NonSerializedAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_NotSupportedException* m_System_NotSupportedException__ctor_0()
+t_System_NotSupportedException* m_System_NotSupportedException__ctor_0(t_System_NotSupportedException* self, t_System_String* p_message)
 {
-	t_System_NotSupportedException* self;
-	self = CS2X_GC_New(sizeof(t_System_NotSupportedException));
-	self->CS2X_RuntimeType = &t_System_NotSupportedException_RTTYPE_OBJ;
+	m_System_Exception__ctor_1(self, p_message);
 	return self;
 }
 
@@ -1744,36 +1740,27 @@ t_System_String* m_System_Object_ToString_0(t_System_Object* self)
 	return m_System_Object_GetType_0(self)->f__FullName_k__BackingField_1;
 }
 
-t_System_Object* m_System_Object__ctor_0()
+t_System_Object* m_System_Object__ctor_0(t_System_Object* self)
 {
-	t_System_Object* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Object*));
-	self->CS2X_RuntimeType = &t_System_Object_RTTYPE_OBJ;
 	return self;
 }
 
-t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_0()
+t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_0(t_System_ObsoleteAttribute* self)
 {
-	t_System_ObsoleteAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_ObsoleteAttribute));
-	self->CS2X_RuntimeType = &t_System_ObsoleteAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_1(t_System_String* p_message)
+t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_1(t_System_ObsoleteAttribute* self, t_System_String* p_message)
 {
-	t_System_ObsoleteAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_ObsoleteAttribute));
-	self->CS2X_RuntimeType = &t_System_ObsoleteAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__message_2 = p_message;
 	return self;
 }
 
-t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_2(t_System_String* p_message, char p_error)
+t_System_ObsoleteAttribute* m_System_ObsoleteAttribute__ctor_2(t_System_ObsoleteAttribute* self, t_System_String* p_message, char p_error)
 {
-	t_System_ObsoleteAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_ObsoleteAttribute));
-	self->CS2X_RuntimeType = &t_System_ObsoleteAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__message_2 = p_message;
 	self->f__error_2 = p_error;
 	return self;
@@ -1789,19 +1776,15 @@ t_System_String* m_System_ObsoleteAttribute_get_Message_0(t_System_ObsoleteAttri
 	return self->f__message_2;
 }
 
-t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0()
+t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0(t_System_ParamArrayAttribute* self)
 {
-	t_System_ParamArrayAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_ParamArrayAttribute*));
-	self->CS2X_RuntimeType = &t_System_ParamArrayAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_RuntimeType* m_System_RuntimeType__ctor_0()
+t_System_RuntimeType* m_System_RuntimeType__ctor_0(t_System_RuntimeType* self)
 {
-	t_System_RuntimeType* self;
-	self = CS2X_GC_New(sizeof(t_System_RuntimeType));
-	self->CS2X_RuntimeType = &t_System_RuntimeType_RTTYPE_OBJ;
+	m_System_Type__ctor_0(self);
 	return self;
 }
 
@@ -1829,7 +1812,7 @@ void m_System_String_FillStringChecked_0(t_System_String* p_dest, int32_t p_dest
 	char16_t* l_pSrc_1;
 	if (m_System_String_get_Length_0(p_src) > m_System_String_get_Length_0(p_dest) - p_destPos)
 	{
-		CS2X_ThreadExceptionObject = m_System_IndexOutOfRangeException__ctor_0();
+		CS2X_ThreadExceptionObject = m_System_IndexOutOfRangeException__ctor_0(CS2X_AllocType(sizeof(t_System_IndexOutOfRangeException), &t_System_IndexOutOfRangeException_RTTYPE_OBJ));
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* THROW */
 	}
 	l_pDest_0 = &p_dest->f__firstChar_1;
@@ -1921,19 +1904,15 @@ char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value)
 	return 1;
 }
 
-t_System_String* m_System_String__ctor_0()
+t_System_String* m_System_String__ctor_0(t_System_String* self)
 {
-	t_System_String* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_String));
-	self->CS2X_RuntimeType = &t_System_String_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_StringBuilder* m_System_StringBuilder__ctor_0()
+t_System_StringBuilder* m_System_StringBuilder__ctor_0(t_System_StringBuilder* self)
 {
-	t_System_StringBuilder* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_StringBuilder*));
-	self->CS2X_RuntimeType = &t_System_StringBuilder_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
@@ -1942,27 +1921,21 @@ t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_ha
 	return p_handle.f_m_type_2;
 }
 
-t_System_Type* m_System_Type__ctor_0()
+t_System_Type* m_System_Type__ctor_0(t_System_Type* self)
 {
-	t_System_Type* self;
-	self = CS2X_GC_New(sizeof(t_System_Type));
-	self->CS2X_RuntimeType = &t_System_Type_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_ValueType* m_System_ValueType__ctor_0()
+t_System_ValueType* m_System_ValueType__ctor_0(t_System_ValueType* self)
 {
-	t_System_ValueType* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_ValueType*));
-	self->CS2X_RuntimeType = &t_System_ValueType_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_CodeDom_Compiler_GeneratedCodeAttribute* m_System_CodeDom_Compiler_GeneratedCodeAttribute__ctor_0(t_System_String* p_tool, t_System_String* p_version)
+t_System_CodeDom_Compiler_GeneratedCodeAttribute* m_System_CodeDom_Compiler_GeneratedCodeAttribute__ctor_0(t_System_CodeDom_Compiler_GeneratedCodeAttribute* self, t_System_String* p_tool, t_System_String* p_version)
 {
-	t_System_CodeDom_Compiler_GeneratedCodeAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_CodeDom_Compiler_GeneratedCodeAttribute));
-	self->CS2X_RuntimeType = &t_System_CodeDom_Compiler_GeneratedCodeAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__tool_2 = p_tool;
 	self->f__version_2 = p_version;
 	return self;
@@ -1983,11 +1956,9 @@ int32_t m_System_Collections_ArrayList_get_Count_0(t_System_Collections_ArrayLis
 	return 0;
 }
 
-t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0()
+t_System_Collections_ArrayList* m_System_Collections_ArrayList__ctor_0(t_System_Collections_ArrayList* self)
 {
-	t_System_Collections_ArrayList* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Collections_ArrayList*));
-	self->CS2X_RuntimeType = &t_System_Collections_ArrayList_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
@@ -1996,11 +1967,9 @@ int32_t m_System_Collections_Queue_get_Count_0(t_System_Collections_Queue* self)
 	return 0;
 }
 
-t_System_Collections_Queue* m_System_Collections_Queue__ctor_0()
+t_System_Collections_Queue* m_System_Collections_Queue__ctor_0(t_System_Collections_Queue* self)
 {
-	t_System_Collections_Queue* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Collections_Queue*));
-	self->CS2X_RuntimeType = &t_System_Collections_Queue_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
@@ -2009,35 +1978,27 @@ int32_t m_System_Collections_Stack_get_Count_0(t_System_Collections_Stack* self)
 	return 0;
 }
 
-t_System_Collections_Stack* m_System_Collections_Stack__ctor_0()
+t_System_Collections_Stack* m_System_Collections_Stack__ctor_0(t_System_Collections_Stack* self)
 {
-	t_System_Collections_Stack* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Collections_Stack*));
-	self->CS2X_RuntimeType = &t_System_Collections_Stack_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_ComponentModel_BrowsableAttribute* m_System_ComponentModel_BrowsableAttribute__ctor_0()
+t_System_ComponentModel_BrowsableAttribute* m_System_ComponentModel_BrowsableAttribute__ctor_0(t_System_ComponentModel_BrowsableAttribute* self)
 {
-	t_System_ComponentModel_BrowsableAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_ComponentModel_BrowsableAttribute*));
-	self->CS2X_RuntimeType = &t_System_ComponentModel_BrowsableAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyAttribute__ctor_0()
+t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyAttribute__ctor_0(t_System_ComponentModel_DependencyAttribute* self)
 {
-	t_System_ComponentModel_DependencyAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_ComponentModel_DependencyAttribute*));
-	self->CS2X_RuntimeType = &t_System_ComponentModel_DependencyAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_EditorBrowsableAttribute__ctor_0(t_System_ComponentModel_EditorBrowsableState p_state)
+t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_EditorBrowsableAttribute__ctor_0(t_System_ComponentModel_EditorBrowsableAttribute* self, t_System_ComponentModel_EditorBrowsableState p_state)
 {
-	t_System_ComponentModel_EditorBrowsableAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_ComponentModel_EditorBrowsableAttribute));
-	self->CS2X_RuntimeType = &t_System_ComponentModel_EditorBrowsableAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__browsableState_2 = p_state;
 	return self;
 }
@@ -2047,11 +2008,9 @@ t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrows
 	return self->f__browsableState_2;
 }
 
-t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttribute__ctor_0(t_System_String* p_conditionString)
+t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttribute__ctor_0(t_System_Diagnostics_ConditionalAttribute* self, t_System_String* p_conditionString)
 {
-	t_System_Diagnostics_ConditionalAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Diagnostics_ConditionalAttribute));
-	self->CS2X_RuntimeType = &t_System_Diagnostics_ConditionalAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__conditionString_2 = p_conditionString;
 	return self;
 }
@@ -2061,43 +2020,33 @@ t_System_String* m_System_Diagnostics_ConditionalAttribute_get_ConditionString_0
 	return self->f__conditionString_2;
 }
 
-t_System_Diagnostics_Debug* m_System_Diagnostics_Debug__ctor_0()
+t_System_Diagnostics_Debug* m_System_Diagnostics_Debug__ctor_0(t_System_Diagnostics_Debug* self)
 {
-	t_System_Diagnostics_Debug* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Diagnostics_Debug*));
-	self->CS2X_RuntimeType = &t_System_Diagnostics_Debug_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* m_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute__ctor_0()
+t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* m_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute__ctor_0(t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* self)
 {
-	t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute*));
-	self->CS2X_RuntimeType = &t_System_Diagnostics_CodeAnalysis_SuppressMessageAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_Globalization_CultureInfo* m_System_Globalization_CultureInfo__ctor_0()
+t_System_Globalization_CultureInfo* m_System_Globalization_CultureInfo__ctor_0(t_System_Globalization_CultureInfo* self)
 {
-	t_System_Globalization_CultureInfo* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Globalization_CultureInfo*));
-	self->CS2X_RuntimeType = &t_System_Globalization_CultureInfo_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_Globalization_NumberFormatInfo* m_System_Globalization_NumberFormatInfo__ctor_0()
+t_System_Globalization_NumberFormatInfo* m_System_Globalization_NumberFormatInfo__ctor_0(t_System_Globalization_NumberFormatInfo* self)
 {
-	t_System_Globalization_NumberFormatInfo* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Globalization_NumberFormatInfo*));
-	self->CS2X_RuntimeType = &t_System_Globalization_NumberFormatInfo_RTTYPE_OBJ;
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
-t_System_Reflection_AssemblyCompanyAttribute* m_System_Reflection_AssemblyCompanyAttribute__ctor_0(t_System_String* p_company)
+t_System_Reflection_AssemblyCompanyAttribute* m_System_Reflection_AssemblyCompanyAttribute__ctor_0(t_System_Reflection_AssemblyCompanyAttribute* self, t_System_String* p_company)
 {
-	t_System_Reflection_AssemblyCompanyAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyCompanyAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyCompanyAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__company_2 = p_company;
 	return self;
 }
@@ -2107,11 +2056,9 @@ t_System_String* m_System_Reflection_AssemblyCompanyAttribute_get_Company_0(t_Sy
 	return self->f__company_2;
 }
 
-t_System_Reflection_AssemblyConfigurationAttribute* m_System_Reflection_AssemblyConfigurationAttribute__ctor_0(t_System_String* p_configuration)
+t_System_Reflection_AssemblyConfigurationAttribute* m_System_Reflection_AssemblyConfigurationAttribute__ctor_0(t_System_Reflection_AssemblyConfigurationAttribute* self, t_System_String* p_configuration)
 {
-	t_System_Reflection_AssemblyConfigurationAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyConfigurationAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyConfigurationAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__configuration_2 = p_configuration;
 	return self;
 }
@@ -2121,11 +2068,9 @@ t_System_String* m_System_Reflection_AssemblyConfigurationAttribute_get_Configur
 	return self->f__configuration_2;
 }
 
-t_System_Reflection_AssemblyCopyrightAttribute* m_System_Reflection_AssemblyCopyrightAttribute__ctor_0(t_System_String* p_copyright)
+t_System_Reflection_AssemblyCopyrightAttribute* m_System_Reflection_AssemblyCopyrightAttribute__ctor_0(t_System_Reflection_AssemblyCopyrightAttribute* self, t_System_String* p_copyright)
 {
-	t_System_Reflection_AssemblyCopyrightAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyCopyrightAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyCopyrightAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__copyright_2 = p_copyright;
 	return self;
 }
@@ -2135,11 +2080,9 @@ t_System_String* m_System_Reflection_AssemblyCopyrightAttribute_get_Copyright_0(
 	return self->f__copyright_2;
 }
 
-t_System_Reflection_AssemblyCultureAttribute* m_System_Reflection_AssemblyCultureAttribute__ctor_0(t_System_String* p_culture)
+t_System_Reflection_AssemblyCultureAttribute* m_System_Reflection_AssemblyCultureAttribute__ctor_0(t_System_Reflection_AssemblyCultureAttribute* self, t_System_String* p_culture)
 {
-	t_System_Reflection_AssemblyCultureAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyCultureAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyCultureAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__culture_2 = p_culture;
 	return self;
 }
@@ -2149,11 +2092,9 @@ t_System_String* m_System_Reflection_AssemblyCultureAttribute_get_Culture_0(t_Sy
 	return self->f__culture_2;
 }
 
-t_System_Reflection_AssemblyDelaySignAttribute* m_System_Reflection_AssemblyDelaySignAttribute__ctor_0(char p_delaySign)
+t_System_Reflection_AssemblyDelaySignAttribute* m_System_Reflection_AssemblyDelaySignAttribute__ctor_0(t_System_Reflection_AssemblyDelaySignAttribute* self, char p_delaySign)
 {
-	t_System_Reflection_AssemblyDelaySignAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Reflection_AssemblyDelaySignAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyDelaySignAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__delaySign_2 = p_delaySign;
 	return self;
 }
@@ -2163,11 +2104,9 @@ char m_System_Reflection_AssemblyDelaySignAttribute_get_DelaySign_0(t_System_Ref
 	return self->f__delaySign_2;
 }
 
-t_System_Reflection_AssemblyDescriptionAttribute* m_System_Reflection_AssemblyDescriptionAttribute__ctor_0(t_System_String* p_description)
+t_System_Reflection_AssemblyDescriptionAttribute* m_System_Reflection_AssemblyDescriptionAttribute__ctor_0(t_System_Reflection_AssemblyDescriptionAttribute* self, t_System_String* p_description)
 {
-	t_System_Reflection_AssemblyDescriptionAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyDescriptionAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyDescriptionAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__description_2 = p_description;
 	return self;
 }
@@ -2177,11 +2116,9 @@ t_System_String* m_System_Reflection_AssemblyDescriptionAttribute_get_Descriptio
 	return self->f__description_2;
 }
 
-t_System_Reflection_AssemblyFileVersionAttribute* m_System_Reflection_AssemblyFileVersionAttribute__ctor_0(t_System_String* p_version)
+t_System_Reflection_AssemblyFileVersionAttribute* m_System_Reflection_AssemblyFileVersionAttribute__ctor_0(t_System_Reflection_AssemblyFileVersionAttribute* self, t_System_String* p_version)
 {
-	t_System_Reflection_AssemblyFileVersionAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyFileVersionAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyFileVersionAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__version_2 = p_version;
 	return self;
 }
@@ -2191,11 +2128,9 @@ t_System_String* m_System_Reflection_AssemblyFileVersionAttribute_get_Version_0(
 	return self->f__version_2;
 }
 
-t_System_Reflection_AssemblyInformationalVersionAttribute* m_System_Reflection_AssemblyInformationalVersionAttribute__ctor_0(t_System_String* p_informationalVersion)
+t_System_Reflection_AssemblyInformationalVersionAttribute* m_System_Reflection_AssemblyInformationalVersionAttribute__ctor_0(t_System_Reflection_AssemblyInformationalVersionAttribute* self, t_System_String* p_informationalVersion)
 {
-	t_System_Reflection_AssemblyInformationalVersionAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyInformationalVersionAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyInformationalVersionAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__informationalVersion_2 = p_informationalVersion;
 	return self;
 }
@@ -2205,11 +2140,9 @@ t_System_String* m_System_Reflection_AssemblyInformationalVersionAttribute_get_I
 	return self->f__informationalVersion_2;
 }
 
-t_System_Reflection_AssemblyKeyFileAttribute* m_System_Reflection_AssemblyKeyFileAttribute__ctor_0(t_System_String* p_keyFile)
+t_System_Reflection_AssemblyKeyFileAttribute* m_System_Reflection_AssemblyKeyFileAttribute__ctor_0(t_System_Reflection_AssemblyKeyFileAttribute* self, t_System_String* p_keyFile)
 {
-	t_System_Reflection_AssemblyKeyFileAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyKeyFileAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyKeyFileAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__keyFile_2 = p_keyFile;
 	return self;
 }
@@ -2219,11 +2152,9 @@ t_System_String* m_System_Reflection_AssemblyKeyFileAttribute_get_KeyFile_0(t_Sy
 	return self->f__keyFile_2;
 }
 
-t_System_Reflection_AssemblyProductAttribute* m_System_Reflection_AssemblyProductAttribute__ctor_0(t_System_String* p_product)
+t_System_Reflection_AssemblyProductAttribute* m_System_Reflection_AssemblyProductAttribute__ctor_0(t_System_Reflection_AssemblyProductAttribute* self, t_System_String* p_product)
 {
-	t_System_Reflection_AssemblyProductAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyProductAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyProductAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__product_2 = p_product;
 	return self;
 }
@@ -2233,11 +2164,9 @@ t_System_String* m_System_Reflection_AssemblyProductAttribute_get_Product_0(t_Sy
 	return self->f__product_2;
 }
 
-t_System_Reflection_AssemblyTitleAttribute* m_System_Reflection_AssemblyTitleAttribute__ctor_0(t_System_String* p_title)
+t_System_Reflection_AssemblyTitleAttribute* m_System_Reflection_AssemblyTitleAttribute__ctor_0(t_System_Reflection_AssemblyTitleAttribute* self, t_System_String* p_title)
 {
-	t_System_Reflection_AssemblyTitleAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyTitleAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyTitleAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__title_2 = p_title;
 	return self;
 }
@@ -2247,11 +2176,9 @@ t_System_String* m_System_Reflection_AssemblyTitleAttribute_get_Title_0(t_System
 	return self->f__title_2;
 }
 
-t_System_Reflection_AssemblyTrademarkAttribute* m_System_Reflection_AssemblyTrademarkAttribute__ctor_0(t_System_String* p_trademark)
+t_System_Reflection_AssemblyTrademarkAttribute* m_System_Reflection_AssemblyTrademarkAttribute__ctor_0(t_System_Reflection_AssemblyTrademarkAttribute* self, t_System_String* p_trademark)
 {
-	t_System_Reflection_AssemblyTrademarkAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyTrademarkAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyTrademarkAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__trademark_2 = p_trademark;
 	return self;
 }
@@ -2261,11 +2188,9 @@ t_System_String* m_System_Reflection_AssemblyTrademarkAttribute_get_Trademark_0(
 	return self->f__trademark_2;
 }
 
-t_System_Reflection_AssemblyVersionAttribute* m_System_Reflection_AssemblyVersionAttribute__ctor_0(t_System_String* p_version)
+t_System_Reflection_AssemblyVersionAttribute* m_System_Reflection_AssemblyVersionAttribute__ctor_0(t_System_Reflection_AssemblyVersionAttribute* self, t_System_String* p_version)
 {
-	t_System_Reflection_AssemblyVersionAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_AssemblyVersionAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_AssemblyVersionAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__version_2 = p_version;
 	return self;
 }
@@ -2275,11 +2200,9 @@ t_System_String* m_System_Reflection_AssemblyVersionAttribute_get_Version_0(t_Sy
 	return self->f__version_2;
 }
 
-t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAttribute__ctor_0(t_System_String* p_memberName)
+t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAttribute__ctor_0(t_System_Reflection_DefaultMemberAttribute* self, t_System_String* p_memberName)
 {
-	t_System_Reflection_DefaultMemberAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Reflection_DefaultMemberAttribute));
-	self->CS2X_RuntimeType = &t_System_Reflection_DefaultMemberAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__memberName_2 = p_memberName;
 	return self;
 }
@@ -2289,96 +2212,74 @@ t_System_String* m_System_Reflection_DefaultMemberAttribute_get_MemberName_0(t_S
 	return self->f__memberName_2;
 }
 
-t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_CompilerServices_CompilerGeneratedAttribute__ctor_0()
+t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_CompilerServices_CompilerGeneratedAttribute__ctor_0(t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* self)
 {
-	t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_CompilerGeneratedAttribute*));
-	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_CompilerGeneratedAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_CompilerServices_IndexerNameAttribute__ctor_0(t_System_String* p_indexerName)
+t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_CompilerServices_IndexerNameAttribute__ctor_0(t_System_Runtime_CompilerServices_IndexerNameAttribute* self, t_System_String* p_indexerName)
 {
-	t_System_Runtime_CompilerServices_IndexerNameAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_IndexerNameAttribute*));
-	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_IndexerNameAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerServices_IntrinsicAttribute__ctor_0()
+t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerServices_IntrinsicAttribute__ctor_0(t_System_Runtime_CompilerServices_IntrinsicAttribute* self)
 {
-	t_System_Runtime_CompilerServices_IntrinsicAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_IntrinsicAttribute*));
-	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_IntrinsicAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions)
+t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplAttribute* self, t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions)
 {
-	t_System_Runtime_CompilerServices_MethodImplAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_MethodImplAttribute));
-	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__Value_k__BackingField_2 = p_methodImplOptions;
 	return self;
 }
 
-t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_1(int16_t p_value)
+t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_1(t_System_Runtime_CompilerServices_MethodImplAttribute* self, int16_t p_value)
 {
-	t_System_Runtime_CompilerServices_MethodImplAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_MethodImplAttribute));
-	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__Value_k__BackingField_2 = (t_System_Runtime_CompilerServices_MethodImplOptions)p_value;
 	return self;
 }
 
-t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2()
+t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2(t_System_Runtime_CompilerServices_MethodImplAttribute* self)
 {
-	t_System_Runtime_CompilerServices_MethodImplAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_CompilerServices_MethodImplAttribute));
-	self->CS2X_RuntimeType = &t_System_Runtime_CompilerServices_MethodImplAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0()
+t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self)
 {
-	t_System_Runtime_InteropServices_OutAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_InteropServices_OutAttribute*));
-	self->CS2X_RuntimeType = &t_System_Runtime_InteropServices_OutAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	return self;
 }
 
-t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_LayoutKind p_layoutKind)
+t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind)
 {
-	t_System_Runtime_InteropServices_StructLayoutAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_InteropServices_StructLayoutAttribute));
-	self->CS2X_RuntimeType = &t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__Value_k__BackingField_2 = p_layoutKind;
 	return self;
 }
 
-t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(int16_t p_layoutKind)
+t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(t_System_Runtime_InteropServices_StructLayoutAttribute* self, int16_t p_layoutKind)
 {
-	t_System_Runtime_InteropServices_StructLayoutAttribute* self;
-	self = CS2X_GC_NewAtomic(sizeof(t_System_Runtime_InteropServices_StructLayoutAttribute));
-	self->CS2X_RuntimeType = &t_System_Runtime_InteropServices_StructLayoutAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__Value_k__BackingField_2 = (t_System_Runtime_InteropServices_LayoutKind)p_layoutKind;
 	return self;
 }
 
-t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_String* p_frameworkName)
+t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName)
 {
-	t_System_Runtime_Versioning_TargetFrameworkAttribute* self;
-	self = CS2X_GC_New(sizeof(t_System_Runtime_Versioning_TargetFrameworkAttribute));
-	self->CS2X_RuntimeType = &t_System_Runtime_Versioning_TargetFrameworkAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f__FrameworkName_k__BackingField_2 = p_frameworkName;
 	return self;
 }
 
-t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName)
+t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternAttribute* self, t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName)
 {
-	t_CS2X_NativeExternAttribute* self;
-	self = CS2X_GC_New(sizeof(t_CS2X_NativeExternAttribute));
-	self->CS2X_RuntimeType = &t_CS2X_NativeExternAttribute_RTTYPE_OBJ;
+	m_System_Attribute__ctor_0(self);
 	self->f_target_2 = p_target;
 	self->f_methodName_2 = p_methodName;
 	return self;

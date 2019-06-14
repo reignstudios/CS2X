@@ -336,6 +336,50 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Method definitions */");
 			writer.WriteLine("/* =============================== */");
+			if (project.isCoreLib)
+			{
+				string runtimeTypeName = GetTypeFullName(runtimeType);
+
+				// alloc GC type and set runtime ptr helper
+				writer.WriteLine();
+				writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(sizeof(size));");
+				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+				writer.WriteLinePrefix("return ptr;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
+
+				// alloc atomic GC type and set runtime ptr helper
+				writer.WriteLine();
+				writer.WriteLine($"void* CS2X_AllocTypeAtomic(size_t size, {runtimeTypeName}* runtimeType)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(sizeof(size));");
+				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+				writer.WriteLinePrefix("return ptr;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
+
+				// 'is' type helper method
+				var runtimeTypeBaseTypeField = FindAutoPropertyFieldByName(typeType, "BaseType");
+				writer.WriteLine($"char CS2X_IsType({runtimeTypeName}* runtimeType, {runtimeTypeName}* isRuntimeType)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix($"{runtimeTypeName}* runtimeTypeBase = runtimeType;");
+				writer.WriteLinePrefix("while (runtimeTypeBase != 0)");
+				writer.WriteLinePrefix('{');
+				writer.AddTab();
+				writer.WriteLinePrefix("if (runtimeTypeBase == isRuntimeType) return 1;");
+				writer.WriteLinePrefix($"runtimeTypeBase = runtimeTypeBase->{GetFieldFullName(runtimeTypeBaseTypeField)};");
+				writer.RemoveTab();
+				writer.WriteLinePrefix('}');
+				writer.WriteLinePrefix("return 0;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
+			}
+			writer.WriteLine();
 			foreach (var type in project.allTypes)
 			{
 				if (type.TypeKind == TypeKind.Interface) continue;
@@ -706,6 +750,11 @@ namespace CS2X.Core.Transpilers
 				writer.Write($"{GetTypeFullName(method.ContainingType)}* self");
 				if (method.Parameters.Length != 0) writer.Write(", ");
 			}
+			else if (!method.IsStatic && method.MethodKind == MethodKind.Constructor && method.ContainingType.IsReferenceType)
+			{
+				writer.Write($"{GetTypeFullName(method.ContainingType)}* self");
+				if (method.Parameters.Length != 0) writer.Write(", ");
+			}
 			WriteParameters(method.Parameters);
 
 			// write method block
@@ -723,22 +772,17 @@ namespace CS2X.Core.Transpilers
 				if (method.MethodKind == MethodKind.Constructor)
 				{
 					var type = method.ContainingType;
-					if (type.IsReferenceType)
+					if (type.IsValueType)
 					{
-						writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} self;");
-						string ptr = string.Empty;
-						if (IsEmptyType(type)) ptr = "*";
-						writer.WriteLinePrefix($"self = {GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}{ptr}));");
-						writer.WriteLinePrefix($"self->CS2X_RuntimeType = &{GetRuntimeTypeObjFullName(type)};");
-					}
-					else if (method.IsImplicitlyDeclared)
-					{
-						writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj = {{0}};");
-					}
-					else
-					{
-						writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj;");
-						writer.WriteLinePrefix($"{GetTypeFullName(type)}* self = &selfObj;");
+						if (method.IsImplicitlyDeclared)
+						{
+							writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj = {{0}};");
+						}
+						else
+						{
+							writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj;");
+							writer.WriteLinePrefix($"{GetTypeFullName(type)}* self = &selfObj;");
+						}
 					}
 				}
 
@@ -777,6 +821,26 @@ namespace CS2X.Core.Transpilers
 							else if (syntaxDeclaration is ConstructorDeclarationSyntax)
 							{
 								var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
+								if (!method.IsStatic && method.ContainingType.IsReferenceType)
+								{
+									IMethodSymbol baseConstructor = null;
+									if (syntax.Initializer != null) baseConstructor = (IMethodSymbol)semanticModel.GetSymbolInfo(syntax.Initializer).Symbol;
+									else if (method.ContainingType.BaseType != null) baseConstructor = FindEmptyConstructor(method.ContainingType.BaseType);
+									if (baseConstructor != null)
+									{
+										writer.WritePrefix(GetMethodFullName(baseConstructor));
+										writer.Write("(self");
+										if (baseConstructor.Parameters.Length != 0) writer.Write(", ");
+										var last = baseConstructor.Parameters.LastOrDefault();
+										foreach (var parameter in baseConstructor.Parameters)
+										{
+											writer.Write(GetParameterFullName(parameter));
+											if (parameter != last) writer.Write(", ");
+										}
+										writer.WriteLine(");");
+									}
+								}
+								WriteContrustorFieldInitializers(method);
 								if (syntax.Body != null) WriteBody(syntax.Body);
 								else throw new NotSupportedException("Cunstructor body cannot be emtpy: " + syntax.ToString());
 							}
@@ -922,30 +986,13 @@ namespace CS2X.Core.Transpilers
 				}
 				else if (method.MethodKind == MethodKind.Constructor || method.MethodKind == MethodKind.StaticConstructor)
 				{
-					var members = method.ContainingType.GetMembers();
-					foreach (var member in members)
+					if (!method.IsStatic && method.ContainingType.IsReferenceType && method.ContainingType.BaseType != null)
 					{
-						if (member.IsImplicitlyDeclared) continue;
-						if (!member.IsStatic && method.MethodKind != MethodKind.Constructor) continue;
-						if (member.IsStatic && method.MethodKind != MethodKind.StaticConstructor) continue;
-
-						if (member.Kind == SymbolKind.Field)
-						{
-							var field = (IFieldSymbol)member;
-							if (field.IsConst) continue;
-
-							var syntaxRef = field.DeclaringSyntaxReferences.FirstOrDefault();
-							var syntax = (VariableDeclaratorSyntax)syntaxRef.GetSyntax();
-							if (syntax.Initializer != null)
-							{
-								if (!field.IsStatic) writer.WritePrefix($"self->{GetFieldFullName(field)}");
-								else writer.WritePrefix(GetFieldFullName(field));
-								writer.Write(" = ");
-								WriteExpression(syntax.Initializer.Value);
-								writer.WriteLine(';');
-							}
-						}
+						var baseConstructor = FindEmptyConstructor(method.ContainingType.BaseType);
+						writer.WritePrefix(GetMethodFullName(baseConstructor));
+						writer.WriteLine("(self);");
 					}
+					WriteContrustorFieldInitializers(method);
 				}
 				else
 				{
@@ -962,6 +1009,34 @@ namespace CS2X.Core.Transpilers
 			}
 
 			return true;
+		}
+
+		private void WriteContrustorFieldInitializers(IMethodSymbol method)
+		{
+			var members = method.ContainingType.GetMembers();
+			foreach (var member in members)
+			{
+				if (member.IsImplicitlyDeclared) continue;
+				if (!member.IsStatic && method.MethodKind != MethodKind.Constructor) continue;
+				if (member.IsStatic && method.MethodKind != MethodKind.StaticConstructor) continue;
+
+				if (member.Kind == SymbolKind.Field)
+				{
+					var field = (IFieldSymbol)member;
+					if (field.IsConst) continue;
+
+					var syntaxRef = field.DeclaringSyntaxReferences.FirstOrDefault();
+					var syntax = (VariableDeclaratorSyntax)syntaxRef.GetSyntax();
+					if (syntax.Initializer != null)
+					{
+						if (!field.IsStatic) writer.WritePrefix($"self->{GetFieldFullName(field)}");
+						else writer.WritePrefix(GetFieldFullName(field));
+						writer.Write(" = ");
+						WriteExpression(syntax.Initializer.Value);
+						writer.WriteLine(';');
+					}
+				}
+			}
 		}
 
 		private bool IsParameterPassByRef(IParameterSymbol parameter)
@@ -1264,11 +1339,11 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix($"memcpy({jmpBuffLast}, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));");
 			writer.WriteLinePrefix($"{isJmp} = setjmp({jmpBuff});");
 			writer.WriteLinePrefix($"if ({isJmp} == 0)");
-			void WriteLocal()
+			void WriteTryStart()
 			{
 				writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuff}, sizeof(jmp_buf));");
 			}
-			BlockStartCallback = WriteLocal;
+			BlockStartCallback = WriteTryStart;
 			WriteStatement(statement.Block);
 
 			// write catches
@@ -1276,10 +1351,29 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix('{');
 			writer.AddTab();
 			writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuffLast}, sizeof(jmp_buf));");
+			var first = statement.Catches.FirstOrDefault();
 			foreach (var c in statement.Catches)
 			{
 				if (c.Filter != null) throw new NotSupportedException("Catch blocks do not support filters: " + c.ToFullString());
-				// TODO: check exception type and write blocks
+				if (c.Declaration != null)
+				{
+					var type = semanticModel.GetTypeInfo(c.Declaration.Type).Type;
+					writer.WritePrefix();
+					if (c != first) writer.Write("else ");
+					writer.WriteLine($"if (CS2X_IsType((({GetTypeFullName(objectType)}*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &{GetRuntimeTypeObjFullName(type)}))");
+				}
+				void WriteCatchStart()
+				{
+					if (c.Declaration != null)
+					{
+						var type = semanticModel.GetTypeInfo(c.Declaration.Type).Type;
+						var local = TryAddLocal(c.Declaration.Identifier.ValueText, type);
+						writer.WriteLinePrefix($"{local.name} = CS2X_ThreadExceptionObject;");
+					}
+					writer.WriteLinePrefix("CS2X_ThreadExceptionObject = 0;");
+				}
+				BlockStartCallback = WriteCatchStart;
+				WriteStatement(c.Block);
 			}
 			writer.WriteLinePrefix("/* throw unhandled exception */");
 			writer.WriteLinePrefix("if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1);");
@@ -1563,6 +1657,11 @@ namespace CS2X.Core.Transpilers
 			var method = (IMethodSymbol)symbolInfo.Symbol;
 			writer.Write(GetMethodFullName(method));
 			writer.Write('(');
+			if (method.ContainingType.IsReferenceType)
+			{
+				writer.Write($"{GetNewObjectMethod(method.ContainingType)}(sizeof({GetTypeFullName(method.ContainingType)}), &{GetRuntimeTypeObjFullName(method.ContainingType)})");
+				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
+			}
 			WriteArgumentList(expression.ArgumentList);
 			if (expression.ArgumentList.Arguments.Count != method.Parameters.Length)// optional parameters
 			{
@@ -2027,8 +2126,8 @@ namespace CS2X.Core.Transpilers
 		#region C name resolution
 		private string GetNewObjectMethod(ITypeSymbol type)
 		{
-			if (IsAtomicType(type)) return "CS2X_GC_NewAtomic";
-			else return "CS2X_GC_New";
+			if (IsAtomicType(type)) return "CS2X_AllocTypeAtomic";
+			else return "CS2X_AllocType";
 		}
 
 		private string GetNewArrayMethod(ITypeSymbol type)

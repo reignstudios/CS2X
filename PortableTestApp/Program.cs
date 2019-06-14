@@ -44,7 +44,7 @@ namespace PortableTestApp
 
 	class Program
 	{
-		public int abc;
+		public int abc = 99;
 		public static int abcStatic;
 
 		public int MyAutoProp { get; private set; }
@@ -163,6 +163,10 @@ namespace PortableTestApp
 			{
 				FooThrow();
 			}
+			catch (NotSupportedException e)
+			{
+				Console.WriteLine("NotSupportedException: " + e.Message);
+			}
 			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);
@@ -171,7 +175,7 @@ namespace PortableTestApp
 
 		static void FooThrow()
 		{
-			throw new Exception("My Exception!");
+			throw new NotSupportedException("My Exception!");
 		}
 
         static MyBaseClass i2;
