@@ -346,7 +346,7 @@ namespace CS2X.Core.Transpilers
 			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName) as IMethodSymbol;
 		}
 
-		protected IMethodSymbol FindEmptyConstructor(ITypeSymbol type)
+		protected IMethodSymbol FindDefaultConstructor(ITypeSymbol type)
 		{
 			foreach (var member in type.GetMembers())
 			{

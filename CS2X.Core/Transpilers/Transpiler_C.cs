@@ -825,7 +825,7 @@ namespace CS2X.Core.Transpilers
 								{
 									IMethodSymbol baseConstructor = null;
 									if (syntax.Initializer != null) baseConstructor = (IMethodSymbol)semanticModel.GetSymbolInfo(syntax.Initializer).Symbol;
-									else if (method.ContainingType.BaseType != null) baseConstructor = FindEmptyConstructor(method.ContainingType.BaseType);
+									else if (method.ContainingType.BaseType != null) baseConstructor = FindDefaultConstructor(method.ContainingType.BaseType);
 									if (baseConstructor != null)
 									{
 										writer.WritePrefix(GetMethodFullName(baseConstructor));
@@ -988,7 +988,7 @@ namespace CS2X.Core.Transpilers
 				{
 					if (!method.IsStatic && method.ContainingType.IsReferenceType && method.ContainingType.BaseType != null)
 					{
-						var baseConstructor = FindEmptyConstructor(method.ContainingType.BaseType);
+						var baseConstructor = FindDefaultConstructor(method.ContainingType.BaseType);
 						writer.WritePrefix(GetMethodFullName(baseConstructor));
 						writer.WriteLine("(self);");
 					}
