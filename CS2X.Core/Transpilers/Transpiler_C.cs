@@ -136,8 +136,6 @@ namespace CS2X.Core.Transpilers
 		{
 			public readonly Project project;
 			public readonly List<TranspiledProject> references = new List<TranspiledProject>();
-			public readonly Dictionary<string, string> stringLiterals = new Dictionary<string, string>();
-			// TODO: add generics
 
 			public TranspiledProject(Project project)
 			{
@@ -151,11 +149,17 @@ namespace CS2X.Core.Transpilers
 		private Project project;// active project
 		private IMethodSymbol method;// active method
 		private SemanticModel semanticModel;// active semantic model for a method
-		private StreamWriterEx writer, stringLiteralWriter;
+		private StreamWriterEx writer, stringLiteralWriter, arrayRuntimeTypeWriter;
 		private BlockSyntax block;// active body block
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
+		private List<ITypeSymbol> arrayRuntimeTypes;// implicit array runtime types
 		private int tryCatchNestingLevel;// used for special local name mangling
+
+		private const string stringLiteralsHeader = "_StringLiterals.h";
+		private const string arrayRuntimeTypesHeader = "_ArrayRuntimeTypes.h";
+
+		private string stringTypeName, stringRuntimeTypeName;
 
 		/// <summary>
 		/// For debugging only. Skips compiling references
@@ -182,13 +186,27 @@ namespace CS2X.Core.Transpilers
 
 		public override void Transpile(string outputPath)
 		{
+			stringTypeName = GetTypeFullName(stringType);
+			stringRuntimeTypeName = GetRuntimeTypeObjFullName(stringType);
+
 			stringLiterals = new Dictionary<string, string>();
-			using (var stream = new FileStream(Path.Combine(outputPath, "_StringLiterals.h"), FileMode.Create, FileAccess.Write, FileShare.Read))
-			using (stringLiteralWriter = new StreamWriterEx(stream))
+			arrayRuntimeTypes = new List<ITypeSymbol>();
+			using (var stringLiteralStream = new FileStream(Path.Combine(outputPath, stringLiteralsHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
+			using (var arrayRuntimeTypeStream = new FileStream(Path.Combine(outputPath, arrayRuntimeTypesHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
+			using (stringLiteralWriter = new StreamWriterEx(stringLiteralStream))
+			using (arrayRuntimeTypeWriter = new StreamWriterEx(arrayRuntimeTypeStream))
 			{
+				// write string literal header
 				WriteHeaderInfo(stringLiteralWriter);
 				stringLiteralWriter.WriteLine("#pragma once");
 				stringLiteralWriter.WriteLine();
+
+				// write array runtime type header
+				WriteHeaderInfo(arrayRuntimeTypeWriter);
+				arrayRuntimeTypeWriter.WriteLine("#pragma once");
+				arrayRuntimeTypeWriter.WriteLine();
+
+				// write projects
 				foreach (var project in solution.projects)
 				{
 					var transpileReference = transpiledProjects.FirstOrDefault(x => x.project == project);
@@ -245,9 +263,6 @@ namespace CS2X.Core.Transpilers
 		{
 			this.project = project;
 
-			string stringTypeName = GetTypeFullName(stringType);
-			string stringRuntimeTypeName = GetRuntimeTypeObjFullName(stringType);
-
 			// writer info
 			WriteHeaderInfo(writer);
 			if (project.type == ProjectTypes.Dll) writer.WriteLine("#pragma once");
@@ -283,7 +298,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"#include \"{Path.Combine(options.gcFolderPath, "CS2X.InstructionHelpers.h")}\"");
 
 				// include string literals
-				writer.WriteLine("#include \"_StringLiterals.h\"");
+				writer.WriteLine($"#include \"{stringLiteralsHeader}\"");
 			}
 
 			// include references
@@ -315,7 +330,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes)
 			{
-				if (WriteRuntimeType(type)) writer.WriteLine();
+				if (WriteRuntimeType(type, writer)) writer.WriteLine();
 			}
 
 			// forward declare methods
@@ -389,6 +404,13 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
+			// include array runtime types
+			if (project.isCoreLib)
+			{
+				writer.WriteLine($"#include \"{arrayRuntimeTypesHeader}\"");
+				writer.WriteLine();
+			}
+
 			// init library
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Init Library */");
@@ -408,53 +430,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine();
 			}
 
-			writer.WriteLinePrefix("/* Init runtime type objects */");
-			string baseTypeFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "BaseType"));
-			string nameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "Name"));
-			string fullNameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "FullName"));
-			foreach (var type in project.allTypes)
-			{
-				if (type.SpecialType == SpecialType.System_Void) continue;
-				if (type.TypeKind == TypeKind.Interface) continue;
-				string obj = GetRuntimeTypeObjFullName(type);
-				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
-				writer.WriteLinePrefix($"{obj}.runtimeType.CS2X_RuntimeType = &{obj};");
-				if (type.BaseType != null) writer.WriteLinePrefix($"{obj}.runtimeType.{baseTypeFieldName} = &{GetRuntimeTypeObjFullName(type.BaseType)};");
-				else writer.WriteLinePrefix($"{obj}.runtimeType.{baseTypeFieldName} = 0;");
-				writer.WriteLinePrefix($"{obj}.runtimeType.{nameFieldName} = ({stringTypeName}*){GetRuntimeTypeMetadataFullName(type)}_Name;");
-				writer.WriteLinePrefix($"{obj}.runtimeType.{fullNameFieldName} = ({stringTypeName}*){GetRuntimeTypeMetadataFullName(type)}_FullName;");
-			}
-
-			if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.GlobalProgramMemory_RAM)
-			{
-				writer.WriteLine();
-				writer.WriteLinePrefix("/* Init runtime type metadata / string literals */");
-				foreach (var type in project.allTypes)
-				{
-					if (type.SpecialType == SpecialType.System_Void) continue;
-					if (type.TypeKind == TypeKind.Interface) continue;
-					string metadata = GetRuntimeTypeMetadataFullName(type);
-					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
-					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_FullName)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
-				}
-			}
-
-			writer.WriteLine();
-			writer.WriteLinePrefix("/* Init runtime type vtabel */");
-			foreach (var type in project.allTypes)
-			{
-				if (type.SpecialType == SpecialType.System_Void) continue;
-				if (type.TypeKind == TypeKind.Interface) continue;
-				string obj = GetRuntimeTypeObjFullName(type);
-				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
-				foreach (var method in orderedVirtualMethods)
-				{
-					var highestMethod = FindHighestVirtualMethodSlot(type, method);
-					if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
-					else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = 0;");
-				}
-			}
-
+			WriteInitRuntimeTypes(project.allTypes, writer);
 			writer.RemoveTab();
 			writer.WriteLine('}');
 
@@ -505,6 +481,15 @@ namespace CS2X.Core.Transpilers
 				writer.RemoveTab();
 				writer.WriteLine('}');
 
+				// init array runtime types
+				arrayRuntimeTypeWriter.WriteLine();
+				arrayRuntimeTypeWriter.WriteLine("void CS2X_InitArrayRuntimeTypes()");
+				arrayRuntimeTypeWriter.WriteLine('{');
+				arrayRuntimeTypeWriter.AddTab();
+				WriteInitRuntimeTypes(arrayRuntimeTypes, arrayRuntimeTypeWriter);
+				arrayRuntimeTypeWriter.RemoveTab();
+				arrayRuntimeTypeWriter.WriteLine('}');
+
 				// entry point
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
@@ -532,6 +517,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("CS2X_GC_Init();");
 				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
+				writer.WriteLinePrefix("CS2X_InitArrayRuntimeTypes();");
 				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
 				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
 				writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");// TODO: add support for args
@@ -539,6 +525,56 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("return 0;");
 				writer.RemoveTab();
 				writer.WriteLine('}');
+			}
+		}
+
+		private void WriteInitRuntimeTypes(IEnumerable<ITypeSymbol> types, StreamWriterEx writer)
+		{
+			writer.WriteLinePrefix("/* Init runtime type objects */");
+			string baseTypeFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "BaseType"));
+			string nameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "Name"));
+			string fullNameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "FullName"));
+			foreach (var type in types)
+			{
+				if (type.SpecialType == SpecialType.System_Void) continue;
+				if (type.TypeKind == TypeKind.Interface) continue;
+				string obj = GetRuntimeTypeObjFullName(type);
+				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
+				writer.WriteLinePrefix($"{obj}.runtimeType.CS2X_RuntimeType = &{obj};");
+				if (type.BaseType != null) writer.WriteLinePrefix($"{obj}.runtimeType.{baseTypeFieldName} = &{GetRuntimeTypeObjFullName(type.BaseType)};");
+				else writer.WriteLinePrefix($"{obj}.runtimeType.{baseTypeFieldName} = 0;");
+				writer.WriteLinePrefix($"{obj}.runtimeType.{nameFieldName} = ({stringTypeName}*){GetRuntimeTypeMetadataFullName(type)}_Name;");
+				writer.WriteLinePrefix($"{obj}.runtimeType.{fullNameFieldName} = ({stringTypeName}*){GetRuntimeTypeMetadataFullName(type)}_FullName;");
+			}
+
+			if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.GlobalProgramMemory_RAM)
+			{
+				writer.WriteLine();
+				writer.WriteLinePrefix("/* Init runtime type metadata / string literals */");
+				foreach (var type in types)
+				{
+					if (type.SpecialType == SpecialType.System_Void) continue;
+					if (type.TypeKind == TypeKind.Interface) continue;
+					string metadata = GetRuntimeTypeMetadataFullName(type);
+					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
+					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_FullName)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
+				}
+			}
+
+			writer.WriteLine();
+			writer.WriteLinePrefix("/* Init runtime type vtabel */");
+			foreach (var type in types)
+			{
+				if (type.SpecialType == SpecialType.System_Void) continue;
+				if (type.TypeKind == TypeKind.Interface) continue;
+				string obj = GetRuntimeTypeObjFullName(type);
+				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
+				foreach (var method in orderedVirtualMethods)
+				{
+					var highestMethod = FindHighestVirtualMethodSlot(type, method);
+					if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
+					else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = 0;");
+				}
 			}
 		}
 
@@ -581,7 +617,7 @@ namespace CS2X.Core.Transpilers
 		#endregion
 
 		#region Type Writers
-		private bool WriteRuntimeType(INamedTypeSymbol type)
+		private bool WriteRuntimeType(ITypeSymbol type, StreamWriterEx writer)
 		{
 			if (type.SpecialType == SpecialType.System_Void) return false;
 			if (type.TypeKind == TypeKind.Interface) return false;
@@ -596,7 +632,8 @@ namespace CS2X.Core.Transpilers
 			{
 				if (method.IsStatic) throw new NotSupportedException("Virtual static method not supported: " + method.Name);
 				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetVTableMethodFullName(method)})(");
-				writer.Write($"{GetTypeFullName(type)}* self");
+				if (type.IsReferenceType) writer.Write($"{GetTypeFullNameRef(type)} self");
+				else writer.Write($"{GetTypeFullName(type)}* self");
 				if (method.Parameters.Length != 0) writer.Write(", ");
 				WriteParameters(method.Parameters);
 				writer.WriteLine(");");
@@ -605,8 +642,9 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine($"}} {runtimeTypeName};");
 			writer.WriteLine($"{runtimeTypeName} {GetRuntimeTypeObjFullName(type)};");
 
-			writer.Write($"int8_t {GetRuntimeTypeMetadataFullName(type)}_Name[{GetStringMemorySize(type.Name)}] = ");
-			writer.Write(StringToLiteral(type.Name));
+			string name = type.Name();
+			writer.Write($"int8_t {GetRuntimeTypeMetadataFullName(type)}_Name[{GetStringMemorySize(name)}] = ");
+			writer.Write(StringToLiteral(name));
 			writer.WriteLine(';');
 
 			string fullName = type.FullName();
@@ -1360,7 +1398,11 @@ namespace CS2X.Core.Transpilers
 					var type = semanticModel.GetTypeInfo(c.Declaration.Type).Type;
 					writer.WritePrefix();
 					if (c != first) writer.Write("else ");
-					writer.WriteLine($"if (CS2X_IsType((({GetTypeFullName(objectType)}*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &{GetRuntimeTypeObjFullName(type)}))");
+					writer.WriteLine($"if (CS2X_IsType((({GetTypeFullName(objectType)}*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &{GetRuntimeTypeObjFullName(type)})) /* catch */");
+				}
+				else
+				{
+					writer.WriteLinePrefix("/* empty catch */");
 				}
 				void WriteCatchStart()
 				{
@@ -1375,10 +1417,9 @@ namespace CS2X.Core.Transpilers
 				BlockStartCallback = WriteCatchStart;
 				WriteStatement(c.Block);
 			}
-			writer.WriteLinePrefix("/* throw unhandled exception */");
-			writer.WriteLinePrefix("if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1);");
+			writer.WriteLinePrefix("if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */");
 			writer.RemoveTab();
-			writer.WriteLinePrefix('}');
+			writer.WriteLinePrefix("} /* end catch */");
 
 			++tryCatchNestingLevel;
 		}
@@ -1388,7 +1429,7 @@ namespace CS2X.Core.Transpilers
 			writer.WritePrefix("CS2X_ThreadExceptionObject = ");
 			WriteExpression(statement.Expression);
 			writer.WriteLine(';');
-			writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* THROW */");
+			writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)
@@ -1734,6 +1775,7 @@ namespace CS2X.Core.Transpilers
 		private void ArrayCreationExpression(ArrayCreationExpressionSyntax expression)
 		{
 			var arrayType = expression.Type;
+			var typeArray = semanticModel.GetTypeInfo(arrayType).Type;
 			var type = semanticModel.GetTypeInfo(arrayType.ElementType).Type;
 			foreach (var rank in arrayType.RankSpecifiers)
 			{
@@ -1742,6 +1784,13 @@ namespace CS2X.Core.Transpilers
 			writer.Write($"{GetNewArrayMethod(type)}(sizeof({GetTypeFullName(type)}), ");
 			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
 			writer.Write(')');
+
+			// write array runtime type
+			if (!arrayRuntimeTypes.Contains(typeArray))
+			{
+				arrayRuntimeTypes.Add(typeArray);// track this array type
+				WriteRuntimeType(typeArray, arrayRuntimeTypeWriter);
+			}
 
 			// write initializer
 			if (expression.Initializer != null)
@@ -1770,7 +1819,6 @@ namespace CS2X.Core.Transpilers
 					else writer.Write(local.name);
 				}
 				
-				var typeArray = semanticModel.GetTypeInfo(arrayType).Type;
 				var last = expression.Initializer.Expressions.LastOrDefault();
 				int i = 0;
 				foreach (ExpressionSyntax e in expression.Initializer.Expressions)
@@ -2194,7 +2242,9 @@ namespace CS2X.Core.Transpilers
 		private string GetRuntimeTypeFullName(ITypeSymbol type)
 		{
 			CheckType(type);
-			return GetTypeFullName(type) + "_RTTYPE";
+			string fullname = type.FullName();
+			ParseImplementationDetail(ref fullname);
+			return "rt_" + fullname;
 		}
 
 		private string GetRuntimeTypeObjFullName(ITypeSymbol type)
@@ -2204,7 +2254,7 @@ namespace CS2X.Core.Transpilers
 
 		private string GetRuntimeTypeMetadataFullName(ITypeSymbol type)
 		{
-			return GetRuntimeTypeFullName(type) + "_RTTYPE_METADATA";
+			return GetRuntimeTypeFullName(type) + "_METADATA";
 		}
 
 		private Enabler allowTypePrefix = new Enabler(true);

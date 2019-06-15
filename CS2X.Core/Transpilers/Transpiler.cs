@@ -86,6 +86,8 @@ namespace CS2X.Core.Transpilers
 		{
 			if (name.Contains('<')) name = name.Replace('<', '_');
 			if (name.Contains('>')) name = name.Replace('>', '_');
+			if (name.Contains('[')) name = name.Replace('[', '_');
+			if (name.Contains(']')) name = name.Replace(']', '_');
 			if (name.Contains('.')) name = name.Replace('.', '_');
 		}
 
@@ -252,10 +254,10 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		protected List<IMethodSymbol> GetOrderedVirtualMethods(INamedTypeSymbol type)
+		protected List<IMethodSymbol> GetOrderedVirtualMethods(ITypeSymbol type)
 		{
 			var virtualMethodList = new List<IMethodSymbol>();
-			void AddVirtualMethods(INamedTypeSymbol namedType)
+			void AddVirtualMethods(ITypeSymbol namedType)
 			{
 				foreach (IMethodSymbol method in namedType.GetMembers().Where(x => x.Kind == SymbolKind.Method).Reverse())
 				{
@@ -274,7 +276,7 @@ namespace CS2X.Core.Transpilers
 			return virtualMethodList;
 		}
 
-		protected IMethodSymbol FindHighestVirtualMethodSlot(INamedTypeSymbol type, IMethodSymbol rootSlotMethod)
+		protected IMethodSymbol FindHighestVirtualMethodSlot(ITypeSymbol type, IMethodSymbol rootSlotMethod)
 		{
 			var baseType = type;
 			do

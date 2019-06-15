@@ -87,28 +87,17 @@ namespace CS2X.Core
 
 	static class ISymbolExt
 	{
+		private static SymbolDisplayFormat nameFormat = new SymbolDisplayFormat(typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameOnly);
+		private static SymbolDisplayFormat fullNameFormat = new SymbolDisplayFormat(typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
+
+		public static string Name(this ISymbol symbol)
+		{
+			return symbol.ToDisplayString(nameFormat);
+		}
+
 		public static string FullName(this ISymbol symbol)
 		{
-			var fullName = new StringBuilder(symbol.Name);
-			while (symbol != null)
-			{
-				if (symbol.ContainingType != null)
-				{
-					symbol = symbol.ContainingType;
-					fullName.Insert(0, symbol.Name + '.');
-				}
-				else if (symbol.ContainingNamespace != null)
-				{
-					if (symbol.ContainingNamespace.IsGlobalNamespace) break;
-					symbol = symbol.ContainingNamespace;
-					fullName.Insert(0, symbol.Name + '.');
-				}
-				else
-				{
-					symbol = null;
-				}
-			}
-			return fullName.ToString();
+			return symbol.ToDisplayString(fullNameFormat);
 		}
 	}
 }
