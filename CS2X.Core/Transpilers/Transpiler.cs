@@ -217,10 +217,11 @@ namespace CS2X.Core.Transpilers
 			int index = 0;
 			foreach (var typeMethod in method.ContainingType.GetMembers())
 			{
-				if (typeMethod is IMethodSymbol)
+				var otherMethod = typeMethod as IMethodSymbol;
+				if (otherMethod != null)
 				{
-					if (typeMethod == method) break;
-					else if (typeMethod.Name == method.Name) ++index;
+					if (otherMethod == method || (method.IsExtensionMethod && method.ReducedFrom == otherMethod)) break;
+					else if (otherMethod.Name == method.Name) ++index;
 				}
 			}
 			return index;

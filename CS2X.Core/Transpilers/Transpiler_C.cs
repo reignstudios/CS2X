@@ -1949,7 +1949,7 @@ namespace CS2X.Core.Transpilers
 				else callerType = semanticModel.GetTypeInfo(caller).Type;
 				isCallerValueType = callerType.IsValueType;
 
-				if (callerType.TypeKind == TypeKind.Enum) throw new NotImplementedException("Enum meta data not yet supported: " + expression.ToFullString());
+				if (callerType.TypeKind == TypeKind.Enum && !method.IsExtensionMethod) throw new NotImplementedException("Non extension Enum method not supported: " + expression.ToFullString());
 				if (callerType.IsValueType)
 				{
 					if (method.ContainingType == objectType) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
@@ -1988,7 +1988,7 @@ namespace CS2X.Core.Transpilers
 			writer.Write('(');
 			if (!method.IsStatic)
 			{
-				if (isCallerValueType) writer.Write('&');
+				if (isCallerValueType && !method.IsExtensionMethod) writer.Write('&');
 				WriteCaller(expression.Expression);
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}

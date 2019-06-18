@@ -72,6 +72,7 @@ typedef struct t_System_Reflection_AssemblyTrademarkAttribute t_System_Reflectio
 typedef struct t_System_Reflection_AssemblyVersionAttribute t_System_Reflection_AssemblyVersionAttribute;
 typedef struct t_System_Reflection_DefaultMemberAttribute t_System_Reflection_DefaultMemberAttribute;
 typedef struct t_System_Runtime_CompilerServices_CompilerGeneratedAttribute t_System_Runtime_CompilerServices_CompilerGeneratedAttribute;
+typedef struct t_System_Runtime_CompilerServices_ExtensionAttribute t_System_Runtime_CompilerServices_ExtensionAttribute;
 typedef struct t_System_Runtime_CompilerServices_IndexerNameAttribute t_System_Runtime_CompilerServices_IndexerNameAttribute;
 typedef struct t_System_Runtime_CompilerServices_IntrinsicAttribute t_System_Runtime_CompilerServices_IntrinsicAttribute;
 typedef struct t_System_Runtime_CompilerServices_MethodImplAttribute t_System_Runtime_CompilerServices_MethodImplAttribute;
@@ -442,6 +443,11 @@ struct t_System_Reflection_DefaultMemberAttribute
 };
 
 struct t_System_Runtime_CompilerServices_CompilerGeneratedAttribute
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t_System_Runtime_CompilerServices_ExtensionAttribute
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
 };
@@ -1082,6 +1088,15 @@ rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute rt_System_Runtime_
 int8_t rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_METADATA_Name[66] = {0,0,0,0,0,0,0,0,26,0,0,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,71,0,101,0,110,0,101,0,114,0,97,0,116,0,101,0,100,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
 int8_t rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_METADATA_FullName[130] = {0,0,0,0,0,0,0,0,58,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,71,0,101,0,110,0,101,0,114,0,97,0,116,0,101,0,100,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
 
+typedef struct rt_System_Runtime_CompilerServices_ExtensionAttribute
+{
+	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_ToString_0)(t_System_Runtime_CompilerServices_ExtensionAttribute* self);
+} rt_System_Runtime_CompilerServices_ExtensionAttribute;
+rt_System_Runtime_CompilerServices_ExtensionAttribute rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ;
+int8_t rt_System_Runtime_CompilerServices_ExtensionAttribute_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
+int8_t rt_System_Runtime_CompilerServices_ExtensionAttribute_METADATA_FullName[114] = {0,0,0,0,0,0,0,0,50,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0};
+
 typedef struct rt_System_Runtime_CompilerServices_IndexerNameAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -1481,6 +1496,7 @@ t_System_String* m_System_Reflection_AssemblyVersionAttribute_get_Version_0(t_Sy
 t_System_Reflection_DefaultMemberAttribute* m_System_Reflection_DefaultMemberAttribute__ctor_0(t_System_Reflection_DefaultMemberAttribute* self, t_System_String* p_memberName);
 t_System_String* m_System_Reflection_DefaultMemberAttribute_get_MemberName_0(t_System_Reflection_DefaultMemberAttribute* self);
 t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_CompilerServices_CompilerGeneratedAttribute__ctor_0(t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* self);
+t_System_Runtime_CompilerServices_ExtensionAttribute* m_System_Runtime_CompilerServices_ExtensionAttribute__ctor_0(t_System_Runtime_CompilerServices_ExtensionAttribute* self);
 t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_CompilerServices_IndexerNameAttribute__ctor_0(t_System_Runtime_CompilerServices_IndexerNameAttribute* self, t_System_String* p_indexerName);
 t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerServices_IntrinsicAttribute__ctor_0(t_System_Runtime_CompilerServices_IntrinsicAttribute* self);
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplAttribute* self, t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions);
@@ -2235,6 +2251,12 @@ t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_C
 	return self;
 }
 
+t_System_Runtime_CompilerServices_ExtensionAttribute* m_System_Runtime_CompilerServices_ExtensionAttribute__ctor_0(t_System_Runtime_CompilerServices_ExtensionAttribute* self)
+{
+	m_System_Attribute__ctor_0(self);
+	return self;
+}
+
 t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_CompilerServices_IndexerNameAttribute__ctor_0(t_System_Runtime_CompilerServices_IndexerNameAttribute* self, t_System_String* p_indexerName)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2784,6 +2806,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_METADATA_Name;
 	rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_METADATA_FullName;
+	memset(&rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ, 0, sizeof(rt_System_Runtime_CompilerServices_ExtensionAttribute));
+	rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ;
+	rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
+	rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_ExtensionAttribute_METADATA_Name;
+	rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_ExtensionAttribute_METADATA_FullName;
 	memset(&rt_System_Runtime_CompilerServices_IndexerNameAttribute_OBJ, 0, sizeof(rt_System_Runtime_CompilerServices_IndexerNameAttribute));
 	rt_System_Runtime_CompilerServices_IndexerNameAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_CompilerServices_IndexerNameAttribute_OBJ;
 	rt_System_Runtime_CompilerServices_IndexerNameAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -3067,6 +3094,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Reflection_DefaultMemberAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_CompilerServices_ExtensionAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_CompilerServices_ExtensionAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_IndexerNameAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_IndexerNameAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_IntrinsicAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3196,6 +3225,7 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Reflection_AssemblyVersionAttribute_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	rt_System_Reflection_DefaultMemberAttribute_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	rt_System_Runtime_CompilerServices_CompilerGeneratedAttribute_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
+	rt_System_Runtime_CompilerServices_ExtensionAttribute_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	rt_System_Runtime_CompilerServices_IndexerNameAttribute_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	rt_System_Runtime_CompilerServices_IntrinsicAttribute_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	rt_System_Runtime_CompilerServices_MethodImplAttribute_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;

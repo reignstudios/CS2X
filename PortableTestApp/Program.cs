@@ -42,8 +42,24 @@ namespace PortableTestApp
 		A, B, C
 	}
 
+	static class MyExtensions
+	{
+		public static string Name(this MyEnum e)
+		{
+			if (e == MyEnum.A) return "A";
+			return "TODO";
+		}
+
+		public static string Name2(this Program e)
+		{
+			return "TODO";
+		}
+	}
+
 	class Program
 	{
+		public string Name2(){ return null;}
+
 		public int abc = 99;
 		public static int abcStatic;
 
@@ -78,6 +94,8 @@ namespace PortableTestApp
 
 		void Foo(Program p)
 		{
+			p.Name2();
+			MyExtensions.Name2(p);
 			MyAutoProp = 123;
 			int i2 = 55;
 			{
@@ -91,6 +109,8 @@ namespace PortableTestApp
 		static Program()
 		{
 			MyAutoPropStatic = 555;
+			var en = MyEnum.A;
+			string e = en.Name();
 		}
 
 		unsafe static void Main()//string[] args)
