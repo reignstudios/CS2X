@@ -74,23 +74,6 @@ namespace CS2X.Core.Transpilers
 			ReadonlyProgramMemory_AVR
 		}
 
-		public enum ArrayLengthMemoryLocation
-		{
-			/// <summary>
-			/// Stores the array length at a zero offset from your array's ptr
-			/// Array's are accessed like so: MyArray[sizeof(size_t) + MyIndex]
-			/// This is the default option
-			/// </summary>
-			AtPointer,
-
-			/// <summary>
-			/// Stores the array length behind your array's ptr with a negitive 'size_t' offset (aka its header)
-			/// Array's are accessed like so: MyArray[MyIndex] but MyArray.Length does pointer arithmetic instead
-			/// This method can be faster but only works with the GC disabled currently
-			/// </summary>
-			BeforePointer
-		}
-
 		public struct Options
 		{
 			/// <summary>
@@ -108,11 +91,6 @@ namespace CS2X.Core.Transpilers
 			/// Native pointer size in bits (native int)
 			/// </summary>
 			public Ptr_Size ptrSize;
-
-			/// <summary>
-			/// Array.Length memory location
-			/// </summary>
-			public ArrayLengthMemoryLocation arrayLengthMemoryLocation;
 
 			/// <summary>
 			/// CPU bit order
@@ -176,12 +154,6 @@ namespace CS2X.Core.Transpilers
 		: base(solution)
 		{
 			this.options = options;
-
-			// test compatibility matrix
-			if (options.gc == GC_Type.Boehm)
-			{
-				if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.BeforePointer) throw new NotSupportedException("Array length memory location must be 'AtPointer' for Boehm GC");
-			}
 		}
 
 		public override void Transpile(string outputPath)
@@ -360,7 +332,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(sizeof(size));");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(size);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
 				writer.WriteLinePrefix("return ptr;");
 				writer.RemoveTab();
@@ -371,14 +343,39 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"void* CS2X_AllocTypeAtomic(size_t size, {runtimeTypeName}* runtimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(sizeof(size));");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(size);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+				writer.WriteLinePrefix("return ptr;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
+
+				// alloc array GC type and set runtime ptr helper and length
+				writer.WriteLine();
+				writer.WriteLine($"void* CS2X_AllocArrayType(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length));");
+				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+				writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
+				writer.WriteLinePrefix("return ptr;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
+
+				// alloc atomic array GC type and set runtime ptr helper and length
+				writer.WriteLine();
+				writer.WriteLine($"void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length));");
+				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+				writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
 				writer.WriteLinePrefix("return ptr;");
 				writer.RemoveTab();
 				writer.WriteLine('}');
 
 				// 'is' type helper method
 				var runtimeTypeBaseTypeField = FindAutoPropertyFieldByName(typeType, "BaseType");
+				writer.WriteLine();
 				writer.WriteLine($"char CS2X_IsType({runtimeTypeName}* runtimeType, {runtimeTypeName}* isRuntimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
@@ -984,28 +981,9 @@ namespace CS2X.Core.Transpilers
 							}
 							else if (type.Name == "Array")
 							{
-								if (method.Name == "get_Length")
-								{
-									switch (options.arrayLengthMemoryLocation)
-									{
-										case ArrayLengthMemoryLocation.AtPointer: writer.WriteLinePrefix($"return (int32_t)(*(size_t*)self);"); break;
-										case ArrayLengthMemoryLocation.BeforePointer: writer.WriteLinePrefix($"return (int32_t)(*(size_t*)(--self));"); break;
-										default: throw new NotImplementedException("Unsupported array length memory location: " + options.arrayLengthMemoryLocation);
-									}
-								}
-								else if (method.Name == "get_LongLength")
-								{
-									switch (options.arrayLengthMemoryLocation)
-									{
-										case ArrayLengthMemoryLocation.AtPointer: writer.WriteLinePrefix($"return (int64_t)(*(size_t*)self);"); break;
-										case ArrayLengthMemoryLocation.BeforePointer: writer.WriteLinePrefix($"return (int64_t)(*(size_t*)(--self));"); break;
-										default: throw new NotImplementedException("Unsupported array length memory location: " + options.arrayLengthMemoryLocation);
-									}
-								}
-								else
-								{
-									throw new NotSupportedException("Unsupported internal Array method: " + method.Name);
-								}
+								if (method.Name == "get_Length") writer.WriteLinePrefix($"return (int32_t)(*((size_t*)self + 1));");
+								else if (method.Name == "get_LongLength") writer.WriteLinePrefix($"return (int64_t)(*((size_t*)self + 1));");
+								else throw new NotSupportedException("Unsupported internal Array method: " + method.Name);
 							}
 							else
 							{
@@ -1783,7 +1761,7 @@ namespace CS2X.Core.Transpilers
 			}
 			writer.Write($"{GetNewArrayMethod(type)}(sizeof({GetTypeFullName(type)}), ");
 			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
-			writer.Write(')');
+			writer.Write($", &{GetRuntimeTypeObjFullName(typeArray)})");
 
 			// write array runtime type
 			if (!arrayRuntimeTypes.Contains(typeArray))
@@ -2123,11 +2101,11 @@ namespace CS2X.Core.Transpilers
 		private delegate void WriteArrayElementAccessOffsetCallback();
 		private void WriteArrayElementAccessOffset(WriteArrayElementAccessOffsetCallback writeExpressionCallback, ITypeSymbol type)
 		{
-			if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer && type.Kind == SymbolKind.ArrayType)
+			if (type.Kind == SymbolKind.ArrayType)
 			{
-				writer.Write($"(({GetTypeFullNameRef(type)})(((size_t*)");
+				writer.Write($"(({GetTypeFullNameRef(type)})(((char*)");
 				writeExpressionCallback();
-				writer.Write(") + 1))");
+				writer.Write(") + (sizeof(size_t)*2)))");
 			}
 			else
 			{
@@ -2180,20 +2158,8 @@ namespace CS2X.Core.Transpilers
 
 		private string GetNewArrayMethod(ITypeSymbol type)
 		{
-			if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.AtPointer)
-			{
-				if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomic";
-				else return "CS2X_GC_NewArray";
-			}
-			else if (options.arrayLengthMemoryLocation == ArrayLengthMemoryLocation.BeforePointer)
-			{
-				if (IsAtomicType(type)) return "CS2X_GC_NewArrayAtomicHeader";
-				else return "CS2X_GC_NewArrayHeader";
-			}
-			else
-			{
-				throw new NotImplementedException("Unsupported new array length location: " + options.arrayLengthMemoryLocation);
-			}
+			if (IsAtomicType(type)) return "CS2X_AllocArrayTypeAtomic";
+			else return "CS2X_AllocArrayType";
 		}
 
 		private string GetFormatedConstValue(object value)

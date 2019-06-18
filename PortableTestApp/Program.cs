@@ -118,6 +118,7 @@ namespace PortableTestApp
 
 			//foreach (var i in "asdfas")// requires method System.String::get_Chars(int32)
 			var a = new int[5] {1, 2, 3, 4, 5};
+			if (a.GetType() == typeof(int[])) Console.WriteLine(a.GetType().FullName);
 			//a[0] = new int[3];
 			//int b = a.Length;
 			//int c = a[0].Length;

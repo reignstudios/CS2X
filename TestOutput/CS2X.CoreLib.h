@@ -1528,17 +1528,34 @@ t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0();
 
 void* CS2X_AllocType(size_t size, t_System_RuntimeType* runtimeType)
 {
-	t_System_RuntimeType* ptr = CS2X_GC_New(sizeof(size));
+	t_System_RuntimeType* ptr = CS2X_GC_New(size);
 	ptr->CS2X_RuntimeType = runtimeType;
 	return ptr;
 }
 
 void* CS2X_AllocTypeAtomic(size_t size, t_System_RuntimeType* runtimeType)
 {
-	t_System_RuntimeType* ptr = CS2X_GC_NewAtomic(sizeof(size));
+	t_System_RuntimeType* ptr = CS2X_GC_NewAtomic(size);
 	ptr->CS2X_RuntimeType = runtimeType;
 	return ptr;
 }
+
+void* CS2X_AllocArrayType(size_t elementSize, size_t length, t_System_RuntimeType* runtimeType)
+{
+	t_System_RuntimeType* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length));
+	ptr->CS2X_RuntimeType = runtimeType;
+	*((size_t*)ptr + 1) = length;
+	return ptr;
+}
+
+void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, t_System_RuntimeType* runtimeType)
+{
+	t_System_RuntimeType* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length));
+	ptr->CS2X_RuntimeType = runtimeType;
+	*((size_t*)ptr + 1) = length;
+	return ptr;
+}
+
 char CS2X_IsType(t_System_RuntimeType* runtimeType, t_System_RuntimeType* isRuntimeType)
 {
 	t_System_RuntimeType* runtimeTypeBase = runtimeType;
@@ -1552,12 +1569,12 @@ char CS2X_IsType(t_System_RuntimeType* runtimeType, t_System_RuntimeType* isRunt
 
 int32_t m_System_Array_get_Length_0(t_System_Array* self)
 {
-	return (int32_t)(*(size_t*)self);
+	return (int32_t)(*((size_t*)self + 1));
 }
 
 int64_t m_System_Array_get_LongLength_0(t_System_Array* self)
 {
-	return (int64_t)(*(size_t*)self);
+	return (int64_t)(*((size_t*)self + 1));
 }
 
 int32_t m_System_Array_get_Count_0(t_System_Array* self)
