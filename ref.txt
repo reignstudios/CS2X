@@ -28,3 +28,7 @@ To uninstall all packaged for clean updates
 * GetDeclaredSymbol: Gets ISymbol for Declaration Syntax
 * GetSymbolInfo: Gets ISymbol for Reference Syntax
 * GetTypeInfo: Gets ITypeSymbol for Reference Syntax
+
+<<< HOW TO: Find symbol references >>>
+using Microsoft.CodeAnalysis.FindSymbols;
+SymbolFinder.FindReferencesAsync(...)
