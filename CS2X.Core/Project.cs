@@ -177,7 +177,7 @@ namespace CS2X.Core
 				var typeSymbol = semanticModel.GetSymbolInfo(node).Symbol as ITypeSymbol;
 				if (typeSymbol != null)
 				{
-					if (typeSymbol.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)typeSymbol).IsGenericType)
+					if (typeSymbol.Kind == SymbolKind.NamedType && !typeSymbol.IsDefinition && ((INamedTypeSymbol)typeSymbol).IsGenericType)
 					{
 						((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)typeSymbol);
 					}

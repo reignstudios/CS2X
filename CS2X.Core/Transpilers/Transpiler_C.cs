@@ -624,6 +624,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (type.SpecialType == SpecialType.System_Void) return false;
 			if (type.TypeKind == TypeKind.Interface) return false;
+			if (type.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)type).IsGenericType && type.IsDefinition) return false;
 
 			string runtimeTypeName = GetRuntimeTypeFullName(type);
 			writer.WriteLine($"typedef struct {runtimeTypeName}");
@@ -662,6 +663,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return false;
 			if (type.TypeKind == TypeKind.Interface) return false;
+			if (type.IsGenericType && type.IsDefinition) return false;
 
 			if (!writeBody)
 			{
