@@ -173,7 +173,6 @@ namespace CS2X.Core
 			var semanticModel = compilation.GetSemanticModel(root.SyntaxTree);
 			foreach (var node in root.DescendantNodesAndSelf())
 			{
-				// add type
 				var typeSymbol = semanticModel.GetSymbolInfo(node).Symbol as ITypeSymbol;
 				if (typeSymbol != null)
 				{
