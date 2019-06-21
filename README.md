@@ -2,7 +2,6 @@
 
 # CS2X (Currently Experimental)
 Transpiles a C# subset to non .NET languages, platforms, runtimes and enviroments. (Powered by Roslyn)<br>
-If you're looking for IL2X: https://github.com/reignstudios/IL2X
 
 ## WASM Demo
 http://reign-studios.com/wasm/cs2x/ray-trace-benchmark/cs2x.html
@@ -20,7 +19,7 @@ This project will focus on transpiling a C# subset with a modified type system f
 	* SDCC: Many targets (ColecoVision, etc)
 * LLVM
 * LLVM IR => Assembly: CP1610 (Intellivision)
-* LLVM IR => Assembly: Intel 8048 (Magnavox Odyssey 2 - if possible)
+* LLVM IR => Assembly: Intel 8048 (Magnavox Odyssey 2)
 * LLVM IR => Retarget: Custom assembly targets (FPGA CPU, 16bit bytes, etc)
 * Java
 * Kotlin
@@ -36,7 +35,7 @@ This project will focus on transpiling a C# subset with a modified type system f
 * CG (Cg programming language) [PSVita, Nvidia / other]
 * PSSL (PlayStation Shader Language) [PS4]
 * MSL (Metal Shading Language) [macOS / iOS]
-* AGAL (Adobe Pixel Bender and Adobe Graphics Assembly Language)
+* AGAL (Adobe Graphics Assembly Language)
 * Custom: Plugin system
 
 ## Primary Project libraries
@@ -57,13 +56,12 @@ This project will focus on transpiling a C# subset with a modified type system f
 Almost zero performance loss. C# code will generate in a manner as if hand written in the target language for the most part. To accomplish this we think of the C# syntax as a C like language extension with minimal overhead if you will. This means a couple key things.
 * Structs are not part of the object system as they are in the .NET runtime.
 	* No auto boxing for value types are supported (.NET has many easy to fall in syntax performance pitfalls here).
-	* System.Object can never be set to a 'struct' or 'enum' type.
-	* Virtuals like 'MyStruct.GetType()' give compile time errors.
-	* Virtuals like 'MyEnum.ToString()' are compile time generated metadata methods.
-* Interfaces are considered (type-classes / ad hoc polymorphism) compile time only type parameters.
+	* System.Object can never equal a 'struct', 'enum' or 'primitive' type.
+	* Virtuals like 'MyStruct.GetType()' or 'MyEnum.GetType()' give compile time errors (use typeof instead).
+* Interfaces are considered 'type-classes' and are compile time only.
 	* No virtual calls needed.
 	* No casting overhead or boxing.
-	* Cannot be used at runtime (no casting to them or variable declarations of them).
+	* No casting to them or variable declarations of them.
 
 ## Building
 * Prerequisites
