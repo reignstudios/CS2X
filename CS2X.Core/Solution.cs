@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
 
 namespace CS2X.Core
 {
@@ -17,6 +18,11 @@ namespace CS2X.Core
 
 		public IReadOnlyList<Project> projects { get; private set; }
 		public Project coreLibProject { get; private set; }
+
+		// special types
+		public IReadOnlyCollection<INamedTypeSymbol> genericTypes { get; private set; }
+		public IReadOnlyCollection<IArrayTypeSymbol> arrayTypes { get; private set; }
+		public IReadOnlyCollection<IPointerTypeSymbol> pointerTypes { get; private set; }
 
 		static Solution()
 		{
@@ -59,9 +65,15 @@ namespace CS2X.Core
 				this.projects = projects;
 
 				// parse projects
+				genericTypes = new HashSet<INamedTypeSymbol>();
+				arrayTypes = new HashSet<IArrayTypeSymbol>();
+				pointerTypes = new HashSet<IPointerTypeSymbol>();
 				foreach (var project in projects)
 				{
 					await project.Parse();
+					foreach (var type in project.genericTypes) ((HashSet<INamedTypeSymbol>)genericTypes).Add(type);
+					foreach (var type in project.arrayTypes) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add(type);
+					foreach (var type in project.pointerTypes) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add(type);
 				}
 			}
 		}

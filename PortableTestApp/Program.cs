@@ -179,7 +179,9 @@ namespace PortableTestApp
             {
 
             }*/
-
+			float[] sldkfj;
+			float[] sldkfj2;
+			//MyG<short[]>[] sfkasd;
 			try
 			{
 				FooThrow();
@@ -200,7 +202,7 @@ namespace PortableTestApp
 		}
 
         static MyBaseClass i2;
-		static int[] Ya()
+		static double[] Ya()
 		{
 			return null;
 		}
@@ -210,6 +212,11 @@ namespace PortableTestApp
 			return o.ToString();
 		}
 	}
+
+	//class MyG<T>
+	//{
+	//	T g;
+	//}
 
     /*class MyE : IEnumerable<int>
     {

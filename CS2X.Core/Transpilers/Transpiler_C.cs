@@ -131,7 +131,6 @@ namespace CS2X.Core.Transpilers
 		private BlockSyntax block;// active body block
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
-		private List<ITypeSymbol> arrayRuntimeTypes;// implicit array runtime types
 		private int tryCatchNestingLevel;// used for special local name mangling
 
 		private const string stringLiteralsHeader = "_StringLiterals.h";
@@ -162,7 +161,6 @@ namespace CS2X.Core.Transpilers
 			stringRuntimeTypeName = GetRuntimeTypeObjFullName(stringType);
 
 			stringLiterals = new Dictionary<string, string>();
-			arrayRuntimeTypes = new List<ITypeSymbol>();
 			using (var stringLiteralStream = new FileStream(Path.Combine(outputPath, stringLiteralsHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (var arrayRuntimeTypeStream = new FileStream(Path.Combine(outputPath, arrayRuntimeTypesHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (stringLiteralWriter = new StreamWriterEx(stringLiteralStream))
@@ -479,11 +477,18 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine('}');
 
 				// init array runtime types
+				foreach (var type in solution.arrayTypes)
+				{
+					if (WriteRuntimeType(type, arrayRuntimeTypeWriter)) arrayRuntimeTypeWriter.WriteLine();
+				}
 				arrayRuntimeTypeWriter.WriteLine();
+				arrayRuntimeTypeWriter.WriteLine("/* =============================== */");
+				arrayRuntimeTypeWriter.WriteLine("/* Init Array Types */");
+				arrayRuntimeTypeWriter.WriteLine("/* =============================== */");
 				arrayRuntimeTypeWriter.WriteLine("void CS2X_InitArrayRuntimeTypes()");
 				arrayRuntimeTypeWriter.WriteLine('{');
 				arrayRuntimeTypeWriter.AddTab();
-				WriteInitRuntimeTypes(arrayRuntimeTypes, arrayRuntimeTypeWriter);
+				WriteInitRuntimeTypes(solution.arrayTypes, arrayRuntimeTypeWriter);
 				arrayRuntimeTypeWriter.RemoveTab();
 				arrayRuntimeTypeWriter.WriteLine('}');
 
@@ -535,6 +540,7 @@ namespace CS2X.Core.Transpilers
 			{
 				if (type.SpecialType == SpecialType.System_Void) continue;
 				if (type.TypeKind == TypeKind.Interface) continue;
+
 				string obj = GetRuntimeTypeObjFullName(type);
 				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
 				writer.WriteLinePrefix($"{obj}.runtimeType.CS2X_RuntimeType = &{obj};");
@@ -1753,22 +1759,15 @@ namespace CS2X.Core.Transpilers
 		private void ArrayCreationExpression(ArrayCreationExpressionSyntax expression)
 		{
 			var arrayType = expression.Type;
-			var typeArray = semanticModel.GetTypeInfo(arrayType).Type;
-			var type = semanticModel.GetTypeInfo(arrayType.ElementType).Type;
+			var type = semanticModel.GetTypeInfo(arrayType).Type;
+			var elementType = semanticModel.GetTypeInfo(arrayType.ElementType).Type;
 			foreach (var rank in arrayType.RankSpecifiers)
 			{
 				if (rank.Sizes.Count != 1) throw new NotSupportedException("Array creation only supports single rank size");
 			}
-			writer.Write($"{GetNewArrayMethod(type)}(sizeof({GetTypeFullName(type)}), ");
+			writer.Write($"{GetNewArrayMethod(elementType)}(sizeof({GetTypeFullName(elementType)}), ");
 			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
-			writer.Write($", &{GetRuntimeTypeObjFullName(typeArray)})");
-
-			// write array runtime type
-			if (!arrayRuntimeTypes.Contains(typeArray))
-			{
-				arrayRuntimeTypes.Add(typeArray);// track this array type
-				WriteRuntimeType(typeArray, arrayRuntimeTypeWriter);
-			}
+			writer.Write($", &{GetRuntimeTypeObjFullName(type)})");
 
 			// write initializer
 			if (expression.Initializer != null)
@@ -1802,7 +1801,7 @@ namespace CS2X.Core.Transpilers
 				foreach (ExpressionSyntax e in expression.Initializer.Expressions)
 				{
 					writer.WritePrefix();
-					WriteArrayElementAccessOffset(writeExpression, typeArray);
+					WriteArrayElementAccessOffset(writeExpression, type);
 					writer.Write($"[{i}] = ");
 					WriteExpression(e);
 					if (e != last) writer.WriteLine(';');
@@ -2088,8 +2087,8 @@ namespace CS2X.Core.Transpilers
 
 		private void CastExpression(CastExpressionSyntax expression)
 		{
-			var type = semanticModel.GetTypeInfo(expression.Type);
-			writer.Write($"({GetTypeFullNameRef(type.Type)})");
+			var type = semanticModel.GetTypeInfo(expression.Type).Type;
+			writer.Write($"({GetTypeFullNameRef(type)})");
 			WriteExpression(expression.Expression);
 		}
 

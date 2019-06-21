@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CS2X.Core
 {
@@ -26,12 +27,19 @@ namespace CS2X.Core
 		public IReadOnlyList<Project> references { get; private set;}
 		
 		public CSharpCompilation compilation { get; private set; }
+
+		// normal types
 		public IReadOnlyList<INamedTypeSymbol> allTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> allTypesDependencyOrdered { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> classTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> structTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> interfaceTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> enumTypes { get; private set; }
+
+		// special types
+		public IReadOnlyCollection<INamedTypeSymbol> genericTypes { get; private set; }
+		public IReadOnlyCollection<IArrayTypeSymbol> arrayTypes { get; private set; }
+		public IReadOnlyCollection<IPointerTypeSymbol> pointerTypes { get; private set; }
 
 		public Project(Solution solution, RoslynProject roslynProject)
 		{
@@ -76,9 +84,19 @@ namespace CS2X.Core
 			interfaceTypes = new List<INamedTypeSymbol>();
 			enumTypes = new List<INamedTypeSymbol>();
 
-			// parse lowered objects
+			genericTypes = new HashSet<INamedTypeSymbol>();
+			arrayTypes = new HashSet<IArrayTypeSymbol>();
+			pointerTypes = new HashSet<IPointerTypeSymbol>();
+
+			// parse normal members
 			compilation = (CSharpCompilation)await roslynProject.GetCompilationAsync();
 			ParseNamespace(compilation.Assembly.GlobalNamespace);
+
+			// get special types
+			foreach (var syntaxTree in compilation.SyntaxTrees)
+			{
+				ParseSpecialMembers(compilation, syntaxTree.GetRoot());
+			}
 			
 			// merge all types in one list
 			var allTypesList = new List<INamedTypeSymbol>();
@@ -123,7 +141,7 @@ namespace CS2X.Core
 			// parse members
 			foreach (var member in namespaceSymbol.GetTypeMembers())
 			{
-				ParseMembers(member);
+				ParseNormalMembers(member);
 			}
 
 			// parse sub namespaces
@@ -133,7 +151,7 @@ namespace CS2X.Core
 			}
 		}
 
-		private void ParseMembers(INamedTypeSymbol member)
+		private void ParseNormalMembers(INamedTypeSymbol member)
 		{
 			switch (member.TypeKind)
 			{
@@ -146,7 +164,32 @@ namespace CS2X.Core
 			// parse sub members
 			foreach (var subMember in member.GetTypeMembers())
 			{
-				ParseMembers(subMember);
+				ParseNormalMembers(subMember);
+			}
+		}
+
+		private void ParseSpecialMembers(CSharpCompilation compilation, SyntaxNode root)
+		{
+			var semanticModel = compilation.GetSemanticModel(root.SyntaxTree);
+			foreach (var node in root.DescendantNodesAndSelf())
+			{
+				// add type
+				var typeSymbol = semanticModel.GetSymbolInfo(node).Symbol as ITypeSymbol;
+				if (typeSymbol != null)
+				{
+					if (typeSymbol.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)typeSymbol).IsGenericType)
+					{
+						((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)typeSymbol);
+					}
+					else if (typeSymbol.Kind == SymbolKind.ArrayType)
+					{
+						((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)typeSymbol);
+					}
+					else if (typeSymbol.Kind == SymbolKind.PointerType)
+					{
+						((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)typeSymbol);
+					}
+				}
 			}
 		}
 	}
