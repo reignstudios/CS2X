@@ -2509,6 +2509,7 @@ t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0()
 }
 
 #include "_ArrayRuntimeTypes.h"
+#include "_PointerRuntimeTypes.h"
 
 /* =============================== */
 /* Init Library */

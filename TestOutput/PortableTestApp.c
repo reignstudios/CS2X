@@ -249,13 +249,13 @@ void m_PortableTestApp_Program_Main_0()
 	jmp_buf CS2X_JMP_LAST_0;
 	jmp_buf CS2X_JMP_0;
 	int CS2X_IS_JMP_0;
-	l_a_0 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 5, &rt_System_Int32___OBJ);
+	l_a_0 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 5, &rt_System_Int32___ARRAY_OBJ);
 	((int32_t*)(((char*)l_a_0) + (sizeof(size_t)*2)))[0] = 1;
 	((int32_t*)(((char*)l_a_0) + (sizeof(size_t)*2)))[1] = 2;
 	((int32_t*)(((char*)l_a_0) + (sizeof(size_t)*2)))[2] = 3;
 	((int32_t*)(((char*)l_a_0) + (sizeof(size_t)*2)))[3] = 4;
 	((int32_t*)(((char*)l_a_0) + (sizeof(size_t)*2)))[4] = 5;
-	if (m_System_Object_GetType_0(l_a_0) == (&rt_System_Int32___OBJ)) m_System_Console_WriteLine_0(m_System_Object_GetType_0(l_a_0)->f__FullName_k__BackingField_1);
+	if (m_System_Object_GetType_0(l_a_0) == (&rt_System_Int32___ARRAY_OBJ)) m_System_Console_WriteLine_0(m_System_Object_GetType_0(l_a_0)->f__FullName_k__BackingField_1);
 	for (l_aa_i_1 = 0; l_aa_i_1 != m_System_Array_get_Length_0((t_System_Array*)l_a_0); ++l_aa_i_1)
 	{
 		int32_t l_aa_2;
@@ -448,6 +448,7 @@ int main()
 	CS2X_InitLib_PortableTestApp();
 	CS2X_InitStringLiterals();
 	CS2X_InitArrayRuntimeTypes();
+	CS2X_InitPointerRuntimeTypes();
 	CS2X_InvokeStaticConstructors_PortableTestApp();
 	m_PortableTestApp_Program_Main_0();
 	CS2X_GC_Collect();

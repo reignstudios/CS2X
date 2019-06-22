@@ -89,6 +89,7 @@ namespace CS2X.Core.Transpilers
 			if (name.Contains('[')) name = name.Replace('[', '_');
 			if (name.Contains(']')) name = name.Replace(']', '_');
 			if (name.Contains('.')) name = name.Replace('.', '_');
+			if (name.Contains('*')) name = name.Replace('*', '_');
 		}
 
 		protected bool IsAutoProperty(IPropertySymbol property) { return IsAutoProperty(property, out _); }

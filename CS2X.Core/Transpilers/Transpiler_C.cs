@@ -127,7 +127,7 @@ namespace CS2X.Core.Transpilers
 		private Project project;// active project
 		private IMethodSymbol method;// active method
 		private SemanticModel semanticModel;// active semantic model for a method
-		private StreamWriterEx writer, stringLiteralWriter, arrayRuntimeTypeWriter;
+		private StreamWriterEx writer, stringLiteralWriter, arrayRuntimeTypeWriter, pointerRuntimeTypeWriter;
 		private BlockSyntax block;// active body block
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
@@ -135,6 +135,7 @@ namespace CS2X.Core.Transpilers
 
 		private const string stringLiteralsHeader = "_StringLiterals.h";
 		private const string arrayRuntimeTypesHeader = "_ArrayRuntimeTypes.h";
+		private const string pointerRuntimeTypesHeader = "_PointerRuntimeTypes.h";
 
 		private string stringTypeName, stringRuntimeTypeName;
 
@@ -163,8 +164,10 @@ namespace CS2X.Core.Transpilers
 			stringLiterals = new Dictionary<string, string>();
 			using (var stringLiteralStream = new FileStream(Path.Combine(outputPath, stringLiteralsHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (var arrayRuntimeTypeStream = new FileStream(Path.Combine(outputPath, arrayRuntimeTypesHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
+			using (var pointerRuntimeTypeStream = new FileStream(Path.Combine(outputPath, pointerRuntimeTypesHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (stringLiteralWriter = new StreamWriterEx(stringLiteralStream))
 			using (arrayRuntimeTypeWriter = new StreamWriterEx(arrayRuntimeTypeStream))
+			using (pointerRuntimeTypeWriter = new StreamWriterEx(pointerRuntimeTypeStream))
 			{
 				// write string literal header
 				WriteHeaderInfo(stringLiteralWriter);
@@ -175,6 +178,11 @@ namespace CS2X.Core.Transpilers
 				WriteHeaderInfo(arrayRuntimeTypeWriter);
 				arrayRuntimeTypeWriter.WriteLine("#pragma once");
 				arrayRuntimeTypeWriter.WriteLine();
+
+				// write array runtime type header
+				WriteHeaderInfo(pointerRuntimeTypeWriter);
+				pointerRuntimeTypeWriter.WriteLine("#pragma once");
+				pointerRuntimeTypeWriter.WriteLine();
 
 				// write projects
 				foreach (var project in solution.projects)
@@ -403,6 +411,7 @@ namespace CS2X.Core.Transpilers
 			if (project.isCoreLib)
 			{
 				writer.WriteLine($"#include \"{arrayRuntimeTypesHeader}\"");
+				writer.WriteLine($"#include \"{pointerRuntimeTypesHeader}\"");
 				writer.WriteLine();
 			}
 
@@ -492,6 +501,22 @@ namespace CS2X.Core.Transpilers
 				arrayRuntimeTypeWriter.RemoveTab();
 				arrayRuntimeTypeWriter.WriteLine('}');
 
+				// init pointer runtime types
+				foreach (var type in solution.pointerTypes)
+				{
+					if (WriteRuntimeType(type, pointerRuntimeTypeWriter)) pointerRuntimeTypeWriter.WriteLine();
+				}
+				pointerRuntimeTypeWriter.WriteLine();
+				pointerRuntimeTypeWriter.WriteLine("/* =============================== */");
+				pointerRuntimeTypeWriter.WriteLine("/* Init Pointer Types */");
+				pointerRuntimeTypeWriter.WriteLine("/* =============================== */");
+				pointerRuntimeTypeWriter.WriteLine("void CS2X_InitPointerRuntimeTypes()");
+				pointerRuntimeTypeWriter.WriteLine('{');
+				pointerRuntimeTypeWriter.AddTab();
+				WriteInitRuntimeTypes(solution.pointerTypes, pointerRuntimeTypeWriter);
+				pointerRuntimeTypeWriter.RemoveTab();
+				pointerRuntimeTypeWriter.WriteLine('}');
+
 				// entry point
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
@@ -520,6 +545,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
 				writer.WriteLinePrefix("CS2X_InitArrayRuntimeTypes();");
+				writer.WriteLinePrefix("CS2X_InitPointerRuntimeTypes();");
 				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
 				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
 				writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");// TODO: add support for args
@@ -2210,6 +2236,8 @@ namespace CS2X.Core.Transpilers
 		{
 			CheckType(type);
 			string fullname = type.FullName();
+			if (type.Kind == SymbolKind.ArrayType) fullname += "_ARRAY";
+			else if (type.Kind == SymbolKind.PointerType) fullname += "_PTR";
 			ParseImplementationDetail(ref fullname);
 			return "rt_" + fullname;
 		}
