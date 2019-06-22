@@ -209,7 +209,7 @@ namespace PortableTestApp
 
 		static string GetValue(object o)
 		{
-			return o.ToString();
+			return o.GetType().FullName;
 		}
 	}
 

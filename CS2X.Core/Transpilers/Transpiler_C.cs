@@ -474,16 +474,19 @@ namespace CS2X.Core.Transpilers
 			if (project.type == ProjectTypes.Exe)
 			{
 				// init string literals
-				writer.WriteLine();
-				writer.WriteLine("void CS2X_InitStringLiterals()");
-				writer.WriteLine('{');
-				writer.AddTab();
-				foreach (var literal in stringLiterals)
+				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.GlobalProgramMemory_RAM)
 				{
-					writer.WriteLinePrefix($"(({stringTypeName}*){literal.Value})->CS2X_RuntimeType = &{stringRuntimeTypeName};");
+					writer.WriteLine();
+					writer.WriteLine("void CS2X_InitStringLiterals()");
+					writer.WriteLine('{');
+					writer.AddTab();
+					foreach (var literal in stringLiterals)
+					{
+						writer.WriteLinePrefix($"(({stringTypeName}*){literal.Value})->CS2X_RuntimeType = &{stringRuntimeTypeName};");
+					}
+					writer.RemoveTab();
+					writer.WriteLine('}');
 				}
-				writer.RemoveTab();
-				writer.WriteLine('}');
 
 				// init array runtime types
 				foreach (var type in solution.arrayTypes)

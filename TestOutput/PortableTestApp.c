@@ -62,7 +62,6 @@ t_PortableTestApp_MyBaseClass* f_PortableTestApp_Program_i2;
 typedef struct rt_PortableTestApp_MyAbstractClass
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_PortableTestApp_MyAbstractClass* self);
 	void (*vTable_MyVirtMethod_0)(t_PortableTestApp_MyAbstractClass* self);
 } rt_PortableTestApp_MyAbstractClass;
 rt_PortableTestApp_MyAbstractClass rt_PortableTestApp_MyAbstractClass_OBJ;
@@ -72,7 +71,6 @@ int8_t rt_PortableTestApp_MyAbstractClass_METADATA_FullName[76] = {0,0,0,0,0,0,0
 typedef struct rt_PortableTestApp_MyBaseClass
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_PortableTestApp_MyBaseClass* self);
 	void (*vTable_MyVirtMethod_0)(t_PortableTestApp_MyBaseClass* self);
 } rt_PortableTestApp_MyBaseClass;
 rt_PortableTestApp_MyBaseClass rt_PortableTestApp_MyBaseClass_OBJ;
@@ -82,7 +80,6 @@ int8_t rt_PortableTestApp_MyBaseClass_METADATA_FullName[68] = {0,0,0,0,0,0,0,0,2
 typedef struct rt_PortableTestApp_MyExtensions
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_PortableTestApp_MyExtensions* self);
 } rt_PortableTestApp_MyExtensions;
 rt_PortableTestApp_MyExtensions rt_PortableTestApp_MyExtensions_OBJ;
 int8_t rt_PortableTestApp_MyExtensions_METADATA_Name[38] = {0,0,0,0,0,0,0,0,12,0,0,0,77,0,121,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,115,0,0,0};
@@ -91,7 +88,6 @@ int8_t rt_PortableTestApp_MyExtensions_METADATA_FullName[70] = {0,0,0,0,0,0,0,0,
 typedef struct rt_PortableTestApp_Program
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_PortableTestApp_Program* self);
 } rt_PortableTestApp_Program;
 rt_PortableTestApp_Program rt_PortableTestApp_Program_OBJ;
 int8_t rt_PortableTestApp_Program_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,80,0,114,0,111,0,103,0,114,0,97,0,109,0,0,0};
@@ -100,7 +96,6 @@ int8_t rt_PortableTestApp_Program_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,
 typedef struct rt_PortableTestApp_MyEnum
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_PortableTestApp_MyEnum* self);
 } rt_PortableTestApp_MyEnum;
 rt_PortableTestApp_MyEnum rt_PortableTestApp_MyEnum_OBJ;
 int8_t rt_PortableTestApp_MyEnum_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
@@ -109,7 +104,6 @@ int8_t rt_PortableTestApp_MyEnum_METADATA_FullName[58] = {0,0,0,0,0,0,0,0,22,0,0
 typedef struct rt_PortableTestApp_MyNamespace_MyEnum
 {
 	t_System_RuntimeType runtimeType;
-	t_System_String* (*vTable_ToString_0)(t_PortableTestApp_MyNamespace_MyEnum* self);
 } rt_PortableTestApp_MyNamespace_MyEnum;
 rt_PortableTestApp_MyNamespace_MyEnum rt_PortableTestApp_MyNamespace_MyEnum_OBJ;
 int8_t rt_PortableTestApp_MyNamespace_MyEnum_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0};
@@ -317,7 +311,7 @@ double* m_PortableTestApp_Program_Ya_0()
 
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o)
 {
-	return ((rt_System_Object*)p_o->CS2X_RuntimeType)->vTable_ToString_0(p_o);
+	return m_System_Object_GetType_0(p_o)->f__FullName_k__BackingField_1;
 }
 
 t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0(t_PortableTestApp_Program* self)
@@ -394,14 +388,8 @@ void CS2X_InitLib_PortableTestApp()
 	((t_System_String*)rt_PortableTestApp_MyNamespace_MyEnum_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 
 	/* Init runtime type vtabel */
-	rt_PortableTestApp_MyAbstractClass_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	rt_PortableTestApp_MyAbstractClass_OBJ.vTable_MyVirtMethod_0 = 0;
-	rt_PortableTestApp_MyBaseClass_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 	rt_PortableTestApp_MyBaseClass_OBJ.vTable_MyVirtMethod_0 = m_PortableTestApp_MyBaseClass_MyVirtMethod_0;
-	rt_PortableTestApp_MyExtensions_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	rt_PortableTestApp_Program_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	rt_PortableTestApp_MyEnum_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
-	rt_PortableTestApp_MyNamespace_MyEnum_OBJ.vTable_ToString_0 = m_System_Object_ToString_0;
 }
 
 void CS2X_InvokeStaticConstructors_PortableTestApp()
