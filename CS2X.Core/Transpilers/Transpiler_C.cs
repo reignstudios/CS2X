@@ -127,16 +127,13 @@ namespace CS2X.Core.Transpilers
 		private Project project;// active project
 		private IMethodSymbol method;// active method
 		private SemanticModel semanticModel;// active semantic model for a method
-		private StreamWriterEx writer, stringLiteralWriter, arrayRuntimeTypeWriter, pointerRuntimeTypeWriter;
+		private StreamWriterEx writer, stringLiteralWriter;
 		private BlockSyntax block;// active body block
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
 		private int tryCatchNestingLevel;// used for special local name mangling
 
 		private const string stringLiteralsHeader = "_StringLiterals.h";
-		private const string arrayRuntimeTypesHeader = "_ArrayRuntimeTypes.h";
-		private const string pointerRuntimeTypesHeader = "_PointerRuntimeTypes.h";
-
 		private string stringTypeName, stringRuntimeTypeName;
 
 		/// <summary>
@@ -163,27 +160,13 @@ namespace CS2X.Core.Transpilers
 
 			stringLiterals = new Dictionary<string, string>();
 			using (var stringLiteralStream = new FileStream(Path.Combine(outputPath, stringLiteralsHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
-			using (var arrayRuntimeTypeStream = new FileStream(Path.Combine(outputPath, arrayRuntimeTypesHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
-			using (var pointerRuntimeTypeStream = new FileStream(Path.Combine(outputPath, pointerRuntimeTypesHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (stringLiteralWriter = new StreamWriterEx(stringLiteralStream))
-			using (arrayRuntimeTypeWriter = new StreamWriterEx(arrayRuntimeTypeStream))
-			using (pointerRuntimeTypeWriter = new StreamWriterEx(pointerRuntimeTypeStream))
 			{
 				// write string literal header
 				WriteHeaderInfo(stringLiteralWriter);
 				stringLiteralWriter.WriteLine("#pragma once");
 				stringLiteralWriter.WriteLine();
-
-				// write array runtime type header
-				WriteHeaderInfo(arrayRuntimeTypeWriter);
-				arrayRuntimeTypeWriter.WriteLine("#pragma once");
-				arrayRuntimeTypeWriter.WriteLine();
-
-				// write array runtime type header
-				WriteHeaderInfo(pointerRuntimeTypeWriter);
-				pointerRuntimeTypeWriter.WriteLine("#pragma once");
-				pointerRuntimeTypeWriter.WriteLine();
-
+				
 				// write projects
 				foreach (var project in solution.projects)
 				{
@@ -311,6 +294,28 @@ namespace CS2X.Core.Transpilers
 				if (WriteRuntimeType(type, writer)) writer.WriteLine();
 			}
 
+			if (project.arrayTypes.Count != 0)
+			{
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* ARRAY Runtime Types */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in project.arrayTypes)
+				{
+					if (WriteRuntimeType(type, writer)) writer.WriteLine();
+				}
+			}
+
+			if (project.pointerTypes.Count != 0)
+			{
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* POINTER Runtime Types */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in project.pointerTypes)
+				{
+					if (WriteRuntimeType(type, writer)) writer.WriteLine();
+				}
+			}
+
 			// forward declare methods
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Forward decalre Methods */");
@@ -407,14 +412,6 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			// include array runtime types
-			if (project.isCoreLib)
-			{
-				writer.WriteLine($"#include \"{arrayRuntimeTypesHeader}\"");
-				writer.WriteLine($"#include \"{pointerRuntimeTypesHeader}\"");
-				writer.WriteLine();
-			}
-
 			// init library
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Init Library */");
@@ -434,7 +431,21 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine();
 			}
 
-			WriteInitRuntimeTypes(project.allTypes, writer);
+			WriteInitRuntimeTypes(project.allTypes);
+			if (project.arrayTypes.Count != 0)
+			{
+				writer.WriteLine();
+				writer.WriteLinePrefix("/* <<< === Array Runtime Types === >>> */");
+				WriteInitRuntimeTypes(project.arrayTypes);
+			}
+
+			if (project.pointerTypes.Count != 0)
+			{
+				writer.WriteLine();
+				writer.WriteLinePrefix("/* <<< === Pointer Runtime Types === >>> */");
+				WriteInitRuntimeTypes(project.pointerTypes);
+			}
+
 			writer.RemoveTab();
 			writer.WriteLine('}');
 
@@ -488,38 +499,6 @@ namespace CS2X.Core.Transpilers
 					writer.WriteLine('}');
 				}
 
-				// init array runtime types
-				foreach (var type in solution.arrayTypes)
-				{
-					if (WriteRuntimeType(type, arrayRuntimeTypeWriter)) arrayRuntimeTypeWriter.WriteLine();
-				}
-				arrayRuntimeTypeWriter.WriteLine();
-				arrayRuntimeTypeWriter.WriteLine("/* =============================== */");
-				arrayRuntimeTypeWriter.WriteLine("/* Init Array Types */");
-				arrayRuntimeTypeWriter.WriteLine("/* =============================== */");
-				arrayRuntimeTypeWriter.WriteLine("void CS2X_InitArrayRuntimeTypes()");
-				arrayRuntimeTypeWriter.WriteLine('{');
-				arrayRuntimeTypeWriter.AddTab();
-				WriteInitRuntimeTypes(solution.arrayTypes, arrayRuntimeTypeWriter);
-				arrayRuntimeTypeWriter.RemoveTab();
-				arrayRuntimeTypeWriter.WriteLine('}');
-
-				// init pointer runtime types
-				foreach (var type in solution.pointerTypes)
-				{
-					if (WriteRuntimeType(type, pointerRuntimeTypeWriter)) pointerRuntimeTypeWriter.WriteLine();
-				}
-				pointerRuntimeTypeWriter.WriteLine();
-				pointerRuntimeTypeWriter.WriteLine("/* =============================== */");
-				pointerRuntimeTypeWriter.WriteLine("/* Init Pointer Types */");
-				pointerRuntimeTypeWriter.WriteLine("/* =============================== */");
-				pointerRuntimeTypeWriter.WriteLine("void CS2X_InitPointerRuntimeTypes()");
-				pointerRuntimeTypeWriter.WriteLine('{');
-				pointerRuntimeTypeWriter.AddTab();
-				WriteInitRuntimeTypes(solution.pointerTypes, pointerRuntimeTypeWriter);
-				pointerRuntimeTypeWriter.RemoveTab();
-				pointerRuntimeTypeWriter.WriteLine('}');
-
 				// entry point
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
@@ -547,8 +526,6 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("CS2X_GC_Init();");
 				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
-				writer.WriteLinePrefix("CS2X_InitArrayRuntimeTypes();");
-				writer.WriteLinePrefix("CS2X_InitPointerRuntimeTypes();");
 				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
 				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
 				writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");// TODO: add support for args
@@ -559,8 +536,10 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		private void WriteInitRuntimeTypes(IEnumerable<ITypeSymbol> types, StreamWriterEx writer)
+		private void WriteInitRuntimeTypes(IEnumerable<ITypeSymbol> types)
 		{
+			if (types.Count() == 0) return;
+
 			writer.WriteLinePrefix("/* Init runtime type objects */");
 			string baseTypeFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "BaseType"));
 			string nameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "Name"));
@@ -593,8 +572,7 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			writer.WriteLine();
-			writer.WriteLinePrefix("/* Init runtime type vtabel */");
+			bool first = true;
 			foreach (var type in types)
 			{
 				if (type.SpecialType == SpecialType.System_Void) continue;
@@ -603,6 +581,12 @@ namespace CS2X.Core.Transpilers
 				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
 				foreach (var method in orderedVirtualMethods)
 				{
+					if (first)
+					{
+						first = false;
+						writer.WriteLine();
+						writer.WriteLinePrefix("/* Init runtime type vtabel */");
+					}
 					var highestMethod = FindHighestVirtualMethodSlot(type, method);
 					if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
 					else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = 0;");

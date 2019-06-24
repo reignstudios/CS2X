@@ -18,6 +18,8 @@ namespace CS2X.Core
 
 	public class Project
 	{
+		private bool isParsed;
+
 		public readonly Solution solution;
 		public readonly RoslynProject roslynProject;
 		public readonly bool isCoreLib;
@@ -66,6 +68,9 @@ namespace CS2X.Core
 
 		public async Task Parse()
 		{
+			if (isParsed) return;
+			isParsed = true;
+
 			// gather references
 			var references = new List<Project>();
 			var sln = roslynProject.Solution;
@@ -74,6 +79,7 @@ namespace CS2X.Core
 				var project = solution.projects.FirstOrDefault(x => x.roslynProject.Id == reference.ProjectId);
 				if (project == null) throw new Exception("Project reference not found in solution: " + reference.ProjectId);
 				references.Add(project);
+				await project.Parse();
 			}
 
 			this.references = references;
@@ -178,15 +184,30 @@ namespace CS2X.Core
 				{
 					if (typeSymbol.Kind == SymbolKind.NamedType && !typeSymbol.IsDefinition && ((INamedTypeSymbol)typeSymbol).IsGenericType)
 					{
-						((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)typeSymbol);
+						INamedTypeSymbol existing = null;
+						foreach (var reference in references)
+						{
+							existing = reference.genericTypes.FirstOrDefault(x => x == typeSymbol);
+						}
+						if (existing == null) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)typeSymbol);
 					}
 					else if (typeSymbol.Kind == SymbolKind.ArrayType)
 					{
-						((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)typeSymbol);
+						IArrayTypeSymbol existing = null;
+						foreach (var reference in references)
+						{
+							existing = reference.arrayTypes.FirstOrDefault(x => x == typeSymbol);
+						}
+						if (existing == null) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)typeSymbol);
 					}
 					else if (typeSymbol.Kind == SymbolKind.PointerType)
 					{
-						((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)typeSymbol);
+						IPointerTypeSymbol existing = null;
+						foreach (var reference in references)
+						{
+							existing = reference.pointerTypes.FirstOrDefault(x => x == typeSymbol);
+						}
+						if (existing == null) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)typeSymbol);
 					}
 				}
 			}
