@@ -181,7 +181,11 @@ namespace PortableTestApp
             }*/
 			float[] sldkfj;
 			float[] sldkfj2;
-			//MyG<short[]>[] sfkasd;
+			//MyG<short[]>[] myGArray;
+			MyG<int> myG = new MyG<int>();
+			int myGI = myG.DoStuff();
+			//int myGI2 = myG.DoStuff2<int>(123);
+			Console.WriteLine(myG.GetType().FullName);
 			try
 			{
 				FooThrow();
@@ -213,12 +217,33 @@ namespace PortableTestApp
 		}
 	}
 
-	//class MyG<T>
+	class MyG<T> where T : struct
+	{
+		public T g;
+
+		public T DoStuff()
+		{
+			return g;
+		}
+
+		public E DoStuff2<E>(E value)
+		{
+			return value;
+		}
+
+		public E DoStuff3<E>(E value, T value2)
+		{
+			if (typeof(E) == typeof(T)) return value;
+			return value;
+		}
+	}
+
+	//struct MyS<T>
 	//{
-	//	T g;
+	//	public T s;
 	//}
 
-    /*class MyE : IEnumerable<int>
+	/*class MyE : IEnumerable<int>
     {
         public IEnumerator<int> GetEnumerator()
         {

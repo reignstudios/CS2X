@@ -188,6 +188,7 @@ namespace CS2X.Core
 						foreach (var reference in references)
 						{
 							existing = reference.genericTypes.FirstOrDefault(x => x == typeSymbol);
+							if (existing != null) break;
 						}
 						if (existing == null) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)typeSymbol);
 					}
@@ -197,6 +198,7 @@ namespace CS2X.Core
 						foreach (var reference in references)
 						{
 							existing = reference.arrayTypes.FirstOrDefault(x => x == typeSymbol);
+							if (existing != null) break;
 						}
 						if (existing == null) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)typeSymbol);
 					}
@@ -206,6 +208,7 @@ namespace CS2X.Core
 						foreach (var reference in references)
 						{
 							existing = reference.pointerTypes.FirstOrDefault(x => x == typeSymbol);
+							if (existing != null) break;
 						}
 						if (existing == null) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)typeSymbol);
 					}
