@@ -368,5 +368,25 @@ namespace CS2X.Core.Transpilers
 			ParseImplementationDetail(ref refAssemblyName);
 			return refAssemblyName;
 		}
+
+		protected ITypeSymbol ResolveType(ExpressionSyntax syntax, IMethodSymbol method, SemanticModel semanticModel)
+		{
+			var type = semanticModel.GetTypeInfo(syntax).Type;
+			if (type is ITypeParameterSymbol)
+			{
+				var parameterType = (ITypeParameterSymbol)type;
+				if (parameterType.TypeParameterKind == TypeParameterKind.Type)
+				{
+					int index = parameterType.DeclaringType.TypeParameters.IndexOf(parameterType);
+					type = method.ContainingType.TypeArguments[index];
+				}
+				else if (parameterType.TypeParameterKind == TypeParameterKind.Method)
+				{
+					int index = parameterType.DeclaringMethod.TypeParameters.IndexOf(parameterType);
+					type = method.TypeArguments[index];
+				}
+			}
+			return type;
+		}
 	}
 }

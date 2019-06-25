@@ -185,6 +185,8 @@ namespace PortableTestApp
 			MyG<int> myG = new MyG<int>();
 			int myGI = myG.DoStuff();
 			int myGI2 = myG.DoStuff2<int>(123);
+			int myGI3 = myG.DoStuff3<int>(123, 55);
+			var myGIS = MyG<Vec3>.DoStuffStatic(true);
 			Console.WriteLine(myG.GetType().FullName);
 			try
 			{
@@ -226,6 +228,12 @@ namespace PortableTestApp
 			return g;
 		}
 
+		public static T DoStuffStatic(bool value)
+		{
+			if (value) return default;
+			else return default(T);
+		}
+
 		public E DoStuff2<E>(E value)
 		{
 			return value;
@@ -236,6 +244,11 @@ namespace PortableTestApp
 			if (typeof(E) == typeof(T)) return value;
 			return value;
 		}
+	}
+
+	struct Vec3
+	{
+		public float x, y, z;
 	}
 
 	//struct MyS<T>
