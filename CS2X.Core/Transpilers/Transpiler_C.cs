@@ -2307,20 +2307,6 @@ namespace CS2X.Core.Transpilers
 		private void TypeOfExpression(TypeOfExpressionSyntax expression)
 		{
 			var type = ResolveType(expression.Type);
-			if (type is ITypeParameterSymbol)
-			{
-				var parameterType = (ITypeParameterSymbol)type;
-				if (parameterType.TypeParameterKind == TypeParameterKind.Type)
-				{
-					int index = parameterType.DeclaringType.TypeParameters.IndexOf(parameterType);
-					type = method.ContainingType.TypeArguments[index];
-				}
-				else if (parameterType.TypeParameterKind == TypeParameterKind.Method)
-				{
-					int index = parameterType.DeclaringMethod.TypeParameters.IndexOf(parameterType);
-					type = method.TypeArguments[index];
-				}
-			}
 			writer.Write($"(&{GetRuntimeTypeObjFullName(type)})");
 		}
 

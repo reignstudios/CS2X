@@ -375,16 +375,9 @@ namespace CS2X.Core.Transpilers
 			if (type is ITypeParameterSymbol)
 			{
 				var parameterType = (ITypeParameterSymbol)type;
-				if (parameterType.TypeParameterKind == TypeParameterKind.Type)
-				{
-					int index = parameterType.DeclaringType.TypeParameters.IndexOf(parameterType);
-					type = method.ContainingType.TypeArguments[index];
-				}
-				else if (parameterType.TypeParameterKind == TypeParameterKind.Method)
-				{
-					int index = parameterType.DeclaringMethod.TypeParameters.IndexOf(parameterType);
-					type = method.TypeArguments[index];
-				}
+				if (parameterType.TypeParameterKind == TypeParameterKind.Type) type = method.ContainingType.TypeArguments[parameterType.Ordinal];
+				else if (parameterType.TypeParameterKind == TypeParameterKind.Method) type = method.TypeArguments[parameterType.Ordinal];
+				else throw new NotSupportedException("Unsupported ITypeParameterSymbol kind: " + parameterType.TypeParameterKind);
 			}
 			return type;
 		}

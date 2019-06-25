@@ -239,7 +239,7 @@ t_PortableTestApp_Vec3 m_t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestAp
 t_PortableTestApp_Vec3 m_t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC_DoStuffStatic_1(char p_value);
 t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC* m_t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC__ctor_1(t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC* self);
 int32_t m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff2_1(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC* self, int32_t p_value);
-int32_t m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC* self, int32_t p_value, int32_t p_value2);
+int32_t m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC* self, float p_value2, int32_t p_value, int32_t p_value3);
 
 /* =============================== */
 /* Method definitions */
@@ -384,7 +384,7 @@ void m_PortableTestApp_Program_Main_0()
 	l_myG_6 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC__ctor_1(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC), &rt_PortableTestApp_MyG_System_Int32_GENERIC_OBJ));
 	l_myGI_7 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff_1(l_myG_6);
 	l_myGI2_8 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff2_1(l_myG_6, 123);
-	l_myGI3_9 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(l_myG_6, 123, 55);
+	l_myGI3_9 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(l_myG_6, 55.0f, 123, 55);
 	l_myGIS_10 = m_t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC_DoStuffStatic_1(1);
 	m_System_Console_WriteLine_0(m_System_Object_GetType_0(l_myG_6)->f__FullName_k__BackingField_1);
 	/* try */
@@ -499,9 +499,9 @@ int32_t m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff2
 {
 	return p_value;
 }
-int32_t m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC* self, int32_t p_value, int32_t p_value2)
+int32_t m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC* self, float p_value2, int32_t p_value, int32_t p_value3)
 {
-	if ((&rt_System_Int32_OBJ) == (&rt_System_Int32_OBJ)) return p_value;
+	if ((&rt_System_Single_OBJ) == (&rt_System_Int32_OBJ) && (&rt_System_Int32_OBJ) == (&rt_System_Int32_OBJ)) return p_value;
 	return p_value;
 }
 /* =============================== */

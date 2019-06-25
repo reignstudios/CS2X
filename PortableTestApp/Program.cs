@@ -185,7 +185,7 @@ namespace PortableTestApp
 			MyG<int> myG = new MyG<int>();
 			int myGI = myG.DoStuff();
 			int myGI2 = myG.DoStuff2<int>(123);
-			int myGI3 = myG.DoStuff3<int>(123, 55);
+			int myGI3 = myG.DoStuff3<int,float>(55f, 123, 55);
 			var myGIS = MyG<Vec3>.DoStuffStatic(true);
 			Console.WriteLine(myG.GetType().FullName);
 			try
@@ -239,9 +239,9 @@ namespace PortableTestApp
 			return value;
 		}
 
-		public E DoStuff3<E>(E value, T value2)
+		public E DoStuff3<E,E2>(E2 value2, E value, T value3)
 		{
-			if (typeof(E) == typeof(T)) return value;
+			if (typeof(E2) == typeof(E) && typeof(E) == typeof(T)) return value;
 			return value;
 		}
 	}
