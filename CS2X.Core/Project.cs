@@ -39,6 +39,7 @@ namespace CS2X.Core
 		public IReadOnlyList<INamedTypeSymbol> enumTypes { get; private set; }
 
 		// special types
+		public IReadOnlyCollection<IMethodSymbol> genericMethods { get; private set; }
 		public IReadOnlyCollection<INamedTypeSymbol> genericTypes { get; private set; }
 		public IReadOnlyCollection<IArrayTypeSymbol> arrayTypes { get; private set; }
 		public IReadOnlyCollection<IPointerTypeSymbol> pointerTypes { get; private set; }
@@ -90,6 +91,7 @@ namespace CS2X.Core
 			interfaceTypes = new List<INamedTypeSymbol>();
 			enumTypes = new List<INamedTypeSymbol>();
 
+			genericMethods = new HashSet<IMethodSymbol>();
 			genericTypes = new HashSet<INamedTypeSymbol>();
 			arrayTypes = new HashSet<IArrayTypeSymbol>();
 			pointerTypes = new HashSet<IPointerTypeSymbol>();
@@ -179,38 +181,67 @@ namespace CS2X.Core
 			var semanticModel = compilation.GetSemanticModel(root.SyntaxTree);
 			foreach (var node in root.DescendantNodesAndSelf())
 			{
-				var typeSymbol = semanticModel.GetSymbolInfo(node).Symbol as ITypeSymbol;
-				if (typeSymbol != null)
+				var type = semanticModel.GetSymbolInfo(node).Symbol as ITypeSymbol;
+				if (type != null)
 				{
-					if (typeSymbol.Kind == SymbolKind.NamedType && !typeSymbol.IsDefinition && ((INamedTypeSymbol)typeSymbol).IsGenericType)
+					if (type.Kind == SymbolKind.NamedType && !type.IsDefinition && ((INamedTypeSymbol)type).IsGenericType)
 					{
-						INamedTypeSymbol existing = null;
+						bool found = false;
 						foreach (var reference in references)
 						{
-							existing = reference.genericTypes.FirstOrDefault(x => x == typeSymbol);
-							if (existing != null) break;
+							if (reference.genericTypes.Any(x => x == type))
+							{
+								found = true;
+								break;
+							}
 						}
-						if (existing == null) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)typeSymbol);
+						if (!found) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)type);
 					}
-					else if (typeSymbol.Kind == SymbolKind.ArrayType)
+					else if (type.Kind == SymbolKind.ArrayType)
 					{
-						IArrayTypeSymbol existing = null;
+						bool found = false;
 						foreach (var reference in references)
 						{
-							existing = reference.arrayTypes.FirstOrDefault(x => x == typeSymbol);
-							if (existing != null) break;
+							if (reference.arrayTypes.Any(x => x == type))
+							{
+								found = true;
+								break;
+							}
 						}
-						if (existing == null) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)typeSymbol);
+						if (!found) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)type);
 					}
-					else if (typeSymbol.Kind == SymbolKind.PointerType)
+					else if (type.Kind == SymbolKind.PointerType)
 					{
-						IPointerTypeSymbol existing = null;
+						bool found = false;
 						foreach (var reference in references)
 						{
-							existing = reference.pointerTypes.FirstOrDefault(x => x == typeSymbol);
-							if (existing != null) break;
+							if (reference.pointerTypes.Any(x => x == type))
+							{
+								found = true;
+								break;
+							}
 						}
-						if (existing == null) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)typeSymbol);
+						if (!found) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)type);
+					}
+				}
+				else
+				{
+					var method = semanticModel.GetSymbolInfo(node).Symbol as IMethodSymbol;
+					if (method != null)
+					{
+						if (method.IsGenericMethod && !method.IsDefinition)
+						{
+							bool found = false;
+							foreach (var reference in references)
+							{
+								if (reference.genericMethods.Any(x => x == method))
+								{
+									found = true;
+									break;
+								}
+							}
+							if (!found) ((HashSet<IMethodSymbol>)genericMethods).Add(method);
+						}
 					}
 				}
 			}

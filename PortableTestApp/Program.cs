@@ -184,7 +184,7 @@ namespace PortableTestApp
 			//MyG<short[]>[] myGArray;
 			MyG<int> myG = new MyG<int>();
 			int myGI = myG.DoStuff();
-			//int myGI2 = myG.DoStuff2<int>(123);
+			int myGI2 = myG.DoStuff2<int>(123);
 			Console.WriteLine(myG.GetType().FullName);
 			try
 			{
