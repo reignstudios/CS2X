@@ -289,7 +289,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			writer.WriteLine("/* Type definitions */");
 			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypesDependencyOrdered)
+			foreach (var type in project.allTypes)
 			{
 				if (WriteType(type, true)) writer.WriteLine();
 			}
@@ -368,6 +368,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("/* =============================== */");
 				foreach (var type in project.genericTypes)
 				{
+					if (type.TypeKind == TypeKind.Interface) continue;
 					foreach (var method in type.GetMembers())
 					{
 						if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, false);
@@ -471,6 +472,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("/* =============================== */");
 				foreach (var type in project.genericTypes)
 				{
+					if (type.TypeKind == TypeKind.Interface) continue;
 					foreach (var method in type.GetMembers())
 					{
 						if (method is IMethodSymbol && WriteMethod((IMethodSymbol)method, true)) writer.WriteLine();
@@ -855,10 +857,11 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteField(IFieldSymbol field)
 		{
+			if (field.Type.TypeKind == TypeKind.Interface) throw new NotSupportedException("Fields cannot be an interface type");
 			writer.WriteLinePrefix($"{GetTypeFullNameRef(field.Type)} {GetFieldFullName(field)};");
 		}
 
-		private bool WriteMethod(IMethodSymbol method, bool writeBody)
+		private bool WriteMethod(IMethodSymbol method, bool writeBody, Dictionary<IParameterSymbol, ITypeSymbol> parameterOverrides = null)
 		{
 			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
@@ -875,6 +878,8 @@ namespace CS2X.Core.Transpilers
 					if (arg == param) return false;
 				}
 			}
+
+			if (parameterOverrides == null && method.Parameters.Any(x => x.Type.TypeKind == TypeKind.Interface)) return false;
 
 			bool isVirtualAutoPropertyMethod = false;
 			if (IsAutoPropertyMethod(method, out var virtualAutoProperty, out var virtualAutoPropertyField))
@@ -906,6 +911,9 @@ namespace CS2X.Core.Transpilers
 					break;
 				default: throw new NotSupportedException("Unsupported method kind: " + method.MethodKind);
 			}
+
+			// validate method doesn't return interface
+			if (method.ReturnType.TypeKind == TypeKind.Interface) throw new NotSupportedException("Methods cannot return an interface");
 
 			// write method desc
 			if (method.MethodKind != MethodKind.Constructor) writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
@@ -1216,6 +1224,7 @@ namespace CS2X.Core.Transpilers
 		#region Method Body / Syntax Instructions
 		private InstructionalBody.Local TryAddLocal(string identifier, ITypeSymbol type)
 		{
+			if (type.TypeKind == TypeKind.Interface) throw new NotSupportedException("Locals cannot be an interface");
 			InstructionalBody.Local local = null;
 			local = instructionalBody.locals.FirstOrDefault(x => x.Equals(identifier, type));
 			if (local == null)

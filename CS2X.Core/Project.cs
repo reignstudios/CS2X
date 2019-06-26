@@ -32,19 +32,19 @@ namespace CS2X.Core
 
 		// normal types
 		public IReadOnlyList<INamedTypeSymbol> allTypes { get; private set; }
-		public IReadOnlyList<INamedTypeSymbol> allTypesDependencyOrdered { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> classTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> structTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> interfaceTypes { get; private set; }
 		public IReadOnlyList<INamedTypeSymbol> enumTypes { get; private set; }
 
 		// special types
+		public IReadOnlyCollection<InvocationExpressionSyntax> typeClassMethods { get; private set; }
 		public IReadOnlyCollection<IMethodSymbol> genericMethods { get; private set; }
 		public IReadOnlyCollection<INamedTypeSymbol> genericTypes { get; private set; }
 		public IReadOnlyCollection<IArrayTypeSymbol> arrayTypes { get; private set; }
 		public IReadOnlyCollection<IPointerTypeSymbol> pointerTypes { get; private set; }
 
-		public Project(Solution solution, RoslynProject roslynProject)
+		internal Project(Solution solution, RoslynProject roslynProject)
 		{
 			this.solution = solution;
 			this.roslynProject = roslynProject;
@@ -67,7 +67,7 @@ namespace CS2X.Core
 			optimizationLevel = compilationOptions.OptimizationLevel;
 		}
 
-		public async Task Parse()
+		internal async Task Parse()
 		{
 			if (isParsed) return;
 			isParsed = true;
@@ -91,6 +91,7 @@ namespace CS2X.Core
 			interfaceTypes = new List<INamedTypeSymbol>();
 			enumTypes = new List<INamedTypeSymbol>();
 
+			typeClassMethods = new HashSet<InvocationExpressionSyntax>();
 			genericMethods = new HashSet<IMethodSymbol>();
 			genericTypes = new HashSet<INamedTypeSymbol>();
 			arrayTypes = new HashSet<IArrayTypeSymbol>();
@@ -112,7 +113,6 @@ namespace CS2X.Core
 			allTypesList.AddRange(structTypes);
 			allTypesList.AddRange(interfaceTypes);
 			allTypesList.AddRange(enumTypes);
-			allTypes = allTypesList;
 
 			// dependency sort all types
 			var allTypesDependencyOrderedList = new List<INamedTypeSymbol>();
@@ -141,7 +141,15 @@ namespace CS2X.Core
 				if (index == -1) allTypesDependencyOrderedList.Add(type);
 				else allTypesDependencyOrderedList.Insert(index, type);
 			}
-			allTypesDependencyOrdered = allTypesDependencyOrderedList;
+			allTypes = allTypesDependencyOrderedList;
+
+			// validate basic syntax rules
+			foreach (var type in allTypes) ValidateType(type);
+		}
+
+		private void ValidateType(INamedTypeSymbol type)
+		{
+			// TODO
 		}
 
 		private void ParseNamespace(INamespaceSymbol namespaceSymbol)
@@ -186,42 +194,15 @@ namespace CS2X.Core
 				{
 					if (type.Kind == SymbolKind.NamedType && !type.IsDefinition && ((INamedTypeSymbol)type).IsGenericType)
 					{
-						bool found = false;
-						foreach (var reference in references)
-						{
-							if (reference.genericTypes.Any(x => x == type))
-							{
-								found = true;
-								break;
-							}
-						}
-						if (!found) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)type);
+						if (!ExistsInReference(genericTypes, type)) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)type);
 					}
 					else if (type.Kind == SymbolKind.ArrayType)
 					{
-						bool found = false;
-						foreach (var reference in references)
-						{
-							if (reference.arrayTypes.Any(x => x == type))
-							{
-								found = true;
-								break;
-							}
-						}
-						if (!found) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)type);
+						if (!ExistsInReference(arrayTypes, type)) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)type);
 					}
 					else if (type.Kind == SymbolKind.PointerType)
 					{
-						bool found = false;
-						foreach (var reference in references)
-						{
-							if (reference.pointerTypes.Any(x => x == type))
-							{
-								found = true;
-								break;
-							}
-						}
-						if (!found) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)type);
+						if (!ExistsInReference(pointerTypes, type)) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)type);
 					}
 				}
 				else
@@ -231,20 +212,25 @@ namespace CS2X.Core
 					{
 						if (method.IsGenericMethod && !method.IsDefinition)
 						{
-							bool found = false;
-							foreach (var reference in references)
-							{
-								if (reference.genericMethods.Any(x => x == method))
-								{
-									found = true;
-									break;
-								}
-							}
-							if (!found) ((HashSet<IMethodSymbol>)genericMethods).Add(method);
+							if (!ExistsInReference(genericMethods, method)) ((HashSet<IMethodSymbol>)genericMethods).Add(method);
+						}
+						else if (node is InvocationExpressionSyntax && method.Parameters.Any(x => x.Type.TypeKind == TypeKind.Interface))
+						{
+							var expression = (InvocationExpressionSyntax)node;
+							if (!ExistsInReference(typeClassMethods, expression)) ((HashSet<InvocationExpressionSyntax>)typeClassMethods).Add(expression);
 						}
 					}
 				}
 			}
+		}
+
+		private bool ExistsInReference<T>(IReadOnlyCollection<T> collection, T value) where T : class
+		{
+			foreach (var reference in references)
+			{
+				if (collection.Any(x => x == value)) return true;
+			}
+			return false;
 		}
 	}
 }

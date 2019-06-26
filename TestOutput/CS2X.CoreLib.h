@@ -16,6 +16,7 @@
 /* =============================== */
 typedef struct t_System_Array t_System_Array;
 typedef struct t_System_Attribute t_System_Attribute;
+typedef int32_t t_System_AttributeTargets;
 typedef struct t_System_AttributeUsageAttribute t_System_AttributeUsageAttribute;
 typedef struct t_System_BitConverter t_System_BitConverter;
 typedef struct t_System_Buffer t_System_Buffer;
@@ -51,6 +52,7 @@ typedef struct t_System_Collections_Queue t_System_Collections_Queue;
 typedef struct t_System_Collections_Stack t_System_Collections_Stack;
 typedef struct t_System_ComponentModel_BrowsableAttribute t_System_ComponentModel_BrowsableAttribute;
 typedef struct t_System_ComponentModel_DependencyAttribute t_System_ComponentModel_DependencyAttribute;
+typedef int32_t t_System_ComponentModel_EditorBrowsableState;
 typedef struct t_System_ComponentModel_EditorBrowsableAttribute t_System_ComponentModel_EditorBrowsableAttribute;
 typedef struct t_System_Diagnostics_ConditionalAttribute t_System_Diagnostics_ConditionalAttribute;
 typedef struct t_System_Diagnostics_Debug t_System_Diagnostics_Debug;
@@ -75,23 +77,21 @@ typedef struct t_System_Runtime_CompilerServices_CompilerGeneratedAttribute t_Sy
 typedef struct t_System_Runtime_CompilerServices_ExtensionAttribute t_System_Runtime_CompilerServices_ExtensionAttribute;
 typedef struct t_System_Runtime_CompilerServices_IndexerNameAttribute t_System_Runtime_CompilerServices_IndexerNameAttribute;
 typedef struct t_System_Runtime_CompilerServices_IntrinsicAttribute t_System_Runtime_CompilerServices_IntrinsicAttribute;
+typedef int32_t t_System_Runtime_CompilerServices_MethodCodeType;
+typedef int32_t t_System_Runtime_CompilerServices_MethodImplOptions;
 typedef struct t_System_Runtime_CompilerServices_MethodImplAttribute t_System_Runtime_CompilerServices_MethodImplAttribute;
 typedef struct t_System_Runtime_CompilerServices_RuntimeHelpers t_System_Runtime_CompilerServices_RuntimeHelpers;
 typedef struct t_System_Runtime_InteropServices_OutAttribute t_System_Runtime_InteropServices_OutAttribute;
+typedef int32_t t_System_Runtime_InteropServices_LayoutKind;
 typedef struct t_System_Runtime_InteropServices_StructLayoutAttribute t_System_Runtime_InteropServices_StructLayoutAttribute;
 typedef struct t_System_Runtime_Versioning_TargetFrameworkAttribute t_System_Runtime_Versioning_TargetFrameworkAttribute;
+typedef int32_t t_CS2X_NativeExternTarget;
 typedef struct t_CS2X_NativeExternAttribute t_CS2X_NativeExternAttribute;
 typedef struct t_System_Decimal t_System_Decimal;
 typedef void* t_System_RuntimeFieldHandle;
 typedef struct t_System_RuntimeTypeHandle t_System_RuntimeTypeHandle;
 typedef struct t_System_Collections_DictionaryEntry t_System_Collections_DictionaryEntry;
-typedef int32_t t_System_AttributeTargets;
-typedef int32_t t_System_ComponentModel_EditorBrowsableState;
 typedef int32_t t_System_Reflection_MethodImplAttributes;
-typedef int32_t t_System_Runtime_CompilerServices_MethodCodeType;
-typedef int32_t t_System_Runtime_CompilerServices_MethodImplOptions;
-typedef int32_t t_System_Runtime_InteropServices_LayoutKind;
-typedef int32_t t_CS2X_NativeExternTarget;
 
 /* =============================== */
 /* Type definitions */
@@ -579,6 +579,22 @@ rt_System_Attribute rt_System_Attribute_OBJ;
 int8_t rt_System_Attribute_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* Attribute */
 int8_t rt_System_Attribute_METADATA_FullName[46] = {0,0,0,0,0,0,0,0,16,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Attribute */
 
+typedef struct rt_System_Boolean
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Boolean;
+rt_System_Boolean rt_System_Boolean_OBJ;
+int8_t rt_System_Boolean_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,66,0,111,0,111,0,108,0,101,0,97,0,110,0,0,0}; /* Boolean */
+int8_t rt_System_Boolean_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,66,0,111,0,111,0,108,0,101,0,97,0,110,0,0,0}; /* System.Boolean */
+
+typedef struct rt_System_AttributeTargets
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_AttributeTargets;
+rt_System_AttributeTargets rt_System_AttributeTargets_OBJ;
+int8_t rt_System_AttributeTargets_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,84,0,97,0,114,0,103,0,101,0,116,0,115,0,0,0}; /* AttributeTargets */
+int8_t rt_System_AttributeTargets_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,84,0,97,0,114,0,103,0,101,0,116,0,115,0,0,0}; /* System.AttributeTargets */
+
 typedef struct rt_System_AttributeUsageAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -693,6 +709,14 @@ rt_System_IndexOutOfRangeException rt_System_IndexOutOfRangeException_OBJ;
 int8_t rt_System_IndexOutOfRangeException_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,73,0,110,0,100,0,101,0,120,0,79,0,117,0,116,0,79,0,102,0,82,0,97,0,110,0,103,0,101,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* IndexOutOfRangeException */
 int8_t rt_System_IndexOutOfRangeException_METADATA_FullName[76] = {0,0,0,0,0,0,0,0,31,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,100,0,101,0,120,0,79,0,117,0,116,0,79,0,102,0,82,0,97,0,110,0,103,0,101,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* System.IndexOutOfRangeException */
 
+typedef struct rt_System_Double
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Double;
+rt_System_Double rt_System_Double_OBJ;
+int8_t rt_System_Double_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,68,0,111,0,117,0,98,0,108,0,101,0,0,0}; /* Double */
+int8_t rt_System_Double_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,111,0,117,0,98,0,108,0,101,0,0,0}; /* System.Double */
+
 typedef struct rt_System_Math
 {
 	t_System_RuntimeType runtimeType;
@@ -700,6 +724,14 @@ typedef struct rt_System_Math
 rt_System_Math rt_System_Math_OBJ;
 int8_t rt_System_Math_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,77,0,97,0,116,0,104,0,0,0}; /* Math */
 int8_t rt_System_Math_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,77,0,97,0,116,0,104,0,0,0}; /* System.Math */
+
+typedef struct rt_System_Single
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Single;
+rt_System_Single rt_System_Single_OBJ;
+int8_t rt_System_Single_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,83,0,105,0,110,0,103,0,108,0,101,0,0,0}; /* Single */
+int8_t rt_System_Single_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,83,0,105,0,110,0,103,0,108,0,101,0,0,0}; /* System.Single */
 
 typedef struct rt_System_MathF
 {
@@ -782,6 +814,22 @@ rt_System_RuntimeType rt_System_RuntimeType_OBJ;
 int8_t rt_System_RuntimeType_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* RuntimeType */
 int8_t rt_System_RuntimeType_METADATA_FullName[50] = {0,0,0,0,0,0,0,0,18,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* System.RuntimeType */
 
+typedef struct rt_System_Char
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Char;
+rt_System_Char rt_System_Char_OBJ;
+int8_t rt_System_Char_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,67,0,104,0,97,0,114,0,0,0}; /* Char */
+int8_t rt_System_Char_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,104,0,97,0,114,0,0,0}; /* System.Char */
+
+typedef struct rt_System_Int32
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Int32;
+rt_System_Int32 rt_System_Int32_OBJ;
+int8_t rt_System_Int32_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* Int32 */
+int8_t rt_System_Int32_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* System.Int32 */
+
 typedef struct rt_System_String
 {
 	t_System_RuntimeType runtimeType;
@@ -861,6 +909,14 @@ typedef struct rt_System_ComponentModel_DependencyAttribute
 rt_System_ComponentModel_DependencyAttribute rt_System_ComponentModel_DependencyAttribute_OBJ;
 int8_t rt_System_ComponentModel_DependencyAttribute_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,68,0,101,0,112,0,101,0,110,0,100,0,101,0,110,0,99,0,121,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* DependencyAttribute */
 int8_t rt_System_ComponentModel_DependencyAttribute_METADATA_FullName[96] = {0,0,0,0,0,0,0,0,41,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,109,0,112,0,111,0,110,0,101,0,110,0,116,0,77,0,111,0,100,0,101,0,108,0,46,0,68,0,101,0,112,0,101,0,110,0,100,0,101,0,110,0,99,0,121,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.ComponentModel.DependencyAttribute */
+
+typedef struct rt_System_ComponentModel_EditorBrowsableState
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_ComponentModel_EditorBrowsableState;
+rt_System_ComponentModel_EditorBrowsableState rt_System_ComponentModel_EditorBrowsableState_OBJ;
+int8_t rt_System_ComponentModel_EditorBrowsableState_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,69,0,100,0,105,0,116,0,111,0,114,0,66,0,114,0,111,0,119,0,115,0,97,0,98,0,108,0,101,0,83,0,116,0,97,0,116,0,101,0,0,0}; /* EditorBrowsableState */
+int8_t rt_System_ComponentModel_EditorBrowsableState_METADATA_FullName[98] = {0,0,0,0,0,0,0,0,42,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,109,0,112,0,111,0,110,0,101,0,110,0,116,0,77,0,111,0,100,0,101,0,108,0,46,0,69,0,100,0,105,0,116,0,111,0,114,0,66,0,114,0,111,0,119,0,115,0,97,0,98,0,108,0,101,0,83,0,116,0,97,0,116,0,101,0,0,0}; /* System.ComponentModel.EditorBrowsableState */
 
 typedef struct rt_System_ComponentModel_EditorBrowsableAttribute
 {
@@ -1054,6 +1110,22 @@ rt_System_Runtime_CompilerServices_IntrinsicAttribute rt_System_Runtime_Compiler
 int8_t rt_System_Runtime_CompilerServices_IntrinsicAttribute_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,73,0,110,0,116,0,114,0,105,0,110,0,115,0,105,0,99,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* IntrinsicAttribute */
 int8_t rt_System_Runtime_CompilerServices_IntrinsicAttribute_METADATA_FullName[114] = {0,0,0,0,0,0,0,0,50,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,73,0,110,0,116,0,114,0,105,0,110,0,115,0,105,0,99,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.CompilerServices.IntrinsicAttribute */
 
+typedef struct rt_System_Runtime_CompilerServices_MethodCodeType
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Runtime_CompilerServices_MethodCodeType;
+rt_System_Runtime_CompilerServices_MethodCodeType rt_System_Runtime_CompilerServices_MethodCodeType_OBJ;
+int8_t rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,67,0,111,0,100,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* MethodCodeType */
+int8_t rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_FullName[106] = {0,0,0,0,0,0,0,0,46,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,77,0,101,0,116,0,104,0,111,0,100,0,67,0,111,0,100,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* System.Runtime.CompilerServices.MethodCodeType */
+
+typedef struct rt_System_Runtime_CompilerServices_MethodImplOptions
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Runtime_CompilerServices_MethodImplOptions;
+rt_System_Runtime_CompilerServices_MethodImplOptions rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ;
+int8_t rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,79,0,112,0,116,0,105,0,111,0,110,0,115,0,0,0}; /* MethodImplOptions */
+int8_t rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_FullName[112] = {0,0,0,0,0,0,0,0,49,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,79,0,112,0,116,0,105,0,111,0,110,0,115,0,0,0}; /* System.Runtime.CompilerServices.MethodImplOptions */
+
 typedef struct rt_System_Runtime_CompilerServices_MethodImplAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -1078,6 +1150,14 @@ rt_System_Runtime_InteropServices_OutAttribute rt_System_Runtime_InteropServices
 int8_t rt_System_Runtime_InteropServices_OutAttribute_METADATA_Name[38] = {0,0,0,0,0,0,0,0,12,0,0,0,79,0,117,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* OutAttribute */
 int8_t rt_System_Runtime_InteropServices_OutAttribute_METADATA_FullName[100] = {0,0,0,0,0,0,0,0,43,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,79,0,117,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.InteropServices.OutAttribute */
 
+typedef struct rt_System_Runtime_InteropServices_LayoutKind
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Runtime_InteropServices_LayoutKind;
+rt_System_Runtime_InteropServices_LayoutKind rt_System_Runtime_InteropServices_LayoutKind_OBJ;
+int8_t rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name[34] = {0,0,0,0,0,0,0,0,10,0,0,0,76,0,97,0,121,0,111,0,117,0,116,0,75,0,105,0,110,0,100,0,0,0}; /* LayoutKind */
+int8_t rt_System_Runtime_InteropServices_LayoutKind_METADATA_FullName[96] = {0,0,0,0,0,0,0,0,41,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,76,0,97,0,121,0,111,0,117,0,116,0,75,0,105,0,110,0,100,0,0,0}; /* System.Runtime.InteropServices.LayoutKind */
+
 typedef struct rt_System_Runtime_InteropServices_StructLayoutAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -1094,6 +1174,14 @@ rt_System_Runtime_Versioning_TargetFrameworkAttribute rt_System_Runtime_Versioni
 int8_t rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,84,0,97,0,114,0,103,0,101,0,116,0,70,0,114,0,97,0,109,0,101,0,119,0,111,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* TargetFrameworkAttribute */
 int8_t rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName[114] = {0,0,0,0,0,0,0,0,50,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,86,0,101,0,114,0,115,0,105,0,111,0,110,0,105,0,110,0,103,0,46,0,84,0,97,0,114,0,103,0,101,0,116,0,70,0,114,0,97,0,109,0,101,0,119,0,111,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.Versioning.TargetFrameworkAttribute */
 
+typedef struct rt_CS2X_NativeExternTarget
+{
+	t_System_RuntimeType runtimeType;
+} rt_CS2X_NativeExternTarget;
+rt_CS2X_NativeExternTarget rt_CS2X_NativeExternTarget_OBJ;
+int8_t rt_CS2X_NativeExternTarget_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,84,0,97,0,114,0,103,0,101,0,116,0,0,0}; /* NativeExternTarget */
+int8_t rt_CS2X_NativeExternTarget_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,67,0,83,0,50,0,88,0,46,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,84,0,97,0,114,0,103,0,101,0,116,0,0,0}; /* CS2X.NativeExternTarget */
+
 typedef struct rt_CS2X_NativeExternAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -1101,14 +1189,6 @@ typedef struct rt_CS2X_NativeExternAttribute
 rt_CS2X_NativeExternAttribute rt_CS2X_NativeExternAttribute_OBJ;
 int8_t rt_CS2X_NativeExternAttribute_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* NativeExternAttribute */
 int8_t rt_CS2X_NativeExternAttribute_METADATA_FullName[66] = {0,0,0,0,0,0,0,0,26,0,0,0,67,0,83,0,50,0,88,0,46,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* CS2X.NativeExternAttribute */
-
-typedef struct rt_System_Boolean
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Boolean;
-rt_System_Boolean rt_System_Boolean_OBJ;
-int8_t rt_System_Boolean_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,66,0,111,0,111,0,108,0,101,0,97,0,110,0,0,0}; /* Boolean */
-int8_t rt_System_Boolean_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,66,0,111,0,111,0,108,0,101,0,97,0,110,0,0,0}; /* System.Boolean */
 
 typedef struct rt_System_Byte
 {
@@ -1118,14 +1198,6 @@ rt_System_Byte rt_System_Byte_OBJ;
 int8_t rt_System_Byte_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,66,0,121,0,116,0,101,0,0,0}; /* Byte */
 int8_t rt_System_Byte_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,66,0,121,0,116,0,101,0,0,0}; /* System.Byte */
 
-typedef struct rt_System_Char
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Char;
-rt_System_Char rt_System_Char_OBJ;
-int8_t rt_System_Char_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,67,0,104,0,97,0,114,0,0,0}; /* Char */
-int8_t rt_System_Char_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,104,0,97,0,114,0,0,0}; /* System.Char */
-
 typedef struct rt_System_Decimal
 {
 	t_System_RuntimeType runtimeType;
@@ -1134,14 +1206,6 @@ rt_System_Decimal rt_System_Decimal_OBJ;
 int8_t rt_System_Decimal_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,68,0,101,0,99,0,105,0,109,0,97,0,108,0,0,0}; /* Decimal */
 int8_t rt_System_Decimal_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,101,0,99,0,105,0,109,0,97,0,108,0,0,0}; /* System.Decimal */
 
-typedef struct rt_System_Double
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Double;
-rt_System_Double rt_System_Double_OBJ;
-int8_t rt_System_Double_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,68,0,111,0,117,0,98,0,108,0,101,0,0,0}; /* Double */
-int8_t rt_System_Double_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,111,0,117,0,98,0,108,0,101,0,0,0}; /* System.Double */
-
 typedef struct rt_System_Int16
 {
 	t_System_RuntimeType runtimeType;
@@ -1149,14 +1213,6 @@ typedef struct rt_System_Int16
 rt_System_Int16 rt_System_Int16_OBJ;
 int8_t rt_System_Int16_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,49,0,54,0,0,0}; /* Int16 */
 int8_t rt_System_Int16_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,49,0,54,0,0,0}; /* System.Int16 */
-
-typedef struct rt_System_Int32
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Int32;
-rt_System_Int32 rt_System_Int32_OBJ;
-int8_t rt_System_Int32_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* Int32 */
-int8_t rt_System_Int32_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* System.Int32 */
 
 typedef struct rt_System_Int64
 {
@@ -1198,14 +1254,6 @@ rt_System_SByte rt_System_SByte_OBJ;
 int8_t rt_System_SByte_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,83,0,66,0,121,0,116,0,101,0,0,0}; /* SByte */
 int8_t rt_System_SByte_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,83,0,66,0,121,0,116,0,101,0,0,0}; /* System.SByte */
 
-typedef struct rt_System_Single
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Single;
-rt_System_Single rt_System_Single_OBJ;
-int8_t rt_System_Single_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,83,0,105,0,110,0,103,0,108,0,101,0,0,0}; /* Single */
-int8_t rt_System_Single_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,83,0,105,0,110,0,103,0,108,0,101,0,0,0}; /* System.Single */
-
 typedef struct rt_System_UInt16
 {
 	t_System_RuntimeType runtimeType;
@@ -1246,22 +1294,6 @@ rt_System_Collections_DictionaryEntry rt_System_Collections_DictionaryEntry_OBJ;
 int8_t rt_System_Collections_DictionaryEntry_METADATA_Name[44] = {0,0,0,0,0,0,0,0,15,0,0,0,68,0,105,0,99,0,116,0,105,0,111,0,110,0,97,0,114,0,121,0,69,0,110,0,116,0,114,0,121,0,0,0}; /* DictionaryEntry */
 int8_t rt_System_Collections_DictionaryEntry_METADATA_FullName[82] = {0,0,0,0,0,0,0,0,34,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,115,0,46,0,68,0,105,0,99,0,116,0,105,0,111,0,110,0,97,0,114,0,121,0,69,0,110,0,116,0,114,0,121,0,0,0}; /* System.Collections.DictionaryEntry */
 
-typedef struct rt_System_AttributeTargets
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_AttributeTargets;
-rt_System_AttributeTargets rt_System_AttributeTargets_OBJ;
-int8_t rt_System_AttributeTargets_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,84,0,97,0,114,0,103,0,101,0,116,0,115,0,0,0}; /* AttributeTargets */
-int8_t rt_System_AttributeTargets_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,84,0,97,0,114,0,103,0,101,0,116,0,115,0,0,0}; /* System.AttributeTargets */
-
-typedef struct rt_System_ComponentModel_EditorBrowsableState
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_ComponentModel_EditorBrowsableState;
-rt_System_ComponentModel_EditorBrowsableState rt_System_ComponentModel_EditorBrowsableState_OBJ;
-int8_t rt_System_ComponentModel_EditorBrowsableState_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,69,0,100,0,105,0,116,0,111,0,114,0,66,0,114,0,111,0,119,0,115,0,97,0,98,0,108,0,101,0,83,0,116,0,97,0,116,0,101,0,0,0}; /* EditorBrowsableState */
-int8_t rt_System_ComponentModel_EditorBrowsableState_METADATA_FullName[98] = {0,0,0,0,0,0,0,0,42,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,109,0,112,0,111,0,110,0,101,0,110,0,116,0,77,0,111,0,100,0,101,0,108,0,46,0,69,0,100,0,105,0,116,0,111,0,114,0,66,0,114,0,111,0,119,0,115,0,97,0,98,0,108,0,101,0,83,0,116,0,97,0,116,0,101,0,0,0}; /* System.ComponentModel.EditorBrowsableState */
-
 typedef struct rt_System_Reflection_MethodImplAttributes
 {
 	t_System_RuntimeType runtimeType;
@@ -1269,38 +1301,6 @@ typedef struct rt_System_Reflection_MethodImplAttributes
 rt_System_Reflection_MethodImplAttributes rt_System_Reflection_MethodImplAttributes_OBJ;
 int8_t rt_System_Reflection_MethodImplAttributes_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,115,0,0,0}; /* MethodImplAttributes */
 int8_t rt_System_Reflection_MethodImplAttributes_METADATA_FullName[90] = {0,0,0,0,0,0,0,0,38,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,101,0,102,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,46,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,115,0,0,0}; /* System.Reflection.MethodImplAttributes */
-
-typedef struct rt_System_Runtime_CompilerServices_MethodCodeType
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Runtime_CompilerServices_MethodCodeType;
-rt_System_Runtime_CompilerServices_MethodCodeType rt_System_Runtime_CompilerServices_MethodCodeType_OBJ;
-int8_t rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,67,0,111,0,100,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* MethodCodeType */
-int8_t rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_FullName[106] = {0,0,0,0,0,0,0,0,46,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,77,0,101,0,116,0,104,0,111,0,100,0,67,0,111,0,100,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* System.Runtime.CompilerServices.MethodCodeType */
-
-typedef struct rt_System_Runtime_CompilerServices_MethodImplOptions
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Runtime_CompilerServices_MethodImplOptions;
-rt_System_Runtime_CompilerServices_MethodImplOptions rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ;
-int8_t rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,79,0,112,0,116,0,105,0,111,0,110,0,115,0,0,0}; /* MethodImplOptions */
-int8_t rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_FullName[112] = {0,0,0,0,0,0,0,0,49,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,79,0,112,0,116,0,105,0,111,0,110,0,115,0,0,0}; /* System.Runtime.CompilerServices.MethodImplOptions */
-
-typedef struct rt_System_Runtime_InteropServices_LayoutKind
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_Runtime_InteropServices_LayoutKind;
-rt_System_Runtime_InteropServices_LayoutKind rt_System_Runtime_InteropServices_LayoutKind_OBJ;
-int8_t rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name[34] = {0,0,0,0,0,0,0,0,10,0,0,0,76,0,97,0,121,0,111,0,117,0,116,0,75,0,105,0,110,0,100,0,0,0}; /* LayoutKind */
-int8_t rt_System_Runtime_InteropServices_LayoutKind_METADATA_FullName[96] = {0,0,0,0,0,0,0,0,41,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,76,0,97,0,121,0,111,0,117,0,116,0,75,0,105,0,110,0,100,0,0,0}; /* System.Runtime.InteropServices.LayoutKind */
-
-typedef struct rt_CS2X_NativeExternTarget
-{
-	t_System_RuntimeType runtimeType;
-} rt_CS2X_NativeExternTarget;
-rt_CS2X_NativeExternTarget rt_CS2X_NativeExternTarget_OBJ;
-int8_t rt_CS2X_NativeExternTarget_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,84,0,97,0,114,0,103,0,101,0,116,0,0,0}; /* NativeExternTarget */
-int8_t rt_CS2X_NativeExternTarget_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,67,0,83,0,50,0,88,0,46,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,84,0,97,0,114,0,103,0,101,0,116,0,0,0}; /* CS2X.NativeExternTarget */
 
 /* =============================== */
 /* POINTER Runtime Types */
@@ -1337,6 +1337,8 @@ int64_t m_System_Array_get_LongLength_0(t_System_Array* self);
 int32_t m_System_Array_get_Count_0(t_System_Array* self);
 t_System_Array* m_System_Array__ctor_0(t_System_Array* self);
 t_System_Attribute* m_System_Attribute__ctor_0(t_System_Attribute* self);
+char m_char__ctor_0();
+t_System_AttributeTargets m_System_AttributeTargets__ctor_0();
 t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_System_AttributeUsageAttribute* self, t_System_AttributeTargets p_validOn);
 t_System_AttributeTargets m_System_AttributeUsageAttribute_get_ValidOn_0(t_System_AttributeUsageAttribute* self);
 int32_t m_System_BitConverter_SingleToInt32Bits_0(float p_value);
@@ -1357,6 +1359,10 @@ t_System_Exception* m_System_Exception__ctor_1(t_System_Exception* self, t_Syste
 t_System_String* m_System_Exception_get_Message_0(t_System_Exception* self);
 t_System_FlagsAttribute* m_System_FlagsAttribute__ctor_0(t_System_FlagsAttribute* self);
 t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0(t_System_IndexOutOfRangeException* self);
+double m_double__ctor_0();
+char m_float_IsNaN_0(float p_f);
+char m_float_IsNegative_0(float p_f);
+float m_float__ctor_0();
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_MulticastDelegate* self);
 t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0(t_System_NonSerializedAttribute* self);
 t_System_NotSupportedException* m_System_NotSupportedException__ctor_0(t_System_NotSupportedException* self, t_System_String* p_message);
@@ -1369,6 +1375,9 @@ char m_System_ObsoleteAttribute_get_IsError_0(t_System_ObsoleteAttribute* self);
 t_System_String* m_System_ObsoleteAttribute_get_Message_0(t_System_ObsoleteAttribute* self);
 t_System_ParamArrayAttribute* m_System_ParamArrayAttribute__ctor_0(t_System_ParamArrayAttribute* self);
 t_System_RuntimeType* m_System_RuntimeType__ctor_0(t_System_RuntimeType* self);
+char16_t m_char16_t__ctor_0();
+t_System_String* m_int32_t_ToString_0(int32_t* self);
+int32_t m_int32_t__ctor_0();
 int32_t m_System_String_get_Length_0(t_System_String* self);
 t_System_String* m_System_String_FastAllocateString_0(int32_t p_length);
 char m_System_String_IsNullOrEmpty_0(t_System_String* p_value);
@@ -1393,6 +1402,7 @@ int32_t m_System_Collections_Stack_get_Count_0(t_System_Collections_Stack* self)
 t_System_Collections_Stack* m_System_Collections_Stack__ctor_0(t_System_Collections_Stack* self);
 t_System_ComponentModel_BrowsableAttribute* m_System_ComponentModel_BrowsableAttribute__ctor_0(t_System_ComponentModel_BrowsableAttribute* self);
 t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyAttribute__ctor_0(t_System_ComponentModel_DependencyAttribute* self);
+t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableState__ctor_0();
 t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_EditorBrowsableAttribute__ctor_0(t_System_ComponentModel_EditorBrowsableAttribute* self, t_System_ComponentModel_EditorBrowsableState p_state);
 t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableAttribute_get_State_0(t_System_ComponentModel_EditorBrowsableAttribute* self);
 t_System_Diagnostics_ConditionalAttribute* m_System_Diagnostics_ConditionalAttribute__ctor_0(t_System_Diagnostics_ConditionalAttribute* self, t_System_String* p_conditionString);
@@ -1433,44 +1443,34 @@ t_System_Runtime_CompilerServices_CompilerGeneratedAttribute* m_System_Runtime_C
 t_System_Runtime_CompilerServices_ExtensionAttribute* m_System_Runtime_CompilerServices_ExtensionAttribute__ctor_0(t_System_Runtime_CompilerServices_ExtensionAttribute* self);
 t_System_Runtime_CompilerServices_IndexerNameAttribute* m_System_Runtime_CompilerServices_IndexerNameAttribute__ctor_0(t_System_Runtime_CompilerServices_IndexerNameAttribute* self, t_System_String* p_indexerName);
 t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerServices_IntrinsicAttribute__ctor_0(t_System_Runtime_CompilerServices_IntrinsicAttribute* self);
+t_System_Runtime_CompilerServices_MethodCodeType m_System_Runtime_CompilerServices_MethodCodeType__ctor_0();
+t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerServices_MethodImplOptions__ctor_0();
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplAttribute* self, t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions);
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_1(t_System_Runtime_CompilerServices_MethodImplAttribute* self, int16_t p_value);
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2(t_System_Runtime_CompilerServices_MethodImplAttribute* self);
 t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self);
+t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0();
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(t_System_Runtime_InteropServices_StructLayoutAttribute* self, int16_t p_layoutKind);
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName);
+t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0();
 t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternAttribute* self, t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName);
-char m_char__ctor_0();
 uint8_t m_uint8_t__ctor_0();
-char16_t m_char16_t__ctor_0();
 t_System_Decimal m_System_Decimal__ctor_0();
-double m_double__ctor_0();
 int16_t m_int16_t__ctor_0();
-t_System_String* m_int32_t_ToString_0(int32_t* self);
-int32_t m_int32_t__ctor_0();
 int64_t m_int64_t__ctor_0();
 intptr_t m_intptr_t__ctor_0();
 t_System_RuntimeFieldHandle m_System_RuntimeFieldHandle__ctor_0();
 t_System_RuntimeTypeHandle m_System_RuntimeTypeHandle__ctor_0(t_System_RuntimeType* p_type);
 t_System_RuntimeTypeHandle m_System_RuntimeTypeHandle__ctor_1();
 int8_t m_int8_t__ctor_0();
-char m_float_IsNaN_0(float p_f);
-char m_float_IsNegative_0(float p_f);
-float m_float__ctor_0();
 uint16_t m_uint16_t__ctor_0();
 uint32_t m_uint32_t__ctor_0();
 uint64_t m_uint64_t__ctor_0();
 uintptr_t m_uintptr_t__ctor_0();
 t_System_Collections_DictionaryEntry m_System_Collections_DictionaryEntry__ctor_0(t_System_Object* p_key, t_System_Object* p_value);
 t_System_Collections_DictionaryEntry m_System_Collections_DictionaryEntry__ctor_1();
-t_System_AttributeTargets m_System_AttributeTargets__ctor_0();
-t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableState__ctor_0();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
-t_System_Runtime_CompilerServices_MethodCodeType m_System_Runtime_CompilerServices_MethodCodeType__ctor_0();
-t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerServices_MethodImplOptions__ctor_0();
-t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0();
-t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0();
 
 /* =============================== */
 /* Method definitions */
@@ -1542,6 +1542,18 @@ t_System_Attribute* m_System_Attribute__ctor_0(t_System_Attribute* self)
 {
 	m_System_Object__ctor_0(self);
 	return self;
+}
+
+char m_char__ctor_0()
+{
+	char selfObj = {0};
+	return selfObj;
+}
+
+t_System_AttributeTargets m_System_AttributeTargets__ctor_0()
+{
+	t_System_AttributeTargets selfObj = {0};
+	return selfObj;
 }
 
 t_System_AttributeUsageAttribute* m_System_AttributeUsageAttribute__ctor_0(t_System_AttributeUsageAttribute* self, t_System_AttributeTargets p_validOn)
@@ -1679,6 +1691,30 @@ t_System_IndexOutOfRangeException* m_System_IndexOutOfRangeException__ctor_0(t_S
 	return self;
 }
 
+double m_double__ctor_0()
+{
+	double selfObj = {0};
+	return selfObj;
+}
+
+char m_float_IsNaN_0(float p_f)
+{
+	int32_t l_bits_0;
+	l_bits_0 = m_System_BitConverter_SingleToInt32Bits_0(p_f);
+	return (l_bits_0 & 2147483647) > 2139095040;
+}
+
+char m_float_IsNegative_0(float p_f)
+{
+	return m_System_BitConverter_SingleToInt32Bits_0(p_f) < 0;
+}
+
+float m_float__ctor_0()
+{
+	float selfObj = {0};
+	return selfObj;
+}
+
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_MulticastDelegate* self)
 {
 	m_System_Delegate__ctor_0(self);
@@ -1748,6 +1784,23 @@ t_System_RuntimeType* m_System_RuntimeType__ctor_0(t_System_RuntimeType* self)
 {
 	m_System_Type__ctor_0(self);
 	return self;
+}
+
+char16_t m_char16_t__ctor_0()
+{
+	char16_t selfObj = {0};
+	return selfObj;
+}
+
+t_System_String* m_int32_t_ToString_0(int32_t* self)
+{
+	return f_System_String_Empty;
+}
+
+int32_t m_int32_t__ctor_0()
+{
+	int32_t selfObj = {0};
+	return selfObj;
 }
 
 int32_t m_System_String_get_Length_0(t_System_String* self)
@@ -1956,6 +2009,12 @@ t_System_ComponentModel_DependencyAttribute* m_System_ComponentModel_DependencyA
 {
 	m_System_Attribute__ctor_0(self);
 	return self;
+}
+
+t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableState__ctor_0()
+{
+	t_System_ComponentModel_EditorBrowsableState selfObj = {0};
+	return selfObj;
 }
 
 t_System_ComponentModel_EditorBrowsableAttribute* m_System_ComponentModel_EditorBrowsableAttribute__ctor_0(t_System_ComponentModel_EditorBrowsableAttribute* self, t_System_ComponentModel_EditorBrowsableState p_state)
@@ -2198,6 +2257,18 @@ t_System_Runtime_CompilerServices_IntrinsicAttribute* m_System_Runtime_CompilerS
 	return self;
 }
 
+t_System_Runtime_CompilerServices_MethodCodeType m_System_Runtime_CompilerServices_MethodCodeType__ctor_0()
+{
+	t_System_Runtime_CompilerServices_MethodCodeType selfObj = {0};
+	return selfObj;
+}
+
+t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerServices_MethodImplOptions__ctor_0()
+{
+	t_System_Runtime_CompilerServices_MethodImplOptions selfObj = {0};
+	return selfObj;
+}
+
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplAttribute* self, t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2224,6 +2295,12 @@ t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_
 	return self;
 }
 
+t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0()
+{
+	t_System_Runtime_InteropServices_LayoutKind selfObj = {0};
+	return selfObj;
+}
+
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2245,6 +2322,12 @@ t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versionin
 	return self;
 }
 
+t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0()
+{
+	t_CS2X_NativeExternTarget selfObj = {0};
+	return selfObj;
+}
+
 t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternAttribute* self, t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2253,21 +2336,9 @@ t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_Native
 	return self;
 }
 
-char m_char__ctor_0()
-{
-	char selfObj = {0};
-	return selfObj;
-}
-
 uint8_t m_uint8_t__ctor_0()
 {
 	uint8_t selfObj = {0};
-	return selfObj;
-}
-
-char16_t m_char16_t__ctor_0()
-{
-	char16_t selfObj = {0};
 	return selfObj;
 }
 
@@ -2277,26 +2348,9 @@ t_System_Decimal m_System_Decimal__ctor_0()
 	return selfObj;
 }
 
-double m_double__ctor_0()
-{
-	double selfObj = {0};
-	return selfObj;
-}
-
 int16_t m_int16_t__ctor_0()
 {
 	int16_t selfObj = {0};
-	return selfObj;
-}
-
-t_System_String* m_int32_t_ToString_0(int32_t* self)
-{
-	return f_System_String_Empty;
-}
-
-int32_t m_int32_t__ctor_0()
-{
-	int32_t selfObj = {0};
 	return selfObj;
 }
 
@@ -2335,24 +2389,6 @@ t_System_RuntimeTypeHandle m_System_RuntimeTypeHandle__ctor_1()
 int8_t m_int8_t__ctor_0()
 {
 	int8_t selfObj = {0};
-	return selfObj;
-}
-
-char m_float_IsNaN_0(float p_f)
-{
-	int32_t l_bits_0;
-	l_bits_0 = m_System_BitConverter_SingleToInt32Bits_0(p_f);
-	return (l_bits_0 & 2147483647) > 2139095040;
-}
-
-char m_float_IsNegative_0(float p_f)
-{
-	return m_System_BitConverter_SingleToInt32Bits_0(p_f) < 0;
-}
-
-float m_float__ctor_0()
-{
-	float selfObj = {0};
 	return selfObj;
 }
 
@@ -2395,45 +2431,9 @@ t_System_Collections_DictionaryEntry m_System_Collections_DictionaryEntry__ctor_
 	return selfObj;
 }
 
-t_System_AttributeTargets m_System_AttributeTargets__ctor_0()
-{
-	t_System_AttributeTargets selfObj = {0};
-	return selfObj;
-}
-
-t_System_ComponentModel_EditorBrowsableState m_System_ComponentModel_EditorBrowsableState__ctor_0()
-{
-	t_System_ComponentModel_EditorBrowsableState selfObj = {0};
-	return selfObj;
-}
-
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0()
 {
 	t_System_Reflection_MethodImplAttributes selfObj = {0};
-	return selfObj;
-}
-
-t_System_Runtime_CompilerServices_MethodCodeType m_System_Runtime_CompilerServices_MethodCodeType__ctor_0()
-{
-	t_System_Runtime_CompilerServices_MethodCodeType selfObj = {0};
-	return selfObj;
-}
-
-t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerServices_MethodImplOptions__ctor_0()
-{
-	t_System_Runtime_CompilerServices_MethodImplOptions selfObj = {0};
-	return selfObj;
-}
-
-t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0()
-{
-	t_System_Runtime_InteropServices_LayoutKind selfObj = {0};
-	return selfObj;
-}
-
-t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0()
-{
-	t_CS2X_NativeExternTarget selfObj = {0};
 	return selfObj;
 }
 
@@ -2453,6 +2453,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Attribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_Attribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Attribute_METADATA_Name;
 	rt_System_Attribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Attribute_METADATA_FullName;
+	memset(&rt_System_Boolean_OBJ, 0, sizeof(rt_System_Boolean));
+	rt_System_Boolean_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Boolean_OBJ;
+	rt_System_Boolean_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_Boolean_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Boolean_METADATA_Name;
+	rt_System_Boolean_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Boolean_METADATA_FullName;
+	memset(&rt_System_AttributeTargets_OBJ, 0, sizeof(rt_System_AttributeTargets));
+	rt_System_AttributeTargets_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_AttributeTargets_OBJ;
+	rt_System_AttributeTargets_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_System_AttributeTargets_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_AttributeTargets_METADATA_Name;
+	rt_System_AttributeTargets_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_AttributeTargets_METADATA_FullName;
 	memset(&rt_System_AttributeUsageAttribute_OBJ, 0, sizeof(rt_System_AttributeUsageAttribute));
 	rt_System_AttributeUsageAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_AttributeUsageAttribute_OBJ;
 	rt_System_AttributeUsageAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -2523,11 +2533,21 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_IndexOutOfRangeException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Exception_OBJ;
 	rt_System_IndexOutOfRangeException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_IndexOutOfRangeException_METADATA_Name;
 	rt_System_IndexOutOfRangeException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_IndexOutOfRangeException_METADATA_FullName;
+	memset(&rt_System_Double_OBJ, 0, sizeof(rt_System_Double));
+	rt_System_Double_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Double_OBJ;
+	rt_System_Double_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_Double_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Double_METADATA_Name;
+	rt_System_Double_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Double_METADATA_FullName;
 	memset(&rt_System_Math_OBJ, 0, sizeof(rt_System_Math));
 	rt_System_Math_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Math_OBJ;
 	rt_System_Math_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_Math_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Math_METADATA_Name;
 	rt_System_Math_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Math_METADATA_FullName;
+	memset(&rt_System_Single_OBJ, 0, sizeof(rt_System_Single));
+	rt_System_Single_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Single_OBJ;
+	rt_System_Single_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_Single_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Single_METADATA_Name;
+	rt_System_Single_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Single_METADATA_FullName;
 	memset(&rt_System_MathF_OBJ, 0, sizeof(rt_System_MathF));
 	rt_System_MathF_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_MathF_OBJ;
 	rt_System_MathF_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
@@ -2578,6 +2598,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_RuntimeType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Type_OBJ;
 	rt_System_RuntimeType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_RuntimeType_METADATA_Name;
 	rt_System_RuntimeType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_RuntimeType_METADATA_FullName;
+	memset(&rt_System_Char_OBJ, 0, sizeof(rt_System_Char));
+	rt_System_Char_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Char_OBJ;
+	rt_System_Char_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_Char_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Char_METADATA_Name;
+	rt_System_Char_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Char_METADATA_FullName;
+	memset(&rt_System_Int32_OBJ, 0, sizeof(rt_System_Int32));
+	rt_System_Int32_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Int32_OBJ;
+	rt_System_Int32_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_Int32_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Int32_METADATA_Name;
+	rt_System_Int32_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Int32_METADATA_FullName;
 	memset(&rt_System_String_OBJ, 0, sizeof(rt_System_String));
 	rt_System_String_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_String_OBJ;
 	rt_System_String_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
@@ -2628,6 +2658,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_ComponentModel_DependencyAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_ComponentModel_DependencyAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_ComponentModel_DependencyAttribute_METADATA_Name;
 	rt_System_ComponentModel_DependencyAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_ComponentModel_DependencyAttribute_METADATA_FullName;
+	memset(&rt_System_ComponentModel_EditorBrowsableState_OBJ, 0, sizeof(rt_System_ComponentModel_EditorBrowsableState));
+	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_ComponentModel_EditorBrowsableState_OBJ;
+	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_Name;
+	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_FullName;
 	memset(&rt_System_ComponentModel_EditorBrowsableAttribute_OBJ, 0, sizeof(rt_System_ComponentModel_EditorBrowsableAttribute));
 	rt_System_ComponentModel_EditorBrowsableAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_ComponentModel_EditorBrowsableAttribute_OBJ;
 	rt_System_ComponentModel_EditorBrowsableAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -2748,6 +2783,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_CompilerServices_IntrinsicAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_CompilerServices_IntrinsicAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_IntrinsicAttribute_METADATA_Name;
 	rt_System_Runtime_CompilerServices_IntrinsicAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_IntrinsicAttribute_METADATA_FullName;
+	memset(&rt_System_Runtime_CompilerServices_MethodCodeType_OBJ, 0, sizeof(rt_System_Runtime_CompilerServices_MethodCodeType));
+	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_CompilerServices_MethodCodeType_OBJ;
+	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_Name;
+	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_FullName;
+	memset(&rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ, 0, sizeof(rt_System_Runtime_CompilerServices_MethodImplOptions));
+	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ;
+	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_Name;
+	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_FullName;
 	memset(&rt_System_Runtime_CompilerServices_MethodImplAttribute_OBJ, 0, sizeof(rt_System_Runtime_CompilerServices_MethodImplAttribute));
 	rt_System_Runtime_CompilerServices_MethodImplAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_CompilerServices_MethodImplAttribute_OBJ;
 	rt_System_Runtime_CompilerServices_MethodImplAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -2763,6 +2808,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_InteropServices_OutAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_InteropServices_OutAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_Name;
 	rt_System_Runtime_InteropServices_OutAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_FullName;
+	memset(&rt_System_Runtime_InteropServices_LayoutKind_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_LayoutKind));
+	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_LayoutKind_OBJ;
+	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name;
+	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_FullName;
 	memset(&rt_System_Runtime_InteropServices_StructLayoutAttribute_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_StructLayoutAttribute));
 	rt_System_Runtime_InteropServices_StructLayoutAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_StructLayoutAttribute_OBJ;
 	rt_System_Runtime_InteropServices_StructLayoutAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -2773,46 +2823,31 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name;
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName;
+	memset(&rt_CS2X_NativeExternTarget_OBJ, 0, sizeof(rt_CS2X_NativeExternTarget));
+	rt_CS2X_NativeExternTarget_OBJ.runtimeType.CS2X_RuntimeType = &rt_CS2X_NativeExternTarget_OBJ;
+	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternTarget_METADATA_Name;
+	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternTarget_METADATA_FullName;
 	memset(&rt_CS2X_NativeExternAttribute_OBJ, 0, sizeof(rt_CS2X_NativeExternAttribute));
 	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_CS2X_NativeExternAttribute_OBJ;
 	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_Name;
 	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_FullName;
-	memset(&rt_System_Boolean_OBJ, 0, sizeof(rt_System_Boolean));
-	rt_System_Boolean_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Boolean_OBJ;
-	rt_System_Boolean_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
-	rt_System_Boolean_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Boolean_METADATA_Name;
-	rt_System_Boolean_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Boolean_METADATA_FullName;
 	memset(&rt_System_Byte_OBJ, 0, sizeof(rt_System_Byte));
 	rt_System_Byte_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Byte_OBJ;
 	rt_System_Byte_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
 	rt_System_Byte_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Byte_METADATA_Name;
 	rt_System_Byte_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Byte_METADATA_FullName;
-	memset(&rt_System_Char_OBJ, 0, sizeof(rt_System_Char));
-	rt_System_Char_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Char_OBJ;
-	rt_System_Char_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
-	rt_System_Char_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Char_METADATA_Name;
-	rt_System_Char_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Char_METADATA_FullName;
 	memset(&rt_System_Decimal_OBJ, 0, sizeof(rt_System_Decimal));
 	rt_System_Decimal_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Decimal_OBJ;
 	rt_System_Decimal_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
 	rt_System_Decimal_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Decimal_METADATA_Name;
 	rt_System_Decimal_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Decimal_METADATA_FullName;
-	memset(&rt_System_Double_OBJ, 0, sizeof(rt_System_Double));
-	rt_System_Double_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Double_OBJ;
-	rt_System_Double_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
-	rt_System_Double_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Double_METADATA_Name;
-	rt_System_Double_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Double_METADATA_FullName;
 	memset(&rt_System_Int16_OBJ, 0, sizeof(rt_System_Int16));
 	rt_System_Int16_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Int16_OBJ;
 	rt_System_Int16_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
 	rt_System_Int16_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Int16_METADATA_Name;
 	rt_System_Int16_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Int16_METADATA_FullName;
-	memset(&rt_System_Int32_OBJ, 0, sizeof(rt_System_Int32));
-	rt_System_Int32_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Int32_OBJ;
-	rt_System_Int32_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
-	rt_System_Int32_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Int32_METADATA_Name;
-	rt_System_Int32_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Int32_METADATA_FullName;
 	memset(&rt_System_Int64_OBJ, 0, sizeof(rt_System_Int64));
 	rt_System_Int64_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Int64_OBJ;
 	rt_System_Int64_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
@@ -2838,11 +2873,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_SByte_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
 	rt_System_SByte_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_SByte_METADATA_Name;
 	rt_System_SByte_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_SByte_METADATA_FullName;
-	memset(&rt_System_Single_OBJ, 0, sizeof(rt_System_Single));
-	rt_System_Single_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Single_OBJ;
-	rt_System_Single_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
-	rt_System_Single_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Single_METADATA_Name;
-	rt_System_Single_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Single_METADATA_FullName;
 	memset(&rt_System_UInt16_OBJ, 0, sizeof(rt_System_UInt16));
 	rt_System_UInt16_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_UInt16_OBJ;
 	rt_System_UInt16_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
@@ -2868,47 +2898,21 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Collections_DictionaryEntry_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
 	rt_System_Collections_DictionaryEntry_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Collections_DictionaryEntry_METADATA_Name;
 	rt_System_Collections_DictionaryEntry_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Collections_DictionaryEntry_METADATA_FullName;
-	memset(&rt_System_AttributeTargets_OBJ, 0, sizeof(rt_System_AttributeTargets));
-	rt_System_AttributeTargets_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_AttributeTargets_OBJ;
-	rt_System_AttributeTargets_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
-	rt_System_AttributeTargets_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_AttributeTargets_METADATA_Name;
-	rt_System_AttributeTargets_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_AttributeTargets_METADATA_FullName;
-	memset(&rt_System_ComponentModel_EditorBrowsableState_OBJ, 0, sizeof(rt_System_ComponentModel_EditorBrowsableState));
-	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_ComponentModel_EditorBrowsableState_OBJ;
-	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
-	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_Name;
-	rt_System_ComponentModel_EditorBrowsableState_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_FullName;
 	memset(&rt_System_Reflection_MethodImplAttributes_OBJ, 0, sizeof(rt_System_Reflection_MethodImplAttributes));
 	rt_System_Reflection_MethodImplAttributes_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Reflection_MethodImplAttributes_OBJ;
 	rt_System_Reflection_MethodImplAttributes_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
 	rt_System_Reflection_MethodImplAttributes_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Reflection_MethodImplAttributes_METADATA_Name;
 	rt_System_Reflection_MethodImplAttributes_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Reflection_MethodImplAttributes_METADATA_FullName;
-	memset(&rt_System_Runtime_CompilerServices_MethodCodeType_OBJ, 0, sizeof(rt_System_Runtime_CompilerServices_MethodCodeType));
-	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_CompilerServices_MethodCodeType_OBJ;
-	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
-	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_Name;
-	rt_System_Runtime_CompilerServices_MethodCodeType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_FullName;
-	memset(&rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ, 0, sizeof(rt_System_Runtime_CompilerServices_MethodImplOptions));
-	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ;
-	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
-	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_Name;
-	rt_System_Runtime_CompilerServices_MethodImplOptions_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_FullName;
-	memset(&rt_System_Runtime_InteropServices_LayoutKind_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_LayoutKind));
-	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_LayoutKind_OBJ;
-	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
-	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name;
-	rt_System_Runtime_InteropServices_LayoutKind_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_FullName;
-	memset(&rt_CS2X_NativeExternTarget_OBJ, 0, sizeof(rt_CS2X_NativeExternTarget));
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.CS2X_RuntimeType = &rt_CS2X_NativeExternTarget_OBJ;
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternTarget_METADATA_Name;
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternTarget_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
 	((t_System_String*)rt_System_Array_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Array_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Attribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Attribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Boolean_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Boolean_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_AttributeTargets_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_AttributeTargets_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_AttributeUsageAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_AttributeUsageAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_BitConverter_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -2937,8 +2941,12 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_GC_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_IndexOutOfRangeException_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_IndexOutOfRangeException_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Double_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Double_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Math_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Math_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Single_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Single_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MathF_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MathF_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MulticastDelegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -2959,6 +2967,10 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_ParamArrayAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_RuntimeType_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_RuntimeType_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Char_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Char_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Int32_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Int32_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_String_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_String_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_StringBuilder_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -2979,6 +2991,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_ComponentModel_BrowsableAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_ComponentModel_DependencyAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_ComponentModel_DependencyAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_ComponentModel_EditorBrowsableAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_ComponentModel_EditorBrowsableAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Diagnostics_ConditionalAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3027,32 +3041,32 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Runtime_CompilerServices_IndexerNameAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_IntrinsicAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_IntrinsicAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_MethodImplAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_MethodImplAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_CS2X_NativeExternTarget_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_CS2X_NativeExternTarget_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Boolean_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Boolean_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Byte_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Byte_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Char_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Char_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Decimal_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Decimal_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Double_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Double_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Int16_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Int16_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Int32_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Int32_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Int64_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Int64_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_IntPtr_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3063,8 +3077,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_RuntimeTypeHandle_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_SByte_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_SByte_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Single_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Single_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_UInt16_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_UInt16_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_UInt32_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3075,20 +3087,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_UIntPtr_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Collections_DictionaryEntry_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Collections_DictionaryEntry_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_AttributeTargets_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_AttributeTargets_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_ComponentModel_EditorBrowsableState_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Reflection_MethodImplAttributes_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Reflection_MethodImplAttributes_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Runtime_CompilerServices_MethodCodeType_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Runtime_CompilerServices_MethodImplOptions_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_CS2X_NativeExternTarget_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_CS2X_NativeExternTarget_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 
 	/* Init runtime type vtabel */
 	rt_System_Exception_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
