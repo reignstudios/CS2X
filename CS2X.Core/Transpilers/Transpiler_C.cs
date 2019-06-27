@@ -236,6 +236,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("#include <math.h>");
 				writer.WriteLine("#include <stdint.h>");
 				writer.WriteLine("#include <uchar.h>");
+				writer.WriteLine("#include <time.h>");
 				writer.WriteLine("#include <locale.h>");
 				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
 
@@ -1580,7 +1581,7 @@ namespace CS2X.Core.Transpilers
 				var accessExpression = (MemberAccessExpressionSyntax)expression;
 				expression = accessExpression.Expression;
 			}
-			else if (expression is IdentifierNameSyntax && expression.Parent is MemberAccessExpressionSyntax)
+			else if (expression is IdentifierNameSyntax && expression.Parent is MemberAccessExpressionSyntax && (expression.Parent as MemberAccessExpressionSyntax).Expression != expression)
 			{
 				return GetCaller((MemberAccessExpressionSyntax)expression.Parent);
 			}
