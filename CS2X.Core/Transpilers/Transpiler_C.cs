@@ -1580,7 +1580,7 @@ namespace CS2X.Core.Transpilers
 				var accessExpression = (MemberAccessExpressionSyntax)expression;
 				expression = accessExpression.Expression;
 			}
-			else if (expression is IdentifierNameSyntax && expression.Parent is MemberAccessExpressionSyntax)
+			else if (expression is IdentifierNameSyntax && expression.Parent is MemberAccessExpressionSyntax && (expression.Parent as MemberAccessExpressionSyntax).Expression != expression)
 			{
 				return GetCaller((MemberAccessExpressionSyntax)expression.Parent);
 			}
