@@ -2,7 +2,7 @@
 
 namespace System
 {
-	[NativeType(NativeTarget.C, "time_t")]
+	[NativeType(NativeTarget.C)]
 	struct time_t
 	{
 		public static implicit operator long(time_t value)
