@@ -899,9 +899,18 @@ namespace CS2X.Core.Transpilers
 				isVirtualAutoPropertyMethod = true;
 			}
 
-			// skip if type is native type
+			// skip method if CS2X attribute type
 			if (IsCS2XAttributeType(method.ContainingType)) return false;
-			if (GetNativeTypeAttribute(method.ContainingType, NativeTarget.C) != null) return false;
+
+			// skip if type is native type
+			if (GetNativeTypeAttribute(method.ContainingType, NativeTarget.C) != null)
+			{
+				if (method.IsExtern && !method.IsStatic) throw new NotSupportedException("Non-Static extern methods on native C types are not supported");
+				if (method.MethodKind != MethodKind.Constructor && method.MethodKind != MethodKind.StaticConstructor && method.MethodKind != MethodKind.Ordinary)
+				{
+					return false;
+				}
+			}
 
 			// skip if method is native extern
 			if (method.IsExtern && GetNativeExternAttribute(method, NativeTarget.C) != null) return false;
@@ -2481,6 +2490,7 @@ namespace CS2X.Core.Transpilers
 		{
 			using (allowTypePrefix.Disable())
 			{
+				if (GetNativeTypeAttribute(field.ContainingType, NativeTarget.C) != null) return field.Name;
 				string result = base.GetFieldFullName(field);
 				if (!field.IsStatic) result = $"f_{result}_{GetBaseTypeCount(field.ContainingType)}";
 				else result = $"f_{GetTypeFullName(field.ContainingType)}_{result}";

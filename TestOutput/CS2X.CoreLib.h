@@ -1442,6 +1442,7 @@ t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_Interop
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(t_System_Runtime_InteropServices_StructLayoutAttribute* self, int16_t p_layoutKind);
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName);
 uint8_t m_uint8_t__ctor_0();
+time_t m_time_t__ctor_0();
 int64_t m_System_DateTime_TODO_0(t_System_DateTime* self);
 t_System_DateTime m_System_DateTime__ctor_0();
 t_System_Decimal m_System_Decimal__ctor_0();
@@ -2316,9 +2317,16 @@ uint8_t m_uint8_t__ctor_0()
 	return selfObj;
 }
 
+time_t m_time_t__ctor_0()
+{
+	time_t selfObj = {0};
+	return selfObj;
+}
+
 int64_t m_System_DateTime_TODO_0(t_System_DateTime* self)
 {
 	time_t l_i_0;
+	self->f__internalDate_2 = 123;
 	l_i_0 = self->f__internalDate_2;
 	return (int64_t)l_i_0;
 }

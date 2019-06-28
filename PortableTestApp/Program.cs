@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CS2X;
+using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 //using System.Collections.Generic;
 
 namespace PortableTestApp
@@ -56,9 +58,25 @@ namespace PortableTestApp
 		}
 	}
 
+	//[NativeType(NativeTarget.C)]
+	//struct native_type_t
+	//{
+	//	public int value;
+	//	public int Boo()
+	//	{
+	//		return value;
+	//	}
+	//}
+
 	class Program
 	{
-		public string Name2(){ return null;}
+		public string Name2()
+		{
+			//native_type_t i2 = new native_type_t();
+			//i2.value = i2.Boo();
+
+			return null;
+		}
 
 		public int abc = 99;
 		public static int abcStatic;

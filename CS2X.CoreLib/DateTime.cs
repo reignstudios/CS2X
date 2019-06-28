@@ -9,6 +9,11 @@ namespace System
 		{
 			return 0;
 		}
+
+		public static implicit operator time_t(long value)
+		{
+			return new time_t();
+		}
 	}
 
 	public struct DateTime
@@ -17,6 +22,7 @@ namespace System
 
 		public long TODO()
 		{
+			_internalDate = 123;
 			var i = _internalDate;
 			return (long)i;
 		}
