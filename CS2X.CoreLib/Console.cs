@@ -4,7 +4,7 @@ namespace System
 {
     public static class Console
     {
-		[NativeExtern(NativeExternTarget.C)]
+		[NativeExtern(NativeTarget.C)]
 		private static unsafe extern int wprintf(char* text);
 		
         public static unsafe void Write(string s)

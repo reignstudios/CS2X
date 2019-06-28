@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <uchar.h>
 #include <locale.h>
+#include <time.h>
 #include "..\CS2X.Native\CS2X.GC.Dumby.h"
 #include "..\CS2X.Native\CS2X.InstructionHelpers.h"
 #include "_StringLiterals.h"
@@ -85,8 +86,7 @@ typedef struct t_System_Runtime_InteropServices_OutAttribute t_System_Runtime_In
 typedef int32_t t_System_Runtime_InteropServices_LayoutKind;
 typedef struct t_System_Runtime_InteropServices_StructLayoutAttribute t_System_Runtime_InteropServices_StructLayoutAttribute;
 typedef struct t_System_Runtime_Versioning_TargetFrameworkAttribute t_System_Runtime_Versioning_TargetFrameworkAttribute;
-typedef int32_t t_CS2X_NativeExternTarget;
-typedef struct t_CS2X_NativeExternAttribute t_CS2X_NativeExternAttribute;
+typedef struct t_System_DateTime t_System_DateTime;
 typedef struct t_System_Decimal t_System_Decimal;
 typedef void* t_System_RuntimeFieldHandle;
 typedef struct t_System_RuntimeTypeHandle t_System_RuntimeTypeHandle;
@@ -513,13 +513,9 @@ struct t_System_Runtime_Versioning_TargetFrameworkAttribute
 	t_System_String* f__FrameworkName_k__BackingField_2;
 };
 
-#define f_CS2X_NativeExternTarget_C 1
-
-struct t_CS2X_NativeExternAttribute
+struct t_System_DateTime
 {
-	t_System_RuntimeType* CS2X_RuntimeType;
-	t_CS2X_NativeExternTarget f_target_2;
-	t_System_String* f_methodName_2;
+	time_t f__internalDate_2;
 };
 
 struct t_System_Decimal
@@ -1174,22 +1170,6 @@ rt_System_Runtime_Versioning_TargetFrameworkAttribute rt_System_Runtime_Versioni
 int8_t rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,84,0,97,0,114,0,103,0,101,0,116,0,70,0,114,0,97,0,109,0,101,0,119,0,111,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* TargetFrameworkAttribute */
 int8_t rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName[114] = {0,0,0,0,0,0,0,0,50,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,86,0,101,0,114,0,115,0,105,0,111,0,110,0,105,0,110,0,103,0,46,0,84,0,97,0,114,0,103,0,101,0,116,0,70,0,114,0,97,0,109,0,101,0,119,0,111,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.Versioning.TargetFrameworkAttribute */
 
-typedef struct rt_CS2X_NativeExternTarget
-{
-	t_System_RuntimeType runtimeType;
-} rt_CS2X_NativeExternTarget;
-rt_CS2X_NativeExternTarget rt_CS2X_NativeExternTarget_OBJ;
-int8_t rt_CS2X_NativeExternTarget_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,84,0,97,0,114,0,103,0,101,0,116,0,0,0}; /* NativeExternTarget */
-int8_t rt_CS2X_NativeExternTarget_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,67,0,83,0,50,0,88,0,46,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,84,0,97,0,114,0,103,0,101,0,116,0,0,0}; /* CS2X.NativeExternTarget */
-
-typedef struct rt_CS2X_NativeExternAttribute
-{
-	t_System_RuntimeType runtimeType;
-} rt_CS2X_NativeExternAttribute;
-rt_CS2X_NativeExternAttribute rt_CS2X_NativeExternAttribute_OBJ;
-int8_t rt_CS2X_NativeExternAttribute_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* NativeExternAttribute */
-int8_t rt_CS2X_NativeExternAttribute_METADATA_FullName[66] = {0,0,0,0,0,0,0,0,26,0,0,0,67,0,83,0,50,0,88,0,46,0,78,0,97,0,116,0,105,0,118,0,101,0,69,0,120,0,116,0,101,0,114,0,110,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* CS2X.NativeExternAttribute */
-
 typedef struct rt_System_Byte
 {
 	t_System_RuntimeType runtimeType;
@@ -1197,6 +1177,14 @@ typedef struct rt_System_Byte
 rt_System_Byte rt_System_Byte_OBJ;
 int8_t rt_System_Byte_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,66,0,121,0,116,0,101,0,0,0}; /* Byte */
 int8_t rt_System_Byte_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,66,0,121,0,116,0,101,0,0,0}; /* System.Byte */
+
+typedef struct rt_System_DateTime
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_DateTime;
+rt_System_DateTime rt_System_DateTime_OBJ;
+int8_t rt_System_DateTime_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,68,0,97,0,116,0,101,0,84,0,105,0,109,0,101,0,0,0}; /* DateTime */
+int8_t rt_System_DateTime_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,15,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,97,0,116,0,101,0,84,0,105,0,109,0,101,0,0,0}; /* System.DateTime */
 
 typedef struct rt_System_Decimal
 {
@@ -1453,9 +1441,9 @@ t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_Lay
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(t_System_Runtime_InteropServices_StructLayoutAttribute* self, int16_t p_layoutKind);
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName);
-t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0();
-t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternAttribute* self, t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName);
 uint8_t m_uint8_t__ctor_0();
+int64_t m_System_DateTime_TODO_0(t_System_DateTime* self);
+t_System_DateTime m_System_DateTime__ctor_0();
 t_System_Decimal m_System_Decimal__ctor_0();
 int16_t m_int16_t__ctor_0();
 int64_t m_int64_t__ctor_0();
@@ -2322,23 +2310,22 @@ t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versionin
 	return self;
 }
 
-t_CS2X_NativeExternTarget m_CS2X_NativeExternTarget__ctor_0()
-{
-	t_CS2X_NativeExternTarget selfObj = {0};
-	return selfObj;
-}
-
-t_CS2X_NativeExternAttribute* m_CS2X_NativeExternAttribute__ctor_0(t_CS2X_NativeExternAttribute* self, t_CS2X_NativeExternTarget p_target, t_System_String* p_methodName)
-{
-	m_System_Attribute__ctor_0(self);
-	self->f_target_2 = p_target;
-	self->f_methodName_2 = p_methodName;
-	return self;
-}
-
 uint8_t m_uint8_t__ctor_0()
 {
 	uint8_t selfObj = {0};
+	return selfObj;
+}
+
+int64_t m_System_DateTime_TODO_0(t_System_DateTime* self)
+{
+	time_t l_i_0;
+	l_i_0 = self->f__internalDate_2;
+	return (int64_t)l_i_0;
+}
+
+t_System_DateTime m_System_DateTime__ctor_0()
+{
+	t_System_DateTime selfObj = {0};
 	return selfObj;
 }
 
@@ -2823,21 +2810,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name;
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName;
-	memset(&rt_CS2X_NativeExternTarget_OBJ, 0, sizeof(rt_CS2X_NativeExternTarget));
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.CS2X_RuntimeType = &rt_CS2X_NativeExternTarget_OBJ;
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternTarget_METADATA_Name;
-	rt_CS2X_NativeExternTarget_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternTarget_METADATA_FullName;
-	memset(&rt_CS2X_NativeExternAttribute_OBJ, 0, sizeof(rt_CS2X_NativeExternAttribute));
-	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_CS2X_NativeExternAttribute_OBJ;
-	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
-	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_Name;
-	rt_CS2X_NativeExternAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_FullName;
 	memset(&rt_System_Byte_OBJ, 0, sizeof(rt_System_Byte));
 	rt_System_Byte_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Byte_OBJ;
 	rt_System_Byte_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
 	rt_System_Byte_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Byte_METADATA_Name;
 	rt_System_Byte_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Byte_METADATA_FullName;
+	memset(&rt_System_DateTime_OBJ, 0, sizeof(rt_System_DateTime));
+	rt_System_DateTime_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_DateTime_OBJ;
+	rt_System_DateTime_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_DateTime_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_DateTime_METADATA_Name;
+	rt_System_DateTime_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_DateTime_METADATA_FullName;
 	memset(&rt_System_Decimal_OBJ, 0, sizeof(rt_System_Decimal));
 	rt_System_Decimal_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Decimal_OBJ;
 	rt_System_Decimal_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
@@ -3057,12 +3039,10 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_CS2X_NativeExternTarget_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_CS2X_NativeExternTarget_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_CS2X_NativeExternAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Byte_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Byte_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_DateTime_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_DateTime_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Decimal_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Decimal_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Int16_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;

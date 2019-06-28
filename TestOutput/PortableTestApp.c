@@ -223,6 +223,7 @@ void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_Main_0();
+void m_PortableTestApp_Program_FooThrow_0();
 double* m_PortableTestApp_Program_Ya_0();
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o);
 t_PortableTestApp_Program* m_PortableTestApp_Program__ctor_0(t_PortableTestApp_Program* self);
@@ -398,7 +399,7 @@ void m_PortableTestApp_Program_Main_0()
 	if (CS2X_IS_JMP_0 == 0)
 	{
 		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_0, sizeof(jmp_buf));
-		m_PortableTestApp_Program_FooThrow_0(m_PortableTestApp_MyBaseClass__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyBaseClass), &rt_PortableTestApp_MyBaseClass_OBJ)));
+		m_PortableTestApp_Program_FooThrow_0();
 	}
 	else /* end try */
 	{
@@ -419,6 +420,12 @@ void m_PortableTestApp_Program_Main_0()
 		}
 		if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */
 	} /* end catch */
+}
+
+void m_PortableTestApp_Program_FooThrow_0()
+{
+	CS2X_ThreadExceptionObject = m_System_NotSupportedException__ctor_0(CS2X_AllocType(sizeof(t_System_NotSupportedException), &rt_System_NotSupportedException_OBJ), StringLiteral_7);
+	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 }
 
 double* m_PortableTestApp_Program_Ya_0()
@@ -638,6 +645,7 @@ void CS2X_InitStringLiterals()
 	((t_System_String*)StringLiteral_4)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)StringLiteral_5)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)StringLiteral_6)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)StringLiteral_7)->CS2X_RuntimeType = &rt_System_String_OBJ;
 }
 
 /* =============================== */

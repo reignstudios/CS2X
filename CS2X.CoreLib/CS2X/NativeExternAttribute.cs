@@ -2,19 +2,13 @@
 
 namespace CS2X
 {
-	[Flags]
-	public enum NativeExternTarget
-	{
-		C = 1
-	}
-
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 	public class NativeExternAttribute : Attribute
 	{
-		public readonly NativeExternTarget target;
+		public readonly NativeTarget target;
 		public readonly string methodName;
 
-		public NativeExternAttribute(NativeExternTarget target, string methodName = null)
+		public NativeExternAttribute(NativeTarget target, string methodName = null)
 		{
 			this.target = target;
 			this.methodName = methodName;

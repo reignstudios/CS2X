@@ -317,12 +317,65 @@ namespace CS2X.Core.Transpilers
 			return false;
 		}
 
-		protected AttributeData GetNativeExternAttribute(ISymbol symbol)
+		protected bool IsCS2XAttributeType(ITypeSymbol type)
+		{
+			return type.Name == "NativeTarget" || type.Name == "NativeExternAttribute" || type.Name == "NativeTypeAttribute";
+		}
+
+		protected bool GetNativeExternName(IMethodSymbol method, NativeTarget target, out string name)
+		{
+			var attribute = GetNativeExternAttribute(method, target);
+			if (attribute != null)
+			{
+				var constant = attribute.ConstructorArguments[1];
+				if (constant.Value == null) name = method.Name;
+				else name = constant.Value.ToString();
+				return true;
+			}
+			else if (!IsInternalCall(method))
+			{
+				throw new NotSupportedException("Unsupported extern method invoke: " + method.FullName());
+			}
+
+			name = null;
+			return false;
+		}
+
+		protected bool GetNativeTypeName(ITypeSymbol type, NativeTarget target, out string name)
+		{
+			var attribute = GetNativeTypeAttribute(type, target);
+			if (attribute != null)
+			{
+				var constant = attribute.ConstructorArguments[1];
+				if (constant.Value == null) name = type.Name;
+				else name = constant.Value.ToString();
+				return true;
+			}
+
+			name = null;
+			return false;
+		}
+
+		protected AttributeData GetNativeExternAttribute(IMethodSymbol method, NativeTarget target)
+		{
+			return GetCS2XAttribute(method, target, "NativeExternAttribute");
+		}
+
+		protected AttributeData GetNativeTypeAttribute(ITypeSymbol type, NativeTarget target)
+		{
+			return GetCS2XAttribute(type, target, "NativeTypeAttribute");
+		}
+
+		protected AttributeData GetCS2XAttribute(ISymbol symbol, NativeTarget target, string attributeTypeName)
 		{
 			foreach (var attribute in symbol.GetAttributes())
 			{
 				var type = attribute.AttributeClass;
-				if (type.ContainingNamespace.Name == "CS2X" && type.Name == "NativeExternAttribute") return attribute;
+				if (type.ContainingNamespace.Name == "CS2X" && type.Name == attributeTypeName)
+				{
+					if (!attribute.ConstructorArguments.Any(x => ((int)x.Value & 1) == (int)target)) throw new NotImplementedException($"NativeTarget not set for '{target}': " + symbol.FullName());
+					return attribute;
+				}
 			}
 			return null;
 		}

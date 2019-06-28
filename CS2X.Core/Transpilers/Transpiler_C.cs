@@ -237,6 +237,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("#include <stdint.h>");
 				writer.WriteLine("#include <uchar.h>");
 				writer.WriteLine("#include <locale.h>");
+				writer.WriteLine("#include <time.h>");
 				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
 
 				// write include of gc to be used
@@ -634,6 +635,8 @@ namespace CS2X.Core.Transpilers
 					var namedType = (INamedTypeSymbol)type;
 					if (namedType.IsGenericType && namedType.IsDefinition) continue;
 				}
+				if (IsCS2XAttributeType(type)) continue;
+				if (GetNativeTypeAttribute(type, NativeTarget.C) != null) continue;
 
 				string obj = GetRuntimeTypeObjFullName(type);
 				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
@@ -657,6 +660,8 @@ namespace CS2X.Core.Transpilers
 						var namedType = (INamedTypeSymbol)type;
 						if (namedType.IsGenericType && namedType.IsDefinition) continue;
 					}
+					if (IsCS2XAttributeType(type)) continue;
+					if (GetNativeTypeAttribute(type, NativeTarget.C) != null) continue;
 
 					string metadata = GetRuntimeTypeMetadataFullName(type);
 					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
@@ -674,6 +679,8 @@ namespace CS2X.Core.Transpilers
 					var namedType = (INamedTypeSymbol)type;
 					if (namedType.IsGenericType && namedType.IsDefinition) continue;
 				}
+				if (IsCS2XAttributeType(type)) continue;
+				if (GetNativeTypeAttribute(type, NativeTarget.C) != null) continue;
 
 				string obj = GetRuntimeTypeObjFullName(type);
 				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
@@ -736,6 +743,8 @@ namespace CS2X.Core.Transpilers
 			if (type.SpecialType == SpecialType.System_Void) return false;
 			if (type.TypeKind == TypeKind.Interface) return false;
 			if (type.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)type).IsGenericType && type.IsDefinition) return false;
+			if (IsCS2XAttributeType(type)) return false;
+			if (GetNativeTypeAttribute(type, NativeTarget.C) != null) return false;
 
 			string runtimeTypeName = GetRuntimeTypeFullName(type);
 			writer.WriteLine($"typedef struct {runtimeTypeName}");
@@ -775,6 +784,8 @@ namespace CS2X.Core.Transpilers
 			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return false;
 			if (type.TypeKind == TypeKind.Interface) return false;
 			if (type.IsGenericType && type.IsDefinition) return false;
+			if (IsCS2XAttributeType(type)) return false;
+			if (GetNativeTypeAttribute(type, NativeTarget.C) != null) return false;
 
 			if (!writeBody)
 			{
@@ -888,16 +899,12 @@ namespace CS2X.Core.Transpilers
 				isVirtualAutoPropertyMethod = true;
 			}
 
+			// skip if type is native type
+			if (IsCS2XAttributeType(method.ContainingType)) return false;
+			if (GetNativeTypeAttribute(method.ContainingType, NativeTarget.C) != null) return false;
+
 			// skip if method is native extern
-			if (method.IsExtern)
-			{
-				var nativeExternAttribute = GetNativeExternAttribute(method);
-				if (nativeExternAttribute != null)
-				{
-					if (!nativeExternAttribute.ConstructorArguments.Any(x => ((int)x.Value & 1) == 1)) throw new NotImplementedException("NativeExternTarget not set for 'C' on method: " + method.FullName());
-					return false;
-				}
-			}
+			if (method.IsExtern && GetNativeExternAttribute(method, NativeTarget.C) != null) return false;
 
 			// validate method type is supported
 			switch (method.MethodKind)
@@ -2129,17 +2136,10 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (method.IsExtern)
 			{
-				var nativeExternAttribute = GetNativeExternAttribute(method);
-				if (nativeExternAttribute != null)
+				if (GetNativeExternName(method, NativeTarget.C, out string name))
 				{
 					isStaticExternCMethod = true;
-					var arg = nativeExternAttribute.ConstructorArguments[1];
-					if (arg.Value == null) writer.Write(method.Name);
-					else writer.Write(arg.Value.ToString());
-				}
-				else if (!IsInternalCall(method))
-				{
-					throw new NotSupportedException("Unsupported extern method invoke: " + method.FullName());
+					writer.Write(name);
 				}
 			}
 
@@ -2412,7 +2412,11 @@ namespace CS2X.Core.Transpilers
 		protected override string GetTypeFullName(ITypeSymbol type)
 		{
 			CheckType(type);
-			if (type.SpecialType == SpecialType.System_Void)
+			if (GetNativeTypeName(type, NativeTarget.C, out string name))
+			{
+				return name;
+			}
+			else if (type.SpecialType == SpecialType.System_Void)
 			{
 				return "void";
 			}
