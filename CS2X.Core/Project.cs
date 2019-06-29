@@ -38,7 +38,6 @@ namespace CS2X.Core
 		public IReadOnlyList<INamedTypeSymbol> enumTypes { get; private set; }
 
 		// special types
-		public IReadOnlyCollection<InvocationExpressionSyntax> typeClassMethods { get; private set; }
 		public IReadOnlyCollection<IMethodSymbol> genericMethods { get; private set; }
 		public IReadOnlyCollection<INamedTypeSymbol> genericTypes { get; private set; }
 		public IReadOnlyCollection<IArrayTypeSymbol> arrayTypes { get; private set; }
@@ -91,7 +90,6 @@ namespace CS2X.Core
 			interfaceTypes = new List<INamedTypeSymbol>();
 			enumTypes = new List<INamedTypeSymbol>();
 
-			typeClassMethods = new HashSet<InvocationExpressionSyntax>();
 			genericMethods = new HashSet<IMethodSymbol>();
 			genericTypes = new HashSet<INamedTypeSymbol>();
 			arrayTypes = new HashSet<IArrayTypeSymbol>();
@@ -208,17 +206,9 @@ namespace CS2X.Core
 				else
 				{
 					var method = semanticModel.GetSymbolInfo(node).Symbol as IMethodSymbol;
-					if (method != null)
+					if (method != null && method.IsGenericMethod && !method.IsDefinition)
 					{
-						if (method.IsGenericMethod && !method.IsDefinition)
-						{
-							if (!ExistsInReference(genericMethods, method)) ((HashSet<IMethodSymbol>)genericMethods).Add(method);
-						}
-						else if (node is InvocationExpressionSyntax && method.Parameters.Any(x => x.Type.TypeKind == TypeKind.Interface))
-						{
-							var expression = (InvocationExpressionSyntax)node;
-							if (!ExistsInReference(typeClassMethods, expression)) ((HashSet<InvocationExpressionSyntax>)typeClassMethods).Add(expression);
-						}
+						if (!ExistsInReference(genericMethods, method)) ((HashSet<IMethodSymbol>)genericMethods).Add(method);
 					}
 				}
 			}

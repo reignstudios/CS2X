@@ -107,6 +107,11 @@ namespace CS2X.Core.Transpilers
 			/// Memory location string literals are stored
 			/// </summary>
 			public StringLiteralMemoryLocation stringLiteralMemoryLocation;
+
+			/// <summary>
+			/// Disables up casting checks for extra performance
+			/// </summary>
+			public bool disableUpCastingChecks;
 		}
 		#endregion
 
@@ -452,6 +457,21 @@ namespace CS2X.Core.Transpilers
 				writer.RemoveTab();
 				writer.WriteLinePrefix('}');
 				writer.WriteLinePrefix("return 0;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
+
+				// 'up-cast' type helper method
+				string objectTypeName = GetTypeFullName(objectType);
+				writer.WriteLine();
+				writer.WriteLine($"{objectTypeName}* CS2X_TestUpCast({objectTypeName}* self, {runtimeTypeName}* isRuntimeType)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix("if (self == 0) return 0;");
+				writer.WriteLinePrefix("if (CS2X_IsType(self->CS2X_RuntimeType, isRuntimeType)) return self;");
+				var castExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.InvalidCastException");
+				var castExceptionTypeConstructor = FindDefaultConstructor(castExceptionType);
+				writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(castExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(castExceptionType)}), &{GetRuntimeTypeObjFullName(castExceptionType)}));");
+				writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}
@@ -872,7 +892,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix($"{GetTypeFullNameRef(field.Type)} {GetFieldFullName(field)};");
 		}
 
-		private bool WriteMethod(IMethodSymbol method, bool writeBody, Dictionary<IParameterSymbol, ITypeSymbol> parameterOverrides = null)
+		private bool WriteMethod(IMethodSymbol method, bool writeBody)
 		{
 			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
@@ -890,12 +910,11 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			if (parameterOverrides == null && method.Parameters.Any(x => x.Type.TypeKind == TypeKind.Interface)) return false;
-
+			// check if we're a auto virtual property
 			bool isVirtualAutoPropertyMethod = false;
-			if (IsAutoPropertyMethod(method, out var virtualAutoProperty, out var virtualAutoPropertyField))
+			if (IsAutoPropertyMethod(method, out _, out var virtualAutoPropertyField))
 			{
-				if (!IsVirtualMethod(method)) return false;
+				if (!IsVirtualMethod(method)) return false;// if we're not virtual backing field will be used
 				isVirtualAutoPropertyMethod = true;
 			}
 
@@ -1213,8 +1232,9 @@ namespace CS2X.Core.Transpilers
 		{
 			switch (parameter.RefKind)
 			{
-				case RefKind.None: return false;
-				case RefKind.In: return false;//parameter.Type.IsValueType && !IsPrimitiveType(parameter.Type);// TODO: limit pass by 'in' to identifier expressions
+				case RefKind.None:
+				case RefKind.In:
+					return false;
 
 				case RefKind.Out:
 				case RefKind.Ref:
@@ -1822,8 +1842,9 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		private void WriteArgumentList(ArgumentListSyntax argumentList)
+		private void WriteArgumentList(IMethodSymbol method, ArgumentListSyntax argumentList)
 		{
+			// normal parameters
 			var arguments = argumentList.Arguments;
 			if (arguments.Count != 0)
 			{
@@ -1833,6 +1854,31 @@ namespace CS2X.Core.Transpilers
 					if (arg.RefKindKeyword.Text == "out" || arg.RefKindKeyword.Text == "ref") writer.Write('&');
 					WriteExpression(arg.Expression);
 					if (arg != lastArg) writer.Write(", ");
+				}
+			}
+
+			// optional parameters
+			if (argumentList.Arguments.Count != method.Parameters.Length)
+			{
+				if (argumentList.Arguments.Count > method.Parameters.Length) throw new Exception("Method argument count is larger than parameter count");
+				int start = method.Parameters.Length - (method.Parameters.Length - argumentList.Arguments.Count);
+				writer.Write(", ");
+				for (int i = start; i != method.Parameters.Length; ++i)
+				{
+					var parameter = method.Parameters[i];
+					if (!parameter.IsOptional) throw new Exception("Parameter is not optional: " + parameter);
+					if (parameter.HasExplicitDefaultValue) 
+					{
+						writer.Write(GetFormatedConstValue(parameter.ExplicitDefaultValue));
+					}
+					else
+					{
+						var reference = parameter.DeclaringSyntaxReferences.First();
+						var syntaxDeclaration = (ParameterSyntax)reference.GetSyntax();
+						if (IsParameterPassByRef(parameter)) writer.Write('&');
+						WriteExpression(syntaxDeclaration.Default.Value);
+					};
+					if (i != method.Parameters.Length - 1) writer.Write(", ");
 				}
 			}
 		}
@@ -1875,30 +1921,7 @@ namespace CS2X.Core.Transpilers
 				writer.Write($"{GetNewObjectMethod(method.ContainingType)}(sizeof({GetTypeFullName(method.ContainingType)}), &{GetRuntimeTypeObjFullName(method.ContainingType)})");
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}
-			WriteArgumentList(expression.ArgumentList);
-			if (expression.ArgumentList.Arguments.Count != method.Parameters.Length)// optional parameters
-			{
-				if (expression.ArgumentList.Arguments.Count > method.Parameters.Length) throw new Exception("Method argument count is larger than parameter count");
-				int start = method.Parameters.Length - (method.Parameters.Length - expression.ArgumentList.Arguments.Count);
-				writer.Write(", ");
-				for (int i = start; i != method.Parameters.Length; ++i)
-				{
-					var parameter = method.Parameters[i];
-					if (!parameter.IsOptional) throw new Exception("Parameter is not optional: " + parameter);
-					if (parameter.HasExplicitDefaultValue) 
-					{
-						writer.Write(GetFormatedConstValue(parameter.ExplicitDefaultValue));
-					}
-					else
-					{
-						var reference = parameter.DeclaringSyntaxReferences.First();
-						var syntaxDeclaration = (ParameterSyntax)reference.GetSyntax();
-						if (IsParameterPassByRef(parameter)) writer.Write('&');
-						WriteExpression(syntaxDeclaration.Default.Value);
-					};
-					if (i != method.Parameters.Length - 1) writer.Write(", ");
-				}
-			}
+			WriteArgumentList(method, expression.ArgumentList);
 			writer.Write(')');
 
 			// write initializer
@@ -2172,7 +2195,7 @@ namespace CS2X.Core.Transpilers
 				WriteCaller(expression.Expression);
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}
-			WriteArgumentList(expression.ArgumentList);
+			WriteArgumentList(method, expression.ArgumentList);
 			writer.Write(')');
 		}
 
@@ -2269,6 +2292,26 @@ namespace CS2X.Core.Transpilers
 		private void CastExpression(CastExpressionSyntax expression)
 		{
 			var type = ResolveType(expression.Type);
+
+			// test up cast
+			if (!options.disableUpCastingChecks)
+			{
+				var castFromType = ResolveType(expression.Expression);
+				if
+				(
+					type.Kind != SymbolKind.PointerType && castFromType.Kind != SymbolKind.PointerType &&
+					!IsPrimitiveType(type) && !IsPrimitiveType(castFromType) &&
+					!HasBaseClass(castFromType, type)
+				)
+				{
+					writer.Write($"({GetTypeFullNameRef(type)})CS2X_TestUpCast(");
+					WriteExpression(expression.Expression);
+					writer.Write($", &{GetRuntimeTypeObjFullName(type)})");
+					return;
+				}
+			}
+
+			// basic / down cast
 			writer.Write($"({GetTypeFullNameRef(type)})");
 			WriteExpression(expression.Expression);
 		}

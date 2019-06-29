@@ -208,8 +208,8 @@ namespace PortableTestApp
 			Console.WriteLine(myG.GetType().FullName);
 			try
 			{
-				FooThrow();//new MyBaseClass());
-				//FooThrow(null);// should be a compile time error
+				MyAbstractClass c = new MyBaseClass();
+				FooThrow((MyBaseClass)c);
 			}
 			catch (NotSupportedException e)
 			{
@@ -217,11 +217,11 @@ namespace PortableTestApp
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.Message);
+				Console.WriteLine("Error: " + e.Message);
 			}
 		}
 
-		static void FooThrow()//MyInterface value)
+		static void FooThrow(MyBaseClass a)
 		{
 			throw new NotSupportedException("My Exception!");
 		}

@@ -59,9 +59,9 @@ Almost zero performance loss. C# code will generate in a manner as if hand writt
 	* System.Object can never equal a 'struct', 'enum' or 'primitive' type.
 	* Virtuals like 'MyStruct.GetType()' or 'MyEnum.GetType()' give compile time errors (use typeof instead).
 * Interfaces are considered 'type-classes' and are compile time only.
-	* No virtual calls needed.
-	* No casting overhead or boxing.
+	* Used for generics only.
 	* No casting to them or variable declarations of them.
+* No down-casting performance loss in C and up-casting checks can be disabled for C output.
 
 ## Building
 * Prerequisites

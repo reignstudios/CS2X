@@ -434,5 +434,16 @@ namespace CS2X.Core.Transpilers
 			}
 			return type;
 		}
+
+		protected bool HasBaseClass(ITypeSymbol type, ITypeSymbol baseClass)
+		{
+			var next = type.BaseType;
+			while (next != null)
+			{
+				if (next == baseClass) return true;
+				next = next.BaseType;
+			}
+			return false;
+		}
 	}
 }
