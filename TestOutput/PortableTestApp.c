@@ -244,7 +244,6 @@ int32_t m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3
 /* =============================== */
 /* Method definitions */
 /* =============================== */
-
 void m_PortableTestApp_MyAbstractClass_MyFoo_0(t_PortableTestApp_MyAbstractClass* self)
 {
 	m_System_Console_Write_0(StringLiteral_1);

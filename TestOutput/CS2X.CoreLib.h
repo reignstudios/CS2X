@@ -1414,9 +1414,8 @@ uintptr_t m_uintptr_t__ctor_0();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
 
 /* =============================== */
-/* Method definitions */
+/* Helper runtime methods */
 /* =============================== */
-
 void* CS2X_AllocType(size_t size, t_System_RuntimeType* runtimeType)
 {
 	t_System_RuntimeType* ptr = CS2X_GC_New(size);
@@ -1466,6 +1465,9 @@ t_System_Object* CS2X_TestUpCast(t_System_Object* self, t_System_RuntimeType* is
 	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 }
 
+/* =============================== */
+/* Method definitions */
+/* =============================== */
 int32_t m_System_Array_get_Length_0(t_System_Array* self)
 {
 	return (int32_t)(*((size_t*)self + 1));

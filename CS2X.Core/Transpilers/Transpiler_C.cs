@@ -387,17 +387,16 @@ namespace CS2X.Core.Transpilers
 				WriteMethod(method, false);
 			}
 
-			// method definitions
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Method definitions */");
-			writer.WriteLine("/* =============================== */");
+			// helper runtime methods
 			if (project.isCoreLib)
 			{
+				writer.WriteLine();
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* Helper runtime methods */");
+				writer.WriteLine("/* =============================== */");
 				string runtimeTypeName = GetTypeFullName(runtimeType);
 
 				// alloc GC type and set runtime ptr helper
-				writer.WriteLine();
 				writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
@@ -475,7 +474,13 @@ namespace CS2X.Core.Transpilers
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}
+
+			// method definitions
 			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Method definitions */");
+			writer.WriteLine("/* =============================== */");
+
 			foreach (var type in project.allTypes)
 			{
 				if (type.TypeKind == TypeKind.Interface) continue;
