@@ -88,7 +88,7 @@ namespace CS2X.Core
 	static class ISymbolExt
 	{
 		private static SymbolDisplayFormat nameFormat = new SymbolDisplayFormat(typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameOnly, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
-		private static SymbolDisplayFormat fullNameFormat = new SymbolDisplayFormat(typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
+		private static SymbolDisplayFormat fullNameFormat = new SymbolDisplayFormat(memberOptions:SymbolDisplayMemberOptions.IncludeContainingType | SymbolDisplayMemberOptions.IncludeParameters, typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters, parameterOptions:SymbolDisplayParameterOptions.IncludeType);
 
 		public static string Name(this ISymbol symbol)
 		{

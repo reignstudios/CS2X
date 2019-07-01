@@ -1,7 +1,7 @@
 namespace System.Collections.Generic
 {
-	/*public interface IEnumerator<T> : IDisposable, IEnumerator
+	public interface IEnumerator<T> : IEnumerator
     {
 		new T Current { get; }
-    }*/
+    }
 }

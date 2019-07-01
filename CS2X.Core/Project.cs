@@ -104,6 +104,11 @@ namespace CS2X.Core
 			{
 				ParseSpecialMembers(compilation, syntaxTree.GetRoot());
 			}
+
+			if (genericTypes.Count != 0)
+			{
+				var members = genericTypes.First().GetMembers();
+			}
 			
 			// merge all types in one list
 			var allTypesList = new List<INamedTypeSymbol>();
@@ -147,7 +152,22 @@ namespace CS2X.Core
 
 		private void ValidateType(INamedTypeSymbol type)
 		{
-			// TODO
+			if (type.TypeKind != TypeKind.Interface)
+			{
+				var ienumerableT = compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerable_T);
+				var ienumerable = compilation.GetSpecialType(SpecialType.System_Collections_IEnumerable);
+				if ((type.Interfaces.Contains(ienumerableT) || type.Interfaces.Contains(ienumerable)) && type.TypeKind != TypeKind.Class)
+				{
+					throw new NotSupportedException("Only classes can implement IEnumerable");
+				}
+
+				var ienumeratorT = compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerator_T);
+				var ienumerator = compilation.GetSpecialType(SpecialType.System_Collections_IEnumerator);
+				if ((type.Interfaces.Contains(ienumeratorT) || type.Interfaces.Contains(ienumerator)) && type.TypeKind != TypeKind.Struct)
+				{
+					throw new NotSupportedException("Only structs can implement IEnumerator");
+				}
+			}
 		}
 
 		private void ParseNamespace(INamespaceSymbol namespaceSymbol)
@@ -182,15 +202,16 @@ namespace CS2X.Core
 			}
 		}
 
-		private void ParseSpecialMembers(CSharpCompilation compilation, SyntaxNode root)
+		/*private void ParseSpecialMembers(CSharpCompilation compilation, SyntaxNode root)
 		{
 			var semanticModel = compilation.GetSemanticModel(root.SyntaxTree);
-			foreach (var node in root.DescendantNodesAndSelf())
+			foreach (var node in root.ChildNodes())//.DescendantNodesAndSelf())
 			{
 				var type = semanticModel.GetSymbolInfo(node).Symbol as ITypeSymbol;
 				if (type != null)
 				{
-					if (type.Kind == SymbolKind.NamedType && !type.IsDefinition && ((INamedTypeSymbol)type).IsGenericType)
+					var namedType = type as INamedTypeSymbol;
+					if (type.Kind == SymbolKind.NamedType && !type.IsDefinition && type.TypeKind != TypeKind.Interface && namedType != null && namedType.IsGenericType)// && !namedType.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
 					{
 						if (!ExistsInReference(genericTypes, type)) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)type);
 					}
@@ -206,12 +227,50 @@ namespace CS2X.Core
 				else
 				{
 					var method = semanticModel.GetSymbolInfo(node).Symbol as IMethodSymbol;
-					if (method != null && method.IsGenericMethod && !method.IsDefinition)
+					if (method != null && method.IsGenericMethod && !method.IsDefinition && method.ContainingType.TypeKind != TypeKind.Interface)// && !method.ContainingType.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
 					{
 						if (!ExistsInReference(genericMethods, method)) ((HashSet<IMethodSymbol>)genericMethods).Add(method);
 					}
 				}
 			}
+		}*/
+
+		private void ParseSpecialMembers(CSharpCompilation compilation, SyntaxNode node)
+		{
+			var semanticModel = compilation.GetSemanticModel(node.SyntaxTree);
+			//foreach (var node in root.ChildNodes())//.DescendantNodesAndSelf())
+			{
+				var type = semanticModel.GetSymbolInfo(node).Symbol as ITypeSymbol;
+				if (type != null)
+				{
+					if (type.Name.Contains("MyEnumerable"))
+					{ }
+
+					var namedType = type as INamedTypeSymbol;
+					if (type.Kind == SymbolKind.NamedType && !type.IsDefinition && type.TypeKind != TypeKind.Interface && namedType != null && namedType.IsGenericType)// && !namedType.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
+					{
+						if (!ExistsInReference(genericTypes, type)) ((HashSet<INamedTypeSymbol>)genericTypes).Add((INamedTypeSymbol)type);
+					}
+					else if (type.Kind == SymbolKind.ArrayType)
+					{
+						if (!ExistsInReference(arrayTypes, type)) ((HashSet<IArrayTypeSymbol>)arrayTypes).Add((IArrayTypeSymbol)type);
+					}
+					else if (type.Kind == SymbolKind.PointerType)
+					{
+						if (!ExistsInReference(pointerTypes, type)) ((HashSet<IPointerTypeSymbol>)pointerTypes).Add((IPointerTypeSymbol)type);
+					}
+				}
+				else
+				{
+					var method = semanticModel.GetSymbolInfo(node).Symbol as IMethodSymbol;
+					if (method != null && method.IsGenericMethod && !method.IsDefinition && method.ContainingType.TypeKind != TypeKind.Interface)// && !method.ContainingType.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
+					{
+						if (!ExistsInReference(genericMethods, method)) ((HashSet<IMethodSymbol>)genericMethods).Add(method);
+					}
+				}
+			}
+
+			foreach (var subNode in node.ChildNodes()) ParseSpecialMembers(compilation, subNode);
 		}
 
 		private bool ExistsInReference<T>(IReadOnlyCollection<T> collection, T value) where T : class

@@ -948,12 +948,17 @@ namespace CS2X.Core.Transpilers
 				case MethodKind.PropertyGet:
 				case MethodKind.PropertySet:
 				case MethodKind.UserDefinedOperator:
+				case MethodKind.ExplicitInterfaceImplementation:
 					break;
 				default: throw new NotSupportedException("Unsupported method kind: " + method.MethodKind);
 			}
 
+			// skip if method is custom IEnumerable / IEnumerator implimitation detail methods
+			if (IsIEnumerable_GetEnumerator(method)) return false;
+			if (IsIEnumerator_Current(method)) return false;
+
 			// validate method doesn't return interface
-			if (method.ReturnType.TypeKind == TypeKind.Interface) throw new NotSupportedException("Methods cannot return an interface");
+			if (method.ReturnType.TypeKind == TypeKind.Interface) throw new NotSupportedException("Methods cannot return an interface: " + method.FullName());
 
 			// write method desc
 			if (method.MethodKind != MethodKind.Constructor) writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
@@ -1458,7 +1463,7 @@ namespace CS2X.Core.Transpilers
 			{
 				// get array object
 				InstructionalBody.Local localExpressionResult;
-				if (statement.Expression is IdentifierNameSyntax)
+				if (statement.Expression is IdentifierNameSyntax)// TODO: handle non local types as well <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 				{
 					var identifierName = (IdentifierNameSyntax)statement.Expression;
 					var type = ResolveType(identifierName);
@@ -1473,12 +1478,12 @@ namespace CS2X.Core.Transpilers
 				}
 
 				// get array length method
-				var method = FindMethodByName(arrayType, "get_Length");
+				var getLengthMethod = FindMethodByName(arrayType, "get_Length");
 
 				// write for statement
 				writer.WritePrefix("for (");
 				var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
-				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(method)}(({GetTypeFullName(arrayType)}*){localExpressionResult.name}); ++{localIterator.name}");
+				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(getLengthMethod)}(({GetTypeFullName(arrayType)}*){localExpressionResult.name}); ++{localIterator.name}");
 
 				// write 
 				void WriteLocal()
@@ -1499,9 +1504,21 @@ namespace CS2X.Core.Transpilers
 				// statement
 				WriteFlowControlStatement(statement.Statement, ")", ") ");
 			}
+			else if (collectionType.Kind == SymbolKind.NamedType)
+			{
+				// get enumerator object
+				var getEnumeratorMethod = FindMethodByName(collectionType, "GetEnumerator");
+				var localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_en", getEnumeratorMethod.ReturnType);
+
+				//write for statement
+				var moveNextMethod = FindMethodByName(getEnumeratorMethod.ReturnType, "MoveNext");
+				writer.WritePrefix($"for ({localExpressionResult.name} = {GetMethodFullName(getEnumeratorMethod)}(");
+				WriteExpression(statement.Expression);
+				writer.WriteLine($"); {GetMethodFullName(moveNextMethod)}(&{localExpressionResult.name}););");
+			}
 			else
 			{
-				throw new NotImplementedException("TODO: add IEnumerable support");
+				throw new NotSupportedException("Unsupported foreach collection kind: " + collectionType.Kind);
 			}
 		}
 
@@ -2306,7 +2323,7 @@ namespace CS2X.Core.Transpilers
 				(
 					type.Kind != SymbolKind.PointerType && castFromType.Kind != SymbolKind.PointerType &&
 					!IsPrimitiveType(type) && !IsPrimitiveType(castFromType) &&
-					!HasBaseClass(castFromType, type)
+					!IsOfType(castFromType, type)
 				)
 				{
 					writer.Write($"({GetTypeFullNameRef(type)})CS2X_TestUpCast(");

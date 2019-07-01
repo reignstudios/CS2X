@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
-//using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace PortableTestApp
 {
@@ -22,10 +22,12 @@ namespace PortableTestApp
 
 	abstract class MyAbstractClass : MyInterface
 	{
-		public abstract void MyVirtMethod();
+		void MyInterface.MyVirtMethod() { }
+		public abstract int MyVirtMethod();
+
 		public void MyFoo()
 		{
-			Console.Write("MyAbstractClass::MyFoo");
+			Console.WriteLine("MyAbstractClass::MyFoo");
 		}
 	}
 
@@ -33,9 +35,10 @@ namespace PortableTestApp
 	{
         public int b, c, d;
 
-		public override void MyVirtMethod()
+		public override int MyVirtMethod()
 		{
-			Console.Write("MyBaseClass::MyVirtMethod");
+			Console.WriteLine("MyBaseClass::MyVirtMethod");
+			return 0;
 		}
 	}
 
@@ -133,16 +136,16 @@ namespace PortableTestApp
 
 		unsafe static void Main()//string[] args)
 		{
-			//var m = new MyBaseClass();
-			//m.MyVirtMethod();
-			//var m2 = (MyAbstractClass)m;
-			//m2.MyVirtMethod();
-			//m.MyFoo();
+			var m = new MyBaseClass();
+			m.MyVirtMethod();
+			var m2 = (MyAbstractClass)m;
+			m2.MyVirtMethod();
+			m.MyFoo();
 			//return;
 
 			//Console.WriteLine("Hello World!");
-            //Console.WriteLine("Hello World!2");
-            //return;
+			//Console.WriteLine("Hello World!2");
+			//return;
 
 			//string value = typeof(int).ToString();
 			//Console.WriteLine(value);
@@ -192,11 +195,11 @@ namespace PortableTestApp
 			//	Console.Write("$");
 			//}
 
-            /*var es = new MyE();
+            var es = new MyEnumerable<int>();
             foreach (var e in es)
             {
 
-            }*/
+            }
 			float[] sldkfj;
 			float[] sldkfj2;
 			//MyG<short[]>[] myGArray;
@@ -275,33 +278,38 @@ namespace PortableTestApp
 	//	public T s;
 	//}
 
-	/*class MyE : IEnumerable<int>
+	class MyEnumerable<T> : IEnumerable<T>
     {
-        public IEnumerator<int> GetEnumerator()
+		public MyEnumerator<T> GetEnumerator()
         {
-            return new MyEnumerator();
+            return new MyEnumerator<T>();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return null;
-        }
-    }
+		// Will be ignored by CS2X
+		IEnumerator<T> IEnumerable<T>.GetEnumerator()
+		{
+			return null;
+		}
 
-    struct MyEnumerator : IEnumerator<int>
+		// Will be ignored by CS2X
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return null;
+		}
+	}
+
+    struct MyEnumerator<T> : IEnumerator<T>
     {
         private int i;
-        private int[] collection;
+        private T[] collection;
 
-        public MyEnumerator(int[] collection)
+        public MyEnumerator(T[] collection)
         {
-            i = 0;
+            i = -1;
             this.collection = collection;
         }
 
-        public void Dispose() { }
-
-        public int Current
+        public T Current
         {
             get
             {
@@ -309,6 +317,7 @@ namespace PortableTestApp
             }
         }
 
+		// Will be ignored by CS2X
         object IEnumerator.Current
         {
             get
@@ -319,12 +328,13 @@ namespace PortableTestApp
 
         public bool MoveNext()
         {
-            return false;
+			++i;
+            return i < collection.Length;
         }
 
         public void Reset()
         {
-
+			i = -1;
         }
-    }*/
+    }
 }

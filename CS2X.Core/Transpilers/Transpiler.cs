@@ -13,6 +13,8 @@ namespace CS2X.Core.Transpilers
 	{
 		public readonly Solution solution;
 		protected INamedTypeSymbol runtimeType, typeType, stringType, arrayType, objectType;
+		protected INamedTypeSymbol ienumerableT, ienumerable, ienumeratorT, ienumerator;
+		protected IMethodSymbol ienumerableT_GetEnumerator, ienumerable_GetEnumerator, ienumeratorT_GetEnumerator, ienumerator_GetEnumerator;
 
 		public Transpiler(Solution solution)
 		{
@@ -23,6 +25,15 @@ namespace CS2X.Core.Transpilers
 			stringType = coreLibProject.compilation.GetSpecialType(SpecialType.System_String);
 			arrayType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Array);
 			objectType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Object);
+
+			ienumerableT = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerable_T);
+			ienumerable = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_IEnumerable);
+			ienumeratorT = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerator_T);
+			ienumerator = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_IEnumerator);
+			ienumerableT_GetEnumerator = FindMethodByName(ienumerableT, "GetEnumerator");
+			ienumerable_GetEnumerator = FindMethodByName(ienumerable, "GetEnumerator");
+			ienumeratorT_GetEnumerator = FindMethodByName(ienumeratorT, "get_Current");
+			ienumerator_GetEnumerator = FindMethodByName(ienumerator, "get_Current");
 		}
 
 		public abstract void Transpile(string outputPath);
@@ -435,15 +446,43 @@ namespace CS2X.Core.Transpilers
 			return type;
 		}
 
-		protected bool HasBaseClass(ITypeSymbol type, ITypeSymbol baseClass)
+		protected bool IsOfType(ITypeSymbol type, ITypeSymbol isType)
 		{
-			var next = type.BaseType;
+			var next = type;
 			while (next != null)
 			{
-				if (next == baseClass) return true;
+				if (next == isType) return true;
 				next = next.BaseType;
 			}
 			return false;
+		}
+
+		protected bool HasInterface(ITypeSymbol type, ITypeSymbol interfaceType)
+		{
+			var next = type;
+			while (next != null)
+			{
+				if (next.Interfaces.Contains(interfaceType)) return true;
+				next = next.BaseType;
+			}
+			return false;
+		}
+
+		protected bool IsIEnumerable_GetEnumerator(IMethodSymbol method)
+		{
+			if (method.MethodKind != MethodKind.ExplicitInterfaceImplementation) return false;
+			if (!method.Name.EndsWith("GetEnumerator")) return false;
+			if (method.ReturnType.TypeKind != TypeKind.Interface) return false;
+			if (HasInterface(method.ContainingType, ienumerableT) && HasInterface(method.ContainingType, ienumerable)) return false;
+			return true;
+		}
+
+		protected bool IsIEnumerator_Current(IMethodSymbol method)
+		{
+			if (method.MethodKind != MethodKind.ExplicitInterfaceImplementation) return false;
+			if (!method.Name.EndsWith("get_Current")) return false;
+			if (HasInterface(method.ContainingType, ienumeratorT) && HasInterface(method.ContainingType, ienumerator)) return false;
+			return true;
 		}
 	}
 }
