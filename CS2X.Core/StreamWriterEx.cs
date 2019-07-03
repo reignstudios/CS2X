@@ -58,6 +58,21 @@ namespace System.IO
 			prefix = prefix.Substring(0, prefix.Length - 1);
 		}
 
+		public override void WriteLine()
+		{
+			if (!disableWrite) base.WriteLine();
+		}
+
+		public override void Write(char value)
+		{
+			if (!disableWrite) base.Write(value);
+		}
+
+		public override void WriteLine(char value)
+		{
+			if (!disableWrite) base.WriteLine(value);
+		}
+
 		public override void Write(string value)
 		{
 			if (!disableWrite) base.Write(value);

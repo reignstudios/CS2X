@@ -227,12 +227,12 @@ namespace CS2X.Core.Transpilers
 		protected int GetMethodOverloadIndex(IMethodSymbol method)
 		{
 			int index = 0;
-			foreach (var typeMethod in method.ContainingType.GetMembers())
+			foreach (var member in method.ContainingType.GetMembers())
 			{
-				var otherMethod = typeMethod as IMethodSymbol;
-				if (otherMethod != null)
+				if (member.Kind == SymbolKind.Method)
 				{
-					if (otherMethod == method || (method.IsExtensionMethod && method.ReducedFrom == otherMethod)) break;
+					var otherMethod = (IMethodSymbol)member;
+					if (otherMethod.Equals(method) || (method.IsExtensionMethod && method.ReducedFrom == otherMethod)) break;
 					else if (otherMethod.Name == method.Name) ++index;
 				}
 			}
@@ -433,17 +433,67 @@ namespace CS2X.Core.Transpilers
 			return refAssemblyName;
 		}
 
-		protected ITypeSymbol ResolveType(ExpressionSyntax syntax, IMethodSymbol method, SemanticModel semanticModel)
+		protected ITypeSymbol ResolveType(ITypeSymbol type, IMethodSymbol method, SemanticModel semanticModel)
 		{
-			var type = semanticModel.GetTypeInfo(syntax).Type;
-			if (type is ITypeParameterSymbol)
+			var resolveTypeVisitor = new ResolveTypeVisitor(method, semanticModel);
+			var resolvedType = resolveTypeVisitor.Visit(type);
+			return resolvedType;
+		}
+
+		//protected ITypeSymbol ResolveType(ExpressionSyntax syntax, IMethodSymbol method, SemanticModel semanticModel)
+		//{
+		//	var type = semanticModel.GetTypeInfo(syntax).Type;
+		//	var resolveTypeVisitor = new ResolveTypeVisitor(method, semanticModel);
+		//	var resolvedType = resolveTypeVisitor.Visit(type);
+		//	return resolvedType;
+		//}
+
+		class ResolveTypeVisitor : SymbolVisitor<ITypeSymbol>
+		{
+			private readonly IMethodSymbol method;
+			private readonly CSharpCompilation compilation;
+
+			public ResolveTypeVisitor(IMethodSymbol method, SemanticModel semanticModel)
 			{
-				var parameterType = (ITypeParameterSymbol)type;
-				if (parameterType.TypeParameterKind == TypeParameterKind.Type) type = method.ContainingType.TypeArguments[parameterType.Ordinal];
-				else if (parameterType.TypeParameterKind == TypeParameterKind.Method) type = method.TypeArguments[parameterType.Ordinal];
-				else throw new NotSupportedException("Unsupported ITypeParameterSymbol kind: " + parameterType.TypeParameterKind);
+				this.method = method;
+				compilation = (CSharpCompilation)semanticModel.Compilation;
 			}
-			return type;
+
+			public override ITypeSymbol VisitNamedType(INamedTypeSymbol symbol)
+			{
+				// check if we need to resolve generic
+				if (!symbol.IsGenericType) return symbol;
+				if (!symbol.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return symbol;
+
+				// resolve generic parameters
+				var parameters = symbol.TypeParameters;
+				var typeParams = new ITypeSymbol[parameters.Length];
+				for (int i = 0; i != typeParams.Length; ++i) typeParams[i] = Visit(parameters[i]);
+
+				// make sure we're constructing from generic source
+				var sourceGeneric = symbol;
+				while (sourceGeneric.ConstructedFrom != null && sourceGeneric != sourceGeneric.ConstructedFrom) sourceGeneric = sourceGeneric.ConstructedFrom;
+				return sourceGeneric.Construct(typeParams);
+			}
+
+			public override ITypeSymbol VisitArrayType(IArrayTypeSymbol symbol)
+			{
+				var type = base.Visit(symbol.ElementType);
+				return compilation.CreateArrayTypeSymbol(type);
+			}
+
+			public override ITypeSymbol VisitPointerType(IPointerTypeSymbol symbol)
+			{
+				var type = base.Visit(symbol.PointedAtType);
+				return compilation.CreatePointerTypeSymbol(type);
+			}
+
+			public override ITypeSymbol VisitTypeParameter(ITypeParameterSymbol symbol)
+			{
+				if (symbol.TypeParameterKind == TypeParameterKind.Type) return method.ContainingType.TypeArguments[symbol.Ordinal];
+				else if (symbol.TypeParameterKind == TypeParameterKind.Method) return method.TypeArguments[symbol.Ordinal];
+				else throw new NotSupportedException("Unsupported ITypeParameterSymbol kind: " + symbol.TypeParameterKind);
+			}
 		}
 
 		protected bool IsOfType(ITypeSymbol type, ITypeSymbol isType)
@@ -482,6 +532,13 @@ namespace CS2X.Core.Transpilers
 			if (method.MethodKind != MethodKind.ExplicitInterfaceImplementation) return false;
 			if (!method.Name.EndsWith("get_Current")) return false;
 			if (HasInterface(method.ContainingType, ienumeratorT) && HasInterface(method.ContainingType, ienumerator)) return false;
+			return true;
+		}
+
+		protected bool IsResolvedGenericType(INamedTypeSymbol type)
+		{
+			if (!type.IsGenericType || type.IsDefinition) return false;
+			if (type.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
 			return true;
 		}
 	}

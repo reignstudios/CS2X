@@ -27,7 +27,7 @@ namespace CS2X.Core.Transpilers
 
 			public bool Equals(string identifier, ITypeSymbol type)
 			{
-				return this.identifier == identifier && this.type == type;
+				return this.identifier == identifier && this.type.Equals(type);
 			}
 		}
 

@@ -198,7 +198,7 @@ namespace PortableTestApp
             var es = new MyEnumerable<int>();
             foreach (var e in es)
             {
-
+				Console.WriteLine("T");
             }
 			float[] sldkfj;
 			float[] sldkfj2;
@@ -282,7 +282,8 @@ namespace PortableTestApp
     {
 		public MyEnumerator<T> GetEnumerator()
         {
-            return new MyEnumerator<T>();
+			MyEnumerator<T> e = new MyEnumerator<T>(new T[3]);
+            return e;
         }
 
 		// Will be ignored by CS2X
