@@ -414,6 +414,35 @@ namespace CS2X.Core.Transpilers
 			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName) as IMethodSymbol;
 		}
 
+		protected IMethodSymbol FindMethodByReturnType(ITypeSymbol type, string methodName, ITypeSymbol returnType)
+		{
+			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName && ((IMethodSymbol)x).ReturnType.Equals(returnType)) as IMethodSymbol;
+		}
+
+		protected IMethodSymbol FindMethodBySignature(ITypeSymbol type, string methodName, ITypeSymbol returnType, params ITypeSymbol[] parameters)
+		{
+			foreach (var member in type.GetMembers())
+			{
+				if (member.Kind != SymbolKind.Method) continue;
+				if (member.Name != methodName) continue;
+				var method = (IMethodSymbol)member;
+				if (!method.ReturnType.Equals(returnType)) continue;
+				if (method.Parameters.Length != parameters.Length) continue;
+
+				bool match = true;
+				for (int i = 0; i != method.Parameters.Length; ++i)
+				{
+					if (!method.Parameters[i].Equals(parameters[i]))
+					{
+						match = false;
+						break;
+					}
+				}
+				if (match) return method;
+			}
+			return null;
+		}
+
 		protected IMethodSymbol FindDefaultConstructor(ITypeSymbol type)
 		{
 			foreach (var member in type.GetMembers())
@@ -564,7 +593,11 @@ namespace CS2X.Core.Transpilers
 			var next = type;
 			while (next != null)
 			{
-				if (next.Interfaces.Contains(interfaceType)) return true;
+				foreach (var i in next.Interfaces)
+				{
+					if (i.Equals(interfaceType)) return true;
+					if (HasInterface(i, interfaceType)) return true;
+				}
 				next = next.BaseType;
 			}
 			return false;
@@ -581,9 +614,9 @@ namespace CS2X.Core.Transpilers
 
 		protected bool IsIEnumerator_Current(IMethodSymbol method)
 		{
-			if (method.MethodKind != MethodKind.ExplicitInterfaceImplementation) return false;
+			if (method.MethodKind != MethodKind.PropertyGet) return false;
 			if (!method.Name.EndsWith("get_Current")) return false;
-			if (HasInterface(method.ContainingType, ienumeratorT) && HasInterface(method.ContainingType, ienumerator)) return false;
+			if (method.ReturnType != objectType && HasInterface(method.ContainingType, ienumerator)) return false;
 			return true;
 		}
 

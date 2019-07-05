@@ -1497,7 +1497,7 @@ namespace CS2X.Core.Transpilers
 				var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
 				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(getLengthMethod)}(({GetTypeFullName(arrayType)}*){localExpressionResult.name}); ++{localIterator.name}");
 
-				// write 
+				// write statement
 				void WriteLocal()
 				{
 					var type = ResolveType(statement.Type);
@@ -1512,23 +1512,36 @@ namespace CS2X.Core.Transpilers
 					writer.WriteLine($"[{localIterator.name}];");
 				}
 				BlockStartCallback = WriteLocal;
-
-				// statement
 				WriteFlowControlStatement(statement.Statement, ")", ") ");
 			}
 			else if (collectionType.Kind == SymbolKind.NamedType)
 			{
-				// get enumerator object
+				// get special CS2X enumerator object
 				var getEnumeratorMethod = FindMethodByName(collectionType, "GetEnumerator");
+				if (getEnumeratorMethod == null) throw new Exception("No valid CS2X 'GetEnumerator' method found on: " + collectionType.FullName());
 				getEnumeratorMethod = ResolveMethod(getEnumeratorMethod, method, semanticModel);
 				var localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_en", getEnumeratorMethod.ReturnType);
 
 				//write for statement
 				var moveNextMethod = FindMethodByName(getEnumeratorMethod.ReturnType, "MoveNext");
 				moveNextMethod = ResolveMethod(moveNextMethod, method, semanticModel);
-				writer.WritePrefix($"for ({localExpressionResult.name} = {GetMethodFullName(getEnumeratorMethod)}(");
+				writer.WritePrefix($"for/*each*/ ({localExpressionResult.name} = {GetMethodFullName(getEnumeratorMethod)}(");
 				WriteExpression(statement.Expression);
-				writer.WriteLine($"); {GetMethodFullName(moveNextMethod)}(&{localExpressionResult.name}););");
+				writer.Write($"); {GetMethodFullName(moveNextMethod)}(&{localExpressionResult.name});");
+
+				// write statement
+				void WriteLocal()
+				{
+					var type = ResolveType(statement.Type);
+					var local = TryAddLocal(statement.Identifier.ValueText, type);
+
+					var getCurrentMethod = FindMethodByName(getEnumeratorMethod.ReturnType, "get_Current");
+					if (getCurrentMethod == null) throw new Exception("No valid 'T Current' getter method found on: " + getEnumeratorMethod.ReturnType.FullName());
+					getCurrentMethod = ResolveMethod(getCurrentMethod, method, semanticModel);
+					writer.WriteLinePrefix($"{local.name} = {GetMethodFullName(getCurrentMethod)}(&{localExpressionResult.name});");
+				}
+				BlockStartCallback = WriteLocal;
+				WriteFlowControlStatement(statement.Statement, ")", ") ");
 			}
 			else
 			{

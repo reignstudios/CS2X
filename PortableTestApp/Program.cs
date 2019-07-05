@@ -198,7 +198,7 @@ namespace PortableTestApp
             var es = new MyEnumerable<int>();
             foreach (var e in es)
             {
-				Console.WriteLine("T");
+				if (e == 0) Console.Write("T");
             }
 			float[] sldkfj;
 			float[] sldkfj2;
@@ -287,16 +287,10 @@ namespace PortableTestApp
         }
 
 		// Will be ignored by CS2X
-		IEnumerator<T> IEnumerable<T>.GetEnumerator()
-		{
-			return null;
-		}
-
-		// Will be ignored by CS2X
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return null;
-		}
+		#pragma warning disable CS0626
+		extern IEnumerator<T> IEnumerable<T>.GetEnumerator();
+		extern IEnumerator IEnumerable.GetEnumerator();
+		#pragma warning restore CS0626
 	}
 
     struct MyEnumerator<T> : IEnumerator<T>
@@ -319,13 +313,9 @@ namespace PortableTestApp
         }
 
 		// Will be ignored by CS2X
-        object IEnumerator.Current
-        {
-            get
-            {
-                return null;
-            }
-        }
+		#pragma warning disable CS0626
+        extern object IEnumerator.Current { get; }
+		#pragma warning restore CS0626
 
         public bool MoveNext()
         {
