@@ -1519,6 +1519,7 @@ namespace CS2X.Core.Transpilers
 				// get special CS2X enumerator object
 				var getEnumeratorMethod = FindMethodByName(collectionType, "GetEnumerator");
 				if (getEnumeratorMethod == null) throw new Exception("No valid CS2X 'GetEnumerator' method found on: " + collectionType.FullName());
+				if (getEnumeratorMethod.DeclaredAccessibility != Accessibility.Public) throw new Exception("'GetEnumerator' must be public");
 				getEnumeratorMethod = ResolveMethod(getEnumeratorMethod, method, semanticModel);
 				var localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_en", getEnumeratorMethod.ReturnType);
 
@@ -1537,6 +1538,7 @@ namespace CS2X.Core.Transpilers
 
 					var getCurrentMethod = FindMethodByName(getEnumeratorMethod.ReturnType, "get_Current");
 					if (getCurrentMethod == null) throw new Exception("No valid 'T Current' getter method found on: " + getEnumeratorMethod.ReturnType.FullName());
+					if (getCurrentMethod.DeclaredAccessibility != Accessibility.Public) throw new Exception("'T Current' must be public");
 					getCurrentMethod = ResolveMethod(getCurrentMethod, method, semanticModel);
 					writer.WriteLinePrefix($"{local.name} = {GetMethodFullName(getCurrentMethod)}(&{localExpressionResult.name});");
 				}
