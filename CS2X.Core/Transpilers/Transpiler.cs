@@ -433,29 +433,22 @@ namespace CS2X.Core.Transpilers
 			return refAssemblyName;
 		}
 
-		protected ITypeSymbol ResolveType(ITypeSymbol type, IMethodSymbol method, SemanticModel semanticModel)
+		protected ITypeSymbol ResolveType(ITypeSymbol type, IMethodSymbol usedWithinMethod, SemanticModel semanticModel)
 		{
-			var resolveTypeVisitor = new ResolveTypeVisitor(method, semanticModel);
+			var resolveTypeVisitor = new ResolveTypeVisitor(usedWithinMethod, semanticModel);
 			var resolvedType = resolveTypeVisitor.Visit(type);
+			if (resolvedType == null) throw new Exception("Failed to resolve type: " + type.FullName());
 			return resolvedType;
 		}
 
-		//protected ITypeSymbol ResolveType(ExpressionSyntax syntax, IMethodSymbol method, SemanticModel semanticModel)
-		//{
-		//	var type = semanticModel.GetTypeInfo(syntax).Type;
-		//	var resolveTypeVisitor = new ResolveTypeVisitor(method, semanticModel);
-		//	var resolvedType = resolveTypeVisitor.Visit(type);
-		//	return resolvedType;
-		//}
-
 		class ResolveTypeVisitor : SymbolVisitor<ITypeSymbol>
 		{
-			private readonly IMethodSymbol method;
+			private readonly IMethodSymbol usedWithinMethod;
 			private readonly CSharpCompilation compilation;
 
-			public ResolveTypeVisitor(IMethodSymbol method, SemanticModel semanticModel)
+			public ResolveTypeVisitor(IMethodSymbol usedWithinMethod, SemanticModel semanticModel)
 			{
-				this.method = method;
+				this.usedWithinMethod = usedWithinMethod;
 				compilation = (CSharpCompilation)semanticModel.Compilation;
 			}
 
@@ -470,10 +463,8 @@ namespace CS2X.Core.Transpilers
 				var typeParams = new ITypeSymbol[parameters.Length];
 				for (int i = 0; i != typeParams.Length; ++i) typeParams[i] = Visit(parameters[i]);
 
-				// make sure we're constructing from generic source
-				var sourceGeneric = symbol;
-				while (sourceGeneric.ConstructedFrom != null && sourceGeneric != sourceGeneric.ConstructedFrom) sourceGeneric = sourceGeneric.ConstructedFrom;
-				return sourceGeneric.Construct(typeParams);
+				// construct from generic source
+				return symbol.OriginalDefinition.Construct(typeParams);
 			}
 
 			public override ITypeSymbol VisitArrayType(IArrayTypeSymbol symbol)
@@ -490,9 +481,70 @@ namespace CS2X.Core.Transpilers
 
 			public override ITypeSymbol VisitTypeParameter(ITypeParameterSymbol symbol)
 			{
-				if (symbol.TypeParameterKind == TypeParameterKind.Type) return method.ContainingType.TypeArguments[symbol.Ordinal];
-				else if (symbol.TypeParameterKind == TypeParameterKind.Method) return method.TypeArguments[symbol.Ordinal];
+				if (symbol.TypeParameterKind == TypeParameterKind.Type) return usedWithinMethod.ContainingType.TypeArguments[symbol.Ordinal];
+				else if (symbol.TypeParameterKind == TypeParameterKind.Method) return usedWithinMethod.TypeArguments[symbol.Ordinal];
 				else throw new NotSupportedException("Unsupported ITypeParameterSymbol kind: " + symbol.TypeParameterKind);
+			}
+		}
+
+		protected IMethodSymbol ResolveMethod(IMethodSymbol method, IMethodSymbol usedWithinMethod, SemanticModel semanticModel)
+		{
+			var resolveMethodVisitor = new ResolveMethodVisitor(this, usedWithinMethod, semanticModel);
+			var resolvedMethod = resolveMethodVisitor.Visit(method);
+			if (resolvedMethod == null) throw new Exception("Failed to resolve method: " + method.FullName());
+			return resolvedMethod;
+		}
+
+		class ResolveMethodVisitor : SymbolVisitor<IMethodSymbol>
+		{
+			private readonly Transpiler transpiler;
+			private readonly IMethodSymbol usedWithinMethod;
+			private readonly SemanticModel semanticModel;
+
+			public ResolveMethodVisitor(Transpiler transpiler, IMethodSymbol usedWithinMethod, SemanticModel semanticModel)
+			{
+				this.transpiler = transpiler;
+				this.usedWithinMethod = usedWithinMethod;
+				this.semanticModel = semanticModel;
+			}
+
+			public override IMethodSymbol VisitMethod(IMethodSymbol symbol)
+			{
+				// check if we need to resolve generic
+				if (symbol.IsGenericMethod && symbol.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
+				{
+					// resolve generic parameters
+					var parameters = symbol.TypeParameters;
+					var typeParams = new ITypeSymbol[parameters.Length];
+					for (int i = 0; i != typeParams.Length; ++i)
+					{
+						var resolveTypeVisitor = new ResolveTypeVisitor(usedWithinMethod, semanticModel);
+						var resolvedType = resolveTypeVisitor.Visit(parameters[i]);
+						if (resolvedType == null) throw new Exception("Failed to resolve type for generic method: " + parameters[i].FullName());
+						typeParams[i] = resolvedType;
+					}
+
+					// make sure we're constructing from generic source
+					var sourceGeneric = symbol;
+					while (sourceGeneric.ConstructedFrom != null && sourceGeneric != sourceGeneric.ConstructedFrom) sourceGeneric = sourceGeneric.ConstructedFrom;
+					return sourceGeneric.Construct(typeParams);
+				}
+				else if (symbol.ContainingType != null && symbol.ContainingType.IsGenericType && symbol.ContainingType.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
+				{
+					// resolve generic type method lives in and find its matching method
+					var resolvedType = transpiler.ResolveType(symbol.ContainingType, usedWithinMethod, semanticModel);
+					foreach (var member in resolvedType.GetMembers())
+					{
+						if (member.Kind != SymbolKind.Method) continue;
+						var method = (IMethodSymbol)member;
+						if (symbol.OriginalDefinition.Equals(method.OriginalDefinition))
+						{
+							return method;
+						}
+					}
+				}
+
+				return symbol;
 			}
 		}
 

@@ -1490,6 +1490,7 @@ namespace CS2X.Core.Transpilers
 
 				// get array length method
 				var getLengthMethod = FindMethodByName(arrayType, "get_Length");
+				getLengthMethod = ResolveMethod(getLengthMethod, method, semanticModel);
 
 				// write for statement
 				writer.WritePrefix("for (");
@@ -1519,10 +1520,12 @@ namespace CS2X.Core.Transpilers
 			{
 				// get enumerator object
 				var getEnumeratorMethod = FindMethodByName(collectionType, "GetEnumerator");
+				getEnumeratorMethod = ResolveMethod(getEnumeratorMethod, method, semanticModel);
 				var localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_en", getEnumeratorMethod.ReturnType);
 
 				//write for statement
 				var moveNextMethod = FindMethodByName(getEnumeratorMethod.ReturnType, "MoveNext");
+				moveNextMethod = ResolveMethod(moveNextMethod, method, semanticModel);
 				writer.WritePrefix($"for ({localExpressionResult.name} = {GetMethodFullName(getEnumeratorMethod)}(");
 				WriteExpression(statement.Expression);
 				writer.WriteLine($"); {GetMethodFullName(moveNextMethod)}(&{localExpressionResult.name}););");
@@ -1774,6 +1777,7 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteMethodInvoke(IMethodSymbol method, ExpressionSyntax expression)
 		{
+			method = ResolveMethod(method, this.method, semanticModel);
 			if (IsVirtualMethod(method) && !(method.IsOverride && method.ContainingType.IsSealed))
 			{
 				var caller = GetCaller(expression);
@@ -1852,16 +1856,17 @@ namespace CS2X.Core.Transpilers
 				}
 				else
 				{
+					var getMethod = ResolveMethod(property.GetMethod, method, semanticModel);
 					if (!property.IsStatic)
 					{
-						WriteMethodInvoke(property.GetMethod, expression);
+						WriteMethodInvoke(getMethod, expression);
 						writer.Write('(');
 						WriteCaller(expression);
 						writer.Write(')');
 					}
 					else
 					{
-						writer.Write($"{GetMethodFullName(property.GetMethod)}()");
+						writer.Write($"{GetMethodFullName(getMethod)}()");
 					}
 				}
 			}
@@ -1947,7 +1952,7 @@ namespace CS2X.Core.Transpilers
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
-			var method = (IMethodSymbol)symbolInfo.Symbol;
+			var method = ResolveMethod((IMethodSymbol)symbolInfo.Symbol, this.method, semanticModel);
 			writer.Write(GetMethodFullName(method));
 			writer.Write('(');
 			if (method.ContainingType.IsReferenceType)
@@ -2113,7 +2118,8 @@ namespace CS2X.Core.Transpilers
 				var property = symbolInfo.Symbol as IPropertySymbol;
 				if (property != null && !IsAutoProperty(property))
 				{
-					writer.Write(GetMethodFullName(property.SetMethod));
+					var setMethod = ResolveMethod(property.SetMethod, method, semanticModel);
+					writer.Write(GetMethodFullName(setMethod));
 					writer.Write('(');
 					if (!property.IsStatic)
 					{
@@ -2130,7 +2136,7 @@ namespace CS2X.Core.Transpilers
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 			if (symbol != null && symbol.Kind == SymbolKind.Method && expression.OperatorToken.ValueText.Length == 2)
 			{
-				var method = (IMethodSymbol)symbol;
+				var method = ResolveMethod((IMethodSymbol)symbol, this.method, semanticModel);
 				if (!method.IsImplicitlyDeclared)
 				{
 					WriteExpression(expression.Left);
@@ -2158,7 +2164,7 @@ namespace CS2X.Core.Transpilers
 				var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 				if (symbol != null && symbol is IMethodSymbol)
 				{
-					var method = (IMethodSymbol)symbol;
+					var method = ResolveMethod((IMethodSymbol)symbol, this.method, semanticModel);
 					if (method.MethodKind != MethodKind.BuiltinOperator)
 					{
 						if (!method.IsStatic || method.MethodKind != MethodKind.UserDefinedOperator) throw new NotSupportedException("Unsupported prefix unary method: " + method.FullName());
@@ -2253,7 +2259,7 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (symbolInfo.Symbol is IMethodSymbol)
 			{
-				var operatorMethod = (IMethodSymbol)symbolInfo.Symbol;
+				var operatorMethod = ResolveMethod((IMethodSymbol)symbolInfo.Symbol, method, semanticModel);
 				var type = operatorMethod.ContainingType;
 				if (type != null && type.SpecialType == SpecialType.System_String)
 				{
@@ -2288,8 +2294,15 @@ namespace CS2X.Core.Transpilers
 						specialMethod = (IMethodSymbol)type.GetMembers().First(x => x is IMethodSymbol && x.Name == "Equals" && ((IMethodSymbol)x).Parameters.Length == 1 && ((IMethodSymbol)x).Parameters[0].Type.SpecialType == SpecialType.System_String);
 					}
 
-					if (specialMethod != null) writer.Write(GetMethodFullName(specialMethod));
-					else writer.Write(GetMethodFullName(operatorMethod));
+					if (specialMethod != null)
+					{
+						specialMethod = ResolveMethod(specialMethod, method, semanticModel);
+						writer.Write(GetMethodFullName(specialMethod));
+					}
+					else
+					{
+						writer.Write(GetMethodFullName(operatorMethod));
+					}
 					writer.Write('(');
 					WriteExpression(expression.Left);
 					writer.Write(", ");
