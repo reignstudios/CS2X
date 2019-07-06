@@ -32,3 +32,4 @@ To uninstall all packaged for clean updates
 <<< HOW TO: Find symbol references >>>
 using Microsoft.CodeAnalysis.FindSymbols;
 SymbolFinder.FindReferencesAsync(...)
+Inherit from SymbolVisitor<ITypeSymbol> (just a helper class)
