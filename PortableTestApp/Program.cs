@@ -224,6 +224,11 @@ namespace PortableTestApp
 			}
 		}
 
+		static void TestLoop(int[] es)
+		{
+            foreach (var e in es) Console.Write("T");
+		}
+
 		static void FooThrow(MyBaseClass a)
 		{
 			throw new NotSupportedException("My Exception!");

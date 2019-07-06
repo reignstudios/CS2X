@@ -226,6 +226,7 @@ void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_Main_0();
+void m_PortableTestApp_Program_TestLoop_0(int32_t* p_es);
 void m_PortableTestApp_Program_FooThrow_0(t_PortableTestApp_MyBaseClass* p_a);
 double* m_PortableTestApp_Program_Ya_0();
 t_System_String* m_PortableTestApp_Program_GetValue_0(t_System_Object* p_o);
@@ -452,6 +453,17 @@ void m_PortableTestApp_Program_Main_0()
 		}
 		if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */
 	} /* end catch */
+}
+
+void m_PortableTestApp_Program_TestLoop_0(int32_t* p_es)
+{
+	int32_t l_e_i_0;
+	int32_t l_e_1;
+	for (l_e_i_0 = 0; l_e_i_0 != m_System_Array_get_Length_0((t_System_Array*)p_es); ++l_e_i_0)
+	{
+		l_e_1 = ((int32_t*)(((char*)p_es) + (sizeof(size_t)*2)))[l_e_i_0];
+		m_System_Console_Write_0(StringLiteral_6);
+	}
 }
 
 void m_PortableTestApp_Program_FooThrow_0(t_PortableTestApp_MyBaseClass* p_a)

@@ -1473,17 +1473,46 @@ namespace CS2X.Core.Transpilers
 			if (collectionType.Kind == SymbolKind.ArrayType)
 			{
 				// get array object
-				InstructionalBody.Local localExpressionResult;
-				if (statement.Expression is IdentifierNameSyntax)// TODO: handle non local types as well <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+				string identifierName = null;
+				if (statement.Expression is IdentifierNameSyntax)
 				{
-					var identifierName = (IdentifierNameSyntax)statement.Expression;
-					var type = ResolveType(identifierName);
-					localExpressionResult = instructionalBody.locals.First(x => x.Equals(identifierName.Identifier.ValueText, type));
+					var syntax = (IdentifierNameSyntax)statement.Expression;
+					var symbol = semanticModel.GetSymbolInfo(syntax).Symbol;
+					if (symbol == null) throw new Exception("Failed to get symbol for IdentifierNameSyntax: " + syntax.ToFullString());
+					if (symbol.Kind == SymbolKind.Local)
+					{
+						var type = ResolveType(syntax);
+						var localExpressionResult = instructionalBody.locals.First(x => x.Equals(syntax.Identifier.ValueText, type));
+						identifierName = localExpressionResult.name;
+					}
+					else if (symbol.Kind == SymbolKind.Parameter)
+					{
+						identifierName = GetParameterFullName((IParameterSymbol)symbol);
+					}
+					else if (symbol.Kind == SymbolKind.Field)
+					{
+						identifierName = GetFieldFullName((IFieldSymbol)symbol);
+					}
+					else if (symbol.Kind == SymbolKind.Property)
+					{
+						// handle as new local below
+					}
+					else if (symbol.Kind == SymbolKind.Method)
+					{
+						// handle as new local below
+					}
+					else
+					{
+						throw new NotSupportedException("Array 'foreach' loop with identifier kind not supported: " + symbol.Kind);
+					}
 				}
-				else
+				
+				// if no existing variable can be used make one
+				if (identifierName == null)
 				{
-					localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_ex", collectionType);
-					writer.WritePrefix($"{localExpressionResult.name} = ");
+					var localExpressionResult = TryAddLocal(statement.Identifier.ValueText + "_ex", collectionType);
+					identifierName = localExpressionResult.name;
+					writer.WritePrefix($"{identifierName} = ");
 					WriteExpression(statement.Expression);
 					writer.WriteLine(';');
 				}
@@ -1495,7 +1524,7 @@ namespace CS2X.Core.Transpilers
 				// write for statement
 				writer.WritePrefix("for (");
 				var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
-				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(getLengthMethod)}(({GetTypeFullName(arrayType)}*){localExpressionResult.name}); ++{localIterator.name}");
+				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(getLengthMethod)}(({GetTypeFullName(arrayType)}*){identifierName}); ++{localIterator.name}");
 
 				// write statement
 				void WriteLocal()
@@ -1505,14 +1534,28 @@ namespace CS2X.Core.Transpilers
 
 					void writeExpression()
 					{
-						writer.Write(localExpressionResult.name);
+						writer.Write(identifierName);
 					}
 					writer.WritePrefix($"{local.name} = ");
 					WriteArrayElementAccessOffset(writeExpression, collectionType);
 					writer.WriteLine($"[{localIterator.name}];");
 				}
-				BlockStartCallback = WriteLocal;
-				WriteFlowControlStatement(statement.Statement, ")", ") ");
+
+				if (statement.Statement is BlockSyntax)
+				{
+					BlockStartCallback = WriteLocal;
+					WriteFlowControlStatement(statement.Statement, ")", ") ");
+				}
+				else// force block style syntax
+				{
+					writer.WriteLine(')');
+					writer.WriteLinePrefix('{');
+					writer.AddTab();
+					WriteLocal();
+					WriteStatement(statement.Statement);
+					writer.RemoveTab();
+					writer.WriteLinePrefix('}');
+				}
 			}
 			else if (collectionType.Kind == SymbolKind.NamedType)
 			{
@@ -1542,8 +1585,22 @@ namespace CS2X.Core.Transpilers
 					getCurrentMethod = ResolveMethod(getCurrentMethod, method, semanticModel);
 					writer.WriteLinePrefix($"{local.name} = {GetMethodFullName(getCurrentMethod)}(&{localExpressionResult.name});");
 				}
-				BlockStartCallback = WriteLocal;
-				WriteFlowControlStatement(statement.Statement, ")", ") ");
+
+				if (statement.Statement is BlockSyntax)
+				{
+					BlockStartCallback = WriteLocal;
+					WriteFlowControlStatement(statement.Statement, ")", ") ");
+				}
+				else// force block style syntax
+				{
+					writer.WriteLine(')');
+					writer.WriteLinePrefix('{');
+					writer.AddTab();
+					WriteLocal();
+					WriteStatement(statement.Statement);
+					writer.RemoveTab();
+					writer.WriteLinePrefix('}');
+				}
 			}
 			else
 			{
@@ -1818,20 +1875,20 @@ namespace CS2X.Core.Transpilers
 		private void WriteIdentifierName(IdentifierNameSyntax expression)
 		{
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
-			if (symbol is ILocalSymbol)
+			if (symbol.Kind == SymbolKind.Local)
 			{
 				var local = (ILocalSymbol)symbol;
 				var type = ResolveType(local.Type);
 				var localObj = instructionalBody.locals.First(x => x.Equals(expression.Identifier.ValueText, type));
 				writer.Write(localObj.name);
 			}
-			else if (symbol is IParameterSymbol)
+			else if (symbol.Kind == SymbolKind.Parameter)
 			{
 				var parameter = (IParameterSymbol)symbol;
 				if (!IsParameterPassByRef(parameter)) writer.Write(GetParameterFullName(parameter));
 				else writer.Write($"(*{GetParameterFullName(parameter)})");
 			}
-			else if (symbol is IFieldSymbol)
+			else if (symbol.Kind == SymbolKind.Field)
 			{
 				var field = (IFieldSymbol)symbol;
 				if (field.IsConst)
@@ -1851,7 +1908,7 @@ namespace CS2X.Core.Transpilers
 					writer.Write(GetFieldFullName(field));
 				}
 			}
-			else if (symbol is IPropertySymbol)
+			else if (symbol.Kind == SymbolKind.Property)
 			{
 				var property = (IPropertySymbol)symbol;
 				if (IsAutoProperty(property, out var field))
@@ -1885,7 +1942,7 @@ namespace CS2X.Core.Transpilers
 					}
 				}
 			}
-			else if (symbol is IMethodSymbol)
+			else if (symbol.Kind == SymbolKind.Method)
 			{
 				var method = (IMethodSymbol)symbol;
 				WriteMethodInvoke(method, expression);
