@@ -658,6 +658,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (types.Count() == 0) return;
 
+			// init runtime type objects
 			writer.WriteLinePrefix("/* Init runtime type objects */");
 			string baseTypeFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "BaseType"));
 			string nameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "Name"));
@@ -683,6 +684,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix($"{obj}.runtimeType.{fullNameFieldName} = ({stringTypeName}*){GetRuntimeTypeMetadataFullName(type)}_FullName;");
 			}
 
+			// init string literals
 			if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.GlobalProgramMemory_RAM)
 			{
 				writer.WriteLine();
@@ -705,6 +707,7 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
+			// init vtable
 			bool first = true;
 			foreach (var type in types)
 			{
@@ -722,6 +725,7 @@ namespace CS2X.Core.Transpilers
 				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
 				foreach (var method in orderedVirtualMethods)
 				{
+					if (method.MethodKind == MethodKind.DelegateInvoke) continue;// ignore delegate invoke virtual
 					if (first)
 					{
 						first = false;
@@ -790,6 +794,7 @@ namespace CS2X.Core.Transpilers
 			var virtualMethods = GetOrderedVirtualMethods(type);
 			foreach (var method in virtualMethods)
 			{
+				if (method.MethodKind == MethodKind.DelegateInvoke) continue;// ignore delegate invoke virtual
 				if (method.IsStatic) throw new NotSupportedException("Virtual static method not supported: " + method.Name);
 				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetVTableMethodFullName(method)})(");
 				if (type.IsReferenceType) writer.Write($"{GetTypeFullNameRef(type)} self");
@@ -846,7 +851,6 @@ namespace CS2X.Core.Transpilers
 						else ptr = string.Empty;
 						writer.WriteLine($"typedef void{ptr} {GetTypeFullName(type)};");
 					}
-					
 				}
 			}
 			else if (type.TypeKind == TypeKind.Enum) 
@@ -866,12 +870,12 @@ namespace CS2X.Core.Transpilers
 			else if(type.IsReferenceType || !IsEmptyType(type))
 			{
 				// get all types that should write non-static fields
-				var fieldTypeList = new List<INamedTypeSymbol>();
-				fieldTypeList.Add(type);
+				var objTypeChain = new List<INamedTypeSymbol>();
+				objTypeChain.Add(type);
 				var baseType = type.BaseType;
 				while (baseType != null)
 				{
-					fieldTypeList.Add(baseType);
+					objTypeChain.Add(baseType);
 					baseType = baseType.BaseType;
 				}
 
@@ -880,7 +884,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine('{');
 				writer.AddTab();
 				if (type.IsReferenceType) writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)}* CS2X_RuntimeType;");
-				foreach (var subType in fieldTypeList)
+				foreach (var subType in objTypeChain)
 				{
 					foreach (var member in subType.GetMembers())
 					{
@@ -960,6 +964,7 @@ namespace CS2X.Core.Transpilers
 				case MethodKind.PropertySet:
 				case MethodKind.UserDefinedOperator:
 				case MethodKind.ExplicitInterfaceImplementation:
+				case MethodKind.DelegateInvoke:
 					break;
 				default: throw new NotSupportedException("Unsupported method kind: " + method.MethodKind);
 			}
@@ -1026,6 +1031,7 @@ namespace CS2X.Core.Transpilers
 						using (var stream = new MemoryStream())
 						using (instructionalBody = new InstructionalBody(stream, writer))
 						{
+							instructionalBody.disableWrite = isCollectionPass;
 							var origWriter = writer;
 							writer = instructionalBody;
 							if (syntaxDeclaration is MethodDeclarationSyntax)
@@ -1203,6 +1209,60 @@ namespace CS2X.Core.Transpilers
 						writer.WriteLine("(self);");
 					}
 					WriteContrustorFieldInitializers(method);
+
+					// write multicast delegate implementation detail
+					if (method.ContainingType != null && method.ContainingType.BaseType != null && method.ContainingType.BaseType.Equals(multicastDelegateType))
+					{
+						var selfField = FindFieldByName(multicastDelegateType, "_self");
+						var funcField = FindFieldByName(multicastDelegateType, "_func");
+						writer.WriteLinePrefix($"self->{GetFieldFullName(selfField)} = {GetParameterFullName(method.Parameters[0])};");
+						writer.WriteLinePrefix($"self->{GetFieldFullName(funcField)} = {GetParameterFullName(method.Parameters[1])};");
+					}
+				}
+				else if (method.MethodKind == MethodKind.DelegateInvoke)
+				{
+					void WriteParameterArgTypes()
+					{
+						var last = method.Parameters.Last();
+						foreach (var parameter in method.Parameters)
+						{
+							writer.Write(GetTypeFullNameRef(parameter.Type));
+							if (parameter != last) writer.Write(", ");
+						}
+					}
+
+					void WriteParameterArgs()
+					{
+						var last = method.Parameters.Last();
+						foreach (var parameter in method.Parameters)
+						{
+							writer.Write(GetParameterFullName(parameter));
+							if (parameter != last) writer.Write(", ");
+						}
+					}
+
+					var selfField = FindFieldByName(multicastDelegateType, "_self");
+					var funcField = FindFieldByName(multicastDelegateType, "_func");
+					var nextField = FindFieldByName(multicastDelegateType, "_next");
+					string selfFieldName = GetFieldFullName(selfField);
+					string funcFieldName = GetFieldFullName(funcField);
+					string nextFieldName = GetFieldFullName(nextField);
+
+					writer.WritePrefix($"if (self->{selfFieldName} != 0) ((void (*)({GetTypeFullName(objectType)}*, ");
+					WriteParameterArgTypes();
+					writer.Write($"))self->{funcFieldName})(self->{selfFieldName}, ");
+					WriteParameterArgs();
+					writer.WriteLine(");");
+
+					writer.WritePrefix($"else ((void (*)(");
+					WriteParameterArgTypes();
+					writer.Write($"))self->{funcFieldName})(");
+					WriteParameterArgs();
+					writer.WriteLine(");");
+
+					writer.WritePrefix($"if (self->{nextFieldName} != 0) {GetMethodFullName(method)}(self->{nextFieldName}, ");
+					WriteParameterArgs();
+					writer.WriteLine(");");
 				}
 				else
 				{
@@ -1323,6 +1383,7 @@ namespace CS2X.Core.Transpilers
 				using (var stream = new MemoryStream())
 				using (var subInstructionalBody = new InstructionalBody(stream, writer))
 				{
+					subInstructionalBody.disableWrite = isCollectionPass;
 					subInstructionalBody.locals.AddRange(instructionalBody.locals);// copy parent block locals
 					var origWriter = writer;
 					var origInstructionalBody = instructionalBody;
@@ -1944,8 +2005,25 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (symbol.Kind == SymbolKind.Method)
 			{
-				var method = (IMethodSymbol)symbol;
-				WriteMethodInvoke(method, expression);
+				var operation = semanticModel.GetOperation(expression);
+				if (operation != null && operation.Kind == OperationKind.MethodReference)
+				{
+					if (operation.Parent != null)
+					{
+						if (operation.Parent.Kind != OperationKind.DelegateCreation) throw new NotSupportedException("MethodReference operation has unsupported parent kind: " + operation.Parent.Kind);
+					}
+					else
+					{
+						 throw new NotSupportedException("MethodReference operation has null parent");
+					}
+
+					writer.Write('0');// TODO: implicit GC allocate new delegate
+				}
+				else
+				{
+					var method = (IMethodSymbol)symbol;
+					WriteMethodInvoke(method, expression);
+				}
 			}
 			else
 			{
@@ -2023,8 +2101,8 @@ namespace CS2X.Core.Transpilers
 		
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
-			var symbolInfo = semanticModel.GetSymbolInfo(expression);
-			var method = ResolveMethod((IMethodSymbol)symbolInfo.Symbol, this.method, semanticModel);
+			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			var method = ResolveMethod((IMethodSymbol)symbol, this.method, semanticModel);
 			writer.Write(GetMethodFullName(method));
 			writer.Write('(');
 			if (method.ContainingType.IsReferenceType)

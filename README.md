@@ -58,6 +58,7 @@ Almost zero performance loss. C# code will generate in a manner as if hand writt
 	* No auto boxing for value types are supported (.NET has many easy to fall in syntax performance pitfalls here).
 	* System.Object can never equal a 'struct', 'enum' or 'primitive' type.
 	* Virtuals like 'MyStruct.GetType()' or 'MyEnum.GetType()' give compile time errors (use typeof instead).
+	* Cannot bind a delegate to a structs method.
 * Interfaces are considered 'type-classes' and are compile time only.
 	* Used for generics only.
 	* No casting to them or variable declarations of them.

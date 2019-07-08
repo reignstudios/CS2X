@@ -134,8 +134,23 @@ namespace PortableTestApp
 			string e = en.Name();
 		}
 
+		delegate void MyDelegate(string i);
+		static MyDelegate myDelegate;
+
+		static void MyDelegateCallback(string i)
+		{
+			Console.WriteLine(i);
+		}
+
 		unsafe static void Main()//string[] args)
 		{
+			//myDelegate = new MyDelegate(MyDelegateCallback);
+			myDelegate = MyDelegateCallback;
+			//myDelegate("Invoke");
+
+			value = "lll";
+			myEnum = MyEnum.A;
+
 			var m = new MyBaseClass();
 			m.MyVirtMethod();
 			var m2 = (MyAbstractClass)m;

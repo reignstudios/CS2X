@@ -219,6 +219,10 @@ float f_System_MathF_PI;
 struct t_System_MulticastDelegate
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
+	t_System_Object* f__self_2;
+	intptr_t f__func_2;
+	t_System_MulticastDelegate* f__prev_2;
+	t_System_MulticastDelegate* f__next_2;
 };
 
 struct t_System_NonSerializedAttribute
@@ -728,6 +732,14 @@ rt_System_MathF rt_System_MathF_OBJ;
 int8_t rt_System_MathF_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,77,0,97,0,116,0,104,0,70,0,0,0}; /* MathF */
 int8_t rt_System_MathF_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,77,0,97,0,116,0,104,0,70,0,0,0}; /* System.MathF */
 
+typedef struct rt_System_IntPtr
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_IntPtr;
+rt_System_IntPtr rt_System_IntPtr_OBJ;
+int8_t rt_System_IntPtr_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* IntPtr */
+int8_t rt_System_IntPtr_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* System.IntPtr */
+
 typedef struct rt_System_MulticastDelegate
 {
 	t_System_RuntimeType runtimeType;
@@ -1177,14 +1189,6 @@ rt_System_Int64 rt_System_Int64_OBJ;
 int8_t rt_System_Int64_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,54,0,52,0,0,0}; /* Int64 */
 int8_t rt_System_Int64_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,54,0,52,0,0,0}; /* System.Int64 */
 
-typedef struct rt_System_IntPtr
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_IntPtr;
-rt_System_IntPtr rt_System_IntPtr_OBJ;
-int8_t rt_System_IntPtr_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* IntPtr */
-int8_t rt_System_IntPtr_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* System.IntPtr */
-
 typedef struct rt_System_RuntimeFieldHandle
 {
 	t_System_RuntimeType runtimeType;
@@ -1284,6 +1288,7 @@ double m_double__ctor_0();
 char m_float_IsNaN_0(float p_f);
 char m_float_IsNegative_0(float p_f);
 float m_float__ctor_0();
+intptr_t m_intptr_t__ctor_0();
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_MulticastDelegate* self);
 t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0(t_System_NonSerializedAttribute* self);
 t_System_NotSupportedException* m_System_NotSupportedException__ctor_0(t_System_NotSupportedException* self, t_System_String* p_message);
@@ -1375,7 +1380,6 @@ t_System_DateTime m_System_DateTime__ctor_0();
 t_System_Decimal m_System_Decimal__ctor_0();
 int16_t m_int16_t__ctor_0();
 int64_t m_int64_t__ctor_0();
-intptr_t m_intptr_t__ctor_0();
 t_System_RuntimeFieldHandle m_System_RuntimeFieldHandle__ctor_0();
 t_System_RuntimeTypeHandle m_System_RuntimeTypeHandle__ctor_0(t_System_RuntimeType* p_type);
 t_System_RuntimeTypeHandle m_System_RuntimeTypeHandle__ctor_1();
@@ -1642,6 +1646,12 @@ char m_float_IsNegative_0(float p_f)
 float m_float__ctor_0()
 {
 	float selfObj = {0};
+	return selfObj;
+}
+
+intptr_t m_intptr_t__ctor_0()
+{
+	intptr_t selfObj = {0};
 	return selfObj;
 }
 
@@ -2263,12 +2273,6 @@ int64_t m_int64_t__ctor_0()
 	return selfObj;
 }
 
-intptr_t m_intptr_t__ctor_0()
-{
-	intptr_t selfObj = {0};
-	return selfObj;
-}
-
 t_System_RuntimeFieldHandle m_System_RuntimeFieldHandle__ctor_0()
 {
 	t_System_RuntimeFieldHandle selfObj = {0};
@@ -2446,6 +2450,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_MathF_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_MathF_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_MathF_METADATA_Name;
 	rt_System_MathF_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_MathF_METADATA_FullName;
+	memset(&rt_System_IntPtr_OBJ, 0, sizeof(rt_System_IntPtr));
+	rt_System_IntPtr_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_IntPtr_OBJ;
+	rt_System_IntPtr_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_IntPtr_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_Name;
+	rt_System_IntPtr_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_FullName;
 	memset(&rt_System_MulticastDelegate_OBJ, 0, sizeof(rt_System_MulticastDelegate));
 	rt_System_MulticastDelegate_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_MulticastDelegate_OBJ;
 	rt_System_MulticastDelegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Delegate_OBJ;
@@ -2726,11 +2735,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Int64_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
 	rt_System_Int64_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Int64_METADATA_Name;
 	rt_System_Int64_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Int64_METADATA_FullName;
-	memset(&rt_System_IntPtr_OBJ, 0, sizeof(rt_System_IntPtr));
-	rt_System_IntPtr_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_IntPtr_OBJ;
-	rt_System_IntPtr_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
-	rt_System_IntPtr_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_Name;
-	rt_System_IntPtr_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_FullName;
 	memset(&rt_System_RuntimeFieldHandle_OBJ, 0, sizeof(rt_System_RuntimeFieldHandle));
 	rt_System_RuntimeFieldHandle_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_RuntimeFieldHandle_OBJ;
 	rt_System_RuntimeFieldHandle_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
@@ -2819,6 +2823,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Single_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MathF_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MathF_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_IntPtr_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_IntPtr_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MulticastDelegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MulticastDelegate_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_NonSerializedAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -2931,8 +2937,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Int16_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Int64_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Int64_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_IntPtr_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_IntPtr_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_RuntimeFieldHandle_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_RuntimeFieldHandle_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_RuntimeTypeHandle_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;

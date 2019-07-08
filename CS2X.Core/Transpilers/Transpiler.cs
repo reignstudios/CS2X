@@ -12,7 +12,7 @@ namespace CS2X.Core.Transpilers
 	public abstract class Transpiler
 	{
 		public readonly Solution solution;
-		protected INamedTypeSymbol runtimeType, typeType, stringType, arrayType, objectType;
+		protected INamedTypeSymbol runtimeType, typeType, stringType, arrayType, objectType, multicastDelegateType;
 		protected INamedTypeSymbol ienumerableT, ienumerable, ienumeratorT, ienumerator;
 		protected IMethodSymbol ienumerableT_GetEnumerator, ienumerable_GetEnumerator, ienumeratorT_GetEnumerator, ienumerator_GetEnumerator;
 
@@ -25,6 +25,7 @@ namespace CS2X.Core.Transpilers
 			stringType = coreLibProject.compilation.GetSpecialType(SpecialType.System_String);
 			arrayType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Array);
 			objectType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Object);
+			multicastDelegateType = coreLibProject.compilation.GetSpecialType(SpecialType.System_MulticastDelegate);
 
 			ienumerableT = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerable_T);
 			ienumerable = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_IEnumerable);
