@@ -146,7 +146,7 @@ namespace PortableTestApp
 		{
 			//myDelegate = new MyDelegate(MyDelegateCallback);
 			myDelegate = MyDelegateCallback;
-			//myDelegate("Invoke");
+			myDelegate("Invoke");
 
 			value = "lll";
 			myEnum = MyEnum.A;

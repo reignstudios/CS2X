@@ -433,7 +433,7 @@ namespace CS2X.Core.Transpilers
 				bool match = true;
 				for (int i = 0; i != method.Parameters.Length; ++i)
 				{
-					if (!method.Parameters[i].Equals(parameters[i]))
+					if (!method.Parameters[i].Type.Equals(parameters[i]))
 					{
 						match = false;
 						break;

@@ -2005,6 +2005,7 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (symbol.Kind == SymbolKind.Method)
 			{
+				var method = (IMethodSymbol)symbol;
 				var operation = semanticModel.GetOperation(expression);
 				if (operation != null && operation.Kind == OperationKind.MethodReference)
 				{
@@ -2017,11 +2018,17 @@ namespace CS2X.Core.Transpilers
 						 throw new NotSupportedException("MethodReference operation has null parent");
 					}
 
-					writer.Write('0');// TODO: implicit GC allocate new delegate
+					var type = operation.Parent.Type;
+					var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
+					var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
+					var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
+					writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}), ");
+					if (!method.IsStatic) WriteCaller(expression);
+					else writer.Write("0");
+					writer.Write($", &{GetMethodFullName(method)})");
 				}
 				else
 				{
-					var method = (IMethodSymbol)symbol;
 					WriteMethodInvoke(method, expression);
 				}
 			}
@@ -2342,6 +2349,21 @@ namespace CS2X.Core.Transpilers
 			var method = (IMethodSymbol)symbolInfo.Symbol;
 			bool isCallerValueType = false, isStaticExternCMethod = false;
 			ITypeSymbol callerType = null;
+
+			if (method.MethodKind == MethodKind.DelegateInvoke)
+			{
+				writer.Write(GetMethodFullName(method));
+				writer.Write('(');
+				WriteExpression(expression.Expression);
+				if (expression.ArgumentList.Arguments.Count != 0)
+				{
+					writer.Write(", ");
+					WriteArgumentList(method, expression.ArgumentList);
+				}
+				writer.Write(')');
+				return;
+			}
+
 			if (!method.IsStatic)
 			{
 				var caller = GetCaller(expression.Expression);
