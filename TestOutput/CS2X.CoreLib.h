@@ -157,6 +157,8 @@ struct t_System_Console
 struct t_System_Delegate
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
+	intptr_t f__methodPtr_1;
+	t_System_Object* f__target_1;
 };
 
 struct t_System_Enum
@@ -219,9 +221,8 @@ float f_System_MathF_PI;
 struct t_System_MulticastDelegate
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
-	t_System_Object* f__self_2;
-	intptr_t f__func_2;
-	t_System_MulticastDelegate* f__prev_2;
+	intptr_t f__methodPtr_1;
+	t_System_Object* f__target_1;
 	t_System_MulticastDelegate* f__next_2;
 };
 
@@ -625,6 +626,14 @@ rt_System_Console rt_System_Console_OBJ;
 int8_t rt_System_Console_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,67,0,111,0,110,0,115,0,111,0,108,0,101,0,0,0}; /* Console */
 int8_t rt_System_Console_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,110,0,115,0,111,0,108,0,101,0,0,0}; /* System.Console */
 
+typedef struct rt_System_IntPtr
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_IntPtr;
+rt_System_IntPtr rt_System_IntPtr_OBJ;
+int8_t rt_System_IntPtr_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* IntPtr */
+int8_t rt_System_IntPtr_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* System.IntPtr */
+
 typedef struct rt_System_Delegate
 {
 	t_System_RuntimeType runtimeType;
@@ -731,14 +740,6 @@ typedef struct rt_System_MathF
 rt_System_MathF rt_System_MathF_OBJ;
 int8_t rt_System_MathF_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,77,0,97,0,116,0,104,0,70,0,0,0}; /* MathF */
 int8_t rt_System_MathF_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,77,0,97,0,116,0,104,0,70,0,0,0}; /* System.MathF */
-
-typedef struct rt_System_IntPtr
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_IntPtr;
-rt_System_IntPtr rt_System_IntPtr_OBJ;
-int8_t rt_System_IntPtr_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* IntPtr */
-int8_t rt_System_IntPtr_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,80,0,116,0,114,0,0,0}; /* System.IntPtr */
 
 typedef struct rt_System_MulticastDelegate
 {
@@ -1274,6 +1275,12 @@ char m_System_CLSCompliantAttribute_get_IsCompliant_0(t_System_CLSCompliantAttri
 void m_System_Console_Write_0(t_System_String* p_s);
 void m_System_Console_WriteLine_0(t_System_String* p_s);
 void m_System_Console_WriteLine_1();
+t_System_Object* m_System_Delegate_get_Target_0(t_System_Delegate* self);
+char m_System_Delegate_op_Equality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
+char m_System_Delegate_op_Inequality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
+t_System_Delegate* m_System_Delegate_Combine_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
+t_System_Delegate* m_System_Delegate_Remove_0(t_System_Delegate* p_source, t_System_Delegate* p_value);
+t_System_Delegate* m_System_Delegate_RemoveAll_0(t_System_Delegate* p_source, t_System_Delegate* p_value);
 t_System_Delegate* m_System_Delegate__ctor_0(t_System_Delegate* self);
 t_System_Enum* m_System_Enum__ctor_0(t_System_Enum* self);
 t_System_String* m_System_Environment_get_NewLine_0();
@@ -1288,7 +1295,6 @@ double m_double__ctor_0();
 char m_float_IsNaN_0(float p_f);
 char m_float_IsNegative_0(float p_f);
 float m_float__ctor_0();
-intptr_t m_intptr_t__ctor_0();
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_MulticastDelegate* self);
 t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0(t_System_NonSerializedAttribute* self);
 t_System_NotSupportedException* m_System_NotSupportedException__ctor_0(t_System_NotSupportedException* self, t_System_String* p_message);
@@ -1387,7 +1393,6 @@ int8_t m_int8_t__ctor_0();
 uint16_t m_uint16_t__ctor_0();
 uint32_t m_uint32_t__ctor_0();
 uint64_t m_uint64_t__ctor_0();
-uintptr_t m_uintptr_t__ctor_0();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
 
 /* =============================== */
@@ -1566,6 +1571,107 @@ void m_System_Console_WriteLine_1()
 	m_System_Console_Write_0(m_System_Environment_get_NewLine_0());
 }
 
+t_System_Object* m_System_Delegate_get_Target_0(t_System_Delegate* self)
+{
+	return self->f__target_1;
+}
+
+char m_System_Delegate_op_Equality_0(t_System_Delegate* p_a, t_System_Delegate* p_b)
+{
+	return 1;
+}
+
+char m_System_Delegate_op_Inequality_0(t_System_Delegate* p_a, t_System_Delegate* p_b)
+{
+	return 1;
+}
+
+t_System_Delegate* m_System_Delegate_Combine_0(t_System_Delegate* p_a, t_System_Delegate* p_b)
+{
+	t_System_MulticastDelegate* l_ma_0;
+	t_System_MulticastDelegate* l_mb_1;
+	t_System_MulticastDelegate* l_last_2;
+	if (p_a == 0) return p_b;
+	l_ma_0 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_a, &rt_System_MulticastDelegate_OBJ);
+	l_mb_1 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_b, &rt_System_MulticastDelegate_OBJ);
+	l_last_2 = l_ma_0;
+	while (l_last_2->f__next_2 != 0) l_last_2 = l_last_2->f__next_2;
+	l_last_2->f__next_2 = l_mb_1;
+	return p_a;
+}
+
+t_System_Delegate* m_System_Delegate_Remove_0(t_System_Delegate* p_source, t_System_Delegate* p_value)
+{
+	t_System_MulticastDelegate* l_next_0;
+	t_System_MulticastDelegate* l_prev_1;
+	t_System_MulticastDelegate* l_last_2;
+	t_System_MulticastDelegate* l_lastPrev_3;
+	if (p_source == 0) return 0;
+	if (p_value == 0) return p_source;
+	l_next_0 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_source, &rt_System_MulticastDelegate_OBJ);
+	l_prev_1 = 0;
+	l_last_2 = 0;
+	l_lastPrev_3 = 0;
+	while (l_next_0 != 0)
+	{
+		if (l_next_0->f__methodPtr_1 == p_value->f__methodPtr_1 && l_next_0->f__target_1 == p_value->f__target_1)
+		{
+			l_lastPrev_3 = l_prev_1;
+			l_last_2 = l_next_0;
+		}
+		l_prev_1 = l_next_0;
+		l_next_0 = l_next_0->f__next_2;
+	}
+	if (l_last_2 != 0)
+	{
+		if (l_last_2 == p_source)
+		{
+			t_System_MulticastDelegate* l_multiSource_4;
+			l_multiSource_4 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_source, &rt_System_MulticastDelegate_OBJ);
+			l_next_0 = l_multiSource_4->f__next_2;
+			l_multiSource_4->f__next_2 = 0;
+			return l_next_0;
+		}
+		if (l_lastPrev_3 != 0)
+		{
+			l_lastPrev_3->f__next_2 = l_last_2->f__next_2;
+			l_last_2->f__next_2 = 0;
+		}
+	}
+	return p_source;
+}
+
+t_System_Delegate* m_System_Delegate_RemoveAll_0(t_System_Delegate* p_source, t_System_Delegate* p_value)
+{
+	t_System_MulticastDelegate* l_next_0;
+	t_System_MulticastDelegate* l_prev_1;
+	if (p_source == 0) return 0;
+	if (p_value == 0) return p_source;
+	l_next_0 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_source, &rt_System_MulticastDelegate_OBJ);
+	l_prev_1 = 0;
+	while (l_next_0 != 0)
+	{
+		t_System_MulticastDelegate* l_nextItem_2;
+		l_nextItem_2 = l_next_0->f__next_2;
+		if (l_next_0->f__methodPtr_1 == p_value->f__methodPtr_1 && l_next_0->f__target_1 == p_value->f__target_1)
+		{
+			if (l_next_0 == p_source)
+			{
+				p_source = l_next_0->f__next_2;
+				l_next_0->f__next_2 = 0;
+			}
+			else if (l_prev_1 != 0)
+{
+				l_prev_1->f__next_2 = l_next_0->f__next_2;
+				l_next_0->f__next_2 = 0;
+}
+		}
+		l_prev_1 = l_next_0;
+		l_next_0 = l_nextItem_2;
+	}
+	return p_source;
+}
+
 t_System_Delegate* m_System_Delegate__ctor_0(t_System_Delegate* self)
 {
 	m_System_Object__ctor_0(self);
@@ -1646,12 +1752,6 @@ char m_float_IsNegative_0(float p_f)
 float m_float__ctor_0()
 {
 	float selfObj = {0};
-	return selfObj;
-}
-
-intptr_t m_intptr_t__ctor_0()
-{
-	intptr_t selfObj = {0};
 	return selfObj;
 }
 
@@ -2317,12 +2417,6 @@ uint64_t m_uint64_t__ctor_0()
 	return selfObj;
 }
 
-uintptr_t m_uintptr_t__ctor_0()
-{
-	uintptr_t selfObj = {0};
-	return selfObj;
-}
-
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0()
 {
 	t_System_Reflection_MethodImplAttributes selfObj = {0};
@@ -2385,6 +2479,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Console_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_Console_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Console_METADATA_Name;
 	rt_System_Console_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Console_METADATA_FullName;
+	memset(&rt_System_IntPtr_OBJ, 0, sizeof(rt_System_IntPtr));
+	rt_System_IntPtr_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_IntPtr_OBJ;
+	rt_System_IntPtr_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_System_IntPtr_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_Name;
+	rt_System_IntPtr_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_FullName;
 	memset(&rt_System_Delegate_OBJ, 0, sizeof(rt_System_Delegate));
 	rt_System_Delegate_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Delegate_OBJ;
 	rt_System_Delegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
@@ -2450,11 +2549,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_MathF_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_MathF_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_MathF_METADATA_Name;
 	rt_System_MathF_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_MathF_METADATA_FullName;
-	memset(&rt_System_IntPtr_OBJ, 0, sizeof(rt_System_IntPtr));
-	rt_System_IntPtr_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_IntPtr_OBJ;
-	rt_System_IntPtr_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
-	rt_System_IntPtr_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_Name;
-	rt_System_IntPtr_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_IntPtr_METADATA_FullName;
 	memset(&rt_System_MulticastDelegate_OBJ, 0, sizeof(rt_System_MulticastDelegate));
 	rt_System_MulticastDelegate_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_MulticastDelegate_OBJ;
 	rt_System_MulticastDelegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Delegate_OBJ;
@@ -2797,6 +2891,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_CLSCompliantAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Console_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Console_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_IntPtr_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_IntPtr_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Delegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Delegate_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Enum_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -2823,8 +2919,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Single_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MathF_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MathF_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_IntPtr_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_IntPtr_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MulticastDelegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MulticastDelegate_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_NonSerializedAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;

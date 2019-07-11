@@ -878,6 +878,7 @@ namespace CS2X.Core.Transpilers
 					objTypeChain.Add(baseType);
 					baseType = baseType.BaseType;
 				}
+				objTypeChain.Reverse();
 
 				// write non-static fields
 				writer.WriteLine($"struct {GetTypeFullName(type)}");
@@ -916,6 +917,7 @@ namespace CS2X.Core.Transpilers
 		{
 			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
+			if (method.ContainingType.SpecialType == SpecialType.System_IntPtr || method.ContainingType.SpecialType == SpecialType.System_UIntPtr) return false;
 			if (method.ContainingType.IsGenericType && !IsResolvedGenericType(method.ContainingType)) return false;
 			if (method.IsAbstract) return false;
 			if (method.IsGenericMethod && method.IsDefinition) return false;
@@ -1213,8 +1215,8 @@ namespace CS2X.Core.Transpilers
 					// write multicast delegate implementation detail
 					if (method.ContainingType != null && method.ContainingType.BaseType != null && method.ContainingType.BaseType.Equals(multicastDelegateType))
 					{
-						var selfField = FindFieldByName(multicastDelegateType, "_self");
-						var funcField = FindFieldByName(multicastDelegateType, "_func");
+						var selfField = FindFieldByName(multicastDelegateType.BaseType, "_target");
+						var funcField = FindFieldByName(multicastDelegateType.BaseType, "_methodPtr");
 						writer.WriteLinePrefix($"self->{GetFieldFullName(selfField)} = {GetParameterFullName(method.Parameters[0])};");
 						writer.WriteLinePrefix($"self->{GetFieldFullName(funcField)} = {GetParameterFullName(method.Parameters[1])};");
 					}
@@ -1241,8 +1243,8 @@ namespace CS2X.Core.Transpilers
 						}
 					}
 
-					var selfField = FindFieldByName(multicastDelegateType, "_self");
-					var funcField = FindFieldByName(multicastDelegateType, "_func");
+					var selfField = FindFieldByName(multicastDelegateType.BaseType, "_target");
+					var funcField = FindFieldByName(multicastDelegateType.BaseType, "_methodPtr");
 					var nextField = FindFieldByName(multicastDelegateType, "_next");
 					string selfFieldName = GetFieldFullName(selfField);
 					string funcFieldName = GetFieldFullName(funcField);
@@ -2007,6 +2009,7 @@ namespace CS2X.Core.Transpilers
 			{
 				var method = (IMethodSymbol)symbol;
 				var operation = semanticModel.GetOperation(expression);
+				if (operation == null && expression.Parent != null) operation = semanticModel.GetOperation(expression.Parent);
 				if (operation != null && operation.Kind == OperationKind.MethodReference)
 				{
 					if (operation.Parent != null)
@@ -2109,7 +2112,27 @@ namespace CS2X.Core.Transpilers
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
-			var method = ResolveMethod((IMethodSymbol)symbol, this.method, semanticModel);
+
+			// grab method symbol
+			IMethodSymbol method;
+			bool isDelegateCreation = false;
+			if (symbol == null)
+			{
+				var operation = semanticModel.GetOperation(expression);
+				if (operation == null) throw new Exception("Failed to get operation for object creation");
+				if (operation.Kind != OperationKind.DelegateCreation) throw new NotSupportedException("Unsupported object creation kind: " + operation.Kind);
+				var type = operation.Type;
+				var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
+				var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
+				method = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
+				isDelegateCreation = true;
+			}
+			else
+			{
+				method = ResolveMethod((IMethodSymbol)symbol, this.method, semanticModel);
+			}
+
+			// write constructor and allocator
 			writer.Write(GetMethodFullName(method));
 			writer.Write('(');
 			if (method.ContainingType.IsReferenceType)
@@ -2117,7 +2140,20 @@ namespace CS2X.Core.Transpilers
 				writer.Write($"{GetNewObjectMethod(method.ContainingType)}(sizeof({GetTypeFullName(method.ContainingType)}), &{GetRuntimeTypeObjFullName(method.ContainingType)})");
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}
-			WriteArgumentList(method, expression.ArgumentList);
+
+			// write custom/special arguments
+			if (!isDelegateCreation)
+			{
+				WriteArgumentList(method, expression.ArgumentList);
+			}
+			else
+			{
+				var arg = expression.ArgumentList.Arguments[0];
+				var argMethod = (IMethodSymbol)semanticModel.GetSymbolInfo(arg.Expression).Symbol;
+				if (!argMethod.IsStatic) WriteCaller(arg.Expression);
+				else writer.Write("0");
+				writer.Write($", &{GetMethodFullName(argMethod)}");
+			}
 			writer.Write(')');
 
 			// write initializer
@@ -2306,6 +2342,21 @@ namespace CS2X.Core.Transpilers
 					writer.Write(')');
 					return;
 				}
+				else if (method.MethodKind == MethodKind.BuiltinOperator && method.ContainingType != null && method.ContainingType.BaseType == multicastDelegateType)
+				{
+					if (expression.OperatorToken.ValueText == "+=") method = FindMethodByName(delegateType, "Combine");
+					else if (expression.OperatorToken.ValueText == "-=") method = FindMethodByName(delegateType, "Remove");
+					else throw new NotSupportedException("Unsupported assignment method for delegate: " + method.FullName());
+					WriteExpression(expression.Left);
+					writer.Write(" = ");
+					writer.Write(GetMethodFullName(method));
+					writer.Write('(');
+					WriteExpression(expression.Left);
+					writer.Write(", ");
+					WriteExpression(expression.Right);
+					writer.Write(')');
+					return;
+				}
 			}
 
 			// normal assignment
@@ -2422,16 +2473,16 @@ namespace CS2X.Core.Transpilers
 
 		private void BinaryExpression(BinaryExpressionSyntax expression)
 		{
-			var symbolInfo = semanticModel.GetSymbolInfo(expression);
-			if (symbolInfo.Symbol == null)
+			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			if (symbol == null)
 			{
 				WriteExpression(expression.Left);
 				writer.Write($" {expression.OperatorToken.ValueText} ");
 				WriteExpression(expression.Right);
 			}
-			else if (symbolInfo.Symbol is IMethodSymbol)
+			else if (symbol is IMethodSymbol)
 			{
-				var operatorMethod = ResolveMethod((IMethodSymbol)symbolInfo.Symbol, method, semanticModel);
+				var operatorMethod = ResolveMethod((IMethodSymbol)symbol, method, semanticModel);
 				var type = operatorMethod.ContainingType;
 				if (type != null && type.SpecialType == SpecialType.System_String)
 				{
@@ -2481,6 +2532,51 @@ namespace CS2X.Core.Transpilers
 					WriteExpression(expression.Right);
 					writer.Write(')');
 				}
+				else if (operatorMethod.MethodKind == MethodKind.BuiltinOperator && type != null && type.BaseType != null && type.BaseType.SpecialType == SpecialType.System_MulticastDelegate)
+				{
+					IMethodSymbol specialMethod = null;
+					if
+					(
+						expression.OperatorToken.ValueText == "+" &&
+						operatorMethod.ReturnType == type &&
+						operatorMethod.Parameters.Length == 2 &&
+						operatorMethod.Parameters[0].Type == type &&
+						operatorMethod.Parameters[1].Type == type
+					)
+					{
+						var delegateType = type.BaseType.BaseType;
+						specialMethod = (IMethodSymbol)delegateType.GetMembers().First(x => x is IMethodSymbol && x.Name == "Combine" && ((IMethodSymbol)x).Parameters.Length == 2);
+					}
+					else if
+					(
+						expression.OperatorToken.ValueText == "-" &&
+						operatorMethod.ReturnType == type &&
+						operatorMethod.Parameters.Length == 2 &&
+						operatorMethod.Parameters[0].Type == type &&
+						operatorMethod.Parameters[1].Type == type
+					)
+					{
+						var delegateType = type.BaseType.BaseType;
+						specialMethod = (IMethodSymbol)delegateType.GetMembers().First(x => x is IMethodSymbol && x.Name == "Remove" && ((IMethodSymbol)x).Parameters.Length == 2);
+					}
+
+					if (specialMethod != null)
+					{
+						specialMethod = ResolveMethod(specialMethod, method, semanticModel);
+						writer.Write(GetMethodFullName(specialMethod));
+						writer.Write('(');
+						WriteExpression(expression.Left);
+						writer.Write(", ");
+						WriteExpression(expression.Right);
+						writer.Write(')');
+					}
+					else
+					{
+						WriteExpression(expression.Left);
+						writer.Write($" {expression.OperatorToken.ValueText} ");
+						WriteExpression(expression.Right);
+					}
+				}
 				else if
 				(
 					((IsPrimitiveType(operatorMethod.Parameters[0].Type) || operatorMethod.Parameters[0].Type is IPointerTypeSymbol) &&
@@ -2504,7 +2600,7 @@ namespace CS2X.Core.Transpilers
 			}
 			else
 			{
-				throw new NotSupportedException("Unsupported binary expression symbol: " + symbolInfo.Symbol.GetType());
+				throw new NotSupportedException("Unsupported binary expression symbol: " + symbol.GetType());
 			}
 		}
 

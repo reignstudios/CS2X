@@ -137,16 +137,29 @@ namespace PortableTestApp
 		delegate void MyDelegate(string i);
 		static MyDelegate myDelegate;
 
-		static void MyDelegateCallback(string i)
+		static void MyDelegateCallbackStatic(string i)
 		{
 			Console.WriteLine(i);
 		}
 
+		void MyDelegateCallback(string i)
+		{
+			if (this != null) Console.WriteLine(i + "_Program");
+		}
+
 		unsafe static void Main()//string[] args)
 		{
-			//myDelegate = new MyDelegate(MyDelegateCallback);
-			myDelegate = MyDelegateCallback;
-			myDelegate("Invoke");
+			var p = new Program();
+			myDelegate = new MyDelegate(p.MyDelegateCallback);
+			myDelegate += p.MyDelegateCallback;
+
+			//myDelegate = new MyDelegate(MyDelegateCallbackStatic);
+			myDelegate += MyDelegateCallbackStatic;
+			myDelegate -= MyDelegateCallbackStatic;
+			//myDelegate = MyDelegateCallbackStatic + myDelegate;
+			myDelegate = myDelegate + MyDelegateCallbackStatic;
+			//myDelegate = (MyDelegate)Delegate.RemoveAll(myDelegate, new MyDelegate(MyDelegateCallback));
+			if (myDelegate != null) myDelegate("Invoke");
 
 			value = "lll";
 			myEnum = MyEnum.A;
