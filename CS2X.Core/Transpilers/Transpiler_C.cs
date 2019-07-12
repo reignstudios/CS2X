@@ -618,13 +618,20 @@ namespace CS2X.Core.Transpilers
 				}
 
 				// entry point
+				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Entry Point */");
 				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("int main()");
+				if (mainMethod.Parameters.Length == 0) writer.WriteLine("int main()");
+				else writer.WriteLine("int main(int argc, char** argv)");
 				writer.WriteLine('{');
 				writer.AddTab();
+				if (mainMethod.Parameters.Length != 0)
+				{
+					writer.WriteLinePrefix("int i;");
+					writer.WriteLine();
+				}
 
 				writer.WriteLinePrefix("/* Init main thread unahandled exeption jump */");
 				writer.WriteLinePrefix("jmp_buf CS2X_UnhandledThreadExceptionBuff;");
@@ -645,8 +652,33 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
 				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
-				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
-				writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");// TODO: add support for args
+				if (mainMethod.Parameters.Length == 0)
+				{
+					writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");
+				}
+				else
+				{
+					// create array type and make sure its runtime type is tracked
+					var arrayType = project.compilation.CreateArrayTypeSymbol(stringType);
+					TrackArrayType(arrayType);
+
+					// GC allocate array
+					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgs = {GetNewArrayMethod(stringType)}(sizeof({GetTypeFullName(stringType)}), argc, &{GetRuntimeTypeObjFullName(arrayType)});");
+					writer.WriteLinePrefix("for (i = 0; i != argc; ++i)");
+					writer.WriteLinePrefix('{');
+					writer.AddTab();
+					writer.WriteLinePrefix("int i2, managedArgLength;");
+					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgsRuntimeOffset;");
+					writer.WriteLinePrefix("managedArgsRuntimeOffset = ((char*)managedArgs) + (sizeof(size_t) * 2);");
+					writer.WriteLinePrefix("managedArgLength = strlen(argv[i]);");
+					var allocMethod = FindMethodByName(stringType, "FastAllocateString");
+					writer.WriteLinePrefix($"managedArgsRuntimeOffset[i] = {GetMethodFullName(allocMethod)}(managedArgLength);");
+					var firstCharField = FindFieldByName(stringType, "_firstChar");
+					writer.WriteLinePrefix($"for (i2 = 0; i2 != managedArgLength; ++i2) (&managedArgsRuntimeOffset[i]->{GetFieldFullName(firstCharField)})[i2] = (char16_t)argv[i][i2];");
+					writer.RemoveTab();
+					writer.WriteLinePrefix('}');
+					writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}(managedArgs);");
+				}
 				writer.WriteLinePrefix("CS2X_GC_Collect();");
 				writer.WriteLinePrefix("return 0;");
 				writer.RemoveTab();
@@ -736,6 +768,55 @@ namespace CS2X.Core.Transpilers
 					if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
 					else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = 0;");
 				}
+			}
+		}
+
+		private bool ExistsInReference<T>(HashSet<T> collection, T value) where T : class
+		{
+			foreach (var reference in transpiledProject.references)
+			{
+				if (collection.Any(x => x == value)) return true;
+			}
+			return false;
+		}
+
+		private void TrackGenericMethod(IMethodSymbol genericMethod)
+		{
+			if (!genericMethod.IsGenericMethod) throw new Exception("TrackGenericMethod failed as method is not generic: " + genericMethod.FullName());
+			if (genericMethod.IsDefinition) throw new Exception("TrackGenericMethod failed as method is definition: " + genericMethod.FullName());
+			if (!ExistsInReference(genericMethods, genericMethod))
+			{
+				genericMethods.Add(genericMethod);
+				transpiledProject.genericMethods.Add(genericMethod);
+			}
+		}
+
+		private void TrackGenericType(INamedTypeSymbol genericType)
+		{
+			if (!genericType.IsGenericType) throw new Exception("TrackGenericype failed as type is not generic: " + genericType.FullName());
+			if (!ExistsInReference(genericTypes, genericType))
+			{
+				if (genericType.IsDefinition) throw new Exception("CheckIfSpecialType should never hit a generic definition");
+				genericTypes.Add(genericType);
+				transpiledProject.genericTypes.Add(genericType);
+			}
+		}
+
+		private void TrackArrayType(IArrayTypeSymbol arrayType)
+		{
+			if (!ExistsInReference(arrayTypes, arrayType))
+			{
+				arrayTypes.Add(arrayType);
+				transpiledProject.arrayTypes.Add(arrayType);
+			}
+		}
+
+		private void TrackPointerType(IPointerTypeSymbol pointerType)
+		{
+			if (!ExistsInReference(pointerTypes, pointerType))
+			{
+				pointerTypes.Add(pointerType);
+				transpiledProject.pointerTypes.Add(pointerType);
 			}
 		}
 
@@ -2755,44 +2836,22 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
-		private bool ExistsInReference<T>(HashSet<T> collection, T value) where T : class
-		{
-			foreach (var reference in transpiledProject.references)
-			{
-				if (collection.Any(x => x == value)) return true;
-			}
-			return false;
-		}
-
 		private void CheckIfSpecialType(ITypeSymbol type)
 		{
 			if (type.Kind == SymbolKind.NamedType)
 			{
 				var namedType = (INamedTypeSymbol)type;
-				if (namedType.IsGenericType && !ExistsInReference(genericTypes, namedType))
-				{
-					if (namedType.IsDefinition) throw new Exception("CheckIfSpecialType should never hit a generic definition");
-					genericTypes.Add(namedType);
-					transpiledProject.genericTypes.Add(namedType);
-				}
+				if (namedType.IsGenericType) TrackGenericType(namedType);
 			}
 			else if (type.Kind == SymbolKind.ArrayType)
 			{
 				var arrayType = (IArrayTypeSymbol)type;
-				if (!ExistsInReference(arrayTypes, arrayType))
-				{
-					arrayTypes.Add(arrayType);
-					transpiledProject.arrayTypes.Add(arrayType);
-				}
+				TrackArrayType(arrayType);
 			}
 			else if (type.Kind == SymbolKind.PointerType)
 			{
 				var pointerType = (IPointerTypeSymbol)type;
-				if (!ExistsInReference(pointerTypes, pointerType))
-				{
-					pointerTypes.Add(pointerType);
-					transpiledProject.pointerTypes.Add(pointerType);
-				}
+				TrackPointerType(pointerType);
 			}
 		}
 
@@ -2922,15 +2981,7 @@ namespace CS2X.Core.Transpilers
 
 		private void CheckIfSpecialMethod(IMethodSymbol method)
 		{
-			if (method.IsGenericMethod)
-			{
-				if (method.IsDefinition) throw new Exception("CheckIfSpecialMethod should never hit a generic definition");
-				if (!ExistsInReference(genericMethods, method))
-				{
-					genericMethods.Add(method);
-					transpiledProject.genericMethods.Add(method);
-				}
-			}
+			if (method.IsGenericMethod) TrackGenericMethod(method);
 		}
 
 		protected override string GetMethodFullName(IMethodSymbol method)

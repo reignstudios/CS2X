@@ -147,8 +147,13 @@ namespace PortableTestApp
 			if (this != null) Console.WriteLine(i + "_Program");
 		}
 
-		unsafe static void Main()//string[] args)
+		unsafe static void Main(string[] args)
 		{
+			foreach (string arg in args)
+			{
+				Console.WriteLine(arg);
+			}
+
 			var p = new Program();
 			myDelegate = new MyDelegate(p.MyDelegateCallback);
 			myDelegate += p.MyDelegateCallback;
