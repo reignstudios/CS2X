@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace PortableTestApp
 {
@@ -127,11 +128,16 @@ namespace PortableTestApp
 			}
 		}
 
+		//[DllImport("Kernel32.dll")]
+		//private static extern uint GetLastError();
+
 		static Program()
 		{
 			MyAutoPropStatic = 555;
 			var en = MyEnum.A;
 			string e = en.Name();
+
+			//uint lastError = GetLastError();
 		}
 
 		delegate void MyDelegate(string i);

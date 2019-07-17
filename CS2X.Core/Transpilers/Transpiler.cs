@@ -337,10 +337,9 @@ namespace CS2X.Core.Transpilers
 
 		protected bool GetNativeExternName(IMethodSymbol method, NativeTarget target, out string name)
 		{
-			var attribute = GetNativeExternAttribute(method, target);
-			if (attribute != null)
+			if (GetNativeExternAttribute(method, target, out var nativeExternAttribute))
 			{
-				var constant = attribute.ConstructorArguments[1];
+				var constant = nativeExternAttribute.ConstructorArguments[1];
 				if (constant.Value == null) name = method.Name;
 				else name = constant.Value.ToString();
 				return true;
@@ -354,10 +353,28 @@ namespace CS2X.Core.Transpilers
 			return false;
 		}
 
+		protected bool GetDllImportName(IMethodSymbol method, out string name)
+		{
+			if (GetDllImportAttribute(method, out var dllImportAttribute))
+			{
+				string entryPoint = null;
+				if (dllImportAttribute.NamedArguments.Any(x => x.Key == "EntryPoint"))
+				{
+					entryPoint = dllImportAttribute.NamedArguments.First(x => x.Key == "EntryPoint").Value.Value as string;
+				}
+				if (entryPoint == null) entryPoint = method.Name;
+
+				name = entryPoint;
+				return true;
+			}
+
+			name = null;
+			return false;
+		}
+
 		protected bool GetNativeTypeName(ITypeSymbol type, NativeTarget target, out string name)
 		{
-			var attribute = GetNativeTypeAttribute(type, target);
-			if (attribute != null)
+			if (GetNativeTypeAttribute(type, target, out var attribute))
 			{
 				var constant = attribute.ConstructorArguments[1];
 				if (constant.Value == null) name = type.Name;
@@ -369,24 +386,46 @@ namespace CS2X.Core.Transpilers
 			return false;
 		}
 
-		protected AttributeData GetNativeExternAttribute(IMethodSymbol method, NativeTarget target)
+		protected bool GetNativeExternAttribute(IMethodSymbol method, NativeTarget target, out AttributeData attribute)
 		{
-			return GetCS2XAttribute(method, target, "NativeExternAttribute");
+			return GetCS2XAttribute(method, target, "NativeExternAttribute", out attribute);
 		}
 
-		protected AttributeData GetNativeTypeAttribute(ITypeSymbol type, NativeTarget target)
+		protected bool GetNativeTypeAttribute(ITypeSymbol type, NativeTarget target, out AttributeData attribute)
 		{
-			return GetCS2XAttribute(type, target, "NativeTypeAttribute");
+			return GetCS2XAttribute(type, target, "NativeTypeAttribute", out attribute);
 		}
 
-		protected AttributeData GetCS2XAttribute(ISymbol symbol, NativeTarget target, string attributeTypeName)
+		protected bool GetCS2XAttribute(ISymbol symbol, NativeTarget target, string attributeTypeName, out AttributeData attribute)
+		{
+			foreach (var a in symbol.GetAttributes())
+			{
+				var type = a.AttributeClass;
+				if (type.ContainingNamespace.Name == "CS2X" && type.Name == attributeTypeName)
+				{
+					if (!a.ConstructorArguments.Any(x => ((int)x.Value & 1) == (int)target)) throw new NotImplementedException($"NativeTarget not set for '{target}': " + symbol.FullName());
+					attribute = a;
+					return true;
+				}
+			}
+
+			attribute = null;
+			return false;
+		}
+
+		protected bool GetDllImportAttribute(IMethodSymbol method, out AttributeData attribute)
+		{
+			attribute = FindAttributeByName(method, "System.Runtime.InteropServices.DllImportAttribute");
+			return attribute != null;
+		}
+
+		protected AttributeData FindAttributeByName(ISymbol symbol, string attributeTypeFullName)
 		{
 			foreach (var attribute in symbol.GetAttributes())
 			{
 				var type = attribute.AttributeClass;
-				if (type.ContainingNamespace.Name == "CS2X" && type.Name == attributeTypeName)
+				if (type.FullName() == attributeTypeFullName)
 				{
-					if (!attribute.ConstructorArguments.Any(x => ((int)x.Value & 1) == (int)target)) throw new NotImplementedException($"NativeTarget not set for '{target}': " + symbol.FullName());
 					return attribute;
 				}
 			}

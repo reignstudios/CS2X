@@ -80,6 +80,8 @@ typedef int32_t t_System_Runtime_CompilerServices_MethodCodeType;
 typedef int32_t t_System_Runtime_CompilerServices_MethodImplOptions;
 typedef struct t_System_Runtime_CompilerServices_MethodImplAttribute t_System_Runtime_CompilerServices_MethodImplAttribute;
 typedef struct t_System_Runtime_CompilerServices_RuntimeHelpers t_System_Runtime_CompilerServices_RuntimeHelpers;
+typedef int32_t t_System_Runtime_InteropServices_CallingConvention;
+typedef struct t_System_Runtime_InteropServices_DllImportAttribute t_System_Runtime_InteropServices_DllImportAttribute;
 typedef struct t_System_Runtime_InteropServices_OutAttribute t_System_Runtime_InteropServices_OutAttribute;
 typedef int32_t t_System_Runtime_InteropServices_LayoutKind;
 typedef struct t_System_Runtime_InteropServices_StructLayoutAttribute t_System_Runtime_InteropServices_StructLayoutAttribute;
@@ -480,6 +482,19 @@ struct t_System_Runtime_CompilerServices_MethodImplAttribute
 struct t_System_Runtime_CompilerServices_RuntimeHelpers
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
+};
+
+#define f_System_Runtime_InteropServices_CallingConvention_Cdecl 2
+#define f_System_Runtime_InteropServices_CallingConvention_StdCall 3
+#define f_System_Runtime_InteropServices_CallingConvention_ThisCall 4
+#define f_System_Runtime_InteropServices_CallingConvention_FastCall 5
+
+struct t_System_Runtime_InteropServices_DllImportAttribute
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	t_System_String* f__Value_k__BackingField_2;
+	t_System_String* f_EntryPoint_2;
+	t_System_Runtime_InteropServices_CallingConvention f_CallingConvention_2;
 };
 
 struct t_System_Runtime_InteropServices_OutAttribute
@@ -1118,6 +1133,22 @@ rt_System_Runtime_CompilerServices_RuntimeHelpers rt_System_Runtime_CompilerServ
 int8_t rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,72,0,101,0,108,0,112,0,101,0,114,0,115,0,0,0}; /* RuntimeHelpers */
 int8_t rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_FullName[106] = {0,0,0,0,0,0,0,0,46,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,67,0,111,0,109,0,112,0,105,0,108,0,101,0,114,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,72,0,101,0,108,0,112,0,101,0,114,0,115,0,0,0}; /* System.Runtime.CompilerServices.RuntimeHelpers */
 
+typedef struct rt_System_Runtime_InteropServices_CallingConvention
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Runtime_InteropServices_CallingConvention;
+rt_System_Runtime_InteropServices_CallingConvention rt_System_Runtime_InteropServices_CallingConvention_OBJ;
+int8_t rt_System_Runtime_InteropServices_CallingConvention_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,67,0,97,0,108,0,108,0,105,0,110,0,103,0,67,0,111,0,110,0,118,0,101,0,110,0,116,0,105,0,111,0,110,0,0,0}; /* CallingConvention */
+int8_t rt_System_Runtime_InteropServices_CallingConvention_METADATA_FullName[110] = {0,0,0,0,0,0,0,0,48,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,67,0,97,0,108,0,108,0,105,0,110,0,103,0,67,0,111,0,110,0,118,0,101,0,110,0,116,0,105,0,111,0,110,0,0,0}; /* System.Runtime.InteropServices.CallingConvention */
+
+typedef struct rt_System_Runtime_InteropServices_DllImportAttribute
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Runtime_InteropServices_DllImportAttribute;
+rt_System_Runtime_InteropServices_DllImportAttribute rt_System_Runtime_InteropServices_DllImportAttribute_OBJ;
+int8_t rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,68,0,108,0,108,0,73,0,109,0,112,0,111,0,114,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* DllImportAttribute */
+int8_t rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_FullName[112] = {0,0,0,0,0,0,0,0,49,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,68,0,108,0,108,0,73,0,109,0,112,0,111,0,114,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.InteropServices.DllImportAttribute */
+
 typedef struct rt_System_Runtime_InteropServices_OutAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -1374,6 +1405,8 @@ t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerSer
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplAttribute* self, t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions);
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_1(t_System_Runtime_CompilerServices_MethodImplAttribute* self, int16_t p_value);
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2(t_System_Runtime_CompilerServices_MethodImplAttribute* self);
+t_System_Runtime_InteropServices_CallingConvention m_System_Runtime_InteropServices_CallingConvention__ctor_0();
+t_System_Runtime_InteropServices_DllImportAttribute* m_System_Runtime_InteropServices_DllImportAttribute__ctor_0(t_System_Runtime_InteropServices_DllImportAttribute* self, t_System_String* p_dllName);
 t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self);
 t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0();
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
@@ -2296,6 +2329,19 @@ t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_Compiler
 	return self;
 }
 
+t_System_Runtime_InteropServices_CallingConvention m_System_Runtime_InteropServices_CallingConvention__ctor_0()
+{
+	t_System_Runtime_InteropServices_CallingConvention selfObj = {0};
+	return selfObj;
+}
+
+t_System_Runtime_InteropServices_DllImportAttribute* m_System_Runtime_InteropServices_DllImportAttribute__ctor_0(t_System_Runtime_InteropServices_DllImportAttribute* self, t_System_String* p_dllName)
+{
+	m_System_Attribute__ctor_0(self);
+	self->f__Value_k__BackingField_2 = p_dllName;
+	return self;
+}
+
 t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2784,6 +2830,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_CompilerServices_RuntimeHelpers_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_Runtime_CompilerServices_RuntimeHelpers_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_Name;
 	rt_System_Runtime_CompilerServices_RuntimeHelpers_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_FullName;
+	memset(&rt_System_Runtime_InteropServices_CallingConvention_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_CallingConvention));
+	rt_System_Runtime_InteropServices_CallingConvention_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_CallingConvention_OBJ;
+	rt_System_Runtime_InteropServices_CallingConvention_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_System_Runtime_InteropServices_CallingConvention_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_CallingConvention_METADATA_Name;
+	rt_System_Runtime_InteropServices_CallingConvention_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_CallingConvention_METADATA_FullName;
+	memset(&rt_System_Runtime_InteropServices_DllImportAttribute_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_DllImportAttribute));
+	rt_System_Runtime_InteropServices_DllImportAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_DllImportAttribute_OBJ;
+	rt_System_Runtime_InteropServices_DllImportAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
+	rt_System_Runtime_InteropServices_DllImportAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_Name;
+	rt_System_Runtime_InteropServices_DllImportAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_FullName;
 	memset(&rt_System_Runtime_InteropServices_OutAttribute_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_OutAttribute));
 	rt_System_Runtime_InteropServices_OutAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_OutAttribute_OBJ;
 	rt_System_Runtime_InteropServices_OutAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -3013,6 +3069,10 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Runtime_CompilerServices_MethodImplAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_CompilerServices_RuntimeHelpers_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_CallingConvention_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_CallingConvention_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;

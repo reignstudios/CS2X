@@ -616,7 +616,7 @@ namespace CS2X.Core.Transpilers
 					writer.RemoveTab();
 					writer.WriteLine('}');
 				}
-
+				
 				// entry point
 				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
 				writer.WriteLine();
@@ -705,7 +705,7 @@ namespace CS2X.Core.Transpilers
 					if (namedType.IsGenericType && !IsResolvedGenericType(namedType)) continue;
 				}
 				if (IsCS2XAttributeType(type)) continue;
-				if (GetNativeTypeAttribute(type, NativeTarget.C) != null) continue;
+				if (GetNativeTypeAttribute(type, NativeTarget.C, out _)) continue;
 
 				string obj = GetRuntimeTypeObjFullName(type);
 				writer.WriteLinePrefix($"memset(&{obj}, 0, sizeof({GetRuntimeTypeFullName(type)}));");
@@ -731,7 +731,7 @@ namespace CS2X.Core.Transpilers
 						if (namedType.IsGenericType && !IsResolvedGenericType(namedType)) continue;
 					}
 					if (IsCS2XAttributeType(type)) continue;
-					if (GetNativeTypeAttribute(type, NativeTarget.C) != null) continue;
+					if (GetNativeTypeAttribute(type, NativeTarget.C, out _)) continue;
 
 					string metadata = GetRuntimeTypeMetadataFullName(type);
 					writer.WriteLinePrefix($"(({stringTypeName}*){metadata}_Name)->CS2X_RuntimeType = &{stringRuntimeTypeName};");
@@ -751,7 +751,7 @@ namespace CS2X.Core.Transpilers
 					if (namedType.IsGenericType && !IsResolvedGenericType(namedType)) continue;
 				}
 				if (IsCS2XAttributeType(type)) continue;
-				if (GetNativeTypeAttribute(type, NativeTarget.C) != null) continue;
+				if (GetNativeTypeAttribute(type, NativeTarget.C, out _)) continue;
 
 				string obj = GetRuntimeTypeObjFullName(type);
 				var orderedVirtualMethods = GetOrderedVirtualMethods(type);
@@ -865,7 +865,7 @@ namespace CS2X.Core.Transpilers
 			if (type.TypeKind == TypeKind.Interface) return false;
 			if (type.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)type).IsGenericType && !IsResolvedGenericType((INamedTypeSymbol)type)) return false;
 			if (IsCS2XAttributeType(type)) return false;
-			if (GetNativeTypeAttribute(type, NativeTarget.C) != null) return false;
+			if (GetNativeTypeAttribute(type, NativeTarget.C, out _)) return false;
 
 			string runtimeTypeName = GetRuntimeTypeFullName(type);
 			writer.WriteLine($"typedef struct {runtimeTypeName}");
@@ -907,7 +907,7 @@ namespace CS2X.Core.Transpilers
 			if (type.TypeKind == TypeKind.Interface) return false;
 			if (type.IsGenericType && !IsResolvedGenericType(type)) return false;
 			if (IsCS2XAttributeType(type)) return false;
-			if (GetNativeTypeAttribute(type, NativeTarget.C) != null) return false;
+			if (GetNativeTypeAttribute(type, NativeTarget.C, out _)) return false;
 
 			if (!writeBody)
 			{
@@ -1025,7 +1025,7 @@ namespace CS2X.Core.Transpilers
 			if (IsCS2XAttributeType(method.ContainingType)) return false;
 
 			// skip if type is native type
-			if (GetNativeTypeAttribute(method.ContainingType, NativeTarget.C) != null)
+			if (GetNativeTypeAttribute(method.ContainingType, NativeTarget.C, out _))
 			{
 				if (method.IsExtern && !method.IsStatic) throw new NotSupportedException("Non-Static extern methods on native C types are not supported");
 				if (method.MethodKind != MethodKind.Constructor && method.MethodKind != MethodKind.StaticConstructor && method.MethodKind != MethodKind.Ordinary)
@@ -1035,7 +1035,7 @@ namespace CS2X.Core.Transpilers
 			}
 
 			// skip if method is native extern
-			if (method.IsExtern && GetNativeExternAttribute(method, NativeTarget.C) != null) return false;
+			if (method.IsExtern && GetNativeExternAttribute(method, NativeTarget.C, out _)) return false;
 
 			// validate method type is supported
 			switch (method.MethodKind)
@@ -1058,6 +1058,19 @@ namespace CS2X.Core.Transpilers
 
 			// validate method doesn't return interface
 			if (method.ReturnType.TypeKind == TypeKind.Interface) throw new NotSupportedException("Methods cannot return an interface: " + method.FullName());
+
+			// handle special interop method
+			if (method.IsStatic && method.IsExtern && GetDllImportAttribute(method, out var attribute))
+			{
+				if (!writeBody)
+				{
+					throw new NotImplementedException("TODO: write function pointer declaration");
+				}
+				else
+				{
+					return false;// external function pointer has no body
+				}
+			}
 
 			// write method desc
 			if (method.MethodKind != MethodKind.Constructor) writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
@@ -2512,10 +2525,15 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (method.IsExtern)
 			{
-				if (GetNativeExternName(method, NativeTarget.C, out string name))
+				string name;
+				if (GetNativeExternName(method, NativeTarget.C, out name))
 				{
 					isStaticExternCMethod = true;
 					writer.Write(name);
+				}
+				else if (GetDllImportName(method, out name))
+				{
+					throw new NotImplementedException("TODO: invoke function pointer");
 				}
 			}
 
@@ -2955,7 +2973,7 @@ namespace CS2X.Core.Transpilers
 		{
 			using (allowTypePrefix.Disable())
 			{
-				if (GetNativeTypeAttribute(field.ContainingType, NativeTarget.C) != null) return field.Name;
+				if (GetNativeTypeAttribute(field.ContainingType, NativeTarget.C, out _)) return field.Name;
 				string result = base.GetFieldFullName(field);
 				if (!field.IsStatic) result = $"f_{result}_{GetBaseTypeCount(field.ContainingType)}";
 				else result = $"f_{GetTypeFullName(field.ContainingType)}_{result}";
