@@ -3115,6 +3115,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_NotSupportedException_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
 }
 
+void CS2X_InitDllImport_CS2X_CoreLib()
+{
+	/* Init this project */
+}
+
 void CS2X_InvokeStaticConstructors_CS2X_CoreLib()
 {
 	/* Init this project */

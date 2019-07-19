@@ -567,6 +567,41 @@ namespace CS2X.Core.Transpilers
 			writer.RemoveTab();
 			writer.WriteLine('}');
 
+			// init dllimport methods
+			writer.WriteLine();
+			string dllImportInitMethod = $"CS2X_InitDllImport_{assemblyName}";
+			writer.WriteLine($"void {dllImportInitMethod}()");
+			writer.WriteLine('{');
+			writer.AddTab();
+			if (project.references.Count != 0)
+			{
+				writer.WriteLinePrefix("/* Init references */");
+				foreach (var reference in project.references)
+				{
+					writer.WriteLinePrefix($"CS2X_InitDllImport_{GetProjectNameFlat(reference)}();");
+				}
+				writer.WriteLine();
+			}
+
+			writer.WriteLinePrefix("/* Init this project */");
+			foreach (var type in project.allTypes)
+			{
+				if (type.TypeKind == TypeKind.Interface) continue;
+				foreach (var member in type.GetMembers())
+				{
+					if (member.Kind == SymbolKind.Method)
+					{
+						var method = (IMethodSymbol)member;
+						if (method.IsExtern && method.IsStatic && GetDllImportName(method, out string name))
+						{
+							writer.WriteLinePrefix($"{GetMethodFullName(method)} = &{name};");// TODO: load library and lookup method address
+						}
+					}
+				}
+			}
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
 			// init static constructors
 			writer.WriteLine();
 			string staticConstructorInitMethod = $"CS2X_InvokeStaticConstructors_{assemblyName}";
@@ -651,6 +686,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("CS2X_GC_Init();");
 				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
+				writer.WriteLinePrefix($"{dllImportInitMethod}();");
 				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
 				if (mainMethod.Parameters.Length == 0)
 				{
@@ -1059,12 +1095,22 @@ namespace CS2X.Core.Transpilers
 			// validate method doesn't return interface
 			if (method.ReturnType.TypeKind == TypeKind.Interface) throw new NotSupportedException("Methods cannot return an interface: " + method.FullName());
 
-			// handle special interop method
+			// handle special interop / dllimport method
 			if (method.IsStatic && method.IsExtern && GetDllImportAttribute(method, out var attribute))
 			{
 				if (!writeBody)
 				{
-					throw new NotImplementedException("TODO: write function pointer declaration");
+					writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetMethodFullName(method)})(");
+					var lastParameter = method.Parameters.LastOrDefault();
+					foreach (var parameter in method.Parameters)
+					{
+						string ptr = string.Empty;
+						writer.Write(GetTypeFullNameRef(parameter.Type));
+						if (IsParameterPassByRef(parameter)) writer.Write('*');
+						if (parameter != lastParameter) writer.Write(", ");
+					}
+					writer.WriteLine(");");
+					return true;
 				}
 				else
 				{
@@ -2525,15 +2571,15 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (method.IsExtern)
 			{
-				string name;
-				if (GetNativeExternName(method, NativeTarget.C, out name))
+				if (GetNativeExternName(method, NativeTarget.C, out string name))
 				{
 					isStaticExternCMethod = true;
 					writer.Write(name);
 				}
-				else if (GetDllImportName(method, out name))
+				else if (GetDllImportName(method, out _))
 				{
-					throw new NotImplementedException("TODO: invoke function pointer");
+					isStaticExternCMethod = true;
+					writer.Write($"(*{GetMethodFullName(method)})");
 				}
 			}
 

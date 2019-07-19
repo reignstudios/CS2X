@@ -250,6 +250,7 @@ int32_t m_PortableTestApp_Program_get_MyPropStatic_0();
 void m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value);
 void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
+uint32_t (*m_PortableTestApp_Program_GetLastError_0)();
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_MyDelegateCallbackStatic_0(t_System_String* p_i);
 void m_PortableTestApp_Program_MyDelegateCallback_0(t_PortableTestApp_Program* self, t_System_String* p_i);
@@ -385,9 +386,11 @@ void m_PortableTestApp_Program__cctor_0()
 {
 	t_PortableTestApp_MyEnum l_en_0;
 	t_System_String* l_e_1;
+	uint32_t l_lastError_2;
 	f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField = 555;
 	l_en_0 = 0;
 	l_e_1 = m_PortableTestApp_MyExtensions_Name_0(l_en_0);
+	l_lastError_2 = (*m_PortableTestApp_Program_GetLastError_0)();
 }
 
 void m_PortableTestApp_Program_MyDelegateCallbackStatic_0(t_System_String* p_i)
@@ -789,6 +792,15 @@ void CS2X_InitLib_PortableTestApp()
 	((t_System_String*)rt_System_String___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 }
 
+void CS2X_InitDllImport_PortableTestApp()
+{
+	/* Init references */
+	CS2X_InitDllImport_CS2X_CoreLib();
+
+	/* Init this project */
+	m_PortableTestApp_Program_GetLastError_0 = &GetLastError;
+}
+
 void CS2X_InvokeStaticConstructors_PortableTestApp()
 {
 	/* Init references */
@@ -839,6 +851,7 @@ int main(int argc, char** argv)
 	CS2X_GC_Init();
 	CS2X_InitLib_PortableTestApp();
 	CS2X_InitStringLiterals();
+	CS2X_InitDllImport_PortableTestApp();
 	CS2X_InvokeStaticConstructors_PortableTestApp();
 	t_System_String** managedArgs = CS2X_AllocArrayTypeAtomic(sizeof(t_System_String), argc, &rt_System_String___ARRAY_OBJ);
 	for (i = 0; i != argc; ++i)

@@ -128,8 +128,8 @@ namespace PortableTestApp
 			}
 		}
 
-		//[DllImport("Kernel32.dll")]
-		//private static extern uint GetLastError();
+		[DllImport("Kernel32.dll")]
+		private static extern uint GetLastError();
 
 		static Program()
 		{
@@ -137,7 +137,7 @@ namespace PortableTestApp
 			var en = MyEnum.A;
 			string e = en.Name();
 
-			//uint lastError = GetLastError();
+			uint lastError = GetLastError();
 		}
 
 		delegate void MyDelegate(string i);

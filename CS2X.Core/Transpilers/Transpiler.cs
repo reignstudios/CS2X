@@ -344,10 +344,6 @@ namespace CS2X.Core.Transpilers
 				else name = constant.Value.ToString();
 				return true;
 			}
-			else if (!IsInternalCall(method))
-			{
-				throw new NotSupportedException("Unsupported extern method invoke: " + method.FullName());
-			}
 
 			name = null;
 			return false;
