@@ -131,6 +131,9 @@ namespace PortableTestApp
 		[DllImport("Kernel32.dll")]
 		private static extern uint GetLastError();
 
+		[DllImport("__Internal")]
+		private static extern uint MyInternalExtern(uint value);
+
 		static Program()
 		{
 			MyAutoPropStatic = 555;
@@ -138,6 +141,7 @@ namespace PortableTestApp
 			string e = en.Name();
 
 			uint lastError = GetLastError();
+			lastError = MyInternalExtern(44);
 		}
 
 		delegate void MyDelegate(string i);

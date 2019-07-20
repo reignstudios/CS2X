@@ -251,6 +251,7 @@ void m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value);
 void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
 uint32_t (*m_PortableTestApp_Program_GetLastError_0)();
+uint32_t (*m_PortableTestApp_Program_MyInternalExtern_0)(uint32_t);
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_MyDelegateCallbackStatic_0(t_System_String* p_i);
 void m_PortableTestApp_Program_MyDelegateCallback_0(t_PortableTestApp_Program* self, t_System_String* p_i);
@@ -382,6 +383,18 @@ void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_Portable
 	}
 }
 
+uint32_t m_PortableTestApp_Program_GetLastError_0_DllNotFoundException()
+{
+	CS2X_ThreadExceptionObject = m_System_DllNotFoundException__ctor_0(CS2X_AllocType(sizeof(t_System_DllNotFoundException), &rt_System_DllNotFoundException_OBJ));
+	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+}
+
+uint32_t m_PortableTestApp_Program_MyInternalExtern_0_DllNotFoundException(uint32_t p_value)
+{
+	CS2X_ThreadExceptionObject = m_System_DllNotFoundException__ctor_0(CS2X_AllocType(sizeof(t_System_DllNotFoundException), &rt_System_DllNotFoundException_OBJ));
+	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+}
+
 void m_PortableTestApp_Program__cctor_0()
 {
 	t_PortableTestApp_MyEnum l_en_0;
@@ -391,6 +404,7 @@ void m_PortableTestApp_Program__cctor_0()
 	l_en_0 = 0;
 	l_e_1 = m_PortableTestApp_MyExtensions_Name_0(l_en_0);
 	l_lastError_2 = (*m_PortableTestApp_Program_GetLastError_0)();
+	l_lastError_2 = (*m_PortableTestApp_Program_MyInternalExtern_0)(44);
 }
 
 void m_PortableTestApp_Program_MyDelegateCallbackStatic_0(t_System_String* p_i)
@@ -798,7 +812,10 @@ void CS2X_InitDllImport_PortableTestApp()
 	CS2X_InitDllImport_CS2X_CoreLib();
 
 	/* Init this project */
-	m_PortableTestApp_Program_GetLastError_0 = &GetLastError;
+	m_PortableTestApp_Program_GetLastError_0 = GetProcAddress(LoadLibraryW(L"Kernel32.dll"), "GetLastError");
+	if (m_PortableTestApp_Program_GetLastError_0 == 0) m_PortableTestApp_Program_GetLastError_0 = &m_PortableTestApp_Program_GetLastError_0_DllNotFoundException;
+	m_PortableTestApp_Program_MyInternalExtern_0 = GetProcAddress(GetModuleHandleW(NULL), "MyInternalExtern");
+	if (m_PortableTestApp_Program_MyInternalExtern_0 == 0) m_PortableTestApp_Program_MyInternalExtern_0 = &m_PortableTestApp_Program_MyInternalExtern_0_DllNotFoundException;
 }
 
 void CS2X_InvokeStaticConstructors_PortableTestApp()

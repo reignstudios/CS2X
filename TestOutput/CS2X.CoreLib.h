@@ -25,6 +25,7 @@ typedef struct t_System_CancelEventArgs t_System_CancelEventArgs;
 typedef struct t_System_CLSCompliantAttribute t_System_CLSCompliantAttribute;
 typedef struct t_System_Console t_System_Console;
 typedef struct t_System_Delegate t_System_Delegate;
+typedef struct t_System_DllNotFoundException t_System_DllNotFoundException;
 typedef struct t_System_Enum t_System_Enum;
 typedef struct t_System_Environment t_System_Environment;
 typedef struct t_System_EventArgs t_System_EventArgs;
@@ -161,6 +162,12 @@ struct t_System_Delegate
 	t_System_RuntimeType* CS2X_RuntimeType;
 	intptr_t f__methodPtr_1;
 	t_System_Object* f__target_1;
+};
+
+struct t_System_DllNotFoundException
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	t_System_String* f__Message_k__BackingField_1;
 };
 
 struct t_System_Enum
@@ -656,6 +663,15 @@ typedef struct rt_System_Delegate
 rt_System_Delegate rt_System_Delegate_OBJ;
 int8_t rt_System_Delegate_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* Delegate */
 int8_t rt_System_Delegate_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,15,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* System.Delegate */
+
+typedef struct rt_System_DllNotFoundException
+{
+	t_System_RuntimeType runtimeType;
+	t_System_String* (*vTable_get_Message_0)(t_System_DllNotFoundException* self);
+} rt_System_DllNotFoundException;
+rt_System_DllNotFoundException rt_System_DllNotFoundException_OBJ;
+int8_t rt_System_DllNotFoundException_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,68,0,108,0,108,0,78,0,111,0,116,0,70,0,111,0,117,0,110,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* DllNotFoundException */
+int8_t rt_System_DllNotFoundException_METADATA_FullName[68] = {0,0,0,0,0,0,0,0,27,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,108,0,108,0,78,0,111,0,116,0,70,0,111,0,117,0,110,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* System.DllNotFoundException */
 
 typedef struct rt_System_Enum
 {
@@ -1313,6 +1329,7 @@ t_System_Delegate* m_System_Delegate_Combine_0(t_System_Delegate* p_a, t_System_
 t_System_Delegate* m_System_Delegate_Remove_0(t_System_Delegate* p_source, t_System_Delegate* p_value);
 t_System_Delegate* m_System_Delegate_RemoveAll_0(t_System_Delegate* p_source, t_System_Delegate* p_value);
 t_System_Delegate* m_System_Delegate__ctor_0(t_System_Delegate* self);
+t_System_DllNotFoundException* m_System_DllNotFoundException__ctor_0(t_System_DllNotFoundException* self);
 t_System_Enum* m_System_Enum__ctor_0(t_System_Enum* self);
 t_System_String* m_System_Environment_get_NewLine_0();
 t_System_EventArgs* m_System_EventArgs__ctor_0(t_System_EventArgs* self);
@@ -1708,6 +1725,12 @@ t_System_Delegate* m_System_Delegate_RemoveAll_0(t_System_Delegate* p_source, t_
 t_System_Delegate* m_System_Delegate__ctor_0(t_System_Delegate* self)
 {
 	m_System_Object__ctor_0(self);
+	return self;
+}
+
+t_System_DllNotFoundException* m_System_DllNotFoundException__ctor_0(t_System_DllNotFoundException* self)
+{
+	m_System_Exception__ctor_0(self);
 	return self;
 }
 
@@ -2535,6 +2558,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Delegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_Delegate_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Delegate_METADATA_Name;
 	rt_System_Delegate_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Delegate_METADATA_FullName;
+	memset(&rt_System_DllNotFoundException_OBJ, 0, sizeof(rt_System_DllNotFoundException));
+	rt_System_DllNotFoundException_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_DllNotFoundException_OBJ;
+	rt_System_DllNotFoundException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Exception_OBJ;
+	rt_System_DllNotFoundException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_DllNotFoundException_METADATA_Name;
+	rt_System_DllNotFoundException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_DllNotFoundException_METADATA_FullName;
 	memset(&rt_System_Enum_OBJ, 0, sizeof(rt_System_Enum));
 	rt_System_Enum_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Enum_OBJ;
 	rt_System_Enum_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
@@ -2951,6 +2979,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_IntPtr_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Delegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Delegate_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_DllNotFoundException_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_DllNotFoundException_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Enum_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Enum_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Environment_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3109,6 +3139,7 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Reflection_MethodImplAttributes_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 
 	/* Init runtime type vtabel */
+	rt_System_DllNotFoundException_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
 	rt_System_Exception_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
 	rt_System_IndexOutOfRangeException_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
 	rt_System_InvalidCastException_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;

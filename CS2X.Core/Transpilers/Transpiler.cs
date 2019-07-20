@@ -349,10 +349,11 @@ namespace CS2X.Core.Transpilers
 			return false;
 		}
 
-		protected bool GetDllImportName(IMethodSymbol method, out string name)
+		protected bool GetDllImportName(IMethodSymbol method, out string dllName, out string name)
 		{
 			if (GetDllImportAttribute(method, out var dllImportAttribute))
 			{
+				dllName = (string)dllImportAttribute.ConstructorArguments[0].Value;
 				string entryPoint = null;
 				if (dllImportAttribute.NamedArguments.Any(x => x.Key == "EntryPoint"))
 				{
@@ -364,6 +365,7 @@ namespace CS2X.Core.Transpilers
 				return true;
 			}
 
+			dllName = null;
 			name = null;
 			return false;
 		}

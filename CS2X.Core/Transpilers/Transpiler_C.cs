@@ -74,8 +74,37 @@ namespace CS2X.Core.Transpilers
 			ReadonlyProgramMemory_AVR
 		}
 
+		public enum API
+		{
+			/// <summary>
+			/// Windows platforms
+			/// </summary>
+			Win32,
+
+			/// <summary>
+			/// Posix compliant platforms such as Linux, BSD, macOS, etc
+			/// </summary>
+			Posix,
+
+			/// <summary>
+			/// Classic Mac OS 9,8,7,6, etc
+			/// </summary>
+			MacOS_Classic,
+
+			/// <summary>
+			/// Non standard / embedded platforms
+			/// NOTE: will disable API specific features such as DllImport and Threads
+			/// </summary>
+			Other
+		}
+
 		public struct Options
 		{
+			/// <summary>
+			/// API target
+			/// </summary>
+			public API api;
+
 			/// <summary>
 			/// Target Garbage Collector
 			/// This will generate the proper C #includes
@@ -254,6 +283,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("#include <uchar.h>");
 				writer.WriteLine("#include <locale.h>");
 				writer.WriteLine("#include <time.h>");
+				if (options.api == API.Posix) writer.WriteLine("#include <dlfcn.h>");
 				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
 
 				// write include of gc to be used
@@ -592,9 +622,29 @@ namespace CS2X.Core.Transpilers
 					if (member.Kind == SymbolKind.Method)
 					{
 						var method = (IMethodSymbol)member;
-						if (method.IsExtern && method.IsStatic && GetDllImportName(method, out string name))
+						if (method.IsExtern && method.IsStatic && GetDllImportName(method, out string dllName, out string name))
 						{
-							writer.WriteLinePrefix($"{GetMethodFullName(method)} = &{name};");// TODO: load library and lookup method address
+							string methodName = GetMethodFullName(method);
+							if (options.api == API.Win32)
+							{
+								if (dllName == "__Internal") writer.WriteLinePrefix($"{methodName} = GetProcAddress(GetModuleHandleW(NULL), \"{name}\");");
+								else writer.WriteLinePrefix($"{methodName} = GetProcAddress(LoadLibraryW(L\"{dllName}\"), \"{name}\");");
+							}
+							else if (options.api == API.Posix)
+							{
+								if (dllName == "__Internal") writer.WriteLinePrefix($"{methodName} = dlsym(dlopen(NULL, RTLD_LAZY), \"{name}\");");
+								else writer.WriteLinePrefix($"{methodName} = dlsym(dlopen(\"{dllName}\", RTLD_LAZY), \"{name}\");");
+							}
+							else if (options.api == API.MacOS_Classic)
+							{
+								throw new NotImplementedException("TODO: Classic MacOS DllImport");
+							}
+							else
+							{
+								throw new NotSupportedException("Unsupported API for DllImport method: " + options.api);
+							}
+
+							writer.WriteLinePrefix($"if ({methodName} == 0) {methodName} = &{methodName}_DllNotFoundException;");
 						}
 					}
 				}
@@ -1096,8 +1146,10 @@ namespace CS2X.Core.Transpilers
 			if (method.ReturnType.TypeKind == TypeKind.Interface) throw new NotSupportedException("Methods cannot return an interface: " + method.FullName());
 
 			// handle special interop / dllimport method
+			bool isDllImportMethod = false;
 			if (method.IsStatic && method.IsExtern && GetDllImportAttribute(method, out var attribute))
 			{
+				isDllImportMethod = true;
 				if (!writeBody)
 				{
 					writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetMethodFullName(method)})(");
@@ -1112,15 +1164,17 @@ namespace CS2X.Core.Transpilers
 					writer.WriteLine(");");
 					return true;
 				}
-				else
-				{
-					return false;// external function pointer has no body
-				}
+				//else
+				//{
+				//	return false;// external function pointer has no body
+				//}
 			}
 
 			// write method desc
-			if (method.MethodKind != MethodKind.Constructor) writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}(");
-			else writer.WritePrefix($"{GetTypeFullNameRef(method.ContainingType)} {GetMethodFullName(method)}(");
+			if (method.MethodKind != MethodKind.Constructor) writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} {GetMethodFullName(method)}");
+			else writer.WritePrefix($"{GetTypeFullNameRef(method.ContainingType)} {GetMethodFullName(method)}");
+			if (isDllImportMethod) writer.Write("_DllNotFoundException");
+			writer.Write('(');
 			if (!method.IsStatic && method.MethodKind != MethodKind.Constructor)
 			{
 				writer.Write($"{GetTypeFullName(method.ContainingType)}* self");
@@ -1336,6 +1390,14 @@ namespace CS2X.Core.Transpilers
 						{
 							throw new NotSupportedException("Unsupported internal method in namespace: " + type.Name);
 						}
+					}
+					else if (isDllImportMethod)
+					{
+						string objectTypeName = GetTypeFullName(objectType);
+						var dllNotFoundExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.DllNotFoundException");
+						var dllNotFoundExceptionTypeConstructor = FindDefaultConstructor(dllNotFoundExceptionType);
+						writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(dllNotFoundExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(dllNotFoundExceptionType)}), &{GetRuntimeTypeObjFullName(dllNotFoundExceptionType)}));");
+						writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
 					}
 					else
 					{
@@ -2576,7 +2638,7 @@ namespace CS2X.Core.Transpilers
 					isStaticExternCMethod = true;
 					writer.Write(name);
 				}
-				else if (GetDllImportName(method, out _))
+				else if (GetDllImportName(method, out _, out _))
 				{
 					isStaticExternCMethod = true;
 					writer.Write($"(*{GetMethodFullName(method)})");
