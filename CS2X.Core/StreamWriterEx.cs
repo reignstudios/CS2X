@@ -9,12 +9,14 @@ namespace System.IO
 {
 	public class StreamWriterEx : StreamWriter, IDisposable
 	{
+		public static Encoding defaultEncoding = Encoding.UTF8;
+
 		public StreamWriterEx next, prev;
 		public string prefix = string.Empty;
 		public bool disableWrite, disablePrefix;
 
 		public StreamWriterEx(Stream stream)
-		: base(stream)
+		: base(stream, defaultEncoding)
 		{
 			
 		}
