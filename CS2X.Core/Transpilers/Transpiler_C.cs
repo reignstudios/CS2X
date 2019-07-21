@@ -1084,7 +1084,6 @@ namespace CS2X.Core.Transpilers
 		{
 			this.method = method;
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
-			if (method.ContainingType.SpecialType == SpecialType.System_IntPtr || method.ContainingType.SpecialType == SpecialType.System_UIntPtr) return false;
 			if (method.ContainingType.IsGenericType && !IsResolvedGenericType(method.ContainingType)) return false;
 			if (method.IsAbstract) return false;
 			if (method.IsGenericMethod && method.IsDefinition) return false;
@@ -1164,10 +1163,6 @@ namespace CS2X.Core.Transpilers
 					writer.WriteLine(");");
 					return true;
 				}
-				//else
-				//{
-				//	return false;// external function pointer has no body
-				//}
 			}
 
 			// write method desc
@@ -1398,6 +1393,10 @@ namespace CS2X.Core.Transpilers
 						var dllNotFoundExceptionTypeConstructor = FindDefaultConstructor(dllNotFoundExceptionType);
 						writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(dllNotFoundExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(dllNotFoundExceptionType)}), &{GetRuntimeTypeObjFullName(dllNotFoundExceptionType)}));");
 						writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
+					}
+					else if (method.ContainingType.SpecialType == SpecialType.System_IntPtr || method.ContainingType.SpecialType == SpecialType.System_UIntPtr)
+					{
+						if (method.MethodKind != MethodKind.UserDefinedOperator) throw new NotSupportedException("Unsupported IntPtr method: " + method.FullName());;
 					}
 					else
 					{

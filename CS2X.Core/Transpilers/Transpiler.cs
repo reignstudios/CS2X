@@ -12,7 +12,9 @@ namespace CS2X.Core.Transpilers
 	public abstract class Transpiler
 	{
 		public readonly Solution solution;
-		protected INamedTypeSymbol runtimeType, typeType, stringType, arrayType, objectType, delegateType, multicastDelegateType;
+		protected INamedTypeSymbol runtimeType, typeType, arrayType, objectType;
+		protected INamedTypeSymbol stringType, stringBuilderType;
+		protected INamedTypeSymbol delegateType, multicastDelegateType;
 		protected INamedTypeSymbol ienumerableT, ienumerable, ienumeratorT, ienumerator;
 		protected IMethodSymbol ienumerableT_GetEnumerator, ienumerable_GetEnumerator, ienumeratorT_GetEnumerator, ienumerator_GetEnumerator;
 
@@ -20,14 +22,21 @@ namespace CS2X.Core.Transpilers
 		{
 			this.solution = solution;
 			var coreLibProject = solution.coreLibProject;
+
+			// get common types
 			runtimeType = coreLibProject.compilation.GetTypeByMetadataName("System.RuntimeType");
 			typeType = coreLibProject.compilation.GetTypeByMetadataName("System.Type");
-			stringType = coreLibProject.compilation.GetSpecialType(SpecialType.System_String);
+
 			arrayType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Array);
 			objectType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Object);
+
+			stringType = coreLibProject.compilation.GetSpecialType(SpecialType.System_String);
+			stringBuilderType = coreLibProject.compilation.GetTypeByMetadataName("System.Text.StringBuilder");
+
 			delegateType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Delegate);
 			multicastDelegateType = coreLibProject.compilation.GetSpecialType(SpecialType.System_MulticastDelegate);
 
+			// get common generic types
 			ienumerableT = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerable_T);
 			ienumerable = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_IEnumerable);
 			ienumeratorT = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerator_T);

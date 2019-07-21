@@ -14,9 +14,9 @@ This project will focus on transpiling a C# subset with a modified type system f
 ### CPU targets
 * C89
 	* Native C performance
-	* C89: modern, legacy and embedded platforms (x86, MIPS, SPARK, RISC-V, PPC, AVR, etc)
+	* C89: modern, legacy and embedded platforms (x86, MIPS, SPARC, RISC-V, PPC, AVR, etc)
 	* CC65: 6502 platforms (Atari, C64, NES, Apple II, etc)
-	* SDCC: Many targets (ColecoVision, etc)
+	* SDCC: Many targets (ColecoVision, ZX Spectrum, etc)
 * LLVM
 * LLVM IR => Assembly: CP1610 (Intellivision)
 * LLVM IR => Assembly: Intel 8048 (Magnavox Odyssey 2)
@@ -63,6 +63,11 @@ Almost zero performance loss. C# code will generate in a manner as if hand writt
 	* Used for generics only.
 	* No casting to them or variable declarations of them.
 * No down-casting performance loss in C and up-casting checks can be disabled for C output.
+* DllImport / PInvoke + Auto-Marshalling of managed types not supported.
+	* Varies to much between platforms in contrast to .NET making writing portable code confusing.
+	* Auto string marshalling has way to many implicits that depend on to many factors to keep track of.
+	* Redundant allocations. If you want to pass the same string multiple times in multiple methods for example auto-marshal it everytime doesn't make sense. Its far better to be explicit here and make that obvious by pre-marshalling the type once.
+	* Portability. Forcing PInvokes to be used this way ensures code functions the same in all runtimes.
 
 ## Building
 * Prerequisites

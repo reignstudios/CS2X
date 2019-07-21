@@ -46,7 +46,6 @@ typedef struct t_System_ObsoleteAttribute t_System_ObsoleteAttribute;
 typedef struct t_System_ParamArrayAttribute t_System_ParamArrayAttribute;
 typedef struct t_System_RuntimeType t_System_RuntimeType;
 typedef struct t_System_String t_System_String;
-typedef struct t_System_StringBuilder t_System_StringBuilder;
 typedef struct t_System_Type t_System_Type;
 typedef struct t_System_ValueType t_System_ValueType;
 typedef struct t_System_CodeDom_Compiler_GeneratedCodeAttribute t_System_CodeDom_Compiler_GeneratedCodeAttribute;
@@ -83,10 +82,14 @@ typedef struct t_System_Runtime_CompilerServices_MethodImplAttribute t_System_Ru
 typedef struct t_System_Runtime_CompilerServices_RuntimeHelpers t_System_Runtime_CompilerServices_RuntimeHelpers;
 typedef int32_t t_System_Runtime_InteropServices_CallingConvention;
 typedef struct t_System_Runtime_InteropServices_DllImportAttribute t_System_Runtime_InteropServices_DllImportAttribute;
+typedef struct t_System_Runtime_InteropServices_Marshal t_System_Runtime_InteropServices_Marshal;
 typedef struct t_System_Runtime_InteropServices_OutAttribute t_System_Runtime_InteropServices_OutAttribute;
 typedef int32_t t_System_Runtime_InteropServices_LayoutKind;
 typedef struct t_System_Runtime_InteropServices_StructLayoutAttribute t_System_Runtime_InteropServices_StructLayoutAttribute;
 typedef struct t_System_Runtime_Versioning_TargetFrameworkAttribute t_System_Runtime_Versioning_TargetFrameworkAttribute;
+typedef struct t_System_Text_Encoding t_System_Text_Encoding;
+typedef struct t_System_Text_StandardEncoding t_System_Text_StandardEncoding;
+typedef struct t_System_Text_StringBuilder t_System_Text_StringBuilder;
 typedef struct t_System_DateTime t_System_DateTime;
 typedef struct t_System_Decimal t_System_Decimal;
 typedef void* t_System_RuntimeFieldHandle;
@@ -288,11 +291,6 @@ struct t_System_String
 	char16_t f__firstChar_1;
 };
 t_System_String* f_System_String_Empty;
-
-struct t_System_StringBuilder
-{
-	t_System_RuntimeType* CS2X_RuntimeType;
-};
 
 struct t_System_Type
 {
@@ -504,6 +502,11 @@ struct t_System_Runtime_InteropServices_DllImportAttribute
 	t_System_Runtime_InteropServices_CallingConvention f_CallingConvention_2;
 };
 
+struct t_System_Runtime_InteropServices_Marshal
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+};
+
 struct t_System_Runtime_InteropServices_OutAttribute
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -526,6 +529,32 @@ struct t_System_Runtime_Versioning_TargetFrameworkAttribute
 	t_System_RuntimeType* CS2X_RuntimeType;
 	t_System_String* f__FrameworkDisplayName_k__BackingField_2;
 	t_System_String* f__FrameworkName_k__BackingField_2;
+};
+
+struct t_System_Text_Encoding
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f__CodePage_k__BackingField_1;
+};
+t_System_Text_Encoding* f_System_Text_Encoding__Default_k__BackingField;
+t_System_Text_Encoding* f_System_Text_Encoding__ASCII_k__BackingField;
+t_System_Text_Encoding* f_System_Text_Encoding__UTF7_k__BackingField;
+t_System_Text_Encoding* f_System_Text_Encoding__UTF8_k__BackingField;
+t_System_Text_Encoding* f_System_Text_Encoding__Unicode_k__BackingField;
+t_System_Text_Encoding* f_System_Text_Encoding__BigEndianUnicode_k__BackingField;
+t_System_Text_Encoding* f_System_Text_Encoding__UTF32_k__BackingField;
+
+struct t_System_Text_StandardEncoding
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f__CodePage_k__BackingField_1;
+};
+
+struct t_System_Text_StringBuilder
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f__stringLength_1;
+	char16_t f__firstChar_1;
 };
 
 struct t_System_DateTime
@@ -869,14 +898,6 @@ rt_System_String rt_System_String_OBJ;
 int8_t rt_System_String_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,0,0}; /* String */
 int8_t rt_System_String_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,0,0}; /* System.String */
 
-typedef struct rt_System_StringBuilder
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_StringBuilder;
-rt_System_StringBuilder rt_System_StringBuilder_OBJ;
-int8_t rt_System_StringBuilder_METADATA_Name[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* StringBuilder */
-int8_t rt_System_StringBuilder_METADATA_FullName[54] = {0,0,0,0,0,0,0,0,20,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* System.StringBuilder */
-
 typedef struct rt_System_Type
 {
 	t_System_RuntimeType runtimeType;
@@ -1165,6 +1186,14 @@ rt_System_Runtime_InteropServices_DllImportAttribute rt_System_Runtime_InteropSe
 int8_t rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_Name[50] = {0,0,0,0,0,0,0,0,18,0,0,0,68,0,108,0,108,0,73,0,109,0,112,0,111,0,114,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* DllImportAttribute */
 int8_t rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_FullName[112] = {0,0,0,0,0,0,0,0,49,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,68,0,108,0,108,0,73,0,109,0,112,0,111,0,114,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.InteropServices.DllImportAttribute */
 
+typedef struct rt_System_Runtime_InteropServices_Marshal
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Runtime_InteropServices_Marshal;
+rt_System_Runtime_InteropServices_Marshal rt_System_Runtime_InteropServices_Marshal_OBJ;
+int8_t rt_System_Runtime_InteropServices_Marshal_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,77,0,97,0,114,0,115,0,104,0,97,0,108,0,0,0}; /* Marshal */
+int8_t rt_System_Runtime_InteropServices_Marshal_METADATA_FullName[90] = {0,0,0,0,0,0,0,0,38,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,77,0,97,0,114,0,115,0,104,0,97,0,108,0,0,0}; /* System.Runtime.InteropServices.Marshal */
+
 typedef struct rt_System_Runtime_InteropServices_OutAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -1196,6 +1225,30 @@ typedef struct rt_System_Runtime_Versioning_TargetFrameworkAttribute
 rt_System_Runtime_Versioning_TargetFrameworkAttribute rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ;
 int8_t rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name[62] = {0,0,0,0,0,0,0,0,24,0,0,0,84,0,97,0,114,0,103,0,101,0,116,0,70,0,114,0,97,0,109,0,101,0,119,0,111,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* TargetFrameworkAttribute */
 int8_t rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName[114] = {0,0,0,0,0,0,0,0,50,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,86,0,101,0,114,0,115,0,105,0,111,0,110,0,105,0,110,0,103,0,46,0,84,0,97,0,114,0,103,0,101,0,116,0,70,0,114,0,97,0,109,0,101,0,119,0,111,0,114,0,107,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.Versioning.TargetFrameworkAttribute */
+
+typedef struct rt_System_Text_Encoding
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Text_Encoding;
+rt_System_Text_Encoding rt_System_Text_Encoding_OBJ;
+int8_t rt_System_Text_Encoding_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0}; /* Encoding */
+int8_t rt_System_Text_Encoding_METADATA_FullName[54] = {0,0,0,0,0,0,0,0,20,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,84,0,101,0,120,0,116,0,46,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0}; /* System.Text.Encoding */
+
+typedef struct rt_System_Text_StandardEncoding
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Text_StandardEncoding;
+rt_System_Text_StandardEncoding rt_System_Text_StandardEncoding_OBJ;
+int8_t rt_System_Text_StandardEncoding_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,83,0,116,0,97,0,110,0,100,0,97,0,114,0,100,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0}; /* StandardEncoding */
+int8_t rt_System_Text_StandardEncoding_METADATA_FullName[70] = {0,0,0,0,0,0,0,0,28,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,84,0,101,0,120,0,116,0,46,0,83,0,116,0,97,0,110,0,100,0,97,0,114,0,100,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0}; /* System.Text.StandardEncoding */
+
+typedef struct rt_System_Text_StringBuilder
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Text_StringBuilder;
+rt_System_Text_StringBuilder rt_System_Text_StringBuilder_OBJ;
+int8_t rt_System_Text_StringBuilder_METADATA_Name[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* StringBuilder */
+int8_t rt_System_Text_StringBuilder_METADATA_FullName[64] = {0,0,0,0,0,0,0,0,25,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,84,0,101,0,120,0,116,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* System.Text.StringBuilder */
 
 typedef struct rt_System_Byte
 {
@@ -1322,6 +1375,9 @@ char m_System_CLSCompliantAttribute_get_IsCompliant_0(t_System_CLSCompliantAttri
 void m_System_Console_Write_0(t_System_String* p_s);
 void m_System_Console_WriteLine_0(t_System_String* p_s);
 void m_System_Console_WriteLine_1();
+char m_intptr_t_op_Equality_0(intptr_t p_a, intptr_t p_b);
+char m_intptr_t_op_Inequality_0(intptr_t p_a, intptr_t p_b);
+intptr_t m_intptr_t__ctor_0();
 t_System_Object* m_System_Delegate_get_Target_0(t_System_Delegate* self);
 char m_System_Delegate_op_Equality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
 char m_System_Delegate_op_Inequality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
@@ -1367,7 +1423,6 @@ t_System_String* m_System_String_Concat_1(t_System_String* p_str0, t_System_Stri
 t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2, t_System_String* p_str3);
 char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value);
 t_System_String* m_System_String__ctor_0(t_System_String* self);
-t_System_StringBuilder* m_System_StringBuilder__ctor_0(t_System_StringBuilder* self);
 t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_handle);
 t_System_Type* m_System_Type__ctor_0(t_System_Type* self);
 t_System_ValueType* m_System_ValueType__ctor_0(t_System_ValueType* self);
@@ -1424,11 +1479,27 @@ t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_Compiler
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2(t_System_Runtime_CompilerServices_MethodImplAttribute* self);
 t_System_Runtime_InteropServices_CallingConvention m_System_Runtime_InteropServices_CallingConvention__ctor_0();
 t_System_Runtime_InteropServices_DllImportAttribute* m_System_Runtime_InteropServices_DllImportAttribute__ctor_0(t_System_Runtime_InteropServices_DllImportAttribute* self, t_System_String* p_dllName);
+intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t_System_String* p_s);
+intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t_System_String* p_s);
+void m_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal);
+intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_0(t_System_Delegate* p_d);
+t_System_Delegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_0(intptr_t p_ptr, t_System_Type* p_t);
 t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self);
 t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0();
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(t_System_Runtime_InteropServices_StructLayoutAttribute* self, int16_t p_layoutKind);
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName);
+void m_System_Text_Encoding__cctor_0();
+int32_t m_System_Text_Encoding_GetByteCount_0(t_System_Text_Encoding* self, char16_t* p_chars);
+int32_t m_System_Text_Encoding_GetByteCount_1(t_System_Text_Encoding* self, t_System_String* p_s);
+int32_t m_System_Text_Encoding_GetByteCount_2(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count);
+int32_t m_System_Text_Encoding_GetByteCount_3(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_count);
+uint8_t* m_System_Text_Encoding_GetBytes_0(t_System_Text_Encoding* self, t_System_String* p_s);
+t_System_String* m_System_Text_Encoding_GetString_0(t_System_Text_Encoding* self, uint8_t* p_bytes);
+t_System_String* m_System_Text_Encoding_GetString_1(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
+t_System_Text_Encoding* m_System_Text_Encoding__ctor_0(t_System_Text_Encoding* self);
+t_System_Text_StandardEncoding* m_System_Text_StandardEncoding__ctor_0(t_System_Text_StandardEncoding* self);
+t_System_Text_StringBuilder* m_System_Text_StringBuilder__ctor_0(t_System_Text_StringBuilder* self);
 uint8_t m_uint8_t__ctor_0();
 time_t m_time_t__ctor_0();
 int64_t m_System_DateTime_TODO_0(t_System_DateTime* self);
@@ -1443,6 +1514,9 @@ int8_t m_int8_t__ctor_0();
 uint16_t m_uint16_t__ctor_0();
 uint32_t m_uint32_t__ctor_0();
 uint64_t m_uint64_t__ctor_0();
+char m_uintptr_t_op_Equality_0(uintptr_t p_a, uintptr_t p_b);
+char m_uintptr_t_op_Inequality_0(uintptr_t p_a, uintptr_t p_b);
+uintptr_t m_uintptr_t__ctor_0();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
 
 /* =============================== */
@@ -1619,6 +1693,20 @@ void m_System_Console_WriteLine_0(t_System_String* p_s)
 void m_System_Console_WriteLine_1()
 {
 	m_System_Console_Write_0(m_System_Environment_get_NewLine_0());
+}
+
+char m_intptr_t_op_Equality_0(intptr_t p_a, intptr_t p_b)
+{
+}
+
+char m_intptr_t_op_Inequality_0(intptr_t p_a, intptr_t p_b)
+{
+}
+
+intptr_t m_intptr_t__ctor_0()
+{
+	intptr_t selfObj = {0};
+	return selfObj;
 }
 
 t_System_Object* m_System_Delegate_get_Target_0(t_System_Delegate* self)
@@ -2021,12 +2109,6 @@ t_System_String* m_System_String__ctor_0(t_System_String* self)
 	return self;
 }
 
-t_System_StringBuilder* m_System_StringBuilder__ctor_0(t_System_StringBuilder* self)
-{
-	m_System_Object__ctor_0(self);
-	return self;
-}
-
 t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_handle)
 {
 	return p_handle.f_m_type_2;
@@ -2365,6 +2447,30 @@ t_System_Runtime_InteropServices_DllImportAttribute* m_System_Runtime_InteropSer
 	return self;
 }
 
+intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t_System_String* p_s)
+{
+	return m_intptr_t__ctor_0();
+}
+
+intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t_System_String* p_s)
+{
+	return m_intptr_t__ctor_0();
+}
+
+void m_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal)
+{
+}
+
+intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_0(t_System_Delegate* p_d)
+{
+	return m_intptr_t__ctor_0();
+}
+
+t_System_Delegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_0(intptr_t p_ptr, t_System_Type* p_t)
+{
+	return 0;
+}
+
 t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2395,6 +2501,77 @@ t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versionin
 {
 	m_System_Attribute__ctor_0(self);
 	self->f__FrameworkName_k__BackingField_2 = p_frameworkName;
+	return self;
+}
+
+void m_System_Text_Encoding__cctor_0()
+{
+	f_System_Text_Encoding__Default_k__BackingField = m_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_Text_StandardEncoding), &rt_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__Default_k__BackingField->f__CodePage_k__BackingField_1 = (int32_t)GetACP();
+	f_System_Text_Encoding__ASCII_k__BackingField = m_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_Text_StandardEncoding), &rt_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__ASCII_k__BackingField->f__CodePage_k__BackingField_1 = 20127;
+	f_System_Text_Encoding__UTF7_k__BackingField = m_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_Text_StandardEncoding), &rt_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__UTF7_k__BackingField->f__CodePage_k__BackingField_1 = 65000;
+	f_System_Text_Encoding__UTF8_k__BackingField = m_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_Text_StandardEncoding), &rt_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__UTF8_k__BackingField->f__CodePage_k__BackingField_1 = 65001;
+	f_System_Text_Encoding__Unicode_k__BackingField = m_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_Text_StandardEncoding), &rt_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__Unicode_k__BackingField->f__CodePage_k__BackingField_1 = 1200;
+	f_System_Text_Encoding__BigEndianUnicode_k__BackingField = m_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_Text_StandardEncoding), &rt_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__BigEndianUnicode_k__BackingField->f__CodePage_k__BackingField_1 = 1201;
+	f_System_Text_Encoding__UTF32_k__BackingField = m_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_Text_StandardEncoding), &rt_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__UTF32_k__BackingField->f__CodePage_k__BackingField_1 = 12000;
+}
+
+int32_t m_System_Text_Encoding_GetByteCount_0(t_System_Text_Encoding* self, char16_t* p_chars)
+{
+	return 0;
+}
+
+int32_t m_System_Text_Encoding_GetByteCount_1(t_System_Text_Encoding* self, t_System_String* p_s)
+{
+	return 0;
+}
+
+int32_t m_System_Text_Encoding_GetByteCount_2(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count)
+{
+	return 0;
+}
+
+int32_t m_System_Text_Encoding_GetByteCount_3(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_count)
+{
+	return 0;
+}
+
+uint8_t* m_System_Text_Encoding_GetBytes_0(t_System_Text_Encoding* self, t_System_String* p_s)
+{
+	return 0;
+}
+
+t_System_String* m_System_Text_Encoding_GetString_0(t_System_Text_Encoding* self, uint8_t* p_bytes)
+{
+	return m_System_Text_Encoding_GetString_1(self, p_bytes, 0, m_System_Array_get_Length_0(p_bytes));
+}
+
+t_System_String* m_System_Text_Encoding_GetString_1(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
+{
+	return 0;
+}
+
+t_System_Text_Encoding* m_System_Text_Encoding__ctor_0(t_System_Text_Encoding* self)
+{
+	m_System_Object__ctor_0(self);
+	return self;
+}
+
+t_System_Text_StandardEncoding* m_System_Text_StandardEncoding__ctor_0(t_System_Text_StandardEncoding* self)
+{
+	m_System_Text_Encoding__ctor_0(self);
+	return self;
+}
+
+t_System_Text_StringBuilder* m_System_Text_StringBuilder__ctor_0(t_System_Text_StringBuilder* self)
+{
+	m_System_Object__ctor_0(self);
 	return self;
 }
 
@@ -2483,6 +2660,20 @@ uint32_t m_uint32_t__ctor_0()
 uint64_t m_uint64_t__ctor_0()
 {
 	uint64_t selfObj = {0};
+	return selfObj;
+}
+
+char m_uintptr_t_op_Equality_0(uintptr_t p_a, uintptr_t p_b)
+{
+}
+
+char m_uintptr_t_op_Inequality_0(uintptr_t p_a, uintptr_t p_b)
+{
+}
+
+uintptr_t m_uintptr_t__ctor_0()
+{
+	uintptr_t selfObj = {0};
 	return selfObj;
 }
 
@@ -2683,11 +2874,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_String_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_System_String_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_String_METADATA_Name;
 	rt_System_String_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_String_METADATA_FullName;
-	memset(&rt_System_StringBuilder_OBJ, 0, sizeof(rt_System_StringBuilder));
-	rt_System_StringBuilder_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_StringBuilder_OBJ;
-	rt_System_StringBuilder_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
-	rt_System_StringBuilder_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_StringBuilder_METADATA_Name;
-	rt_System_StringBuilder_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_StringBuilder_METADATA_FullName;
 	memset(&rt_System_Type_OBJ, 0, sizeof(rt_System_Type));
 	rt_System_Type_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Type_OBJ;
 	rt_System_Type_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
@@ -2868,6 +3054,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_InteropServices_DllImportAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_InteropServices_DllImportAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_Name;
 	rt_System_Runtime_InteropServices_DllImportAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_FullName;
+	memset(&rt_System_Runtime_InteropServices_Marshal_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_Marshal));
+	rt_System_Runtime_InteropServices_Marshal_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_Marshal_OBJ;
+	rt_System_Runtime_InteropServices_Marshal_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_System_Runtime_InteropServices_Marshal_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_Marshal_METADATA_Name;
+	rt_System_Runtime_InteropServices_Marshal_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_Marshal_METADATA_FullName;
 	memset(&rt_System_Runtime_InteropServices_OutAttribute_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_OutAttribute));
 	rt_System_Runtime_InteropServices_OutAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_OutAttribute_OBJ;
 	rt_System_Runtime_InteropServices_OutAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -2888,6 +3079,21 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name;
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName;
+	memset(&rt_System_Text_Encoding_OBJ, 0, sizeof(rt_System_Text_Encoding));
+	rt_System_Text_Encoding_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Text_Encoding_OBJ;
+	rt_System_Text_Encoding_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_System_Text_Encoding_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Text_Encoding_METADATA_Name;
+	rt_System_Text_Encoding_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Text_Encoding_METADATA_FullName;
+	memset(&rt_System_Text_StandardEncoding_OBJ, 0, sizeof(rt_System_Text_StandardEncoding));
+	rt_System_Text_StandardEncoding_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Text_StandardEncoding_OBJ;
+	rt_System_Text_StandardEncoding_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Text_Encoding_OBJ;
+	rt_System_Text_StandardEncoding_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Text_StandardEncoding_METADATA_Name;
+	rt_System_Text_StandardEncoding_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Text_StandardEncoding_METADATA_FullName;
+	memset(&rt_System_Text_StringBuilder_OBJ, 0, sizeof(rt_System_Text_StringBuilder));
+	rt_System_Text_StringBuilder_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Text_StringBuilder_OBJ;
+	rt_System_Text_StringBuilder_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_System_Text_StringBuilder_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Text_StringBuilder_METADATA_Name;
+	rt_System_Text_StringBuilder_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Text_StringBuilder_METADATA_FullName;
 	memset(&rt_System_Byte_OBJ, 0, sizeof(rt_System_Byte));
 	rt_System_Byte_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Byte_OBJ;
 	rt_System_Byte_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
@@ -3029,8 +3235,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Int32_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_String_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_String_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_StringBuilder_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_StringBuilder_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Type_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Type_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_ValueType_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3103,6 +3307,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Runtime_InteropServices_CallingConvention_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_DllImportAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_Marshal_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_Marshal_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_OutAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3111,6 +3317,12 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Text_Encoding_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Text_Encoding_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Text_StandardEncoding_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Text_StandardEncoding_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Text_StringBuilder_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Text_StringBuilder_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Byte_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Byte_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_DateTime_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -3154,4 +3366,5 @@ void CS2X_InitDllImport_CS2X_CoreLib()
 void CS2X_InvokeStaticConstructors_CS2X_CoreLib()
 {
 	/* Init this project */
+	m_System_Text_Encoding__cctor_0();
 }
