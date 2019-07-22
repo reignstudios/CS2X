@@ -603,6 +603,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine($"void {dllImportInitMethod}()");
 			writer.WriteLine('{');
 			writer.AddTab();
+
 			if (project.references.Count != 0)
 			{
 				writer.WriteLinePrefix("/* Init references */");
@@ -1650,7 +1651,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine(';');
 		}
 
-		private void WriteLocalDeclaration(VariableDeclarationSyntax declaration, string delimiter, bool onlyWriteDelimiterIfNotLast)
+		private void WriteLocalDeclaration(VariableDeclarationSyntax declaration, string delimiter, bool onlyWriteDelimiterIfNotLast, bool isFixedDeclaration)
 		{
 			var last = declaration.Variables.LastOrDefault();
 			foreach (var variable in declaration.Variables)
@@ -1660,7 +1661,18 @@ namespace CS2X.Core.Transpilers
 				if (variable.Initializer != null)
 				{
 					writer.WritePrefix(local.name + " = ");
+					bool fixedArrayOffset = false;
+					if (isFixedDeclaration)
+					{
+						var initializerType = ResolveType(variable.Initializer.Value);
+						if (initializerType.Kind == SymbolKind.ArrayType)
+						{
+							writer.Write($"({GetTypeFullNameRef(initializerType)})(((char*)");
+							fixedArrayOffset = true;
+						}
+					}
 					WriteExpression(variable.Initializer.Value);
+					if (fixedArrayOffset) writer.Write(") + (sizeof(size_t)*2))");
 					if (!onlyWriteDelimiterIfNotLast) writer.Write(delimiter);
 					else if (variable != last) writer.Write(delimiter);
 				}
@@ -1685,7 +1697,7 @@ namespace CS2X.Core.Transpilers
 
 		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
 		{
-			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false);
+			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false, false);
 		}
 
 		private void IfStatement(IfStatementSyntax statement)
@@ -1711,7 +1723,7 @@ namespace CS2X.Core.Transpilers
 			// variable initialization
 			writer.WritePrefix("for (");
 			writer.disablePrefix = true;
-			WriteLocalDeclaration(statement.Declaration, ", ", true);
+			WriteLocalDeclaration(statement.Declaration, ", ", true, false);
 			writer.disablePrefix = false;
 			writer.Write("; ");
 
@@ -1879,7 +1891,7 @@ namespace CS2X.Core.Transpilers
 
 		private void FixedStatement(FixedStatementSyntax statement)
 		{
-			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false);
+			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false, true);
 			WriteStatement(statement.Statement);
 		}
 

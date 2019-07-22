@@ -9,7 +9,7 @@ namespace System.IO
 {
 	public class StreamWriterEx : StreamWriter, IDisposable
 	{
-		public static Encoding defaultEncoding = Encoding.UTF8;
+		public static Encoding defaultEncoding = Encoding.Default;
 
 		public StreamWriterEx next, prev;
 		public string prefix = string.Empty;

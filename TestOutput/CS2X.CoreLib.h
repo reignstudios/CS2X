@@ -1,4 +1,4 @@
-﻿/* ############################### */
+/* ############################### */
 /* Generated with CS2X v0.1.0 */
 /* ############################### */
 #pragma once
@@ -1355,6 +1355,17 @@ int8_t rt_System_Reflection_MethodImplAttributes_METADATA_Name[54] = {0,0,0,0,0,
 int8_t rt_System_Reflection_MethodImplAttributes_METADATA_FullName[90] = {0,0,0,0,0,0,0,0,38,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,101,0,102,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,46,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,115,0,0,0}; /* System.Reflection.MethodImplAttributes */
 
 /* =============================== */
+/* ARRAY Runtime Types */
+/* =============================== */
+typedef struct rt_System_Byte___ARRAY
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Byte___ARRAY;
+rt_System_Byte___ARRAY rt_System_Byte___ARRAY_OBJ;
+int8_t rt_System_Byte___ARRAY_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,66,0,121,0,116,0,101,0,91,0,93,0,0,0}; /* Byte[] */
+int8_t rt_System_Byte___ARRAY_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,66,0,121,0,116,0,101,0,91,0,93,0,0,0}; /* System.Byte[] */
+
+/* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
 int32_t m_System_Array_get_Length_0(t_System_Array* self);
@@ -2544,7 +2555,20 @@ int32_t m_System_Text_Encoding_GetByteCount_3(t_System_Text_Encoding* self, char
 
 uint8_t* m_System_Text_Encoding_GetBytes_0(t_System_Text_Encoding* self, t_System_String* p_s)
 {
-	return 0;
+	char16_t* l_sBuffer_0;
+	l_sBuffer_0 = &p_s->f__firstChar_1;
+	{
+		uint32_t l_codePage_1;
+		int32_t l_bufferSize_2;
+		uint8_t* l_buffer_3;
+		uint8_t* l_bufferPtr_4;
+		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		l_bufferSize_2 = WideCharToMultiByte(l_codePage_1, 0, l_sBuffer_0, -1, 0, 0, 0, 0);
+		l_buffer_3 = CS2X_AllocArrayTypeAtomic(sizeof(uint8_t), l_bufferSize_2, &rt_System_Byte___ARRAY_OBJ);
+		l_bufferPtr_4 = (uint8_t*)(((char*)l_buffer_3) + (sizeof(size_t)*2));
+		WideCharToMultiByte(l_codePage_1, 0, l_sBuffer_0, -1, l_bufferPtr_4, l_bufferSize_2, 0, 0);
+		return l_buffer_3;
+	}
 }
 
 t_System_String* m_System_Text_Encoding_GetString_0(t_System_Text_Encoding* self, uint8_t* p_bytes)
@@ -3356,6 +3380,18 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_IndexOutOfRangeException_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
 	rt_System_InvalidCastException_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
 	rt_System_NotSupportedException_OBJ.vTable_get_Message_0 = m_System_Exception_get_Message_0;
+
+	/* <<< === Array Runtime Types === >>> */
+	/* Init runtime type objects */
+	memset(&rt_System_Byte___ARRAY_OBJ, 0, sizeof(rt_System_Byte___ARRAY));
+	rt_System_Byte___ARRAY_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Byte___ARRAY_OBJ;
+	rt_System_Byte___ARRAY_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Array_OBJ;
+	rt_System_Byte___ARRAY_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Byte___ARRAY_METADATA_Name;
+	rt_System_Byte___ARRAY_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Byte___ARRAY_METADATA_FullName;
+
+	/* Init runtime type metadata / string literals */
+	((t_System_String*)rt_System_Byte___ARRAY_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Byte___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 }
 
 void CS2X_InitDllImport_CS2X_CoreLib()

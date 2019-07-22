@@ -17,6 +17,12 @@ namespace System.Text
 		[NativeExtern(NativeTarget.C)]
 		private static extern uint GetACP();
 
+		[NativeExtern(NativeTarget.C)]
+		internal unsafe static extern int WideCharToMultiByte(uint CodePage, uint dwFlags, char* lpWideCharStr, int cchWideChar, byte* lpMultiByteStr, int cbMultiByte, byte* lpDefaultChar, int* lpUsedDefaultChar);
+
+		[NativeExtern(NativeTarget.C)] 
+		internal unsafe static extern void MultiByteToWideChar(uint CodePage, uint dwFlags, byte* lpMultiByteStr, int cbMultiByte, char* lpWideCharStr, int cchWideChar);
+
 		static Encoding()
 		{
 			Default = new StandardEncoding();
@@ -82,9 +88,16 @@ namespace System.Text
 		//public int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex);
 		//public int GetBytes(string s, int charIndex, int charCount, byte[] bytes, int byteIndex);
 		//public unsafe int GetBytes(char* chars, int charCount, byte* bytes, int byteCount);
-		public byte[] GetBytes(string s)
+		public unsafe byte[] GetBytes(string s)
 		{
-			return null;
+			fixed (char* sBuffer = &s._firstChar)
+			{
+				uint codePage = (uint)CodePage;
+				int bufferSize = WideCharToMultiByte(codePage, 0, sBuffer, -1, null, 0, null, null);
+				var buffer = new byte[bufferSize];
+				fixed (byte* bufferPtr = buffer) WideCharToMultiByte(codePage, 0, sBuffer, -1, bufferPtr, bufferSize, null, null);
+				return buffer;
+			}
 		}
 		#endregion
 
