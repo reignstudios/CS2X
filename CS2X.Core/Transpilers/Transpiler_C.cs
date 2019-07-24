@@ -1152,7 +1152,18 @@ namespace CS2X.Core.Transpilers
 				isDllImportMethod = true;
 				if (!writeBody)
 				{
-					writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetMethodFullName(method)})(");
+					string callingConventionName;
+					if (attribute.NamedArguments.Any(x => x.Key == "CallingConvention"))
+					{
+						var callingConvention = attribute.NamedArguments.First(x => x.Key == "CallingConvention");
+						var callingConventionValue = (System.Runtime.InteropServices.CallingConvention)callingConvention.Value.Value;
+						callingConventionName = $"__{callingConventionValue.ToString().ToLower()} ";
+					}
+					else
+					{
+						callingConventionName = string.Empty;
+					}
+					writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} ({callingConventionName}*{GetMethodFullName(method)})(");
 					var lastParameter = method.Parameters.LastOrDefault();
 					foreach (var parameter in method.Parameters)
 					{

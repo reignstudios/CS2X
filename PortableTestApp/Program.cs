@@ -128,7 +128,7 @@ namespace PortableTestApp
 			}
 		}
 
-		[DllImport("Kernel32.dll")]
+		[DllImport("Kernel32.dll", CallingConvention = CallingConvention.StdCall)]
 		private static extern uint GetLastError();
 
 		[DllImport("__Internal")]

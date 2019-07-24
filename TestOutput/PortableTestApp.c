@@ -250,7 +250,7 @@ int32_t m_PortableTestApp_Program_get_MyPropStatic_0();
 void m_PortableTestApp_Program_set_MyPropStatic_0(int32_t p_value);
 void m_PortableTestApp_Program_Foo2_0(t_PortableTestApp_Program* self);
 void m_PortableTestApp_Program_Foo_0(t_PortableTestApp_Program* self, t_PortableTestApp_Program* p_p);
-uint32_t (*m_PortableTestApp_Program_GetLastError_0)();
+uint32_t (__stdcall *m_PortableTestApp_Program_GetLastError_0)();
 uint32_t (*m_PortableTestApp_Program_MyInternalExtern_0)(uint32_t);
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_MyDelegateCallbackStatic_0(t_System_String* p_i);
