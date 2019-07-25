@@ -1629,7 +1629,6 @@ namespace CS2X.Core.Transpilers
 				writer.RemoveTab();
 				writer.WriteLinePrefix('}');
 			}
-			else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
 			else if (statement is ExpressionStatementSyntax) ExpressionStatement((ExpressionStatementSyntax)statement);
 			else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
 			else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
@@ -1638,21 +1637,12 @@ namespace CS2X.Core.Transpilers
 			else if (statement is ForEachStatementSyntax) ForEachStatement((ForEachStatementSyntax)statement);
 			else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
 			else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
+			else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
 			else if (statement is TryStatementSyntax) TryStatement((TryStatementSyntax)statement);
 			else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
+			else if (statement is UsingStatementSyntax) UsingStatement((UsingStatementSyntax)statement);
 			else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
 			BlockStartCallback = null;
-		}
-
-		private void WriteReturnStatement(ReturnStatementSyntax statement)
-		{
-			writer.WritePrefix("return");
-			if (statement.Expression != null)
-			{
-				writer.Write(' ');
-				WriteExpression(statement.Expression);
-			}
-			writer.WriteLine(';');
 		}
 
 		private void ExpressionStatement(ExpressionStatementSyntax statement)
@@ -1662,13 +1652,15 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine(';');
 		}
 
-		private void WriteLocalDeclaration(VariableDeclarationSyntax declaration, string delimiter, bool onlyWriteDelimiterIfNotLast, bool isFixedDeclaration)
+		private List<InstructionalBody.Local> WriteLocalDeclaration(VariableDeclarationSyntax declaration, string delimiter, bool onlyWriteDelimiterIfNotLast, bool isFixedDeclaration)
 		{
+			var locals = new List<InstructionalBody.Local>();
 			var last = declaration.Variables.LastOrDefault();
 			foreach (var variable in declaration.Variables)
 			{
 				var type = ResolveType(declaration.Type);
 				var local = TryAddLocal(variable.Identifier.ValueText, type);
+				if (!locals.Contains(local)) locals.Add(local);
 				if (variable.Initializer != null)
 				{
 					writer.WritePrefix(local.name + " = ");
@@ -1688,6 +1680,7 @@ namespace CS2X.Core.Transpilers
 					else if (variable != last) writer.Write(delimiter);
 				}
 			}
+			return locals;
 		}
 
 		private void WriteFlowControlStatement(StatementSyntax statement, string multiLine, string singleLine)
@@ -1906,6 +1899,48 @@ namespace CS2X.Core.Transpilers
 			WriteStatement(statement.Statement);
 		}
 
+		private void WriteReturnStatement(ReturnStatementSyntax statement)
+		{
+			if (tryCatchNestingLevel == 0)
+			{
+				writer.WritePrefix("return");
+				if (statement.Expression != null)
+				{
+					writer.Write(' ');
+					WriteExpression(statement.Expression);
+				}
+				writer.WriteLine(';');
+			}
+			else
+			{
+				bool inBlock = statement.Parent.Kind() != SyntaxKind.Block;
+				if (!inBlock)
+				{
+					writer.Write('{');
+					writer.AddTab();
+				}
+
+				string returnVarName = $"CS2X_RETURN_{tryCatchNestingLevel}";
+				if (statement.Expression != null)
+				{
+					writer.WriteLinePrefix($"{GetTypeFullNameRef(method.ReturnType)} {returnVarName};");
+					writer.WritePrefix($"{returnVarName} = ");
+					WriteExpression(statement.Expression);
+					writer.WriteLine(';');
+				}
+
+				writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));");
+				if (statement.Expression != null) writer.WriteLinePrefix($"return {returnVarName};");
+				else writer.WriteLinePrefix("return;");
+
+				if (!inBlock)
+				{
+					writer.RemoveTab();
+					writer.WriteLinePrefix('}');
+				}
+			}
+		}
+
 		private void TryStatement(TryStatementSyntax statement)
 		{
 			if (statement.Finally != null) throw new NotSupportedException("Finally blocks not supported: " + statement.ToFullString());
@@ -1915,6 +1950,7 @@ namespace CS2X.Core.Transpilers
 			string jmpBuffLast = $"CS2X_JMP_LAST_{tryCatchNestingLevel}";
 			string jmpBuff = $"CS2X_JMP_{tryCatchNestingLevel}";
 			string isJmp = $"CS2X_IS_JMP_{tryCatchNestingLevel}";
+			++tryCatchNestingLevel;
 			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuffLast));
 			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuff));
 			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "int", isJmp));
@@ -1967,8 +2003,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix("if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */");
 			writer.RemoveTab();
 			writer.WriteLinePrefix("} /* end catch */");
-
-			++tryCatchNestingLevel;
+			writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuffLast}, sizeof(jmp_buf));");
 		}
 
 		private void ThrowStatement(ThrowStatementSyntax statement)
@@ -1977,6 +2012,23 @@ namespace CS2X.Core.Transpilers
 			WriteExpression(statement.Expression);
 			writer.WriteLine(';');
 			writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
+		}
+
+		private void UsingStatement(UsingStatementSyntax statement)
+		{
+			if (statement.Expression != null) throw new NotSupportedException("using statement expression not supported: " + statement.ToFullString());
+			writer.WritePrefix("/*using*/ ");
+			writer.disablePrefix = true;
+			var locals = WriteLocalDeclaration(statement.Declaration, ";", false, false);
+			writer.disablePrefix = false;
+			writer.WriteLine();
+			WriteStatement(statement.Statement);
+			foreach (var local in locals)
+			{
+				var disposeMethod = FindMethodByName(local.type, "Dispose");
+				if (local.type.IsReferenceType) writer.WriteLinePrefix($"{GetMethodFullName(disposeMethod)}({local.name});");
+				else writer.WriteLinePrefix($"{GetMethodFullName(disposeMethod)}(&{local.name});");
+			}
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)

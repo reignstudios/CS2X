@@ -72,8 +72,13 @@ namespace PortableTestApp
 	//	}
 	//}
 
-	class Program
+	class Program : IDisposable
 	{
+		public void Dispose()
+		{
+			Console.WriteLine("Disposed!");
+		}
+
 		public string Name2()
 		{
 			//native_type_t i2 = new native_type_t();
@@ -164,10 +169,11 @@ namespace PortableTestApp
 				Console.WriteLine(arg);
 			}
 
-			var p = new Program();
-			myDelegate = new MyDelegate(p.MyDelegateCallback);
-			myDelegate += p.MyDelegateCallback;
-
+			using (var p = new Program())
+			{
+				myDelegate = new MyDelegate(p.MyDelegateCallback);
+				myDelegate += p.MyDelegateCallback;
+			}
 			//myDelegate = new MyDelegate(MyDelegateCallbackStatic);
 			myDelegate += MyDelegateCallbackStatic;
 			myDelegate -= MyDelegateCallbackStatic;
@@ -256,6 +262,7 @@ namespace PortableTestApp
 			{
 				MyAbstractClass c = new MyBaseClass();
 				FooThrow((MyBaseClass)c);
+				return;
 			}
 			catch (NotSupportedException e)
 			{
