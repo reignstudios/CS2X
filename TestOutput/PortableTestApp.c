@@ -410,7 +410,6 @@ void m_PortableTestApp_Program__cctor_0()
 	l_en_0 = 0;
 	l_e_1 = m_PortableTestApp_MyExtensions_Name_0(l_en_0);
 	l_lastError_2 = (*m_PortableTestApp_Program_GetLastError_0)();
-	l_lastError_2 = (*m_PortableTestApp_Program_MyInternalExtern_0)(44);
 }
 
 void m_PortableTestApp_Program_MyDelegateCallbackStatic_0(t_System_String* p_i)
@@ -451,12 +450,19 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 		l_arg_1 = ((t_System_String**)(((char*)p_args) + (sizeof(size_t)*2)))[l_arg_i_0];
 		m_System_Console_WriteLine_0(l_arg_1);
 	}
-	/*using*/ l_p_1 = m_PortableTestApp_Program__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_Program), &rt_PortableTestApp_Program_OBJ));
+	/* using */
+	l_p_1 = m_PortableTestApp_Program__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_Program), &rt_PortableTestApp_Program_OBJ));
+	memcpy(CS2X_JMP_LAST_0, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
+	CS2X_IS_JMP_0 = setjmp(CS2X_JMP_0);
+	if (CS2X_IS_JMP_0 == 0)
 	{
 		f_PortableTestApp_Program_myDelegate = m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), l_p_1, &m_PortableTestApp_Program_MyDelegateCallback_0);
 		f_PortableTestApp_Program_myDelegate = m_System_Delegate_Combine_0(f_PortableTestApp_Program_myDelegate, m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), l_p_1, &m_PortableTestApp_Program_MyDelegateCallback_0));
 	}
+	memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
 	m_PortableTestApp_Program_Dispose_0(l_p_1);
+	/* end-using */
+	if (CS2X_IS_JMP_0 != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw caught exception */
 	f_PortableTestApp_Program_myDelegate = m_System_Delegate_Combine_0(f_PortableTestApp_Program_myDelegate, m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), 0, &m_PortableTestApp_Program_MyDelegateCallbackStatic_0));
 	f_PortableTestApp_Program_myDelegate = m_System_Delegate_Remove_0(f_PortableTestApp_Program_myDelegate, m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), 0, &m_PortableTestApp_Program_MyDelegateCallbackStatic_0));
 	f_PortableTestApp_Program_myDelegate = m_System_Delegate_Combine_0(f_PortableTestApp_Program_myDelegate, m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), 0, &m_PortableTestApp_Program_MyDelegateCallbackStatic_0));
@@ -516,8 +522,9 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_0, sizeof(jmp_buf));
 		l_c_17 = m_PortableTestApp_MyBaseClass__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyBaseClass), &rt_PortableTestApp_MyBaseClass_OBJ));
 		m_PortableTestApp_Program_FooThrow_0((t_PortableTestApp_MyBaseClass*)CS2X_TestUpCast(l_c_17, &rt_PortableTestApp_MyBaseClass_OBJ));
-		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
-		return;
+{			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
+			return;
+		}
 	}
 	else /* end try */
 	{

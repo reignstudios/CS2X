@@ -1941,19 +1941,35 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+		private void StartTryBlock(out string jmpBuffLast, out string jmpBuff, out string isJmp)
+		{
+			// add special locals
+			string name = $"CS2X_JMP_LAST_{tryCatchNestingLevel}";
+			jmpBuffLast = name;
+			jmpBuff = $"CS2X_JMP_{tryCatchNestingLevel}";
+			isJmp = $"CS2X_IS_JMP_{tryCatchNestingLevel}";
+			if (!instructionalBody.specialLocals.Exists(x => x.name == name))
+			{
+				instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuffLast));
+				instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuff));
+				instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "int", isJmp));
+			}
+		}
+
 		private void TryStatement(TryStatementSyntax statement)
 		{
 			if (statement.Finally != null) throw new NotSupportedException("Finally blocks not supported: " + statement.ToFullString());
 			if (statement.Catches == null || statement.Catches.Count == 0) throw new NotSupportedException("No catach block after try: " + statement.ToFullString());
 
 			// add special locals
-			string jmpBuffLast = $"CS2X_JMP_LAST_{tryCatchNestingLevel}";
-			string jmpBuff = $"CS2X_JMP_{tryCatchNestingLevel}";
-			string isJmp = $"CS2X_IS_JMP_{tryCatchNestingLevel}";
+			//string jmpBuffLast = $"CS2X_JMP_LAST_{tryCatchNestingLevel}";
+			//string jmpBuff = $"CS2X_JMP_{tryCatchNestingLevel}";
+			//string isJmp = $"CS2X_IS_JMP_{tryCatchNestingLevel}";
+			//instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuffLast));
+			//instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuff));
+			//instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "int", isJmp));
+			StartTryBlock(out string jmpBuffLast, out string jmpBuff, out string isJmp);
 			++tryCatchNestingLevel;
-			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuffLast));
-			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuff));
-			instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "int", isJmp));
 
 			// write try
 			writer.WriteLinePrefix("/* try */");
@@ -2004,6 +2020,7 @@ namespace CS2X.Core.Transpilers
 			writer.RemoveTab();
 			writer.WriteLinePrefix("} /* end catch */");
 			writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuffLast}, sizeof(jmp_buf));");
+			--tryCatchNestingLevel;
 		}
 
 		private void ThrowStatement(ThrowStatementSyntax statement)
@@ -2017,18 +2034,29 @@ namespace CS2X.Core.Transpilers
 		private void UsingStatement(UsingStatementSyntax statement)
 		{
 			if (statement.Expression != null) throw new NotSupportedException("using statement expression not supported: " + statement.ToFullString());
-			writer.WritePrefix("/*using*/ ");
-			writer.disablePrefix = true;
-			var locals = WriteLocalDeclaration(statement.Declaration, ";", false, false);
-			writer.disablePrefix = false;
-			writer.WriteLine();
+
+			// add special locals
+			StartTryBlock(out string jmpBuffLast, out string jmpBuff, out string isJmp);
+			++tryCatchNestingLevel;
+
+			writer.WriteLinePrefix("/* using */");
+			var locals = WriteLocalDeclaration(statement.Declaration, ";" + Environment.NewLine, false, false);
+			writer.WriteLinePrefix($"memcpy({jmpBuffLast}, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));");
+			writer.WriteLinePrefix($"{isJmp} = setjmp({jmpBuff});");
+			writer.WritePrefix($"if ({isJmp} == 0)");
+			if (statement.Statement is BlockSyntax) writer.WriteLine();
+			else writer.Write(' ');
 			WriteStatement(statement.Statement);
+			writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuffLast}, sizeof(jmp_buf));");
 			foreach (var local in locals)
 			{
 				var disposeMethod = FindMethodByName(local.type, "Dispose");
 				if (local.type.IsReferenceType) writer.WriteLinePrefix($"{GetMethodFullName(disposeMethod)}({local.name});");
 				else writer.WriteLinePrefix($"{GetMethodFullName(disposeMethod)}(&{local.name});");
 			}
+			writer.WriteLinePrefix("/* end-using */");
+			writer.WriteLinePrefix($"if ({isJmp} != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw caught exception */");
+			--tryCatchNestingLevel;
 		}
 
 		private void WriteExpression(ExpressionSyntax expression)

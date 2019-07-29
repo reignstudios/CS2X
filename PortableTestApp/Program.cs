@@ -146,7 +146,7 @@ namespace PortableTestApp
 			string e = en.Name();
 
 			uint lastError = GetLastError();
-			lastError = MyInternalExtern(44);
+			//lastError = MyInternalExtern(44);
 		}
 
 		delegate void MyDelegate(string i);
