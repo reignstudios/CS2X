@@ -1913,12 +1913,9 @@ namespace CS2X.Core.Transpilers
 			}
 			else
 			{
-				bool inBlock = statement.Parent.Kind() != SyntaxKind.Block;
-				if (!inBlock)
-				{
-					writer.Write('{');
-					writer.AddTab();
-				}
+				writer.WriteLinePrefix("/* protected return */");
+				writer.WriteLinePrefix('{');
+				writer.AddTab();
 
 				string returnVarName = $"CS2X_RETURN_{tryCatchNestingLevel}";
 				if (statement.Expression != null)
@@ -1932,12 +1929,8 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));");
 				if (statement.Expression != null) writer.WriteLinePrefix($"return {returnVarName};");
 				else writer.WriteLinePrefix("return;");
-
-				if (!inBlock)
-				{
-					writer.RemoveTab();
-					writer.WriteLinePrefix('}');
-				}
+				writer.RemoveTab();
+				writer.WriteLinePrefix('}');
 			}
 		}
 
@@ -2018,8 +2011,9 @@ namespace CS2X.Core.Transpilers
 			}
 			writer.WriteLinePrefix("if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */");
 			writer.RemoveTab();
-			writer.WriteLinePrefix("} /* end catch */");
+			writer.WriteLinePrefix('}');
 			writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuffLast}, sizeof(jmp_buf));");
+			writer.WriteLinePrefix("/* end catch */");
 			--tryCatchNestingLevel;
 		}
 
@@ -2044,9 +2038,29 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix($"memcpy({jmpBuffLast}, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));");
 			writer.WriteLinePrefix($"{isJmp} = setjmp({jmpBuff});");
 			writer.WritePrefix($"if ({isJmp} == 0)");
-			if (statement.Statement is BlockSyntax) writer.WriteLine();
-			else writer.Write(' ');
+			if (statement.Statement is BlockSyntax)
+			{
+				writer.WriteLine();
+				void WriteTryStart()
+				{
+					writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuff}, sizeof(jmp_buf));");
+				}
+				BlockStartCallback = WriteTryStart;
+			}
+			else
+			{
+				writer.WriteLine();
+				writer.WriteLinePrefix('{');
+				writer.AddTab();
+				writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuff}, sizeof(jmp_buf));");
+			}
+
 			WriteStatement(statement.Statement);
+			if (!(statement.Statement is BlockSyntax))
+			{
+				writer.RemoveTab();
+				writer.WriteLinePrefix('}');
+			}
 			writer.WriteLinePrefix($"memcpy(CS2X_ThreadExceptionJmpBuff, {jmpBuffLast}, sizeof(jmp_buf));");
 			foreach (var local in locals)
 			{
@@ -2054,8 +2068,8 @@ namespace CS2X.Core.Transpilers
 				if (local.type.IsReferenceType) writer.WriteLinePrefix($"{GetMethodFullName(disposeMethod)}({local.name});");
 				else writer.WriteLinePrefix($"{GetMethodFullName(disposeMethod)}(&{local.name});");
 			}
-			writer.WriteLinePrefix("/* end-using */");
 			writer.WriteLinePrefix($"if ({isJmp} != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw caught exception */");
+			writer.WriteLinePrefix("/* end-using */");
 			--tryCatchNestingLevel;
 		}
 

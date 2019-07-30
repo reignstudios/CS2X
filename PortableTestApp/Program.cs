@@ -170,7 +170,9 @@ namespace PortableTestApp
 			}
 
 			using (var p = new Program())
+			using (var p2 = new Program())
 			{
+				throw new Exception();
 				myDelegate = new MyDelegate(p.MyDelegateCallback);
 				myDelegate += p.MyDelegateCallback;
 			}
