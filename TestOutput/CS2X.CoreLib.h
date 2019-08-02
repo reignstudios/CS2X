@@ -37,7 +37,6 @@ typedef struct t_System_InvalidCastException t_System_InvalidCastException;
 typedef struct t_System_Math t_System_Math;
 typedef struct t_System_MathF t_System_MathF;
 typedef struct t_System_MulticastDelegate t_System_MulticastDelegate;
-typedef struct t_System_NonSerializedAttribute t_System_NonSerializedAttribute;
 typedef struct t_System_NotSupportedException t_System_NotSupportedException;
 typedef struct t_System_Nullable t_System_Nullable;
 typedef struct t_System_Number t_System_Number;
@@ -236,11 +235,6 @@ struct t_System_MulticastDelegate
 	intptr_t f__methodPtr_1;
 	t_System_Object* f__target_1;
 	t_System_MulticastDelegate* f__next_2;
-};
-
-struct t_System_NonSerializedAttribute
-{
-	t_System_RuntimeType* CS2X_RuntimeType;
 };
 
 struct t_System_NotSupportedException
@@ -808,14 +802,6 @@ typedef struct rt_System_MulticastDelegate
 rt_System_MulticastDelegate rt_System_MulticastDelegate_OBJ;
 int8_t rt_System_MulticastDelegate_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,77,0,117,0,108,0,116,0,105,0,99,0,97,0,115,0,116,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* MulticastDelegate */
 int8_t rt_System_MulticastDelegate_METADATA_FullName[62] = {0,0,0,0,0,0,0,0,24,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,77,0,117,0,108,0,116,0,105,0,99,0,97,0,115,0,116,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* System.MulticastDelegate */
-
-typedef struct rt_System_NonSerializedAttribute
-{
-	t_System_RuntimeType runtimeType;
-} rt_System_NonSerializedAttribute;
-rt_System_NonSerializedAttribute rt_System_NonSerializedAttribute_OBJ;
-int8_t rt_System_NonSerializedAttribute_METADATA_Name[58] = {0,0,0,0,0,0,0,0,22,0,0,0,78,0,111,0,110,0,83,0,101,0,114,0,105,0,97,0,108,0,105,0,122,0,101,0,100,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* NonSerializedAttribute */
-int8_t rt_System_NonSerializedAttribute_METADATA_FullName[72] = {0,0,0,0,0,0,0,0,29,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,78,0,111,0,110,0,83,0,101,0,114,0,105,0,97,0,108,0,105,0,122,0,101,0,100,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.NonSerializedAttribute */
 
 typedef struct rt_System_NotSupportedException
 {
@@ -1411,7 +1397,6 @@ char m_float_IsNaN_0(float p_f);
 char m_float_IsNegative_0(float p_f);
 float m_float__ctor_0();
 t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_MulticastDelegate* self);
-t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0(t_System_NonSerializedAttribute* self);
 t_System_NotSupportedException* m_System_NotSupportedException__ctor_0(t_System_NotSupportedException* self, t_System_String* p_message);
 t_System_Type* m_System_Object_GetType_0(t_System_Object* self);
 t_System_Object* m_System_Object__ctor_0(t_System_Object* self);
@@ -1425,6 +1410,7 @@ t_System_RuntimeType* m_System_RuntimeType__ctor_0(t_System_RuntimeType* self);
 char16_t m_char16_t__ctor_0();
 t_System_String* m_int32_t_ToString_0(int32_t* self);
 int32_t m_int32_t__ctor_0();
+t_System_String* m_System_String__ctor_0(t_System_String* self, char16_t* p_value);
 int32_t m_System_String_get_Length_0(t_System_String* self);
 t_System_String* m_System_String_FastAllocateString_0(int32_t p_length);
 char m_System_String_IsNullOrEmpty_0(t_System_String* p_value);
@@ -1432,8 +1418,9 @@ void m_System_String_FillStringChecked_0(t_System_String* p_dest, int32_t p_dest
 t_System_String* m_System_String_Concat_0(t_System_String* p_str0, t_System_String* p_str1);
 t_System_String* m_System_String_Concat_1(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2);
 t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_String* p_str1, t_System_String* p_str2, t_System_String* p_str3);
+char m_System_String_op_Equality_0(t_System_String* p_value1, t_System_String* p_value2);
+char m_System_String_op_Inequality_0(t_System_String* p_value1, t_System_String* p_value2);
 char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value);
-t_System_String* m_System_String__ctor_0(t_System_String* self);
 t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_handle);
 t_System_Type* m_System_Type__ctor_0(t_System_Type* self);
 t_System_ValueType* m_System_ValueType__ctor_0(t_System_ValueType* self);
@@ -1505,7 +1492,12 @@ int32_t m_System_Text_Encoding_GetByteCount_0(t_System_Text_Encoding* self, char
 int32_t m_System_Text_Encoding_GetByteCount_1(t_System_Text_Encoding* self, t_System_String* p_s);
 int32_t m_System_Text_Encoding_GetByteCount_2(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count);
 int32_t m_System_Text_Encoding_GetByteCount_3(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_count);
-uint8_t* m_System_Text_Encoding_GetBytes_0(t_System_Text_Encoding* self, t_System_String* p_s);
+uint8_t* m_System_Text_Encoding_GetBytes_0(t_System_Text_Encoding* self, char16_t* p_chars);
+uint8_t* m_System_Text_Encoding_GetBytes_1(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count);
+int32_t m_System_Text_Encoding_GetBytes_2(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_charIndex, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteIndex);
+int32_t m_System_Text_Encoding_GetBytes_3(t_System_Text_Encoding* self, t_System_String* p_s, int32_t p_charIndex, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteIndex);
+int32_t m_System_Text_Encoding_GetBytes_4(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteCount);
+uint8_t* m_System_Text_Encoding_GetBytes_5(t_System_Text_Encoding* self, t_System_String* p_s);
 t_System_String* m_System_Text_Encoding_GetString_0(t_System_Text_Encoding* self, uint8_t* p_bytes);
 t_System_String* m_System_Text_Encoding_GetString_1(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
 t_System_Text_Encoding* m_System_Text_Encoding__ctor_0(t_System_Text_Encoding* self);
@@ -1809,11 +1801,12 @@ t_System_Delegate* m_System_Delegate_RemoveAll_0(t_System_Delegate* p_source, t_
 				p_source = l_next_0->f__next_2;
 				l_next_0->f__next_2 = 0;
 			}
-			else if (l_prev_1 != 0)
-{
+			else
+			if (l_prev_1 != 0)
+			{
 				l_prev_1->f__next_2 = l_next_0->f__next_2;
 				l_next_0->f__next_2 = 0;
-}
+			}
 		}
 		l_prev_1 = l_next_0;
 		l_next_0 = l_nextItem_2;
@@ -1916,12 +1909,6 @@ t_System_MulticastDelegate* m_System_MulticastDelegate__ctor_0(t_System_Multicas
 	return self;
 }
 
-t_System_NonSerializedAttribute* m_System_NonSerializedAttribute__ctor_0(t_System_NonSerializedAttribute* self)
-{
-	m_System_Attribute__ctor_0(self);
-	return self;
-}
-
 t_System_NotSupportedException* m_System_NotSupportedException__ctor_0(t_System_NotSupportedException* self, t_System_String* p_message)
 {
 	m_System_Exception__ctor_1(self, p_message);
@@ -1996,6 +1983,22 @@ int32_t m_int32_t__ctor_0()
 {
 	int32_t selfObj = {0};
 	return selfObj;
+}
+
+t_System_String* m_System_String__ctor_0(t_System_String* self, char16_t* p_value)
+{
+	int length = 0;
+	char16_t* charOffset;
+	charOffset = p_value;
+	while (*charOffset != 0)
+	{
+		++charOffset;
+		++length;
+	}
+	CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
+	self->f__stringLength_1 = length;
+	memcpy(&self->f__firstChar_1, p_value, sizeof(char16_t) * length);
+	return self;
 }
 
 int32_t m_System_String_get_Length_0(t_System_String* self)
@@ -2108,16 +2111,20 @@ t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_Stri
 	return l_result_1;
 }
 
+char m_System_String_op_Equality_0(t_System_String* p_value1, t_System_String* p_value2)
+{
+	return m_System_String_Equals_0(p_value1, p_value2);
+}
+
+char m_System_String_op_Inequality_0(t_System_String* p_value1, t_System_String* p_value2)
+{
+	return !m_System_String_Equals_0(p_value1, p_value2);
+}
+
 char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value)
 {
 	if (m_System_String_get_Length_0(self) != m_System_String_get_Length_0(p_value)) return 0;
 	return 1;
-}
-
-t_System_String* m_System_String__ctor_0(t_System_String* self)
-{
-	m_System_Object__ctor_0(self);
-	return self;
 }
 
 t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_handle)
@@ -2535,25 +2542,95 @@ void m_System_Text_Encoding__cctor_0()
 
 int32_t m_System_Text_Encoding_GetByteCount_0(t_System_Text_Encoding* self, char16_t* p_chars)
 {
-	return 0;
+	return m_System_Text_Encoding_GetByteCount_2(self, p_chars, 0, m_System_Array_get_Length_0(p_chars));
 }
 
 int32_t m_System_Text_Encoding_GetByteCount_1(t_System_Text_Encoding* self, t_System_String* p_s)
 {
-	return 0;
+	char16_t* l_sBuffer_0;
+	l_sBuffer_0 = &p_s->f__firstChar_1;
+	{
+		uint32_t l_codePage_1;
+		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		return WideCharToMultiByte(l_codePage_1, 0, l_sBuffer_0, -1, 0, 0, 0, 0);
+	}
 }
 
 int32_t m_System_Text_Encoding_GetByteCount_2(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count)
 {
-	return 0;
+	char16_t* l_charsPtr_0;
+	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_1;
+		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		return WideCharToMultiByte(l_codePage_1, 0, l_charsPtr_0 + p_index, p_count, 0, 0, 0, 0);
+	}
 }
 
 int32_t m_System_Text_Encoding_GetByteCount_3(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_count)
 {
-	return 0;
+	uint32_t l_codePage_0;
+	l_codePage_0 = (uint32_t)self->f__CodePage_k__BackingField_1;
+	return WideCharToMultiByte(l_codePage_0, 0, p_chars, p_count, 0, 0, 0, 0);
 }
 
-uint8_t* m_System_Text_Encoding_GetBytes_0(t_System_Text_Encoding* self, t_System_String* p_s)
+uint8_t* m_System_Text_Encoding_GetBytes_0(t_System_Text_Encoding* self, char16_t* p_chars)
+{
+	return m_System_Text_Encoding_GetBytes_1(self, p_chars, 0, m_System_Array_get_Length_0(p_chars));
+}
+
+uint8_t* m_System_Text_Encoding_GetBytes_1(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count)
+{
+	char16_t* l_charsPtr_0;
+	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_1;
+		int32_t l_bufferSize_2;
+		uint8_t* l_buffer_3;
+		uint8_t* l_bufferPtr_4;
+		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		l_bufferSize_2 = WideCharToMultiByte(l_codePage_1, 0, l_charsPtr_0, -1, 0, 0, 0, 0);
+		l_buffer_3 = CS2X_AllocArrayTypeAtomic(sizeof(uint8_t), l_bufferSize_2, &rt_System_Byte___ARRAY_OBJ);
+		l_bufferPtr_4 = (uint8_t*)(((char*)l_buffer_3) + (sizeof(size_t)*2));
+		WideCharToMultiByte(l_codePage_1, 0, l_charsPtr_0 + p_index, p_count, l_bufferPtr_4, l_bufferSize_2, 0, 0);
+		return l_buffer_3;
+	}
+}
+
+int32_t m_System_Text_Encoding_GetBytes_2(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_charIndex, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteIndex)
+{
+	char16_t* l_charsPtr_0;
+	uint8_t* l_bytesPtr_1;
+	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
+	l_bytesPtr_1 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_2;
+		l_codePage_2 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		return WideCharToMultiByte(l_codePage_2, 0, l_charsPtr_0 + p_charIndex, p_charCount, l_bytesPtr_1 + p_byteIndex, m_System_Array_get_Length_0(p_bytes), 0, 0);
+	}
+}
+
+int32_t m_System_Text_Encoding_GetBytes_3(t_System_Text_Encoding* self, t_System_String* p_s, int32_t p_charIndex, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteIndex)
+{
+	char16_t* l_sBuffer_0;
+	uint8_t* l_bytesPtr_1;
+	l_sBuffer_0 = &p_s->f__firstChar_1;
+	l_bytesPtr_1 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_2;
+		l_codePage_2 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		return WideCharToMultiByte(l_codePage_2, 0, l_sBuffer_0 + p_charIndex, p_charCount, l_bytesPtr_1 + p_byteIndex, m_System_Array_get_Length_0(p_bytes), 0, 0);
+	}
+}
+
+int32_t m_System_Text_Encoding_GetBytes_4(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteCount)
+{
+	uint32_t l_codePage_0;
+	l_codePage_0 = (uint32_t)self->f__CodePage_k__BackingField_1;
+	return WideCharToMultiByte(l_codePage_0, 0, p_chars, p_charCount, p_bytes, p_byteCount, 0, 0);
+}
+
+uint8_t* m_System_Text_Encoding_GetBytes_5(t_System_Text_Encoding* self, t_System_String* p_s)
 {
 	char16_t* l_sBuffer_0;
 	l_sBuffer_0 = &p_s->f__firstChar_1;
@@ -2578,7 +2655,18 @@ t_System_String* m_System_Text_Encoding_GetString_0(t_System_Text_Encoding* self
 
 t_System_String* m_System_Text_Encoding_GetString_1(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
 {
-	return 0;
+	uint8_t* l_bytesPtr_0;
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_1;
+		int32_t l_bufferSize_2;
+		char16_t* l_buffer_3;
+		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		l_bufferSize_2 = MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, 0, 0);
+		l_buffer_3 = alloca(sizeof(char16_t) * l_bufferSize_2);
+		MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, l_buffer_3, l_bufferSize_2);
+		return m_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_System_String), &rt_System_String_OBJ), l_buffer_3);
+	}
 }
 
 t_System_Text_Encoding* m_System_Text_Encoding__ctor_0(t_System_Text_Encoding* self)
@@ -2843,11 +2931,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_MulticastDelegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Delegate_OBJ;
 	rt_System_MulticastDelegate_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_MulticastDelegate_METADATA_Name;
 	rt_System_MulticastDelegate_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_MulticastDelegate_METADATA_FullName;
-	memset(&rt_System_NonSerializedAttribute_OBJ, 0, sizeof(rt_System_NonSerializedAttribute));
-	rt_System_NonSerializedAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_NonSerializedAttribute_OBJ;
-	rt_System_NonSerializedAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
-	rt_System_NonSerializedAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_NonSerializedAttribute_METADATA_Name;
-	rt_System_NonSerializedAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_NonSerializedAttribute_METADATA_FullName;
 	memset(&rt_System_NotSupportedException_OBJ, 0, sizeof(rt_System_NotSupportedException));
 	rt_System_NotSupportedException_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_NotSupportedException_OBJ;
 	rt_System_NotSupportedException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Exception_OBJ;
@@ -3237,8 +3320,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_MathF_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MulticastDelegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_MulticastDelegate_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_NonSerializedAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
-	((t_System_String*)rt_System_NonSerializedAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_NotSupportedException_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_NotSupportedException_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Nullable_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;

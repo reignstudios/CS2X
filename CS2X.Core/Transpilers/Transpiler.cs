@@ -439,17 +439,17 @@ namespace CS2X.Core.Transpilers
 			return null;
 		}
 
-		protected IFieldSymbol FindFieldByName(INamedTypeSymbol type, string fieldName)
+		protected IFieldSymbol FindFieldByName(ITypeSymbol type, string fieldName)
 		{
 			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Field && x.Name == fieldName) as IFieldSymbol;
 		}
 
-		protected IPropertySymbol FindPropertyByName(INamedTypeSymbol type, string propertyName)
+		protected IPropertySymbol FindPropertyByName(ITypeSymbol type, string propertyName)
 		{
 			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Property && x.Name == propertyName) as IPropertySymbol;
 		}
 
-		protected IFieldSymbol FindAutoPropertyFieldByName(INamedTypeSymbol type, string propertyName)
+		protected IFieldSymbol FindAutoPropertyFieldByName(ITypeSymbol type, string propertyName)
 		{
 			var members = type.GetMembers();
 			var property = members.FirstOrDefault(x => x.Kind == SymbolKind.Property && x.Name == propertyName) as IPropertySymbol;

@@ -30,7 +30,7 @@ void* CS2X_GC_Resize(void* object, size_t oldSize, size_t newSize)
 {
 	char* ptr = GC_realloc(object, newSize);
 	if (ptr == 0) exit(-1);
-	//size_t sizeDiff = newSize - oldSize;// GC_malloc will null memory ??
+	//size_t sizeDiff = newSize - oldSize;// GC_realloc will null memory ??
 	//if (sizeDiff > 0) memset(ptr + oldSize, 0, sizeDiff);
 	return ptr;
 }

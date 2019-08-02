@@ -21,7 +21,7 @@ namespace System.Text
 		internal unsafe static extern int WideCharToMultiByte(uint CodePage, uint dwFlags, char* lpWideCharStr, int cchWideChar, byte* lpMultiByteStr, int cbMultiByte, byte* lpDefaultChar, int* lpUsedDefaultChar);
 
 		[NativeExtern(NativeTarget.C)] 
-		internal unsafe static extern void MultiByteToWideChar(uint CodePage, uint dwFlags, byte* lpMultiByteStr, int cbMultiByte, char* lpWideCharStr, int cchWideChar);
+		internal unsafe static extern int MultiByteToWideChar(uint CodePage, uint dwFlags, byte* lpMultiByteStr, int cbMultiByte, char* lpWideCharStr, int cchWideChar);
 
 		static Encoding()
 		{
@@ -63,31 +63,78 @@ namespace System.Text
 		#region GetByteCount
 		public int GetByteCount(char[] chars)
 		{
-			return 0;
+			return GetByteCount(chars, 0, chars.Length);
 		}
 
-		public int GetByteCount(string s)
+		public unsafe int GetByteCount(string s)
 		{
-			return 0;
+			fixed (char* sBuffer = &s._firstChar)
+			{
+				uint codePage = (uint)CodePage;
+				return WideCharToMultiByte(codePage, 0, sBuffer, -1, null, 0, null, null);
+			}
 		}
 
-		public int GetByteCount(char[] chars, int index, int count)
+		public unsafe int GetByteCount(char[] chars, int index, int count)
 		{
-			return 0;
+			fixed (char* charsPtr = chars)
+			{
+				uint codePage = (uint)CodePage;
+				return WideCharToMultiByte(codePage, 0, charsPtr + index, count, null, 0, null, null);
+			}
 		}
 
 		public unsafe int GetByteCount(char* chars, int count)
 		{
-			return 0;
+			uint codePage = (uint)CodePage;
+			return WideCharToMultiByte(codePage, 0, chars, count, null, 0, null, null);
 		}
 		#endregion
 
 		#region GetBytes
-		//public byte[] GetBytes(char[] chars);
-		//public byte[] GetBytes(char[] chars, int index, int count);
-		//public int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex);
-		//public int GetBytes(string s, int charIndex, int charCount, byte[] bytes, int byteIndex);
-		//public unsafe int GetBytes(char* chars, int charCount, byte* bytes, int byteCount);
+		public byte[] GetBytes(char[] chars)
+		{
+			return GetBytes(chars, 0, chars.Length);
+		}
+
+		public unsafe byte[] GetBytes(char[] chars, int index, int count)
+		{
+			fixed (char* charsPtr = chars)
+			{
+				uint codePage = (uint)CodePage;
+				int bufferSize = WideCharToMultiByte(codePage, 0, charsPtr, -1, null, 0, null, null);
+				var buffer = new byte[bufferSize];
+				fixed (byte* bufferPtr = buffer) WideCharToMultiByte(codePage, 0, charsPtr + index, count, bufferPtr, bufferSize, null, null);
+				return buffer;
+			}
+		}
+
+		public unsafe int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
+		{
+			fixed (char* charsPtr = chars)
+			fixed (byte* bytesPtr = bytes)
+			{
+				uint codePage = (uint)CodePage;
+				return WideCharToMultiByte(codePage, 0, charsPtr + charIndex, charCount, bytesPtr + byteIndex, bytes.Length, null, null);
+			}
+		}
+
+		public unsafe int GetBytes(string s, int charIndex, int charCount, byte[] bytes, int byteIndex)
+		{
+			fixed (char* sBuffer = &s._firstChar)
+			fixed (byte* bytesPtr = bytes)
+			{
+				uint codePage = (uint)CodePage;
+				return WideCharToMultiByte(codePage, 0, sBuffer + charIndex, charCount, bytesPtr + byteIndex, bytes.Length, null, null);
+			}
+		}
+
+		public unsafe int GetBytes(char* chars, int charCount, byte* bytes, int byteCount)
+		{
+			uint codePage = (uint)CodePage;
+			return WideCharToMultiByte(codePage, 0, chars, charCount, bytes, byteCount, null, null);
+		}
+
 		public unsafe byte[] GetBytes(string s)
 		{
 			fixed (char* sBuffer = &s._firstChar)
@@ -120,9 +167,16 @@ namespace System.Text
 			return GetString(bytes, 0, bytes.Length);
 		}
 
-		public string GetString(byte[] bytes, int index, int count)
+		public unsafe string GetString(byte[] bytes, int index, int count)
 		{
-			return null;
+			fixed (byte* bytesPtr = bytes)
+			{
+				uint codePage = (uint)CodePage;
+				int bufferSize = MultiByteToWideChar(codePage, 0, bytesPtr + index, count, null, 0);
+				char* buffer = stackalloc char[bufferSize];
+				MultiByteToWideChar(codePage, 0, bytesPtr + index, count, buffer, bufferSize);
+				return new string(buffer);
+			}
 		}
 		#endregion
 	}

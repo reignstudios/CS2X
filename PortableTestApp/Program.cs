@@ -4,6 +4,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace PortableTestApp
 {
@@ -164,6 +165,11 @@ namespace PortableTestApp
 
 		unsafe static void Main(string[] args)
 		{
+			const string convertString = "Some Data";
+			var data = Encoding.UTF8.GetBytes(convertString);
+			string result = Encoding.UTF8.GetString(data);
+			if (result == convertString) return;
+
 			foreach (string arg in args)
 			{
 				Console.WriteLine(arg);

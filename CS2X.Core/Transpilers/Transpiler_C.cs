@@ -1353,7 +1353,7 @@ namespace CS2X.Core.Transpilers
 								if (method.Name == "GetTypeFromHandle")
 								{
 									var handle = method.Parameters[0];
-									var field = (IFieldSymbol)handle.Type.GetMembers().First(x => x.Name == "m_type");
+									var field = FindFieldByName(handle.Type, "m_type");
 									writer.WriteLinePrefix($"return {GetParameterFullName(handle)}.{GetFieldFullName(field)};");
 								}
 								else
@@ -1365,17 +1365,36 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "get_Length")
 								{
-									var field = (IFieldSymbol)method.ContainingType.GetMembers().First(x => x.Name == "_stringLength");
+									var field = FindFieldByName(method.ContainingType, "_stringLength");
 									writer.WriteLinePrefix($"return self->{GetFieldFullName(field)};");
 								}
 								else if (method.Name == "FastAllocateString")
 								{
-									var field = (IFieldSymbol)method.ContainingType.GetMembers().First(x => x.Name == "_stringLength");
+									var field = FindFieldByName(method.ContainingType, "_stringLength");
 									string lengthName = GetParameterFullName(method.Parameters[0]);
 									writer.WriteLinePrefix($"{GetTypeFullName(method.ContainingType)}* result = CS2X_GC_NewAtomic(sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * {lengthName}));");
 									writer.WriteLinePrefix($"result->CS2X_RuntimeType = &{GetRuntimeTypeObjFullName(method.ContainingType)};");
 									writer.WriteLinePrefix($"result->{GetFieldFullName(field)} = {lengthName};");
 									writer.WriteLinePrefix("return result;");
+								}
+								else if (method.MethodKind == MethodKind.Constructor && method.Parameters.Length == 1 && method.Parameters[0].Type.TypeKind == TypeKind.Pointer)
+								{
+									var stringLengthField = FindFieldByName(method.ContainingType, "_stringLength");
+									var firstCharField = FindFieldByName(method.ContainingType, "_firstChar");
+									string parameterName = GetParameterFullName(method.Parameters[0]);
+									writer.WriteLinePrefix("int length = 0;");
+									writer.WriteLinePrefix("char16_t* charOffset;");
+									writer.WriteLinePrefix($"charOffset = {parameterName};");
+									writer.WriteLinePrefix("while (*charOffset != 0)");
+									writer.WriteLinePrefix('{');
+									writer.AddTab();
+									writer.WriteLinePrefix("++charOffset;");
+									writer.WriteLinePrefix("++length;");
+									writer.RemoveTab();
+									writer.WriteLinePrefix('}');
+									writer.WriteLinePrefix("CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));");
+									writer.WriteLinePrefix($"self->{GetFieldFullName(stringLengthField)} = length;");
+									writer.WriteLinePrefix($"memcpy(&self->{GetFieldFullName(firstCharField)}, {parameterName}, sizeof(char16_t) * length);");
 								}
 								else
 								{
@@ -1686,6 +1705,19 @@ namespace CS2X.Core.Transpilers
 		private void WriteFlowControlStatement(StatementSyntax statement, string multiLine, string singleLine)
 		{
 			if (statement is BlockSyntax)
+			{
+				writer.WriteLine(multiLine);
+				WriteStatement(statement);
+			}
+			else if
+			(
+				statement is IfStatementSyntax ||
+				statement is WhileStatementSyntax ||
+				statement is ForStatementSyntax ||
+				statement is ForEachStatementSyntax ||
+				statement is TryStatementSyntax ||
+				statement is UsingStatementSyntax
+			)
 			{
 				writer.WriteLine(multiLine);
 				WriteStatement(statement);

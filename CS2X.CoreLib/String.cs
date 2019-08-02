@@ -4,14 +4,28 @@ namespace System
 {
 	public sealed class String
 	{
-		[NonSerialized]
 		private int _stringLength;
-
-		[NonSerialized]
-		internal char _firstChar;// TODO: change back to private when Console is implemented correctly
+		internal char _firstChar;
 
 		[Intrinsic]
         public static readonly string Empty;
+
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public unsafe extern String(char* value);
+		/*public unsafe String(char* value)
+		{
+			fixed (char* _firstCharPtr = &_firstChar)
+			{
+				int length = 0;
+				char* valueOffset = value;
+				while (*valueOffset != 0)
+				{
+					++valueOffset;
+					++length;
+				}
+				Buffer.memcpy(_firstCharPtr, value, (void*)(length * sizeof(char)));
+			}
+		}*/
 
 		//[MethodImpl(MethodImplOptions.InternalCall)]
 		//public extern String(char[] value);
@@ -144,6 +158,16 @@ namespace System
 			FillStringChecked(result, str0.Length + str1.Length + str2.Length, str3);
 
 			return result;
+		}
+
+		public static bool operator==(string value1, string value2)
+		{
+			return value1.Equals(value2);
+		}
+
+		public static bool operator!=(string value1, string value2)
+		{
+			return !value1.Equals(value2);
 		}
 
 		public bool Equals(string value)
