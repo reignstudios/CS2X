@@ -1,5 +1,30 @@
 ﻿using CS2X;
 
+// UTF-16 to UCS2 (legacy windows)
+// https://docs.microsoft.com/en-us/dotnet/api/system.string.normalize?view=netframework-4.8
+// string.Normalize() then chars can be converted to byte array
+
+// glibc approch
+//iconv_t cd = iconv_open("UTF-16", "UTF-8");
+// size_t result = iconv(utf16_to_utf8, (char**)&_utf16, &len16, &_utf8, &len8);
+// iconv_close(utf16_to_utf8);
+
+// C89/C99 agnostic but limited wchar_t approch
+//char local[32];
+//memset(local, 0, sizeof(local));
+//strcpy(local, setlocale(LC_ALL, ""));// aka getlocale
+
+//char result[256];
+//memset(result, 0, sizeof(result));
+//wchar_t value[256] = L"Testing•";
+//char* foo = setlocale(LC_ALL, "en_US.utf8");
+//int bufferSize = wcstombs(result, value, 256);
+
+//wchar_t result2[256];
+//memset(result2, 0, sizeof(result2));
+//char* foo2 = setlocale(LC_ALL, "en_US.utf16");
+//int bufferSize2 = mbstowcs(result2, result, 256);
+
 namespace System.Text
 {
 	public abstract class Encoding
@@ -45,19 +70,6 @@ namespace System.Text
 
 			UTF32 = new StandardEncoding();
 			UTF32.CodePage = 12000;
-
-			//UINT codePage = GetACP();
-			//CP_UTF8
-			////char buffer[256] = { 0 };
-			//char* buffer = 0;
-			//wchar_t* value = L"に";
-			////iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
-			//int bufferSize = WideCharToMultiByte(codePage, 0, value, -1, 0, 0, 0, 0);
-			//buffer = malloc(bufferSize);
-			//WideCharToMultiByte(codePage, 0, value, -1, buffer, bufferSize, 0, 0);
-
-			//wchar_t value2[256] = { 0 };
-			//int valueSize = MultiByteToWideChar(codePage, 0, buffer, bufferSize, value2, 256);
 		}
 
 		#region GetByteCount
