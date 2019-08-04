@@ -21,7 +21,7 @@ namespace CS2X.Core.Test
 			var options = new Transpiler_C.Options()
 			{
 				api = Transpiler_C.API.Win32,
-				gc = Transpiler_C.GC_Type.Dumby,
+				gc = Transpiler_C.GC_Type.Boehm,
 				gcFolderPath = @"..\CS2X.Native",
 				ptrSize = Transpiler_C.Ptr_Size.Bit_64,
 				endianness = Transpiler_C.Endianness.Little,

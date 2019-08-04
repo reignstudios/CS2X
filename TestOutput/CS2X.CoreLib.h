@@ -8,7 +8,7 @@
 #include <uchar.h>
 #include <locale.h>
 #include <time.h>
-#include "..\CS2X.Native\CS2X.GC.Dumby.h"
+#include "..\CS2X.Native\CS2X.GC.Boehm.h"
 #include "..\CS2X.Native\CS2X.InstructionHelpers.h"
 #include "_StringLiterals.h"
 
@@ -1346,6 +1346,17 @@ int8_t rt_System_Char___ARRAY_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,67,0,
 int8_t rt_System_Char___ARRAY_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,104,0,97,0,114,0,91,0,93,0,0,0}; /* System.Char[] */
 
 /* =============================== */
+/* POINTER Runtime Types */
+/* =============================== */
+typedef struct rt_System_Void__PTR
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Void__PTR;
+rt_System_Void__PTR rt_System_Void__PTR_OBJ;
+int8_t rt_System_Void__PTR_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,86,0,111,0,105,0,100,0,42,0,0,0}; /* Void* */
+int8_t rt_System_Void__PTR_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,86,0,111,0,105,0,100,0,42,0,0,0}; /* System.Void* */
+
+/* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
 int32_t m_System_Array_get_Length_0(t_System_Array* self);
@@ -1368,7 +1379,9 @@ void m_System_Console_WriteLine_0(t_System_String* p_s);
 void m_System_Console_WriteLine_1();
 char m_intptr_t_op_Equality_0(intptr_t p_a, intptr_t p_b);
 char m_intptr_t_op_Inequality_0(intptr_t p_a, intptr_t p_b);
-intptr_t m_intptr_t__ctor_0();
+void* m_intptr_t_op_Explicit_0(intptr_t p_value);
+intptr_t m_intptr_t__ctor_0(void* p_value);
+intptr_t m_intptr_t__ctor_1();
 t_System_Object* m_System_Delegate_get_Target_0(t_System_Delegate* self);
 char m_System_Delegate_op_Equality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
 char m_System_Delegate_op_Inequality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
@@ -1469,6 +1482,7 @@ t_System_Runtime_CompilerServices_MethodImplOptions m_System_Runtime_CompilerSer
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_0(t_System_Runtime_CompilerServices_MethodImplAttribute* self, t_System_Runtime_CompilerServices_MethodImplOptions p_methodImplOptions);
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_1(t_System_Runtime_CompilerServices_MethodImplAttribute* self, int16_t p_value);
 t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_CompilerServices_MethodImplAttribute__ctor_2(t_System_Runtime_CompilerServices_MethodImplAttribute* self);
+int32_t m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
 t_System_Runtime_InteropServices_CallingConvention m_System_Runtime_InteropServices_CallingConvention__ctor_0();
 t_System_Runtime_InteropServices_DllImportAttribute* m_System_Runtime_InteropServices_DllImportAttribute__ctor_0(t_System_Runtime_InteropServices_DllImportAttribute* self, t_System_String* p_dllName);
 intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t_System_String* p_s);
@@ -1520,7 +1534,9 @@ uint32_t m_uint32_t__ctor_0();
 uint64_t m_uint64_t__ctor_0();
 char m_uintptr_t_op_Equality_0(uintptr_t p_a, uintptr_t p_b);
 char m_uintptr_t_op_Inequality_0(uintptr_t p_a, uintptr_t p_b);
-uintptr_t m_uintptr_t__ctor_0();
+void* m_uintptr_t_op_Explicit_0(uintptr_t p_value);
+uintptr_t m_uintptr_t__ctor_0(void* p_value);
+uintptr_t m_uintptr_t__ctor_1();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
 
 /* =============================== */
@@ -1707,7 +1723,19 @@ char m_intptr_t_op_Inequality_0(intptr_t p_a, intptr_t p_b)
 {
 }
 
-intptr_t m_intptr_t__ctor_0()
+void* m_intptr_t_op_Explicit_0(intptr_t p_value)
+{
+}
+
+intptr_t m_intptr_t__ctor_0(void* p_value)
+{
+	intptr_t selfObj;
+	intptr_t* self = &selfObj;
+	return (intptr_t)p_value;
+	return selfObj;
+}
+
+intptr_t m_intptr_t__ctor_1()
 {
 	intptr_t selfObj = {0};
 	return selfObj;
@@ -2456,6 +2484,11 @@ t_System_Runtime_CompilerServices_MethodImplAttribute* m_System_Runtime_Compiler
 	return self;
 }
 
+int32_t m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0()
+{
+	return sizeof(void*) + sizeof(int32_t);
+}
+
 t_System_Runtime_InteropServices_CallingConvention m_System_Runtime_InteropServices_CallingConvention__ctor_0()
 {
 	t_System_Runtime_InteropServices_CallingConvention selfObj = {0};
@@ -2471,21 +2504,40 @@ t_System_Runtime_InteropServices_DllImportAttribute* m_System_Runtime_InteropSer
 
 intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t_System_String* p_s)
 {
-	return m_intptr_t__ctor_0();
+	char16_t* l_chars_0;
+	l_chars_0 = ((char*)p_s) + m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
+	{
+		int32_t l_byteCount_1;
+		uint8_t* l_buffer_2;
+		l_byteCount_1 = m_System_Text_Encoding_GetByteCount_3(f_System_Text_Encoding__ASCII_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s));
+		l_buffer_2 = (uint8_t*)malloc((void*)l_byteCount_1);
+		m_System_Text_Encoding_GetBytes_4(f_System_Text_Encoding__ASCII_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s), l_buffer_2, l_byteCount_1);
+		return m_intptr_t__ctor_0(l_buffer_2);
+	}
 }
 
 intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t_System_String* p_s)
 {
-	return m_intptr_t__ctor_0();
+	char16_t* l_chars_0;
+	l_chars_0 = ((char*)p_s) + m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
+	{
+		int32_t l_byteCount_1;
+		uint8_t* l_buffer_2;
+		l_byteCount_1 = m_System_Text_Encoding_GetByteCount_3(f_System_Text_Encoding__Unicode_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s));
+		l_buffer_2 = (uint8_t*)malloc((void*)l_byteCount_1);
+		m_System_Text_Encoding_GetBytes_4(f_System_Text_Encoding__Unicode_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s), l_buffer_2, l_byteCount_1);
+		return m_intptr_t__ctor_0(l_buffer_2);
+	}
 }
 
 void m_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal)
 {
+	free((void*)p_hglobal);
 }
 
 intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_0(t_System_Delegate* p_d)
 {
-	return m_intptr_t__ctor_0();
+	return m_intptr_t__ctor_1();
 }
 
 t_System_Delegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_0(intptr_t p_ptr, t_System_Type* p_t)
@@ -2853,7 +2905,19 @@ char m_uintptr_t_op_Inequality_0(uintptr_t p_a, uintptr_t p_b)
 {
 }
 
-uintptr_t m_uintptr_t__ctor_0()
+void* m_uintptr_t_op_Explicit_0(uintptr_t p_value)
+{
+}
+
+uintptr_t m_uintptr_t__ctor_0(void* p_value)
+{
+	uintptr_t selfObj;
+	uintptr_t* self = &selfObj;
+	return (uintptr_t)p_value;
+	return selfObj;
+}
+
+uintptr_t m_uintptr_t__ctor_1()
 {
 	uintptr_t selfObj = {0};
 	return selfObj;
@@ -3543,6 +3607,18 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Byte___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Char___ARRAY_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Char___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+
+	/* <<< === Pointer Runtime Types === >>> */
+	/* Init runtime type objects */
+	memset(&rt_System_Void__PTR_OBJ, 0, sizeof(rt_System_Void__PTR));
+	rt_System_Void__PTR_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Void__PTR_OBJ;
+	rt_System_Void__PTR_OBJ.runtimeType.f__BaseType_k__BackingField_1 = 0;
+	rt_System_Void__PTR_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Void__PTR_METADATA_Name;
+	rt_System_Void__PTR_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Void__PTR_METADATA_FullName;
+
+	/* Init runtime type metadata / string literals */
+	((t_System_String*)rt_System_Void__PTR_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Void__PTR_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 }
 
 void CS2X_InitDllImport_CS2X_CoreLib()

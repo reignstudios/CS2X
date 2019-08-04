@@ -1132,6 +1132,7 @@ namespace CS2X.Core.Transpilers
 				case MethodKind.PropertyGet:
 				case MethodKind.PropertySet:
 				case MethodKind.UserDefinedOperator:
+				case MethodKind.Conversion:
 				case MethodKind.ExplicitInterfaceImplementation:
 				case MethodKind.DelegateInvoke:
 					break;
@@ -1407,6 +1408,20 @@ namespace CS2X.Core.Transpilers
 								else if (method.Name == "get_LongLength") writer.WriteLinePrefix($"return (int64_t)(*((size_t*)self + 1));");
 								else throw new NotSupportedException("Unsupported internal Array method: " + method.Name);
 							}
+							else if (type.Name == "IntPtr" || type.Name == "UIntPtr")
+							{
+								var i = new IntPtr();
+								var i2 = (int)i;
+								if (method.MethodKind == MethodKind.Constructor)
+								{
+									var valueParam = method.Parameters[0];
+									writer.WriteLinePrefix($"return ({type.Name.ToLower()}_t){GetParameterFullName(valueParam)};");
+								}
+								else
+								{
+									throw new NotSupportedException($"Unsupported constructor {type.Name} method: " + method.Name);
+								}
+							}
 							else
 							{
 								throw new NotSupportedException("Unsupported internal method in type: " + type.Name);
@@ -1427,7 +1442,10 @@ namespace CS2X.Core.Transpilers
 					}
 					else if (method.ContainingType.SpecialType == SpecialType.System_IntPtr || method.ContainingType.SpecialType == SpecialType.System_UIntPtr)
 					{
-						if (method.MethodKind != MethodKind.UserDefinedOperator) throw new NotSupportedException("Unsupported IntPtr method: " + method.FullName());;
+						if (method.MethodKind != MethodKind.UserDefinedOperator && method.MethodKind != MethodKind.Conversion)
+						{
+							throw new NotSupportedException("Unsupported IntPtr method: " + method.FullName());
+						}
 					}
 					else
 					{
@@ -1683,7 +1701,7 @@ namespace CS2X.Core.Transpilers
 				if (variable.Initializer != null)
 				{
 					writer.WritePrefix(local.name + " = ");
-					bool fixedArrayOffset = false;
+					bool fixedArrayOffset = false, fixedStringOffset = false;
 					if (isFixedDeclaration)
 					{
 						var initializerType = ResolveType(variable.Initializer.Value);
@@ -1692,9 +1710,26 @@ namespace CS2X.Core.Transpilers
 							writer.Write($"({GetTypeFullNameRef(initializerType)})(((char*)");
 							fixedArrayOffset = true;
 						}
+						else if (initializerType.SpecialType == SpecialType.System_String)
+						{
+							writer.Write("((char*)");
+							fixedStringOffset = true;
+						}
 					}
+					
 					WriteExpression(variable.Initializer.Value);
-					if (fixedArrayOffset) writer.Write(") + (sizeof(size_t)*2))");
+
+					if (fixedArrayOffset)
+					{
+						writer.Write(") + (sizeof(size_t)*2))");
+					}
+					else if (fixedStringOffset)
+					{
+						var runtimeHelperType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.Runtime.CompilerServices.RuntimeHelpers");
+						var offsetToStringDataMethod = FindPropertyByName(runtimeHelperType, "OffsetToStringData").GetMethod;
+						writer.Write($") + {GetMethodFullName(offsetToStringDataMethod)}()");
+					}
+
 					if (!onlyWriteDelimiterIfNotLast) writer.Write(delimiter);
 					else if (variable != last) writer.Write(delimiter);
 				}
