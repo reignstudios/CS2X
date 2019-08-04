@@ -1,6 +1,6 @@
 ﻿using CS2X;
 
-// UTF-16 to UCS2 (legacy windows)
+// UTF-16 to UCS2 or UTF-32 to UCS4 (legacy wide char formats)
 // https://docs.microsoft.com/en-us/dotnet/api/system.string.normalize?view=netframework-4.8
 // string.Normalize() then chars can be converted to byte array
 
@@ -161,16 +161,60 @@ namespace System.Text
 		#endregion
 
 		#region GetCharCount
-		//public int GetCharCount(byte[] bytes);
-		//public int GetCharCount(byte[] bytes, int index, int count);
-		//public unsafe int GetCharCount(byte* bytes, int count);
+		public int GetCharCount(byte[] bytes)
+		{
+			return GetCharCount(bytes, 0, bytes.Length);
+		}
+
+		public unsafe int GetCharCount(byte[] bytes, int index, int count)
+		{
+			fixed (byte* bytesPtr = bytes)
+			{
+				uint codePage = (uint)CodePage;
+				return MultiByteToWideChar(codePage, 0, bytesPtr + index, count, null, 0);
+			}
+		}
+
+		public unsafe int GetCharCount(byte* bytes, int count)
+		{
+			uint codePage = (uint)CodePage;
+			return MultiByteToWideChar(codePage, 0, bytes, count, null, 0);
+		}
 		#endregion
 
 		#region GetChars
-		//public unsafe int GetChars(byte* bytes, int byteCount, char* chars, int charCount);
-		//public char[] GetChars(byte[] bytes);
-		//public char[] GetChars(byte[] bytes, int index, int count);
-		//public int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex);
+		public unsafe int GetChars(byte* bytes, int byteCount, char* chars, int charCount)
+		{
+			uint codePage = (uint)CodePage;
+			return MultiByteToWideChar(codePage, 0, bytes, byteCount, chars, charCount);
+		}
+
+		public char[] GetChars(byte[] bytes)
+		{
+			return GetChars(bytes, 0, bytes.Length);
+		}
+
+		public unsafe char[] GetChars(byte[] bytes, int index, int count)
+		{
+			fixed (byte* bytesPtr = bytes)
+			{
+				uint codePage = (uint)CodePage;
+				int bufferSize = MultiByteToWideChar(codePage, 0, bytesPtr + index, count, null, 0);
+				var buffer = new char[bufferSize];
+				fixed (char* bufferPtr = buffer) MultiByteToWideChar(codePage, 0, bytesPtr + index, count, bufferPtr, bufferSize);
+				return buffer;
+			}
+		}
+
+		public unsafe int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
+		{
+			fixed (byte* bytesPtr = bytes)
+			fixed (char* charsPtr = chars)
+			{
+				uint codePage = (uint)CodePage;
+				return MultiByteToWideChar(codePage, 0, bytesPtr + byteIndex, byteCount, charsPtr + charIndex, chars.Length);
+			}
+		}
 		#endregion
 
 		#region GetString

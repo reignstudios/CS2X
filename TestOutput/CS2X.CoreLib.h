@@ -1351,6 +1351,14 @@ rt_System_Byte___ARRAY rt_System_Byte___ARRAY_OBJ;
 int8_t rt_System_Byte___ARRAY_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,66,0,121,0,116,0,101,0,91,0,93,0,0,0}; /* Byte[] */
 int8_t rt_System_Byte___ARRAY_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,66,0,121,0,116,0,101,0,91,0,93,0,0,0}; /* System.Byte[] */
 
+typedef struct rt_System_Char___ARRAY
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Char___ARRAY;
+rt_System_Char___ARRAY rt_System_Char___ARRAY_OBJ;
+int8_t rt_System_Char___ARRAY_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,67,0,104,0,97,0,114,0,91,0,93,0,0,0}; /* Char[] */
+int8_t rt_System_Char___ARRAY_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,104,0,97,0,114,0,91,0,93,0,0,0}; /* System.Char[] */
+
 /* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
@@ -1498,6 +1506,13 @@ int32_t m_System_Text_Encoding_GetBytes_2(t_System_Text_Encoding* self, char16_t
 int32_t m_System_Text_Encoding_GetBytes_3(t_System_Text_Encoding* self, t_System_String* p_s, int32_t p_charIndex, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteIndex);
 int32_t m_System_Text_Encoding_GetBytes_4(t_System_Text_Encoding* self, char16_t* p_chars, int32_t p_charCount, uint8_t* p_bytes, int32_t p_byteCount);
 uint8_t* m_System_Text_Encoding_GetBytes_5(t_System_Text_Encoding* self, t_System_String* p_s);
+int32_t m_System_Text_Encoding_GetCharCount_0(t_System_Text_Encoding* self, uint8_t* p_bytes);
+int32_t m_System_Text_Encoding_GetCharCount_1(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
+int32_t m_System_Text_Encoding_GetCharCount_2(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_count);
+int32_t m_System_Text_Encoding_GetChars_0(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_byteCount, char16_t* p_chars, int32_t p_charCount);
+char16_t* m_System_Text_Encoding_GetChars_1(t_System_Text_Encoding* self, uint8_t* p_bytes);
+char16_t* m_System_Text_Encoding_GetChars_2(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
+int32_t m_System_Text_Encoding_GetChars_3(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_byteIndex, int32_t p_byteCount, char16_t* p_chars, int32_t p_charIndex);
 t_System_String* m_System_Text_Encoding_GetString_0(t_System_Text_Encoding* self, uint8_t* p_bytes);
 t_System_String* m_System_Text_Encoding_GetString_1(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
 t_System_Text_Encoding* m_System_Text_Encoding__ctor_0(t_System_Text_Encoding* self);
@@ -2648,6 +2663,72 @@ uint8_t* m_System_Text_Encoding_GetBytes_5(t_System_Text_Encoding* self, t_Syste
 	}
 }
 
+int32_t m_System_Text_Encoding_GetCharCount_0(t_System_Text_Encoding* self, uint8_t* p_bytes)
+{
+	return m_System_Text_Encoding_GetCharCount_1(self, p_bytes, 0, m_System_Array_get_Length_0(p_bytes));
+}
+
+int32_t m_System_Text_Encoding_GetCharCount_1(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
+{
+	uint8_t* l_bytesPtr_0;
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_1;
+		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		return MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, 0, 0);
+	}
+}
+
+int32_t m_System_Text_Encoding_GetCharCount_2(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_count)
+{
+	uint32_t l_codePage_0;
+	l_codePage_0 = (uint32_t)self->f__CodePage_k__BackingField_1;
+	return MultiByteToWideChar(l_codePage_0, 0, p_bytes, p_count, 0, 0);
+}
+
+int32_t m_System_Text_Encoding_GetChars_0(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_byteCount, char16_t* p_chars, int32_t p_charCount)
+{
+	uint32_t l_codePage_0;
+	l_codePage_0 = (uint32_t)self->f__CodePage_k__BackingField_1;
+	return MultiByteToWideChar(l_codePage_0, 0, p_bytes, p_byteCount, p_chars, p_charCount);
+}
+
+char16_t* m_System_Text_Encoding_GetChars_1(t_System_Text_Encoding* self, uint8_t* p_bytes)
+{
+	return m_System_Text_Encoding_GetChars_2(self, p_bytes, 0, m_System_Array_get_Length_0(p_bytes));
+}
+
+char16_t* m_System_Text_Encoding_GetChars_2(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
+{
+	uint8_t* l_bytesPtr_0;
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_1;
+		int32_t l_bufferSize_2;
+		char16_t* l_buffer_3;
+		char16_t* l_bufferPtr_4;
+		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		l_bufferSize_2 = MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, 0, 0);
+		l_buffer_3 = CS2X_AllocArrayTypeAtomic(sizeof(char16_t), l_bufferSize_2, &rt_System_Char___ARRAY_OBJ);
+		l_bufferPtr_4 = (char16_t*)(((char*)l_buffer_3) + (sizeof(size_t)*2));
+		MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, l_bufferPtr_4, l_bufferSize_2);
+		return l_buffer_3;
+	}
+}
+
+int32_t m_System_Text_Encoding_GetChars_3(t_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_byteIndex, int32_t p_byteCount, char16_t* p_chars, int32_t p_charIndex)
+{
+	uint8_t* l_bytesPtr_0;
+	char16_t* l_charsPtr_1;
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	l_charsPtr_1 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
+	{
+		uint32_t l_codePage_2;
+		l_codePage_2 = (uint32_t)self->f__CodePage_k__BackingField_1;
+		return MultiByteToWideChar(l_codePage_2, 0, l_bytesPtr_0 + p_byteIndex, p_byteCount, l_charsPtr_1 + p_charIndex, m_System_Array_get_Length_0(p_chars));
+	}
+}
+
 t_System_String* m_System_Text_Encoding_GetString_0(t_System_Text_Encoding* self, uint8_t* p_bytes)
 {
 	return m_System_Text_Encoding_GetString_1(self, p_bytes, 0, m_System_Array_get_Length_0(p_bytes));
@@ -3469,10 +3550,17 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Byte___ARRAY_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Array_OBJ;
 	rt_System_Byte___ARRAY_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Byte___ARRAY_METADATA_Name;
 	rt_System_Byte___ARRAY_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Byte___ARRAY_METADATA_FullName;
+	memset(&rt_System_Char___ARRAY_OBJ, 0, sizeof(rt_System_Char___ARRAY));
+	rt_System_Char___ARRAY_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Char___ARRAY_OBJ;
+	rt_System_Char___ARRAY_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Array_OBJ;
+	rt_System_Char___ARRAY_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Char___ARRAY_METADATA_Name;
+	rt_System_Char___ARRAY_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Char___ARRAY_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
 	((t_System_String*)rt_System_Byte___ARRAY_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Byte___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Char___ARRAY_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Char___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 }
 
 void CS2X_InitDllImport_CS2X_CoreLib()
