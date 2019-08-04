@@ -12,40 +12,21 @@ namespace System
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public unsafe extern String(char* value);
-		/*public unsafe String(char* value)
-		{
-			fixed (char* _firstCharPtr = &_firstChar)
-			{
-				int length = 0;
-				char* valueOffset = value;
-				while (*valueOffset != 0)
-				{
-					++valueOffset;
-					++length;
-				}
-				Buffer.memcpy(_firstCharPtr, value, (void*)(length * sizeof(char)));
-			}
-		}*/
 
 		//[MethodImpl(MethodImplOptions.InternalCall)]
 		//public extern String(char[] value);
 
-		// Gets the character at a specified position.
-        //
-        /*[IndexerName("Chars")]
-        public extern char this[int index]
+		public unsafe char this[int index]
         {
-            [MethodImpl(MethodImplOptions.InternalCall)]
-            get;
-        }*/
+			get
+			{
+				fixed (char* _firstCharPtr = &_firstChar)
+				{
+					return _firstCharPtr[index];
+				}
+			}
+        }
 
-		// Gets the length of this string
-        //
-        // This is a EE implemented function so that the JIT can recognise it specially
-        // and eliminate checks on character fetches in a loop like:
-        //        for(int i = 0; i < str.Length; i++) str[i]
-        // The actual code generated for this will be one instruction and will be inlined.
-        //
         public extern int Length
         {
             [MethodImpl(MethodImplOptions.InternalCall)]

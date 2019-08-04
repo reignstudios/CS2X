@@ -2657,8 +2657,7 @@ namespace CS2X.Core.Transpilers
 			// check if special property assignment is needed
 			if (expression.Left is IdentifierNameSyntax)
 			{
-				var symbolInfo = semanticModel.GetSymbolInfo(expression.Left);
-				var property = symbolInfo.Symbol as IPropertySymbol;
+				var property = semanticModel.GetSymbolInfo(expression.Left).Symbol as IPropertySymbol;
 				if (property != null && !IsAutoProperty(property))
 				{
 					var setMethod = ResolveMethod(property.SetMethod, method, semanticModel);
@@ -2669,6 +2668,32 @@ namespace CS2X.Core.Transpilers
 						WriteCaller(expression.Left);
 						writer.Write(", ");
 					}
+					WriteExpression(expression.Right);
+					writer.Write(')');
+					return;
+				}
+			}
+
+			// check if special property element assignment will be used
+			if (expression.Left is ElementAccessExpressionSyntax)
+			{
+				var property = semanticModel.GetSymbolInfo(expression.Left).Symbol as IPropertySymbol;
+				if (property != null && property.IsIndexer)
+				{
+					var elementAccessExpression = (ElementAccessExpressionSyntax)expression.Left;
+
+					// get index expression
+					var arguments = elementAccessExpression.ArgumentList.Arguments;
+					if (arguments.Count != 1) throw new NotSupportedException("Elements can only have one arg");
+					var indexExpression = arguments[0].Expression;
+
+					// write method invoke
+					writer.Write(GetMethodFullName(property.SetMethod));
+					writer.Write('(');
+					WriteExpression(elementAccessExpression.Expression);
+					writer.Write(", ");
+					WriteExpression(indexExpression);
+					writer.Write(", ");
 					WriteExpression(expression.Right);
 					writer.Write(')');
 					return;
@@ -3008,6 +3033,37 @@ namespace CS2X.Core.Transpilers
 
 		private void ElementAccessExpression(ElementAccessExpressionSyntax expression)
 		{
+			// get index expression
+			var arguments = expression.ArgumentList.Arguments;
+			if (arguments.Count != 1) throw new NotSupportedException("Elements can only have one arg");
+			var indexExpression = arguments[0].Expression;
+
+			// check if element access is custom property method
+			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			if (symbol is IPropertySymbol)
+			{
+				var property = (IPropertySymbol)symbol;
+				if (property.IsIndexer)
+				{
+					var assignmentExpression = expression.Parent as AssignmentExpressionSyntax;
+					if (assignmentExpression != null && assignmentExpression.Left == expression)
+					{
+						throw new Exception("Setting indexer should happen in assignment expression method");
+					}
+					else
+					{
+						writer.Write(GetMethodFullName(property.GetMethod));
+						writer.Write('(');
+						WriteExpression(expression.Expression);
+						writer.Write(", ");
+						WriteExpression(indexExpression);
+						writer.Write(')');
+					}
+					return;
+				}
+			}
+
+			// write normal element access
 			void writeExpression()
 			{
 				WriteExpression(expression.Expression);
@@ -3016,9 +3072,7 @@ namespace CS2X.Core.Transpilers
 			var type = ResolveType(expression.Expression);
 			WriteArrayElementAccessOffset(writeExpression, type);
 			writer.Write('[');
-			var arguments = expression.ArgumentList.Arguments;
-			if (arguments.Count != 1) throw new NotSupportedException("Elements can only have one arg");
-			WriteExpression(arguments[0].Expression);
+			WriteExpression(indexExpression);
 			writer.Write(']');
 		}
 

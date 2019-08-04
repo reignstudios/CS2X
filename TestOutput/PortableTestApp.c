@@ -54,6 +54,7 @@ struct t_PortableTestApp_Program
 	int32_t f_abc_1;
 	int32_t f__MyAutoProp_k__BackingField_1;
 	int32_t f__MyProp_1;
+	char16_t f_charVal_1;
 };
 int32_t f_PortableTestApp_Program_abcStatic;
 int32_t f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField;
@@ -256,6 +257,8 @@ uint32_t (*m_PortableTestApp_Program_MyInternalExtern_0)(uint32_t);
 void m_PortableTestApp_Program__cctor_0();
 void m_PortableTestApp_Program_MyDelegateCallbackStatic_0(t_System_String* p_i);
 void m_PortableTestApp_Program_MyDelegateCallback_0(t_PortableTestApp_Program* self, t_System_String* p_i);
+char16_t m_PortableTestApp_Program_get_Item_0(t_PortableTestApp_Program* self, int32_t p_index);
+void m_PortableTestApp_Program_set_Item_0(t_PortableTestApp_Program* self, int32_t p_index, char16_t p_value);
 void m_PortableTestApp_Program_Main_0(t_System_String** p_args);
 void m_PortableTestApp_Program_TestLoop_0(int32_t* p_es);
 void m_PortableTestApp_Program_FooThrow_0(t_PortableTestApp_MyBaseClass* p_a);
@@ -422,6 +425,16 @@ void m_PortableTestApp_Program_MyDelegateCallback_0(t_PortableTestApp_Program* s
 	if (self != 0) m_System_Console_WriteLine_0(m_System_String_Concat_0(p_i, StringLiteral_6));
 }
 
+char16_t m_PortableTestApp_Program_get_Item_0(t_PortableTestApp_Program* self, int32_t p_index)
+{
+	return 0x4100;
+}
+
+void m_PortableTestApp_Program_set_Item_0(t_PortableTestApp_Program* self, int32_t p_index, char16_t p_value)
+{
+	self->f_charVal_1 = p_value;
+}
+
 void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 {
 	t_System_String* l_convertString_0;
@@ -459,7 +472,7 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	{
 		t_System_String* l_arg_4;
 		l_arg_4 = ((t_System_String**)(((char*)p_args) + (sizeof(size_t)*2)))[l_arg_i_3];
-		m_System_Console_WriteLine_0(l_arg_4);
+		if (m_System_String_get_Item_0(l_arg_4, 1) == 0x4100) m_System_Console_WriteLine_0(l_arg_4);
 	}
 	/* using */
 	l_p_4 = m_PortableTestApp_Program__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_Program), &rt_PortableTestApp_Program_OBJ));
@@ -475,6 +488,7 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 		if (CS2X_IS_JMP_1 == 0)
 		{
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_1, sizeof(jmp_buf));
+			m_PortableTestApp_Program_set_Item_0(l_p_4, 1, 0x4200);
 			CS2X_ThreadExceptionObject = m_System_Exception__ctor_0(CS2X_AllocType(sizeof(t_System_Exception), &rt_System_Exception_OBJ));
 			longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 			f_PortableTestApp_Program_myDelegate = m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), l_p_4, &m_PortableTestApp_Program_MyDelegateCallback_0);

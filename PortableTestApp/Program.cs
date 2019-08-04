@@ -163,6 +163,19 @@ namespace PortableTestApp
 			if (this != null) Console.WriteLine(i + "_Program");
 		}
 
+		private char charVal;
+		public char this[int index]
+        {
+			get
+			{
+				return 'A';
+			}
+			set
+			{
+				charVal = value;
+			}
+        }
+
 		unsafe static void Main(string[] args)
 		{
 			const string convertString = "Some Data";
@@ -172,12 +185,13 @@ namespace PortableTestApp
 
 			foreach (string arg in args)
 			{
-				Console.WriteLine(arg);
+				if (arg[1] == 'A') Console.WriteLine(arg);
 			}
 
 			using (var p = new Program())
 			using (var p2 = new Program())
 			{
+				p[1] = 'B';
 				throw new Exception();
 				myDelegate = new MyDelegate(p.MyDelegateCallback);
 				myDelegate += p.MyDelegateCallback;
