@@ -1316,6 +1316,12 @@ namespace CS2X.Core.Transpilers
 								if (syntax.Body != null) WriteBody(syntax.Body);
 								else throw new NotSupportedException("Operator body cannot be emtpy: " + syntax.ToString());
 							}
+							else if (syntaxDeclaration is ConversionOperatorDeclarationSyntax)
+							{
+								var syntax = (ConversionOperatorDeclarationSyntax)syntaxDeclaration;
+								if (syntax.Body != null) WriteBody(syntax.Body);
+								else throw new NotSupportedException("Operator body cannot be emtpy: " + syntax.ToString());
+							}
 							else
 							{
 								throw new NotSupportedException("Unsupported method syntax body: " + syntaxDeclaration.GetType());
@@ -2022,12 +2028,6 @@ namespace CS2X.Core.Transpilers
 			if (statement.Catches == null || statement.Catches.Count == 0) throw new NotSupportedException("No catach block after try: " + statement.ToFullString());
 
 			// add special locals
-			//string jmpBuffLast = $"CS2X_JMP_LAST_{tryCatchNestingLevel}";
-			//string jmpBuff = $"CS2X_JMP_{tryCatchNestingLevel}";
-			//string isJmp = $"CS2X_IS_JMP_{tryCatchNestingLevel}";
-			//instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuffLast));
-			//instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "jmp_buf", jmpBuff));
-			//instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, "int", isJmp));
 			StartTryBlock(out string jmpBuffLast, out string jmpBuff, out string isJmp);
 			++tryCatchNestingLevel;
 
@@ -3022,6 +3022,21 @@ namespace CS2X.Core.Transpilers
 		private void CastExpression(CastExpressionSyntax expression)
 		{
 			var type = ResolveType(expression.Type);
+
+			// check if this is an explicit operator cast
+			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			if (symbol != null && symbol.Kind == SymbolKind.Method && !symbol.IsExtern && !symbol.IsImplicitlyDeclared)
+			{
+				var method = (IMethodSymbol)symbol;
+				if (method.MethodKind == MethodKind.Conversion)
+				{
+					writer.Write(GetMethodFullName(method));
+					writer.Write('(');
+					WriteExpression(expression.Expression);
+					writer.Write(')');
+					return;
+				}
+			}
 
 			// test up cast
 			if (!options.disableUpCastingChecks)

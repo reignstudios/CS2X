@@ -176,8 +176,21 @@ namespace PortableTestApp
 			}
         }
 
+		public static explicit operator Program(int value)
+		{
+			return null;
+		}
+
+		public static explicit operator int(Program value)
+		{
+			return 0;
+		}
+
 		unsafe static void Main(string[] args)
 		{
+			Program ppp = (Program)0;
+			int bi = (int)ppp;
+
 			const string convertString = "Some Data";
 			var data = Encoding.UTF8.GetBytes(convertString);
 			string result = Encoding.UTF8.GetString(data);
