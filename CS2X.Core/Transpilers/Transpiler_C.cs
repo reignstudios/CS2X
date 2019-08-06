@@ -1148,33 +1148,40 @@ namespace CS2X.Core.Transpilers
 
 			// handle special interop / dllimport method
 			bool isDllImportMethod = false;
-			if (method.IsStatic && method.IsExtern && GetDllImportAttribute(method, out var attribute))
+			if (method.IsStatic && method.IsExtern)
 			{
-				isDllImportMethod = true;
-				if (!writeBody)
+				if (GetDllImportAttribute(method, out var attribute))
 				{
-					string callingConventionName;
-					if (attribute.NamedArguments.Any(x => x.Key == "CallingConvention"))
+					isDllImportMethod = true;
+					if (!writeBody)
 					{
-						var callingConvention = attribute.NamedArguments.First(x => x.Key == "CallingConvention");
-						var callingConventionValue = (System.Runtime.InteropServices.CallingConvention)callingConvention.Value.Value;
-						callingConventionName = $"__{callingConventionValue.ToString().ToLower()} ";
+						string callingConventionName;
+						if (attribute.NamedArguments.Any(x => x.Key == "CallingConvention"))
+						{
+							var callingConvention = attribute.NamedArguments.First(x => x.Key == "CallingConvention");
+							var callingConventionValue = (System.Runtime.InteropServices.CallingConvention)callingConvention.Value.Value;
+							callingConventionName = $"__{callingConventionValue.ToString().ToLower()} ";
+						}
+						else
+						{
+							callingConventionName = string.Empty;
+						}
+						writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} ({callingConventionName}*{GetMethodFullName(method)})(");
+						var lastParameter = method.Parameters.LastOrDefault();
+						foreach (var parameter in method.Parameters)
+						{
+							string ptr = string.Empty;
+							writer.Write(GetTypeFullNameRef(parameter.Type));
+							if (IsParameterPassByRef(parameter)) writer.Write('*');
+							if (parameter != lastParameter) writer.Write(", ");
+						}
+						writer.WriteLine(");");
+						return true;
 					}
-					else
-					{
-						callingConventionName = string.Empty;
-					}
-					writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} ({callingConventionName}*{GetMethodFullName(method)})(");
-					var lastParameter = method.Parameters.LastOrDefault();
-					foreach (var parameter in method.Parameters)
-					{
-						string ptr = string.Empty;
-						writer.Write(GetTypeFullNameRef(parameter.Type));
-						if (IsParameterPassByRef(parameter)) writer.Write('*');
-						if (parameter != lastParameter) writer.Write(", ");
-					}
-					writer.WriteLine(");");
-					return true;
+				}
+				else if (method.ContainingType.SpecialType == SpecialType.System_IntPtr || method.ContainingType.SpecialType == SpecialType.System_UIntPtr)
+				{
+					return false;// skip if native int helper method
 				}
 			}
 

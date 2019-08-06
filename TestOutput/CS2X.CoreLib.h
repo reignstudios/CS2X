@@ -1090,9 +1090,6 @@ void m_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t 
 void m_System_Console_Write_0(t_System_String* p_s);
 void m_System_Console_WriteLine_0(t_System_String* p_s);
 void m_System_Console_WriteLine_1();
-char m_intptr_t_op_Equality_0(intptr_t p_a, intptr_t p_b);
-char m_intptr_t_op_Inequality_0(intptr_t p_a, intptr_t p_b);
-void* m_intptr_t_op_Explicit_0(intptr_t p_value);
 intptr_t m_intptr_t__ctor_0(void* p_value);
 intptr_t m_intptr_t__ctor_1();
 t_System_Object* m_System_Delegate_get_Target_0(t_System_Delegate* self);
@@ -1224,9 +1221,6 @@ int8_t m_int8_t__ctor_0();
 uint16_t m_uint16_t__ctor_0();
 uint32_t m_uint32_t__ctor_0();
 uint64_t m_uint64_t__ctor_0();
-char m_uintptr_t_op_Equality_0(uintptr_t p_a, uintptr_t p_b);
-char m_uintptr_t_op_Inequality_0(uintptr_t p_a, uintptr_t p_b);
-void* m_uintptr_t_op_Explicit_0(uintptr_t p_value);
 uintptr_t m_uintptr_t__ctor_0(void* p_value);
 uintptr_t m_uintptr_t__ctor_1();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
@@ -1387,18 +1381,6 @@ void m_System_Console_WriteLine_0(t_System_String* p_s)
 void m_System_Console_WriteLine_1()
 {
 	m_System_Console_Write_0(m_System_Environment_get_NewLine_0());
-}
-
-char m_intptr_t_op_Equality_0(intptr_t p_a, intptr_t p_b)
-{
-}
-
-char m_intptr_t_op_Inequality_0(intptr_t p_a, intptr_t p_b)
-{
-}
-
-void* m_intptr_t_op_Explicit_0(intptr_t p_value)
-{
 }
 
 intptr_t m_intptr_t__ctor_0(void* p_value)
@@ -2443,18 +2425,6 @@ uint64_t m_uint64_t__ctor_0()
 {
 	uint64_t selfObj = {0};
 	return selfObj;
-}
-
-char m_uintptr_t_op_Equality_0(uintptr_t p_a, uintptr_t p_b)
-{
-}
-
-char m_uintptr_t_op_Inequality_0(uintptr_t p_a, uintptr_t p_b)
-{
-}
-
-void* m_uintptr_t_op_Explicit_0(uintptr_t p_value)
-{
 }
 
 uintptr_t m_uintptr_t__ctor_0(void* p_value)
