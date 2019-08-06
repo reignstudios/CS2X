@@ -1,10 +1,10 @@
 namespace System
 {
-	public readonly struct Decimal// : IFormattable, IComparable, IConvertible, IComparable<decimal>, IEquatable<decimal>, IDeserializationCallback, ISpanFormattable
+	/*public readonly struct Decimal
 	{
 		private readonly int flags;
         private readonly int hi;
         private readonly int lo;
         private readonly int mid;
-	}
+	}*/
 }

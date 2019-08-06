@@ -1,15 +1,9 @@
-using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace System
 {
-	public abstract class Array// : ICollection//, IEnumerable, IList, IStructuralComparable, IStructuralEquatable, ICloneable
+	public abstract class Array
 	{
-		//public IEnumerator GetEnumerator()
-		//{
-		//	return null;
-		//}
-
 		public extern int Length
         {
             [MethodImpl(MethodImplOptions.InternalCall)]
@@ -23,7 +17,5 @@ namespace System
         }
 
 		internal int Count => Length;
-
-		//int ICollection.Count { get { return Length; } }
 	}
 }

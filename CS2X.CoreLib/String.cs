@@ -7,7 +7,6 @@ namespace System
 		private int _stringLength;
 		internal char _firstChar;
 
-		[Intrinsic]
         public static readonly string Empty;
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
