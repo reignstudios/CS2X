@@ -2822,7 +2822,16 @@ namespace CS2X.Core.Transpilers
 			{
 				writer.Write(GetMethodFullName(method));
 				writer.Write('(');
-				WriteExpression(expression.Expression);
+				if (expression.Expression is MemberAccessExpressionSyntax memberExpression)
+				{
+					var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+					if (symbol.Kind == SymbolKind.Method) WriteExpression(memberExpression.Expression);
+					else throw new NotSupportedException("Unsupported delgate invoke expression: " + expression.ToFullString());
+				}
+				else
+				{
+					WriteExpression(expression.Expression);
+				}
 				if (expression.ArgumentList.Arguments.Count != 0)
 				{
 					writer.Write(", ");

@@ -208,6 +208,7 @@ namespace PortableTestApp
 				throw new Exception();
 				myDelegate = new MyDelegate(p.MyDelegateCallback);
 				myDelegate += p.MyDelegateCallback;
+				myDelegate.Invoke("");
 			}
 			//myDelegate = new MyDelegate(MyDelegateCallbackStatic);
 			myDelegate += MyDelegateCallbackStatic;
