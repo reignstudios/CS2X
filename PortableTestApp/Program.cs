@@ -150,6 +150,7 @@ namespace PortableTestApp
 			//lastError = MyInternalExtern(44);
 		}
 
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		delegate void MyDelegate(string i);
 		static MyDelegate myDelegate;
 

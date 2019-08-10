@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Runtime.InteropServices;
 
 namespace CS2X.Core.Transpilers
 {
@@ -1159,7 +1160,7 @@ namespace CS2X.Core.Transpilers
 						if (attribute.NamedArguments.Any(x => x.Key == "CallingConvention"))
 						{
 							var callingConvention = attribute.NamedArguments.First(x => x.Key == "CallingConvention");
-							var callingConventionValue = (System.Runtime.InteropServices.CallingConvention)callingConvention.Value.Value;
+							var callingConventionValue = (CallingConvention)callingConvention.Value.Value;
 							callingConventionName = $"__{callingConventionValue.ToString().ToLower()} ";
 						}
 						else
@@ -1548,13 +1549,21 @@ namespace CS2X.Core.Transpilers
 					string funcFieldName = GetFieldFullName(funcField);
 					string nextFieldName = GetFieldFullName(nextField);
 
-					writer.WritePrefix($"if (self->{selfFieldName} != 0) ((void (*)({GetTypeFullName(objectType)}*, ");
+					string callingConventionName = string.Empty;
+					var attribute = FindAttributeByName(method.ContainingType, "System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute");
+					if (attribute != null)
+					{
+						var callingConventionValue = (CallingConvention)attribute.ConstructorArguments[0].Value;
+						callingConventionName = $"__{callingConventionValue.ToString().ToLower()} ";
+					}
+
+					writer.WritePrefix($"if (self->{selfFieldName} != 0) ((void ({callingConventionName}*)({GetTypeFullName(objectType)}*, ");
 					WriteParameterArgTypes();
 					writer.Write($"))self->{funcFieldName})(self->{selfFieldName}, ");
 					WriteParameterArgs();
 					writer.WriteLine(");");
 
-					writer.WritePrefix($"else ((void (*)(");
+					writer.WritePrefix($"else ((void ({callingConventionName}*)(");
 					WriteParameterArgTypes();
 					writer.Write($"))self->{funcFieldName})(");
 					WriteParameterArgs();

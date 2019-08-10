@@ -67,6 +67,7 @@ typedef struct t_System_Runtime_InteropServices_Marshal t_System_Runtime_Interop
 typedef struct t_System_Runtime_InteropServices_OutAttribute t_System_Runtime_InteropServices_OutAttribute;
 typedef int32_t t_System_Runtime_InteropServices_LayoutKind;
 typedef struct t_System_Runtime_InteropServices_StructLayoutAttribute t_System_Runtime_InteropServices_StructLayoutAttribute;
+typedef struct t_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute t_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute;
 typedef struct t_System_Runtime_Versioning_TargetFrameworkAttribute t_System_Runtime_Versioning_TargetFrameworkAttribute;
 typedef struct t_System_Text_Encoding t_System_Text_Encoding;
 typedef struct t_System_Text_StandardEncoding t_System_Text_StandardEncoding;
@@ -401,6 +402,12 @@ struct t_System_Runtime_InteropServices_StructLayoutAttribute
 	t_System_Runtime_InteropServices_LayoutKind f__Value_k__BackingField_2;
 	int32_t f_Pack_2;
 	int32_t f_Size_2;
+};
+
+struct t_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	t_System_Runtime_InteropServices_CallingConvention f__CallingConvention_k__BackingField_2;
 };
 
 struct t_System_Runtime_Versioning_TargetFrameworkAttribute
@@ -936,6 +943,14 @@ rt_System_Runtime_InteropServices_StructLayoutAttribute rt_System_Runtime_Intero
 int8_t rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,83,0,116,0,114,0,117,0,99,0,116,0,76,0,97,0,121,0,111,0,117,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* StructLayoutAttribute */
 int8_t rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_FullName[118] = {0,0,0,0,0,0,0,0,52,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,83,0,116,0,114,0,117,0,99,0,116,0,76,0,97,0,121,0,111,0,117,0,116,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.InteropServices.StructLayoutAttribute */
 
+typedef struct rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute;
+rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_OBJ;
+int8_t rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_METADATA_Name[80] = {0,0,0,0,0,0,0,0,33,0,0,0,85,0,110,0,109,0,97,0,110,0,97,0,103,0,101,0,100,0,70,0,117,0,110,0,99,0,116,0,105,0,111,0,110,0,80,0,111,0,105,0,110,0,116,0,101,0,114,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* UnmanagedFunctionPointerAttribute */
+int8_t rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_METADATA_FullName[142] = {0,0,0,0,0,0,0,0,64,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,85,0,110,0,109,0,97,0,110,0,97,0,103,0,101,0,100,0,70,0,117,0,110,0,99,0,116,0,105,0,111,0,110,0,80,0,111,0,105,0,110,0,116,0,101,0,114,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute */
+
 typedef struct rt_System_Runtime_Versioning_TargetFrameworkAttribute
 {
 	t_System_RuntimeType runtimeType;
@@ -1198,6 +1213,7 @@ t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_
 t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0();
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_1(t_System_Runtime_InteropServices_StructLayoutAttribute* self, int16_t p_layoutKind);
+t_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute* m_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute__ctor_0(t_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute* self, t_System_Runtime_InteropServices_CallingConvention p_callingConvention);
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName);
 void m_System_Text_Encoding__cctor_0();
 int32_t m_System_Text_Encoding_GetByteCount_0(t_System_Text_Encoding* self, char16_t* p_chars);
@@ -2121,6 +2137,13 @@ t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_Interop
 	return self;
 }
 
+t_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute* m_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute__ctor_0(t_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute* self, t_System_Runtime_InteropServices_CallingConvention p_callingConvention)
+{
+	m_System_Attribute__ctor_0(self);
+	self->f__CallingConvention_k__BackingField_2 = p_callingConvention;
+	return self;
+}
+
 t_System_Runtime_Versioning_TargetFrameworkAttribute* m_System_Runtime_Versioning_TargetFrameworkAttribute__ctor_0(t_System_Runtime_Versioning_TargetFrameworkAttribute* self, t_System_String* p_frameworkName)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2751,6 +2774,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Runtime_InteropServices_StructLayoutAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
 	rt_System_Runtime_InteropServices_StructLayoutAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_Name;
 	rt_System_Runtime_InteropServices_StructLayoutAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_FullName;
+	memset(&rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_OBJ, 0, sizeof(rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute));
+	rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_OBJ;
+	rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
+	rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_METADATA_Name;
+	rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_METADATA_FullName;
 	memset(&rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ, 0, sizeof(rt_System_Runtime_Versioning_TargetFrameworkAttribute));
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ;
 	rt_System_Runtime_Versioning_TargetFrameworkAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Attribute_OBJ;
@@ -2944,6 +2972,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t_System_String*)rt_System_Runtime_InteropServices_LayoutKind_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_InteropServices_StructLayoutAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Runtime_InteropServices_UnmanagedFunctionPointerAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Runtime_Versioning_TargetFrameworkAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Text_Encoding_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;

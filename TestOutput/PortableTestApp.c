@@ -671,8 +671,8 @@ t_PortableTestApp_Program_MyDelegate* m_PortableTestApp_Program_MyDelegate__ctor
 
 void m_PortableTestApp_Program_MyDelegate_Invoke_0(t_PortableTestApp_Program_MyDelegate* self, t_System_String* p_i)
 {
-	if (self->f__target_1 != 0) ((void (*)(t_System_Object*, t_System_String*))self->f__methodPtr_1)(self->f__target_1, p_i);
-	else ((void (*)(t_System_String*))self->f__methodPtr_1)(p_i);
+	if (self->f__target_1 != 0) ((void (__cdecl *)(t_System_Object*, t_System_String*))self->f__methodPtr_1)(self->f__target_1, p_i);
+	else ((void (__cdecl *)(t_System_String*))self->f__methodPtr_1)(p_i);
 	if (self->f__next_2 != 0) m_PortableTestApp_Program_MyDelegate_Invoke_0(self->f__next_2, p_i);
 }
 
