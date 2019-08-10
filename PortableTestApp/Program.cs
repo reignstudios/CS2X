@@ -181,7 +181,7 @@ namespace PortableTestApp
 			return null;
 		}
 
-		public static explicit operator int(Program value)
+		public static implicit operator int(Program value)
 		{
 			return 0;
 		}
@@ -189,7 +189,7 @@ namespace PortableTestApp
 		unsafe static void Main(string[] args)
 		{
 			Program ppp = (Program)0;
-			int bi = (int)ppp;
+			int bi = ppp;
 
 			const string convertString = "Some Data";
 			var data = Encoding.UTF8.GetBytes(convertString);

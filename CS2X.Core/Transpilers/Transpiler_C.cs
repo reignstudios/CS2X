@@ -2329,6 +2329,21 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteIdentifierName(IdentifierNameSyntax expression)
 		{
+			// check if identifier needs implicit conversion
+			bool requiredConversion = false;
+			var conversion = semanticModel.GetConversion(expression);
+			if (conversion != null && conversion.IsImplicit && conversion.IsUserDefined)
+			{
+				var method = conversion.MethodSymbol;
+				if (method != null && !method.IsExtern)
+				{
+					requiredConversion = true;
+					writer.Write(GetMethodFullName(method));
+					writer.Write('(');
+				}
+			}
+
+			// process normal identifier symbol
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 			if (symbol.Kind == SymbolKind.Local)
 			{
@@ -2410,7 +2425,7 @@ namespace CS2X.Core.Transpilers
 					}
 					else
 					{
-						 throw new NotSupportedException("MethodReference operation has null parent");
+						throw new NotSupportedException("MethodReference operation has null parent");
 					}
 
 					var type = operation.Parent.Type;
@@ -2431,6 +2446,9 @@ namespace CS2X.Core.Transpilers
 			{
 				throw new NotSupportedException("IdentifierNameSyntax Symbol not supported: " + symbol.GetType());
 			}
+
+			// close conversion method
+			if (requiredConversion) writer.Write(')');
 		}
 
 		private void WriteArgumentList(IMethodSymbol method, ArgumentListSyntax argumentList)

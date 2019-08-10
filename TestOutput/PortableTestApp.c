@@ -260,7 +260,7 @@ void m_PortableTestApp_Program_MyDelegateCallback_0(t_PortableTestApp_Program* s
 char16_t m_PortableTestApp_Program_get_Item_0(t_PortableTestApp_Program* self, int32_t p_index);
 void m_PortableTestApp_Program_set_Item_0(t_PortableTestApp_Program* self, int32_t p_index, char16_t p_value);
 t_PortableTestApp_Program* m_PortableTestApp_Program_op_Explicit_0(int32_t p_value);
-int32_t m_PortableTestApp_Program_op_Explicit_1(t_PortableTestApp_Program* p_value);
+int32_t m_PortableTestApp_Program_op_Implicit_0(t_PortableTestApp_Program* p_value);
 void m_PortableTestApp_Program_Main_0(t_System_String** p_args);
 void m_PortableTestApp_Program_TestLoop_0(int32_t* p_es);
 void m_PortableTestApp_Program_FooThrow_0(t_PortableTestApp_MyBaseClass* p_a);
@@ -442,7 +442,7 @@ t_PortableTestApp_Program* m_PortableTestApp_Program_op_Explicit_0(int32_t p_val
 	return 0;
 }
 
-int32_t m_PortableTestApp_Program_op_Explicit_1(t_PortableTestApp_Program* p_value)
+int32_t m_PortableTestApp_Program_op_Implicit_0(t_PortableTestApp_Program* p_value)
 {
 	return 0;
 }
@@ -479,7 +479,7 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	jmp_buf CS2X_JMP_1;
 	int CS2X_IS_JMP_1;
 	l_ppp_0 = m_PortableTestApp_Program_op_Explicit_0(0);
-	l_bi_1 = m_PortableTestApp_Program_op_Explicit_1(l_ppp_0);
+	l_bi_1 = m_PortableTestApp_Program_op_Implicit_0(l_ppp_0);
 	l_convertString_2 = StringLiteral_7;
 	l_data_3 = m_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, l_convertString_2);
 	l_result_4 = m_System_Text_Encoding_GetString_0(f_System_Text_Encoding__UTF8_k__BackingField, l_data_3);
