@@ -760,9 +760,7 @@ t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC* m_t_Porta
 
 t_PortableTestApp_Program_MyDelegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_1(intptr_t p_ptr)
 {
-	t_PortableTestApp_Program_MyDelegate* result;
-	result = m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), 0, p_ptr);
-	return result;
+	return m_PortableTestApp_Program_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Program_MyDelegate), &rt_PortableTestApp_Program_MyDelegate_OBJ), 0, p_ptr);
 }
 
 intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_1(t_PortableTestApp_Program_MyDelegate* p_d, intptr_t* p_dPtr)

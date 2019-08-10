@@ -1463,9 +1463,7 @@ namespace CS2X.Core.Transpilers
 								{
 									var delegateType = method.TypeArguments[0];
 									var constructor = FindDelgateConstructor(delegateType);
-									writer.WriteLinePrefix($"{GetTypeFullNameRef(delegateType)} result;");
-									writer.WriteLinePrefix($"result = {GetMethodFullName(constructor)}({GetNewObjectMethod(delegateType)}(sizeof({GetTypeFullName(delegateType)}), &{GetRuntimeTypeObjFullName(delegateType)}), 0, {GetParameterFullName(method.Parameters[0])});");
-									writer.WriteLinePrefix("return result;");
+									writer.WriteLinePrefix($"return {GetMethodFullName(constructor)}({GetNewObjectMethod(delegateType)}(sizeof({GetTypeFullName(delegateType)}), &{GetRuntimeTypeObjFullName(delegateType)}), 0, {GetParameterFullName(method.Parameters[0])});");
 								}
 								else
 								{
