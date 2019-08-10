@@ -549,7 +549,7 @@ namespace CS2X.Core.Transpilers
 
 			foreach (var method in transpiledProject.genericMethods.ToArray())
 			{
-				WriteMethod(method, true);
+				if (WriteMethod(method, true)) writer.WriteLine();
 			}
 
 			// init library
@@ -1349,7 +1349,8 @@ namespace CS2X.Core.Transpilers
 					else if (IsInternalCall(method))
 					{
 						var type = method.ContainingType;
-						if (type.ContainingNamespace.Name == "System")
+						string fullNamespace = type.FullNamespace();
+						if (fullNamespace == "System")
 						{
 							if (type.Name == "Object")
 							{
@@ -1440,9 +1441,41 @@ namespace CS2X.Core.Transpilers
 								throw new NotSupportedException("Unsupported internal method in type: " + type.Name);
 							}
 						}
+						else if (fullNamespace == "System.Runtime.InteropServices")
+						{
+							if (type.Name == "Marshal")
+							{
+								if (method.Name == "GetFunctionPointerForDelegate")
+								{
+									var delegateType = method.TypeArguments[0];
+									var invokeMethod = FindMethodByName(delegateType, "Invoke");
+									string returnType = GetTypeFullNameRef(method.ReturnType);
+									writer.WriteLinePrefix($"{returnType} result;");
+									writer.WriteLinePrefix($"result = &{GetMethodFullName(invokeMethod)};");
+									writer.WriteLinePrefix($"*{GetParameterFullName(method.Parameters[1])} = ({returnType}){GetParameterFullName(method.Parameters[0])};");
+									writer.WriteLinePrefix("return result;");
+								}
+								else if (method.Name == "GetDelegateForFunctionPointer")
+								{
+									var delegateType = method.TypeArguments[0];
+									var constructor = FindDelgateConstructor(delegateType);
+									writer.WriteLinePrefix($"{GetTypeFullNameRef(delegateType)} result;");
+									writer.WriteLinePrefix($"result = {GetMethodFullName(constructor)}({GetNewObjectMethod(delegateType)}(sizeof({GetTypeFullName(delegateType)}), &{GetRuntimeTypeObjFullName(delegateType)}), 0, {GetParameterFullName(method.Parameters[0])});");
+									writer.WriteLinePrefix("return result;");
+								}
+								else
+								{
+									throw new NotSupportedException("Unsupported internal Mashal method: " + method.Name);
+								}
+							}
+							else
+							{
+								throw new NotSupportedException("Unsupported internal method in type: " + type.Name);
+							}
+						}
 						else
 						{
-							throw new NotSupportedException("Unsupported internal method in namespace: " + type.Name);
+							throw new NotSupportedException("Unsupported internal method in namespace: " + fullNamespace);
 						}
 					}
 					else if (isDllImportMethod)
@@ -2156,6 +2189,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is ObjectCreationExpressionSyntax) ObjectCreationExpression((ObjectCreationExpressionSyntax)expression);
 			else if (expression is ArrayCreationExpressionSyntax) ArrayCreationExpression((ArrayCreationExpressionSyntax)expression);
 			else if (expression is StackAllocArrayCreationExpressionSyntax) StackAllocArrayCreationExpression((StackAllocArrayCreationExpressionSyntax)expression);
+			else if (expression is DeclarationExpressionSyntax) DeclarationExpression((DeclarationExpressionSyntax)expression);
 			else if (expression is AssignmentExpressionSyntax) AssignmentExpression((AssignmentExpressionSyntax)expression);
 			else if (expression is PrefixUnaryExpressionSyntax) PrefixUnaryExpression((PrefixUnaryExpressionSyntax)expression);
 			else if (expression is PostfixUnaryExpressionSyntax) PostfixUnaryExpression((PostfixUnaryExpressionSyntax)expression);
@@ -2710,6 +2744,15 @@ namespace CS2X.Core.Transpilers
 					++i;
 				}
 			}
+		}
+
+		private void DeclarationExpression(DeclarationExpressionSyntax expression)
+		{
+			var type = semanticModel.GetTypeInfo(expression.Type).Type;
+			var designation = expression.Designation as SingleVariableDesignationSyntax;
+			if (designation == null) throw new NotSupportedException("DeclarationExpressionSyntax.Designation must be SingleVariableDesignationSyntax");
+			var local = TryAddLocal(designation.Identifier.ValueText, type);
+			writer.Write(local.name);
 		}
 
 		private void AssignmentExpression(AssignmentExpressionSyntax expression)

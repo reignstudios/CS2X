@@ -2,7 +2,7 @@ namespace System
 {
 	public abstract class Delegate
 	{
-		private IntPtr _methodPtr;
+		internal IntPtr _methodPtr;
 
 		private object _target;
 		public object Target => _target;

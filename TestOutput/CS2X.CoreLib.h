@@ -15,6 +15,7 @@
 /* =============================== */
 /* Forward declare Types */
 /* =============================== */
+typedef struct t_System_Activator t_System_Activator;
 typedef struct t_System_Array t_System_Array;
 typedef struct t_System_Attribute t_System_Attribute;
 typedef int32_t t_System_AttributeTargets;
@@ -77,6 +78,11 @@ typedef int32_t t_System_Reflection_MethodImplAttributes;
 /* =============================== */
 /* Type definitions */
 /* =============================== */
+struct t_System_Activator
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+};
+
 struct t_System_Array
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -461,6 +467,14 @@ struct t_System_RuntimeTypeHandle
 /* =============================== */
 /* Runtime Types */
 /* =============================== */
+typedef struct rt_System_Activator
+{
+	t_System_RuntimeType runtimeType;
+} rt_System_Activator;
+rt_System_Activator rt_System_Activator_OBJ;
+int8_t rt_System_Activator_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,65,0,99,0,116,0,105,0,118,0,97,0,116,0,111,0,114,0,0,0}; /* Activator */
+int8_t rt_System_Activator_METADATA_FullName[46] = {0,0,0,0,0,0,0,0,16,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,65,0,99,0,116,0,105,0,118,0,97,0,116,0,111,0,114,0,0,0}; /* System.Activator */
+
 typedef struct rt_System_Array
 {
 	t_System_RuntimeType runtimeType;
@@ -1179,8 +1193,6 @@ t_System_Runtime_InteropServices_DllImportAttribute* m_System_Runtime_InteropSer
 intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t_System_String* p_s);
 intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t_System_String* p_s);
 void m_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal);
-intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_0(t_System_Delegate* p_d);
-t_System_Delegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_0(intptr_t p_ptr, t_System_Type* p_t);
 t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self);
 t_System_Runtime_InteropServices_LayoutKind m_System_Runtime_InteropServices_LayoutKind__ctor_0();
 t_System_Runtime_InteropServices_StructLayoutAttribute* m_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t_System_Runtime_InteropServices_StructLayoutAttribute* self, t_System_Runtime_InteropServices_LayoutKind p_layoutKind);
@@ -2077,16 +2089,6 @@ void m_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal)
 	free((void*)p_hglobal);
 }
 
-intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_0(t_System_Delegate* p_d)
-{
-	return m_intptr_t__ctor_1();
-}
-
-t_System_Delegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_0(intptr_t p_ptr, t_System_Type* p_t)
-{
-	return 0;
-}
-
 t_System_Runtime_InteropServices_OutAttribute* m_System_Runtime_InteropServices_OutAttribute__ctor_0(t_System_Runtime_InteropServices_OutAttribute* self)
 {
 	m_System_Attribute__ctor_0(self);
@@ -2453,6 +2455,11 @@ t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttribute
 void CS2X_InitLib_CS2X_CoreLib()
 {
 	/* Init runtime type objects */
+	memset(&rt_System_Activator_OBJ, 0, sizeof(rt_System_Activator));
+	rt_System_Activator_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Activator_OBJ;
+	rt_System_Activator_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_System_Activator_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_System_Activator_METADATA_Name;
+	rt_System_Activator_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Activator_METADATA_FullName;
 	memset(&rt_System_Array_OBJ, 0, sizeof(rt_System_Array));
 	rt_System_Array_OBJ.runtimeType.CS2X_RuntimeType = &rt_System_Array_OBJ;
 	rt_System_Array_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
@@ -2815,6 +2822,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt_System_Reflection_MethodImplAttributes_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_System_Reflection_MethodImplAttributes_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
+	((t_System_String*)rt_System_Activator_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_System_Activator_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Array_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Array_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_System_Attribute_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;

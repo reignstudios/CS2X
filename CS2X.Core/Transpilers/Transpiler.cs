@@ -500,7 +500,20 @@ namespace CS2X.Core.Transpilers
 				if (method.MethodKind != MethodKind.Constructor || method.Parameters.Length != 0) continue;
 				return method;
 			}
-			throw new Exception("Failed to find inferable constructor (should never happen)");
+			throw new Exception("Failed to find default constructor");
+		}
+
+		protected IMethodSymbol FindDelgateConstructor(ITypeSymbol type)
+		{
+			foreach (var member in type.GetMembers())
+			{
+				if (member.Kind != SymbolKind.Method) continue;
+				var method = (IMethodSymbol)member;
+				var ps = method.Parameters;
+				if (method.MethodKind != MethodKind.Constructor || ps.Length != 2 || ps[0].Type.SpecialType != SpecialType.System_Object || ps[1].Type.SpecialType != SpecialType.System_IntPtr) continue;
+				return method;
+			}
+			throw new Exception("Failed to find delegate constructor");
 		}
 
 		protected string GetProjectNameFlat(Project project)

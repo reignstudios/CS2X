@@ -188,6 +188,9 @@ namespace PortableTestApp
 
 		unsafe static void Main(string[] args)
 		{
+			var deli = Marshal.GetDelegateForFunctionPointer<MyDelegate>(new IntPtr());
+			var funcPtr = Marshal.GetFunctionPointerForDelegate<MyDelegate>(deli, out IntPtr dPtr);
+
 			Program ppp = (Program)0;
 			int bi = ppp;
 

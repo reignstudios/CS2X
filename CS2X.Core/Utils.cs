@@ -89,6 +89,7 @@ namespace CS2X.Core
 	{
 		private static SymbolDisplayFormat nameFormat = new SymbolDisplayFormat(typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameOnly, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
 		private static SymbolDisplayFormat fullNameFormat = new SymbolDisplayFormat(memberOptions:SymbolDisplayMemberOptions.IncludeContainingType | SymbolDisplayMemberOptions.IncludeParameters, typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters, parameterOptions:SymbolDisplayParameterOptions.IncludeType);
+		private static SymbolDisplayFormat fullNamespaceFormat = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
 
 		public static string Name(this ISymbol symbol)
 		{
@@ -98,6 +99,11 @@ namespace CS2X.Core
 		public static string FullName(this ISymbol symbol)
 		{
 			return symbol.ToDisplayString(fullNameFormat);
+		}
+
+		public static string FullNamespace(this ISymbol symbol)
+		{
+			return symbol.ContainingNamespace.ToDisplayString(fullNamespaceFormat);
 		}
 	}
 }
