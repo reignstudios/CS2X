@@ -32,8 +32,13 @@ namespace System.Runtime.InteropServices
 			Buffer.free((void*)hglobal);
 		}
 
-		//[MethodImpl(MethodImplOptions.InternalCall)]
-		//public static extern IntPtr GetNativePointerForObject(object o);
+		/// <summary>
+		/// Returns the native ptr for an object as IntPtr
+		/// </summary>
+		/// <param name="o">Object to get pointer from</param>
+		/// <returns>Pointer to object</returns>
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern IntPtr GetNativePointerForObject(object o);
 
 		/// <summary>
 		/// Converts a delegate into a function pointer that is callable from unmanaged code.

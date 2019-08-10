@@ -1445,7 +1445,11 @@ namespace CS2X.Core.Transpilers
 						{
 							if (type.Name == "Marshal")
 							{
-								if (method.Name == "GetFunctionPointerForDelegate")
+								if (method.Name == "GetNativePointerForObject")
+								{
+									writer.WriteLinePrefix($"return ({GetTypeFullNameRef(method.ReturnType)}){GetParameterFullName(method.Parameters[0])};");
+								}
+								else if (method.Name == "GetFunctionPointerForDelegate")
 								{
 									var delegateType = method.TypeArguments[0];
 									var invokeMethod = FindMethodByName(delegateType, "Invoke");
