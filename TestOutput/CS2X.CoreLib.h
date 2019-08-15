@@ -1834,7 +1834,18 @@ char m_System_String_op_Inequality_0(t_System_String* p_value1, t_System_String*
 
 char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value)
 {
+	char16_t* l_myValuePtr_0;
+	char16_t* l_valuePtr_1;
 	if (m_System_String_get_Length_0(self) != m_System_String_get_Length_0(p_value)) return 0;
+	l_myValuePtr_0 = ((char*)self) + m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
+	l_valuePtr_1 = ((char*)p_value) + m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
+	{
+		int32_t l_i_2;
+		for (l_i_2 = 0; l_i_2 != m_System_String_get_Length_0(self); ++l_i_2)
+		{
+			if (l_myValuePtr_0[l_i_2] != l_valuePtr_1[l_i_2]) return 0;
+		}
+	}
 	return 1;
 }
 

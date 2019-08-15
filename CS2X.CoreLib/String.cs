@@ -60,7 +60,7 @@ namespace System
             {
                 if (IsNullOrEmpty(str1))
                 {
-                    return string.Empty;
+                    return Empty;
                 }
                 return str1;
             }
@@ -150,13 +150,17 @@ namespace System
 			return !value1.Equals(value2);
 		}
 
-		public bool Equals(string value)
+		public unsafe bool Equals(string value)
 		{
 			if (this.Length != value.Length) return false;
-			/*for (int i = 0; i != Length; ++i)
+			fixed (char* myValuePtr = this)
+			fixed (char* valuePtr = value)
 			{
-				//if (this[i] != value[i]) return false;// TODO: need indexers
-			}*/
+				for (int i = 0; i != Length; ++i)
+				{
+					if (myValuePtr[i] != valuePtr[i]) return false;
+				}
+			}
 			return true;
 		}
 	}

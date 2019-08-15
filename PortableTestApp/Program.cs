@@ -306,7 +306,7 @@ namespace PortableTestApp
 			}
 			catch (NotSupportedException e)
 			{
-				Console.WriteLine("NotSupportedException: " + e.Message);
+				Console.WriteLine("NotSupportedException: " + "YAHOO: " + e.Message);
 			}
 			catch (Exception e)
 			{

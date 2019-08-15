@@ -2976,6 +2976,17 @@ namespace CS2X.Core.Transpilers
 
 		private void BinaryExpression(BinaryExpressionSyntax expression)
 		{
+			// check if binary expression can be resolved to single string literal
+			// optimization to avoid needless string concatenations / GC allocations
+			var constantValue = semanticModel.GetConstantValue(expression).Value;
+			if (constantValue is string constantStringValue)
+			{
+				string literal = TryAddStringLiteral(constantStringValue);
+				writer.Write(literal);
+				return;
+			}
+
+			// write standard binary operations
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 			if (symbol == null)
 			{
