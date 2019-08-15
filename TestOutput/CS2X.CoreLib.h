@@ -1119,8 +1119,13 @@ void m_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t 
 void m_System_Console_Write_0(t_System_String* p_s);
 void m_System_Console_WriteLine_0(t_System_String* p_s);
 void m_System_Console_WriteLine_1();
-intptr_t m_intptr_t__ctor_0(void* p_value);
-intptr_t m_intptr_t__ctor_1();
+intptr_t m_intptr_t__ctor_0(int32_t p_value);
+intptr_t m_intptr_t__ctor_1(int64_t p_value);
+intptr_t m_intptr_t__ctor_2(void* p_value);
+int32_t m_intptr_t_ToInt32_0(intptr_t* self);
+int64_t m_intptr_t_ToInt64_0(intptr_t* self);
+void* m_intptr_t_ToPointer_0(intptr_t* self);
+intptr_t m_intptr_t__ctor_3();
 t_System_Object* m_System_Delegate_get_Target_0(t_System_Delegate* self);
 char m_System_Delegate_op_Equality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
 char m_System_Delegate_op_Inequality_0(t_System_Delegate* p_a, t_System_Delegate* p_b);
@@ -1251,8 +1256,13 @@ int8_t m_int8_t__ctor_0();
 uint16_t m_uint16_t__ctor_0();
 uint32_t m_uint32_t__ctor_0();
 uint64_t m_uint64_t__ctor_0();
-uintptr_t m_uintptr_t__ctor_0(void* p_value);
-uintptr_t m_uintptr_t__ctor_1();
+uintptr_t m_uintptr_t__ctor_0(uint32_t p_value);
+uintptr_t m_uintptr_t__ctor_1(uint64_t p_value);
+uintptr_t m_uintptr_t__ctor_2(void* p_value);
+uint32_t m_uintptr_t_ToUInt32_0(uintptr_t* self);
+uint64_t m_uintptr_t_ToUInt64_0(uintptr_t* self);
+void* m_uintptr_t_ToPointer_0(uintptr_t* self);
+uintptr_t m_uintptr_t__ctor_3();
 t_System_Reflection_MethodImplAttributes m_System_Reflection_MethodImplAttributes__ctor_0();
 
 /* =============================== */
@@ -1413,15 +1423,37 @@ void m_System_Console_WriteLine_1()
 	m_System_Console_Write_0(m_System_Environment_get_NewLine_0());
 }
 
-intptr_t m_intptr_t__ctor_0(void* p_value)
+intptr_t m_intptr_t__ctor_0(int32_t p_value)
 {
-	intptr_t selfObj;
-	intptr_t* self = &selfObj;
-	return (intptr_t)p_value;
-	return selfObj;
+	return (int32_t)p_value;
 }
 
-intptr_t m_intptr_t__ctor_1()
+intptr_t m_intptr_t__ctor_1(int64_t p_value)
+{
+	return (int64_t)p_value;
+}
+
+intptr_t m_intptr_t__ctor_2(void* p_value)
+{
+	return (intptr_t)p_value;
+}
+
+int32_t m_intptr_t_ToInt32_0(intptr_t* self)
+{
+	return (int32_t)(*self);
+}
+
+int64_t m_intptr_t_ToInt64_0(intptr_t* self)
+{
+	return (int64_t)(*self);
+}
+
+void* m_intptr_t_ToPointer_0(intptr_t* self)
+{
+	return (void*)(*self);
+}
+
+intptr_t m_intptr_t__ctor_3()
 {
 	intptr_t selfObj = {0};
 	return selfObj;
@@ -1701,7 +1733,6 @@ t_System_String* m_System_String__ctor_0(t_System_String* self, char16_t* p_valu
 	CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
 	self->f__stringLength_1 = length;
 	memcpy(&self->f__firstChar_1, p_value, sizeof(char16_t) * length);
-	return self;
 }
 
 t_System_String* m_System_String__ctor_1(t_System_String* self, char16_t* p_value)
@@ -1713,7 +1744,6 @@ t_System_String* m_System_String__ctor_1(t_System_String* self, char16_t* p_valu
 	CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
 	self->f__stringLength_1 = length;
 	memcpy(&self->f__firstChar_1, charBuffer, sizeof(char16_t) * length);
-	return self;
 }
 
 char16_t m_System_String_get_Item_0(t_System_String* self, int32_t p_index)
@@ -2107,7 +2137,7 @@ intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t_System
 		l_byteCount_1 = m_System_Text_Encoding_GetByteCount_3(f_System_Text_Encoding__ASCII_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s));
 		l_buffer_2 = (uint8_t*)malloc((void*)l_byteCount_1);
 		m_System_Text_Encoding_GetBytes_4(f_System_Text_Encoding__ASCII_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s), l_buffer_2, l_byteCount_1);
-		return m_intptr_t__ctor_0(l_buffer_2);
+		return m_intptr_t__ctor_2(l_buffer_2);
 	}
 }
 
@@ -2121,7 +2151,7 @@ intptr_t m_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t_System_
 		l_byteCount_1 = m_System_Text_Encoding_GetByteCount_3(f_System_Text_Encoding__Unicode_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s));
 		l_buffer_2 = (uint8_t*)malloc((void*)l_byteCount_1);
 		m_System_Text_Encoding_GetBytes_4(f_System_Text_Encoding__Unicode_k__BackingField, l_chars_0, m_System_String_get_Length_0(p_s), l_buffer_2, l_byteCount_1);
-		return m_intptr_t__ctor_0(l_buffer_2);
+		return m_intptr_t__ctor_2(l_buffer_2);
 	}
 }
 
@@ -2421,8 +2451,8 @@ time_t m_time_t__ctor_0()
 int64_t m_System_DateTime_TODO_0(t_System_DateTime* self)
 {
 	time_t l_i_0;
-	self->f__internalDate_2 = 123;
-	l_i_0 = self->f__internalDate_2;
+	(*self).f__internalDate_2 = 123;
+	l_i_0 = (*self).f__internalDate_2;
 	return (int64_t)l_i_0;
 }
 
@@ -2448,7 +2478,7 @@ t_System_RuntimeTypeHandle m_System_RuntimeTypeHandle__ctor_0(t_System_RuntimeTy
 {
 	t_System_RuntimeTypeHandle selfObj;
 	t_System_RuntimeTypeHandle* self = &selfObj;
-	self->f_m_type_2 = p_type;
+	(*self).f_m_type_2 = p_type;
 	return selfObj;
 }
 
@@ -2482,15 +2512,37 @@ uint64_t m_uint64_t__ctor_0()
 	return selfObj;
 }
 
-uintptr_t m_uintptr_t__ctor_0(void* p_value)
+uintptr_t m_uintptr_t__ctor_0(uint32_t p_value)
 {
-	uintptr_t selfObj;
-	uintptr_t* self = &selfObj;
-	return (uintptr_t)p_value;
-	return selfObj;
+	return (uint32_t)p_value;
 }
 
-uintptr_t m_uintptr_t__ctor_1()
+uintptr_t m_uintptr_t__ctor_1(uint64_t p_value)
+{
+	return (uint64_t)p_value;
+}
+
+uintptr_t m_uintptr_t__ctor_2(void* p_value)
+{
+	return (uintptr_t)p_value;
+}
+
+uint32_t m_uintptr_t_ToUInt32_0(uintptr_t* self)
+{
+	return (uint32_t)(*self);
+}
+
+uint64_t m_uintptr_t_ToUInt64_0(uintptr_t* self)
+{
+	return (uint64_t)(*self);
+}
+
+void* m_uintptr_t_ToPointer_0(uintptr_t* self)
+{
+	return (void*)(*self);
+}
+
+uintptr_t m_uintptr_t__ctor_3()
 {
 	uintptr_t selfObj = {0};
 	return selfObj;

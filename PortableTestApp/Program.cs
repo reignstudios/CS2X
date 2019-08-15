@@ -274,7 +274,7 @@ namespace PortableTestApp
 
 			var a2 = stackalloc byte[3] { 1, 2, 3 };
 
-   //         for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
+			//         for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
 			//{
 			//	if (i == i2) Console.Write("*");
 			//}
@@ -284,7 +284,10 @@ namespace PortableTestApp
 			//	Console.Write("$");
 			//}
 
-            var es = new MyEnumerable<int>();
+			var iii = new IntPtr();
+			iii += 1;
+
+			var es = new MyEnumerable<int>();
             foreach (var e in es)
             {
 				if (e == 0) Console.Write("T");
@@ -333,6 +336,14 @@ namespace PortableTestApp
 		static string GetValue(object o)
 		{
 			return o.GetType().FullName;
+		}
+	}
+
+	struct Foo
+	{
+		public Foo Boo()
+		{
+			return this.Boo().Boo();
 		}
 	}
 

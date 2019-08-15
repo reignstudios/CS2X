@@ -1224,7 +1224,7 @@ namespace CS2X.Core.Transpilers
 						{
 							writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj = {{0}};");
 						}
-						else
+						else if (!IsInternalCall(method))
 						{
 							writer.WriteLinePrefix($"{GetTypeFullNameRef(type)} selfObj;");
 							writer.WriteLinePrefix($"{GetTypeFullName(type)}* self = &selfObj;");
@@ -1440,7 +1440,27 @@ namespace CS2X.Core.Transpilers
 							{
 								var i = new IntPtr();
 								var i2 = (int)i;
-								if (method.MethodKind == MethodKind.Constructor)
+								if (method.MethodKind == MethodKind.Constructor && method.Parameters[0].Type.SpecialType == SpecialType.System_Int32)
+								{
+									var valueParam = method.Parameters[0];
+									writer.WriteLinePrefix($"return (int32_t){GetParameterFullName(valueParam)};");
+								}
+								else if (method.MethodKind == MethodKind.Constructor && method.Parameters[0].Type.SpecialType == SpecialType.System_UInt32)
+								{
+									var valueParam = method.Parameters[0];
+									writer.WriteLinePrefix($"return (uint32_t){GetParameterFullName(valueParam)};");
+								}
+								else if (method.MethodKind == MethodKind.Constructor && method.Parameters[0].Type.SpecialType == SpecialType.System_Int64)
+								{
+									var valueParam = method.Parameters[0];
+									writer.WriteLinePrefix($"return (int64_t){GetParameterFullName(valueParam)};");
+								}
+								else if (method.MethodKind == MethodKind.Constructor && method.Parameters[0].Type.SpecialType == SpecialType.System_UInt64)
+								{
+									var valueParam = method.Parameters[0];
+									writer.WriteLinePrefix($"return (uint64_t){GetParameterFullName(valueParam)};");
+								}
+								else if (method.MethodKind == MethodKind.Constructor && method.Parameters[0].Type.Kind == SymbolKind.PointerType)
 								{
 									var valueParam = method.Parameters[0];
 									writer.WriteLinePrefix($"return ({type.Name.ToLower()}_t){GetParameterFullName(valueParam)};");
@@ -1591,7 +1611,7 @@ namespace CS2X.Core.Transpilers
 					throw new NotSupportedException("Unsupported implicit method kind: " + method.MethodKind);
 				}
 
-				if (method.MethodKind == MethodKind.Constructor)
+				if (method.MethodKind == MethodKind.Constructor && !IsInternalCall(method))
 				{
 					if (method.ContainingType.IsReferenceType) writer.WriteLinePrefix("return self;");
 					else writer.WriteLinePrefix("return selfObj;");
@@ -2427,7 +2447,7 @@ namespace CS2X.Core.Transpilers
 				{
 					var caller = WriteCaller(expression);
 					var type = GetCallerType(caller, expression);
-					if (type.IsReferenceType || caller is ThisExpressionSyntax) writer.Write("->");
+					if (type.IsReferenceType) writer.Write("->");
 					else writer.Write('.');
 					writer.Write(GetFieldFullName(field));
 				}
@@ -2445,7 +2465,7 @@ namespace CS2X.Core.Transpilers
 					{
 						var caller = WriteCaller(expression);
 						var type = GetCallerType(caller, expression);
-						if (type.IsReferenceType || caller is ThisExpressionSyntax) writer.Write("->");
+						if (type.IsReferenceType) writer.Write("->");
 						else writer.Write('.');
 						writer.Write(GetFieldFullName(field));
 					}
@@ -2829,7 +2849,7 @@ namespace CS2X.Core.Transpilers
 
 			// check if we should invoke custom operator method
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
-			if (symbol != null && symbol.Kind == SymbolKind.Method && expression.OperatorToken.ValueText.Length == 2)
+			if (symbol != null && symbol.Kind == SymbolKind.Method && !symbol.IsExtern && expression.OperatorToken.ValueText.Length == 2)
 			{
 				var method = ResolveMethod((IMethodSymbol)symbol, this.method, semanticModel);
 				if (!method.IsImplicitlyDeclared)
@@ -3175,7 +3195,8 @@ namespace CS2X.Core.Transpilers
 
 		private void ThisExpression(ThisExpressionSyntax expression)
 		{
-			writer.Write("self");
+			if (method.ContainingType.IsReferenceType) writer.Write("self");
+			else writer.Write("(*self)");
 		}
 
 		private delegate void WriteArrayElementAccessOffsetCallback();
