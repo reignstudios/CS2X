@@ -1412,6 +1412,19 @@ namespace CS2X.Core.Transpilers
 									writer.WriteLinePrefix($"self->{GetFieldFullName(stringLengthField)} = length;");
 									writer.WriteLinePrefix($"memcpy(&self->{GetFieldFullName(firstCharField)}, {parameterName}, sizeof(char16_t) * length);");
 								}
+								else if (method.MethodKind == MethodKind.Constructor && method.Parameters.Length == 1 && method.Parameters[0].Type.TypeKind == TypeKind.Array)
+								{
+									var stringLengthField = FindFieldByName(method.ContainingType, "_stringLength");
+									var firstCharField = FindFieldByName(method.ContainingType, "_firstChar");
+									string parameterName = GetParameterFullName(method.Parameters[0]);
+									writer.WriteLinePrefix("int length = 0;");
+									writer.WriteLinePrefix("char16_t* charBuffer;");
+									writer.WriteLinePrefix($"length = {parameterName} + sizeof(intptr_t);");
+									writer.WriteLinePrefix($"charBuffer = {parameterName} + sizeof(intptr_t) + sizeof(size_t);");
+									writer.WriteLinePrefix("CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));");
+									writer.WriteLinePrefix($"self->{GetFieldFullName(stringLengthField)} = length;");
+									writer.WriteLinePrefix($"memcpy(&self->{GetFieldFullName(firstCharField)}, charBuffer, sizeof(char16_t) * length);");
+								}
 								else
 								{
 									throw new NotSupportedException("Unsupported internal String method: " + method.Name);

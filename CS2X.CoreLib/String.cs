@@ -12,8 +12,8 @@ namespace System
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public unsafe extern String(char* value);
 
-		//[MethodImpl(MethodImplOptions.InternalCall)]
-		//public extern String(char[] value);
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public extern String(char[] value);
 
 		public unsafe char this[int index]
         {
