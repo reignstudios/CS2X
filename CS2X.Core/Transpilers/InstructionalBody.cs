@@ -1,9 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CS2X.Core.Transpilers

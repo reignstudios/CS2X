@@ -24,7 +24,11 @@ namespace System.IO
 		public StreamWriterEx(Stream stream, StreamWriterEx prev)
 		: base(stream)
 		{
-			prev.next = this;
+			if (prev != null)
+			{
+				if (prev.next != null) throw new Exception("Prev already in chain");
+				prev.next = this;
+			}
 			this.prev = prev;
 		}
 
@@ -41,11 +45,13 @@ namespace System.IO
 				prev.next = null;
 				prev = null;
 			}
+
 			if (next != null)
 			{
 				next.prev = null;
 				next = null;
 			}
+
 			base.Dispose();
 		}
 

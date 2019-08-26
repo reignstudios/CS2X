@@ -1404,7 +1404,10 @@ void m_System_Console_Write_0(t_System_String* p_s)
 		l_ptrOffset_3 = l_ptr_2;
 		while (*l_ptrOffset_3 != 0x0000)
 		{
-			if (l_count_1 == m_System_String_get_Length_0(p_s)) break;
+			if (l_count_1 == m_System_String_get_Length_0(p_s))
+			{
+				break;
+			}
 			l_printBuff_0[0] = *l_ptrOffset_3;
 			wprintf(l_printBuff_0);
 			++l_ptrOffset_3;
@@ -1479,11 +1482,17 @@ t_System_Delegate* m_System_Delegate_Combine_0(t_System_Delegate* p_a, t_System_
 	t_System_MulticastDelegate* l_ma_0;
 	t_System_MulticastDelegate* l_mb_1;
 	t_System_MulticastDelegate* l_last_2;
-	if (p_a == 0) return p_b;
+	if (p_a == 0)
+	{
+		return p_b;
+	}
 	l_ma_0 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_a, &rt_System_MulticastDelegate_OBJ);
 	l_mb_1 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_b, &rt_System_MulticastDelegate_OBJ);
 	l_last_2 = l_ma_0;
-	while (l_last_2->f__next_2 != 0) l_last_2 = l_last_2->f__next_2;
+	while (l_last_2->f__next_2 != 0)
+	{
+		l_last_2 = l_last_2->f__next_2;
+	}
 	l_last_2->f__next_2 = l_mb_1;
 	return p_a;
 }
@@ -1494,8 +1503,14 @@ t_System_Delegate* m_System_Delegate_Remove_0(t_System_Delegate* p_source, t_Sys
 	t_System_MulticastDelegate* l_prev_1;
 	t_System_MulticastDelegate* l_last_2;
 	t_System_MulticastDelegate* l_lastPrev_3;
-	if (p_source == 0) return 0;
-	if (p_value == 0) return p_source;
+	if (p_source == 0)
+	{
+		return 0;
+	}
+	if (p_value == 0)
+	{
+		return p_source;
+	}
 	l_next_0 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_source, &rt_System_MulticastDelegate_OBJ);
 	l_prev_1 = 0;
 	l_last_2 = 0;
@@ -1533,8 +1548,14 @@ t_System_Delegate* m_System_Delegate_RemoveAll_0(t_System_Delegate* p_source, t_
 {
 	t_System_MulticastDelegate* l_next_0;
 	t_System_MulticastDelegate* l_prev_1;
-	if (p_source == 0) return 0;
-	if (p_value == 0) return p_source;
+	if (p_source == 0)
+	{
+		return 0;
+	}
+	if (p_value == 0)
+	{
+		return p_source;
+	}
 	l_next_0 = (t_System_MulticastDelegate*)CS2X_TestUpCast(p_source, &rt_System_MulticastDelegate_OBJ);
 	l_prev_1 = 0;
 	while (l_next_0 != 0)
@@ -1549,10 +1570,12 @@ t_System_Delegate* m_System_Delegate_RemoveAll_0(t_System_Delegate* p_source, t_
 				l_next_0->f__next_2 = 0;
 			}
 			else
-			if (l_prev_1 != 0)
 			{
-				l_prev_1->f__next_2 = l_next_0->f__next_2;
-				l_next_0->f__next_2 = 0;
+				if (l_prev_1 != 0)
+				{
+					l_prev_1->f__next_2 = l_next_0->f__next_2;
+					l_next_0->f__next_2 = 0;
+				}
 			}
 		}
 		l_prev_1 = l_next_0;
@@ -1879,14 +1902,20 @@ char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value)
 {
 	char16_t* l_myValuePtr_0;
 	char16_t* l_valuePtr_1;
-	if (m_System_String_get_Length_0(self) != m_System_String_get_Length_0(p_value)) return 0;
+	if (m_System_String_get_Length_0(self) != m_System_String_get_Length_0(p_value))
+	{
+		return 0;
+	}
 	l_myValuePtr_0 = ((char*)self) + m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
 	l_valuePtr_1 = ((char*)p_value) + m_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
 	{
 		int32_t l_i_2;
 		for (l_i_2 = 0; l_i_2 != m_System_String_get_Length_0(self); ++l_i_2)
 		{
-			if (l_myValuePtr_0[l_i_2] != l_valuePtr_1[l_i_2]) return 0;
+			if (l_myValuePtr_0[l_i_2] != l_valuePtr_1[l_i_2])
+			{
+				return 0;
+			}
 		}
 	}
 	return 1;

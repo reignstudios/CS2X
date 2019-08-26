@@ -1,0 +1,1 @@
+﻿* Delegates cannot be bound to non-static struct methods

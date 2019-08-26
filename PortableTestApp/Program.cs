@@ -284,6 +284,11 @@ namespace PortableTestApp
 			//	Console.Write("$");
 			//}
 
+			/*do
+			{
+				
+			}while (true);*/
+
 			var iii = new IntPtr();
 			iii += 1;
 
@@ -341,9 +346,35 @@ namespace PortableTestApp
 
 	struct Foo
 	{
+		int i;
+		int i2
+		{
+			get { return i; }
+			set { i = value; }
+		}
+
+		public int this[int index]
+		{
+			get
+			{
+				return i;
+			}
+			set
+			{
+				i = value;
+			}
+		}
+
 		public Foo Boo()
 		{
-			return this.Boo().Boo();
+			var foo = this.Boo().Boo();
+			if (foo[0] == foo.Boo().Boo()[0] && this[1] == this[0]) return foo;
+			else if (Boo().Boo().i.ToString() == string.Empty) return foo.Boo().Boo();
+			else if (Boo().Boo().i2.ToString() == string.Empty) return foo;
+			else
+			{
+				return foo.Boo().Boo();
+			}
 		}
 	}
 
