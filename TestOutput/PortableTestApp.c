@@ -57,6 +57,7 @@ struct t_PortableTestApp_Program
 	int32_t f__MyProp_1;
 	char16_t f_charVal_1;
 };
+t_PortableTestApp_Program* f_PortableTestApp_Program_program;
 int32_t f_PortableTestApp_Program_abcStatic;
 int32_t f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField;
 int32_t f_PortableTestApp_Program__MyPropStatic;
@@ -123,6 +124,7 @@ typedef struct rt_PortableTestApp_MyAbstractClass
 {
 	t_System_RuntimeType runtimeType;
 	int32_t (*vTable_MyVirtMethod_0)(t_PortableTestApp_MyAbstractClass* self);
+	void (*vTable_MyFoo2_0)(t_PortableTestApp_MyAbstractClass* self, int32_t* p_i);
 } rt_PortableTestApp_MyAbstractClass;
 rt_PortableTestApp_MyAbstractClass rt_PortableTestApp_MyAbstractClass_OBJ;
 int8_t rt_PortableTestApp_MyAbstractClass_METADATA_Name[44] = {0,0,0,0,0,0,0,0,15,0,0,0,77,0,121,0,65,0,98,0,115,0,116,0,114,0,97,0,99,0,116,0,67,0,108,0,97,0,115,0,115,0,0,0}; /* MyAbstractClass */
@@ -132,6 +134,7 @@ typedef struct rt_PortableTestApp_MyBaseClass
 {
 	t_System_RuntimeType runtimeType;
 	int32_t (*vTable_MyVirtMethod_0)(t_PortableTestApp_MyBaseClass* self);
+	void (*vTable_MyFoo2_0)(t_PortableTestApp_MyBaseClass* self, int32_t* p_i);
 } rt_PortableTestApp_MyBaseClass;
 rt_PortableTestApp_MyBaseClass rt_PortableTestApp_MyBaseClass_OBJ;
 int8_t rt_PortableTestApp_MyBaseClass_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,77,0,121,0,66,0,97,0,115,0,101,0,67,0,108,0,97,0,115,0,115,0,0,0}; /* MyBaseClass */
@@ -251,8 +254,9 @@ int8_t rt_System_String___ARRAY_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,15,0,0,
 /* Forward decalre Methods */
 /* =============================== */
 void m_PortableTestApp_MyAbstractClass_PortableTestApp_MyInterface_MyVirtMethod_0(t_PortableTestApp_MyAbstractClass* self);
-void m_PortableTestApp_MyAbstractClass_MyFoo_0(t_PortableTestApp_MyAbstractClass* self);
+void m_PortableTestApp_MyAbstractClass_MyFoo_0(t_PortableTestApp_MyAbstractClass* self, int32_t* p_i);
 t_PortableTestApp_MyAbstractClass* m_PortableTestApp_MyAbstractClass__ctor_0(t_PortableTestApp_MyAbstractClass* self);
+void m_PortableTestApp_MyBaseClass_MyFoo2_0(t_PortableTestApp_MyBaseClass* self, int32_t* p_i);
 int32_t m_PortableTestApp_MyBaseClass_MyVirtMethod_0(t_PortableTestApp_MyBaseClass* self);
 t_PortableTestApp_MyBaseClass* m_PortableTestApp_MyBaseClass__ctor_0(t_PortableTestApp_MyBaseClass* self);
 t_System_String* m_PortableTestApp_MyExtensions_Name_0(t_PortableTestApp_MyEnum p_e);
@@ -319,7 +323,7 @@ void m_PortableTestApp_MyAbstractClass_PortableTestApp_MyInterface_MyVirtMethod_
 {
 }
 
-void m_PortableTestApp_MyAbstractClass_MyFoo_0(t_PortableTestApp_MyAbstractClass* self)
+void m_PortableTestApp_MyAbstractClass_MyFoo_0(t_PortableTestApp_MyAbstractClass* self, int32_t* p_i)
 {
 	m_System_Console_WriteLine_0(StringLiteral_1);
 }
@@ -328,6 +332,10 @@ t_PortableTestApp_MyAbstractClass* m_PortableTestApp_MyAbstractClass__ctor_0(t_P
 {
 	m_System_Object__ctor_0(self);
 	return self;
+}
+
+void m_PortableTestApp_MyBaseClass_MyFoo2_0(t_PortableTestApp_MyBaseClass* self, int32_t* p_i)
+{
 }
 
 int32_t m_PortableTestApp_MyBaseClass_MyVirtMethod_0(t_PortableTestApp_MyBaseClass* self)
@@ -436,6 +444,7 @@ void m_PortableTestApp_Program__cctor_0()
 	t_PortableTestApp_MyEnum l_en_0;
 	t_System_String* l_e_1;
 	uint32_t l_lastError_2;
+	f_PortableTestApp_Program_program = m_PortableTestApp_Program__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_Program), &rt_PortableTestApp_Program_OBJ));
 	f_PortableTestApp_Program__MyAutoPropStatic_k__BackingField = 555;
 	l_en_0 = 0;
 	l_e_1 = m_PortableTestApp_MyExtensions_Name_0(l_en_0);
@@ -490,26 +499,28 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	t_PortableTestApp_Program* l_p2_10;
 	t_PortableTestApp_MyBaseClass* l_m_11;
 	t_PortableTestApp_MyAbstractClass* l_m2_12;
-	int32_t* l_a_13;
-	int32_t l_aa_i_14;
-	t_PortableTestApp_MyBaseClass* l_i_15;
-	uint8_t* l_a2_16;
-	intptr_t l_iii_17;
-	t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC* l_es_18;
-	t_PortableTestApp_MyEnumeratorPortableTestApp_MyEnumerator_System_Int32_GENERIC l_e_en_19;
-	float* l_sldkfj_20;
-	float* l_sldkfj2_21;
-	t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC* l_myG_22;
-	int32_t l_myGI_23;
-	int32_t l_myGI2_24;
-	int32_t l_myGI3_25;
-	t_PortableTestApp_Vec3 l_myGIS_26;
+	int32_t l_myI_13;
+	int32_t* l_a_14;
+	int32_t l_aa_i_15;
+	t_PortableTestApp_MyBaseClass* l_i_16;
+	uint8_t* l_a2_17;
+	intptr_t l_iii_18;
+	t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC* l_es_19;
+	t_PortableTestApp_MyEnumeratorPortableTestApp_MyEnumerator_System_Int32_GENERIC l_e_en_20;
+	float* l_sldkfj_21;
+	float* l_sldkfj2_22;
+	t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC* l_myG_23;
+	int32_t l_myGI_24;
+	int32_t l_myGI2_25;
+	int32_t l_myGI3_26;
+	t_PortableTestApp_Vec3 l_myGIS_27;
 	jmp_buf CS2X_JMP_LAST_0;
 	jmp_buf CS2X_JMP_0;
 	int CS2X_IS_JMP_0;
 	jmp_buf CS2X_JMP_LAST_1;
 	jmp_buf CS2X_JMP_1;
 	int CS2X_IS_JMP_1;
+	t_PortableTestApp_Program* GCREF_t_PortableTestApp_Program;
 	l_deli_0 = m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_1(m_intptr_t__ctor_3());
 	l_funcPtr_1 = m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_1(l_deli_0, &l_dPtr_2);
 	l_ppp_3 = m_PortableTestApp_Program_op_Explicit_0(0);
@@ -573,23 +584,28 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	m_PortableTestApp_MyBaseClass_MyVirtMethod_0(l_m_11);
 	l_m2_12 = (t_PortableTestApp_MyAbstractClass*)l_m_11;
 	((rt_PortableTestApp_MyAbstractClass*)l_m2_12->CS2X_RuntimeType)->vTable_MyVirtMethod_0(l_m2_12);
-	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11);
-	l_a_13 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 5, &rt_System_Int32___ARRAY_OBJ);
-	((int32_t*)(((char*)l_a_13) + (sizeof(size_t)*2)))[0] = 1;
-	((int32_t*)(((char*)l_a_13) + (sizeof(size_t)*2)))[1] = 2;
-	((int32_t*)(((char*)l_a_13) + (sizeof(size_t)*2)))[2] = 3;
-	((int32_t*)(((char*)l_a_13) + (sizeof(size_t)*2)))[3] = 4;
-	((int32_t*)(((char*)l_a_13) + (sizeof(size_t)*2)))[4] = 5;
-	if (m_System_Object_GetType_0(l_a_13) == (&rt_System_Int32___ARRAY_OBJ))
+	l_myI_13 = 33;
+	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &l_myI_13);
+	((rt_PortableTestApp_MyAbstractClass*)l_m2_12->CS2X_RuntimeType)->vTable_MyFoo2_0(l_m2_12, &((t_PortableTestApp_Program*)CS2X_RefObjOnStack(&GCREF_t_PortableTestApp_Program, f_PortableTestApp_Program_program))->f_abc_1);
+	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &((t_PortableTestApp_Program*)CS2X_RefObjOnStack(&GCREF_t_PortableTestApp_Program, f_PortableTestApp_Program_program))->f_abc_1);
+	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &l_ppp_3->f_abc_1);
+	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &f_PortableTestApp_Program_abcStatic);
+	l_a_14 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 5, &rt_System_Int32___ARRAY_OBJ);
+	((int32_t*)(((char*)l_a_14) + (sizeof(size_t)*2)))[0] = 1;
+	((int32_t*)(((char*)l_a_14) + (sizeof(size_t)*2)))[1] = 2;
+	((int32_t*)(((char*)l_a_14) + (sizeof(size_t)*2)))[2] = 3;
+	((int32_t*)(((char*)l_a_14) + (sizeof(size_t)*2)))[3] = 4;
+	((int32_t*)(((char*)l_a_14) + (sizeof(size_t)*2)))[4] = 5;
+	if (m_System_Object_GetType_0(l_a_14) == (&rt_System_Int32___ARRAY_OBJ))
 	{
-		m_System_Console_WriteLine_0(m_System_Object_GetType_0(l_a_13)->f__FullName_k__BackingField_1);
+		m_System_Console_WriteLine_0(m_System_Object_GetType_0(l_a_14)->f__FullName_k__BackingField_1);
 	}
-	for (l_aa_i_14 = 0; l_aa_i_14 != m_System_Array_get_Length_0((t_System_Array*)l_a_13); ++l_aa_i_14)
+	for (l_aa_i_15 = 0; l_aa_i_15 != m_System_Array_get_Length_0((t_System_Array*)l_a_14); ++l_aa_i_15)
 	{
-		int32_t l_aa_15;
-		l_aa_15 = ((int32_t*)(((char*)l_a_13) + (sizeof(size_t)*2)))[l_aa_i_14];
+		int32_t l_aa_16;
+		l_aa_16 = ((int32_t*)(((char*)l_a_14) + (sizeof(size_t)*2)))[l_aa_i_15];
 		m_System_Console_Write_0(StringLiteral_11);
-		if (l_aa_15 == 88)
+		if (l_aa_16 == 88)
 		{
 			break;
 		}
@@ -598,41 +614,41 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	f_PortableTestApp_Program_i2->f_b_2 = 44;
 	f_PortableTestApp_Program_i2->f_c_2 = 33;
 	f_PortableTestApp_Program_i2->f_d_2 = 66;
-	l_i_15 = m_PortableTestApp_MyBaseClass__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyBaseClass), &rt_PortableTestApp_MyBaseClass_OBJ));
-	l_i_15->f_b_2 = 44;
-	l_i_15->f_c_2 = 33;
-	l_i_15->f_d_2 = 66;
-	l_a2_16 = alloca(sizeof(uint8_t) * 3);
-	l_a2_16[0] = 1;
-	l_a2_16[1] = 2;
-	l_a2_16[2] = 3;
-	l_iii_17 = m_intptr_t__ctor_3();
-	l_iii_17 += 1;
-	l_es_18 = m_t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC), &rt_PortableTestApp_MyEnumerable_System_Int32_GENERIC_OBJ));
-	for/*each*/ (l_e_en_19 = m_t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC_GetEnumerator_0(l_es_18); m_t_PortableTestApp_MyEnumeratorPortableTestApp_MyEnumerator_System_Int32_GENERIC_MoveNext_0(&l_e_en_19);)
+	l_i_16 = m_PortableTestApp_MyBaseClass__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyBaseClass), &rt_PortableTestApp_MyBaseClass_OBJ));
+	l_i_16->f_b_2 = 44;
+	l_i_16->f_c_2 = 33;
+	l_i_16->f_d_2 = 66;
+	l_a2_17 = alloca(sizeof(uint8_t) * 3);
+	l_a2_17[0] = 1;
+	l_a2_17[1] = 2;
+	l_a2_17[2] = 3;
+	l_iii_18 = m_intptr_t__ctor_3();
+	l_iii_18 += 1;
+	l_es_19 = m_t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC), &rt_PortableTestApp_MyEnumerable_System_Int32_GENERIC_OBJ));
+	for/*each*/ (l_e_en_20 = m_t_PortableTestApp_MyEnumerablePortableTestApp_MyEnumerable_System_Int32_GENERIC_GetEnumerator_0(l_es_19); m_t_PortableTestApp_MyEnumeratorPortableTestApp_MyEnumerator_System_Int32_GENERIC_MoveNext_0(&l_e_en_20);)
 	{
-		int32_t l_e_20;
-		l_e_20 = m_t_PortableTestApp_MyEnumeratorPortableTestApp_MyEnumerator_System_Int32_GENERIC_get_Current_0(&l_e_en_19);
-		if (l_e_20 == 0)
+		int32_t l_e_21;
+		l_e_21 = m_t_PortableTestApp_MyEnumeratorPortableTestApp_MyEnumerator_System_Int32_GENERIC_get_Current_0(&l_e_en_20);
+		if (l_e_21 == 0)
 		{
 			m_System_Console_Write_0(StringLiteral_12);
 		}
 	}
-	l_myG_22 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC), &rt_PortableTestApp_MyG_System_Int32_GENERIC_OBJ));
-	l_myGI_23 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff_0(l_myG_22);
-	l_myGI2_24 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff2_1(l_myG_22, 123);
-	l_myGI3_25 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(l_myG_22, 55.0f, 123, 55);
-	l_myGIS_26 = m_t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC_DoStuffStatic_0(1);
-	m_System_Console_WriteLine_0(m_System_Object_GetType_0(l_myG_22)->f__FullName_k__BackingField_1);
+	l_myG_23 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC), &rt_PortableTestApp_MyG_System_Int32_GENERIC_OBJ));
+	l_myGI_24 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff_0(l_myG_23);
+	l_myGI2_25 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff2_1(l_myG_23, 123);
+	l_myGI3_26 = m_t_PortableTestApp_MyGPortableTestApp_MyG_System_Int32_GENERIC_DoStuff3_1(l_myG_23, 55.0f, 123, 55);
+	l_myGIS_27 = m_t_PortableTestApp_MyGPortableTestApp_MyG_PortableTestApp_Vec3_GENERIC_DoStuffStatic_0(1);
+	m_System_Console_WriteLine_0(m_System_Object_GetType_0(l_myG_23)->f__FullName_k__BackingField_1);
 	/* try */
 	memcpy(CS2X_JMP_LAST_0, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
 	CS2X_IS_JMP_0 = setjmp(CS2X_JMP_0);
 	if (CS2X_IS_JMP_0 == 0)
 	{
-		t_PortableTestApp_MyAbstractClass* l_c_27;
+		t_PortableTestApp_MyAbstractClass* l_c_28;
 		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_0, sizeof(jmp_buf));
-		l_c_27 = m_PortableTestApp_MyBaseClass__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyBaseClass), &rt_PortableTestApp_MyBaseClass_OBJ));
-		m_PortableTestApp_Program_FooThrow_0((t_PortableTestApp_MyBaseClass*)CS2X_TestUpCast(l_c_27, &rt_PortableTestApp_MyBaseClass_OBJ));
+		l_c_28 = m_PortableTestApp_MyBaseClass__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_MyBaseClass), &rt_PortableTestApp_MyBaseClass_OBJ));
+		m_PortableTestApp_Program_FooThrow_0((t_PortableTestApp_MyBaseClass*)CS2X_TestUpCast(l_c_28, &rt_PortableTestApp_MyBaseClass_OBJ));
 		/* protected return */
 		{
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
@@ -644,17 +660,17 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
 		if (CS2X_IsType(((t_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt_System_NotSupportedException_OBJ)) /* catch */
 		{
-			t_System_NotSupportedException* l_e_27;
-			l_e_27 = CS2X_ThreadExceptionObject;
+			t_System_NotSupportedException* l_e_28;
+			l_e_28 = CS2X_ThreadExceptionObject;
 			CS2X_ThreadExceptionObject = 0;
-			m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_13, l_e_27->f__Message_k__BackingField_1));
+			m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_13, l_e_28->f__Message_k__BackingField_1));
 		}
 		else if (CS2X_IsType(((t_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt_System_Exception_OBJ)) /* catch */
 		{
-			t_System_Exception* l_e_27;
-			l_e_27 = CS2X_ThreadExceptionObject;
+			t_System_Exception* l_e_28;
+			l_e_28 = CS2X_ThreadExceptionObject;
 			CS2X_ThreadExceptionObject = 0;
-			m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_14, l_e_27->f__Message_k__BackingField_1));
+			m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_14, l_e_28->f__Message_k__BackingField_1));
 		}
 		if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */
 	}
@@ -987,7 +1003,9 @@ void CS2X_InitLib_PortableTestApp()
 
 	/* Init runtime type vtabel */
 	rt_PortableTestApp_MyAbstractClass_OBJ.vTable_MyVirtMethod_0 = 0;
+	rt_PortableTestApp_MyAbstractClass_OBJ.vTable_MyFoo2_0 = 0;
 	rt_PortableTestApp_MyBaseClass_OBJ.vTable_MyVirtMethod_0 = m_PortableTestApp_MyBaseClass_MyVirtMethod_0;
+	rt_PortableTestApp_MyBaseClass_OBJ.vTable_MyFoo2_0 = m_PortableTestApp_MyBaseClass_MyFoo2_0;
 
 	/* <<< === Generic Runtime Types === >>> */
 	/* Init runtime type objects */

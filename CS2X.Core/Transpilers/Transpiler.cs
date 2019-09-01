@@ -646,5 +646,34 @@ namespace CS2X.Core.Transpilers
 			if (type.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
 			return true;
 		}
+
+		protected bool NotReferenceableOnStack(IMethodSymbol method, ExpressionSyntax expression, SemanticModel semanticModel, out ExpressionSyntax outExpression, out ExpressionSyntax memberAccessExpression)
+		{
+			var currentSyntax = expression;
+			while (currentSyntax != null)
+			{
+				if (currentSyntax is MemberAccessExpressionSyntax memberAccess)
+				{
+					var symbol = semanticModel.GetSymbolInfo(memberAccess.Expression).Symbol;
+					var type = semanticModel.GetTypeInfo(memberAccess.Expression).Type;
+					if (symbol.Kind != SymbolKind.Local && type.IsReferenceType)
+					{
+						outExpression = memberAccess.Expression;
+						memberAccessExpression = memberAccess.Name;
+						return true;
+					}
+					currentSyntax = memberAccess.Expression;
+					continue;
+				}
+
+				outExpression = null;
+				memberAccessExpression = null;
+				return false;
+			}
+
+			outExpression = null;
+			memberAccessExpression = null;
+			return false;
+		}
 	}
 }

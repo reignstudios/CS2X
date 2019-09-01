@@ -19,7 +19,7 @@ namespace PortableTestApp
 	interface MyInterface
 	{
 		void MyVirtMethod();
-		void MyFoo();
+		void MyFoo(ref int i);
 	}
 
 	abstract class MyAbstractClass : MyInterface
@@ -27,7 +27,8 @@ namespace PortableTestApp
 		void MyInterface.MyVirtMethod() { }
 		public abstract int MyVirtMethod();
 
-		public void MyFoo()
+		public abstract void MyFoo2(ref int i);
+		public void MyFoo(ref int i)
 		{
 			Console.WriteLine("MyAbstractClass::MyFoo");
 		}
@@ -36,6 +37,11 @@ namespace PortableTestApp
 	sealed class MyBaseClass : MyAbstractClass
 	{
         public int b, c, d;
+
+		public override void MyFoo2(ref int i)
+		{
+			
+		}
 
 		public override int MyVirtMethod()
 		{
@@ -87,6 +93,8 @@ namespace PortableTestApp
 
 			return null;
 		}
+
+		public static Program program = new Program();
 
 		public int abc = 99;
 		public static int abcStatic;
@@ -229,7 +237,12 @@ namespace PortableTestApp
 			m.MyVirtMethod();
 			var m2 = (MyAbstractClass)m;
 			m2.MyVirtMethod();
-			m.MyFoo();
+			int myI = 33;
+			m.MyFoo(ref myI);
+			m2.MyFoo2(ref program.abc);
+			m.MyFoo(ref program.abc);
+			m.MyFoo(ref ppp.abc);
+			m.MyFoo(ref abcStatic);
 			//return;
 
 			//Console.WriteLine("Hello World!");

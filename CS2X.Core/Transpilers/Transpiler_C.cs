@@ -517,6 +517,15 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
 				writer.RemoveTab();
 				writer.WriteLine('}');
+
+				// ref gc object on stack helper
+				writer.WriteLine();
+				writer.WriteLine($"void* CS2X_RefObjOnStack(void** stackRef, void* obj)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix("return (*stackRef) = obj;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
 			}
 
 			// method definitions
@@ -1697,6 +1706,18 @@ namespace CS2X.Core.Transpilers
 			return local;
 		}
 
+		private string TryAddStatementLocal(ITypeSymbol type, string prefix)
+		{
+			var localName = prefix + GetTypeFullName(type);
+			if (!StatementUnwinder.allLocals.ContainsKey(type))
+			{
+				StatementUnwinder.allLocals.Add(type, localName);
+				var localVar = instructionalBody.specialLocals.FirstOrDefault(x => x.name == localName);
+				if (localVar == null) instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, GetTypeFullNameRef(type), localName));
+			}
+			return localName;
+		}
+
 		private delegate void BlockStartCallbackMethod();
 		private BlockStartCallbackMethod BlockStartCallback;
 		private void WriteBody(BlockSyntax body)
@@ -2305,10 +2326,12 @@ namespace CS2X.Core.Transpilers
 			return expression;
 		}
 
+		private bool skipNextWriteCaller;
 		private ExpressionSyntax WriteCaller(ExpressionSyntax expression)
 		{
 			var caller = GetCaller(expression);
-			WriteExpression(caller);
+			if (!skipNextWriteCaller) WriteExpression(caller);
+			skipNextWriteCaller = false;
 			return caller;
 		}
 
@@ -2340,15 +2363,8 @@ namespace CS2X.Core.Transpilers
 			// check if caller needs to be converted to a IValue local
 			if (!(callerExpression is IdentifierNameSyntax) && !(callerExpression is ThisExpressionSyntax))
 			{
-				var localName = "IVALUE_" + GetTypeFullName(callerType);
-
 				// copy ivalue local to current block special locals
-				if (!StatementUnwinder.allLocals.ContainsKey(callerType))
-				{
-					StatementUnwinder.allLocals.Add(callerType, localName);
-					var localVar = instructionalBody.specialLocals.FirstOrDefault(x => x.name == localName);
-					if (localVar == null) instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, GetTypeFullNameRef(callerType), localName));
-				}
+				string localName = TryAddStatementLocal(callerType, "IVALUE_");
 
 				// write ivalue local expression
 				using (var stream = new MemoryStream())
@@ -2623,8 +2639,33 @@ namespace CS2X.Core.Transpilers
 				var lastArg = arguments.Last();
 				foreach (var arg in arguments)
 				{
-					if (arg.RefKindKeyword.Text == "out" || arg.RefKindKeyword.Text == "ref") writer.Write('&');
-					WriteExpression(arg.Expression);
+					if (arg.RefKindKeyword.Text == "out" || arg.RefKindKeyword.Text == "ref")
+					{
+						writer.Write('&');
+						// check if expression needs to store non-local on stack to prevent potential GC collection
+						if (NotReferenceableOnStack(method, arg.Expression, semanticModel, out var expression, out var memberAccessExpression))
+						{
+							var argType = semanticModel.GetTypeInfo(expression).Type;
+							string localName = TryAddStatementLocal(argType, "GCREF_");
+							writer.Write($"(({GetTypeFullNameRef(argType)})CS2X_RefObjOnStack(&{localName}, ");
+							WriteExpression(expression);
+							writer.Write("))");
+							if (memberAccessExpression != null)
+							{
+								skipNextWriteCaller = true;
+								WriteExpression(memberAccessExpression);
+							}
+						}
+						else
+						{
+							WriteExpression(arg.Expression);
+						}
+					}
+					else
+					{
+						WriteExpression(arg.Expression);
+					}
+
 					if (arg != lastArg) writer.Write(", ");
 				}
 			}

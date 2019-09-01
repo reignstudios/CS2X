@@ -53,7 +53,7 @@ This project will focus on transpiling a C# subset with a modified type system f
 * Other: TODO
 
 ## Performance
-Almost zero performance loss. C# code will generate in a manner as if hand written in the target language for the most part. There are a couple key differences in the CS2X runtime / type system vs .NET
+Almost zero performance loss. C# code will generate in a manner as if hand written in the target language in many respects. There are a couple key differences in the CS2X runtime / type system vs .NET
 * Structs are not part of the object system as they are in the .NET runtime.
 	* No auto boxing for value types are supported (.NET has many easy to fall in syntax performance pitfalls here).
 	* System.Object can never equal a 'struct', 'enum' or 'primitive' type.
