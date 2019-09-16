@@ -1951,7 +1951,11 @@ namespace CS2X.Core.Transpilers
 
 		private void DoStatement(DoStatementSyntax statement)
 		{
-			throw new NotImplementedException();
+			writer.WriteLinePrefix("do");
+			WriteStatement(statement.Statement);
+			writer.WritePrefix("while (");
+			WriteExpression(statement.Condition);
+			writer.WriteLine(");");
 		}
 
 		private void ForStatement(ForStatementSyntax statement)

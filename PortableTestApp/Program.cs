@@ -278,7 +278,7 @@ namespace PortableTestApp
                 d = 66
             };
 
-            var i = new MyBaseClass()
+            var iMyBaseClass = new MyBaseClass()
             {
                 b = 44,
                 c = 33,
@@ -287,20 +287,21 @@ namespace PortableTestApp
 
 			var a2 = stackalloc byte[3] { 1, 2, 3 };
 
-			//         for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
-			//{
-			//	if (i == i2) Console.Write("*");
-			//}
-
-			//for (int i = 0; i != a.Length; ++i)
-			//{
-			//	Console.Write("$");
-			//}
-
-			/*do
+			for (int i = 0, i2 = 0; i != a.Length && i2 != 4; ++i, i2 += 2)
 			{
-				
-			}while (true);*/
+				if (i == i2) Console.Write("*");
+			}
+
+			for (int i = 0; i != a.Length; ++i)
+			{
+				Console.Write("$");
+			}
+
+			int booHoo = 0;
+			do
+			{
+				booHoo++;
+			} while (booHoo != 6);
 
 			var iii = new IntPtr();
 			iii += 1;
