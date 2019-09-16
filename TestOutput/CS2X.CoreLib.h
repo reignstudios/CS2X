@@ -1317,11 +1317,6 @@ t_System_Object* CS2X_TestUpCast(t_System_Object* self, t_System_RuntimeType* is
 	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 }
 
-void* CS2X_RefObjOnStack(void** stackRef, void* obj)
-{
-	return (*stackRef) = obj;
-}
-
 /* =============================== */
 /* Method definitions */
 /* =============================== */

@@ -525,13 +525,16 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine('}');
 
 				// ref gc object on stack helper
-				writer.WriteLine();
-				writer.WriteLine($"void* CS2X_RefObjOnStack(void** stackRef, void* obj)");
-				writer.WriteLine('{');
-				writer.AddTab();
-				writer.WriteLinePrefix("return (*stackRef) = obj;");
-				writer.RemoveTab();
-				writer.WriteLine('}');
+				if (options.refNonLocalGCParamsOnStack)
+				{
+					writer.WriteLine();
+					writer.WriteLine($"void* CS2X_RefObjOnStack(void** stackRef, void* obj)");
+					writer.WriteLine('{');
+					writer.AddTab();
+					writer.WriteLinePrefix("return (*stackRef) = obj;");
+					writer.RemoveTab();
+					writer.WriteLine('}');
+				}
 			}
 
 			// method definitions
