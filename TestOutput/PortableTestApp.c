@@ -251,6 +251,21 @@ int8_t rt_System_String___ARRAY_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,83,
 int8_t rt_System_String___ARRAY_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,15,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,91,0,93,0,0,0}; /* System.String[] */
 
 /* =============================== */
+/* PValue to IValue inline helpers */
+/* =============================== */
+t_PortableTestApp_Foo* CS2X_PValueToIValue_t_PortableTestApp_Foo(t_PortableTestApp_Foo pvalue, t_PortableTestApp_Foo* ivalue)
+{
+	(*ivalue) = pvalue;
+	return ivalue;
+}
+
+int32_t* CS2X_PValueToIValue_int32_t(int32_t pvalue, int32_t* ivalue)
+{
+	(*ivalue) = pvalue;
+	return ivalue;
+}
+
+/* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
 void m_PortableTestApp_MyAbstractClass_PortableTestApp_MyInterface_MyVirtMethod_0(t_PortableTestApp_MyAbstractClass* self);
@@ -735,37 +750,27 @@ t_PortableTestApp_Foo m_PortableTestApp_Foo_Boo_0(t_PortableTestApp_Foo* self)
 {
 	t_PortableTestApp_Foo l_foo_0;
 	t_PortableTestApp_Foo IVALUE_t_PortableTestApp_Foo;
-	IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&(*self));
-	l_foo_0 = m_PortableTestApp_Foo_Boo_0(&IVALUE_t_PortableTestApp_Foo);
-	IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&l_foo_0);
-	IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&IVALUE_t_PortableTestApp_Foo);
-	if (m_PortableTestApp_Foo_get_Item_0(&l_foo_0, 0) == m_PortableTestApp_Foo_get_Item_0(&IVALUE_t_PortableTestApp_Foo, 0) && m_PortableTestApp_Foo_get_Item_0(&(*self), 1) == m_PortableTestApp_Foo_get_Item_0(&(*self), 0))
+	l_foo_0 = m_PortableTestApp_Foo_Boo_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(&(*self)), &IVALUE_t_PortableTestApp_Foo));
+	if (m_PortableTestApp_Foo_get_Item_0(&l_foo_0, 0) == m_PortableTestApp_Foo_get_Item_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(&l_foo_0), &IVALUE_t_PortableTestApp_Foo)), &IVALUE_t_PortableTestApp_Foo), 0) && m_PortableTestApp_Foo_get_Item_0(&(*self), 1) == m_PortableTestApp_Foo_get_Item_0(&(*self), 0))
 	{
 		return l_foo_0;
 	}
 	else
 	{
 		int32_t IVALUE_int32_t;
-		IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&(*self));
-		IVALUE_int32_t = m_PortableTestApp_Foo_Boo_0(&IVALUE_t_PortableTestApp_Foo).f_i_2;
-		if (m_System_String_Equals_0(m_int32_t_ToString_0(&IVALUE_int32_t), f_System_String_Empty))
+		if (m_System_String_Equals_0(m_int32_t_ToString_0(CS2X_PValueToIValue_int32_t(m_PortableTestApp_Foo_Boo_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(&(*self)), &IVALUE_t_PortableTestApp_Foo)).f_i_2, &IVALUE_int32_t)), f_System_String_Empty))
 		{
-			IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&l_foo_0);
-			return m_PortableTestApp_Foo_Boo_0(&IVALUE_t_PortableTestApp_Foo);
+			return m_PortableTestApp_Foo_Boo_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(&l_foo_0), &IVALUE_t_PortableTestApp_Foo));
 		}
 		else
 		{
-			IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&(*self));
-			IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&IVALUE_t_PortableTestApp_Foo);
-			IVALUE_int32_t = m_PortableTestApp_Foo_get_i2_0(&IVALUE_t_PortableTestApp_Foo);
-			if (m_System_String_Equals_0(m_int32_t_ToString_0(&IVALUE_int32_t), f_System_String_Empty))
+			if (m_System_String_Equals_0(m_int32_t_ToString_0(CS2X_PValueToIValue_int32_t(m_PortableTestApp_Foo_get_i2_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(&(*self)), &IVALUE_t_PortableTestApp_Foo)), &IVALUE_t_PortableTestApp_Foo)), &IVALUE_int32_t)), f_System_String_Empty))
 			{
 				return l_foo_0;
 			}
 			else
 			{
-				IVALUE_t_PortableTestApp_Foo = m_PortableTestApp_Foo_Boo_0(&l_foo_0);
-				return m_PortableTestApp_Foo_Boo_0(&IVALUE_t_PortableTestApp_Foo);
+				return m_PortableTestApp_Foo_Boo_0(CS2X_PValueToIValue_t_PortableTestApp_Foo(m_PortableTestApp_Foo_Boo_0(&l_foo_0), &IVALUE_t_PortableTestApp_Foo));
 			}
 		}
 	}

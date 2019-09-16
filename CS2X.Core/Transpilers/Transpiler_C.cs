@@ -160,6 +160,7 @@ namespace CS2X.Core.Transpilers
 			public readonly HashSet<INamedTypeSymbol> genericTypes = new HashSet<INamedTypeSymbol>();
 			public readonly HashSet<IArrayTypeSymbol> arrayTypes = new HashSet<IArrayTypeSymbol>();
 			public readonly HashSet<IPointerTypeSymbol> pointerTypes = new HashSet<IPointerTypeSymbol>();
+			public readonly HashSet<ITypeSymbol> pvalueToIValueTypes = new HashSet<ITypeSymbol>();
 
 			public TranspiledProject(Project project)
 			{
@@ -178,12 +179,13 @@ namespace CS2X.Core.Transpilers
 		private BlockSyntax block;// active body block
 		private List<StatementSyntax> blockStatementsOverride;
 		private InstructionalBody instructionalBody;// active instructional body states and values
-		private StatementUnwinder statementUnwinder;// active statement unwinding helper
+		public Dictionary<ITypeSymbol, string> allStatementLocals;// all active statement locals
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
-		public HashSet<IMethodSymbol> genericMethods;// generic methods that span all projects
-		public HashSet<INamedTypeSymbol> genericTypes;// generic types that span all projects
+		private HashSet<IMethodSymbol> genericMethods;// generic methods that span all projects
+		private HashSet<INamedTypeSymbol> genericTypes;// generic types that span all projects
 		private HashSet<IArrayTypeSymbol> arrayTypes;// array types that span all projects
 		private HashSet<IPointerTypeSymbol> pointerTypes;// pointer types that span all projects
+		private HashSet<ITypeSymbol> pvalueToIValueTypes;// types to generate pvalue to ivalue helper methods
 		private int tryCatchNestingLevel;// used for special local name mangling
 
 		private const string stringLiteralsHeader = "_StringLiterals.h";
@@ -201,10 +203,12 @@ namespace CS2X.Core.Transpilers
 			stringTypeName = GetTypeFullName(stringType);
 			stringRuntimeTypeName = GetRuntimeTypeObjFullName(stringType);
 
+			allStatementLocals = new Dictionary<ITypeSymbol, string>();
 			genericMethods = new HashSet<IMethodSymbol>();
 			genericTypes = new HashSet<INamedTypeSymbol>();
 			arrayTypes = new HashSet<IArrayTypeSymbol>();
 			pointerTypes = new HashSet<IPointerTypeSymbol>();
+			pvalueToIValueTypes = new HashSet<ITypeSymbol>();
 
 			for (int i = 0; i != 2; ++i)
 			{
@@ -401,6 +405,25 @@ namespace CS2X.Core.Transpilers
 				foreach (var type in transpiledProject.pointerTypes.ToArray())
 				{
 					if (WriteRuntimeType(type, writer)) writer.WriteLine();
+				}
+			}
+
+			if (transpiledProject.pvalueToIValueTypes.Count != 0)// NOTE: this must happen after all types have been defined
+			{
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* PValue to IValue inline helpers */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in transpiledProject.pvalueToIValueTypes.ToArray())
+				{
+					string typeName = GetTypeFullName(type);
+					writer.WriteLine($"{typeName}* CS2X_PValueToIValue_{typeName}({typeName} pvalue, {typeName}* ivalue)");
+					writer.WriteLine('{');
+					writer.AddTab();
+					writer.WriteLinePrefix("(*ivalue) = pvalue;");
+					writer.WriteLinePrefix("return ivalue;");
+					writer.RemoveTab();
+					writer.WriteLine('}');
+					writer.WriteLine();
 				}
 			}
 
@@ -928,6 +951,15 @@ namespace CS2X.Core.Transpilers
 			}
 		}
 
+		private void TrackPValueToIValueType(ITypeSymbol type)
+		{
+			if (!ExistsInReference(pvalueToIValueTypes, type))
+			{
+				pvalueToIValueTypes.Add(type);
+				transpiledProject.pvalueToIValueTypes.Add(type);
+			}
+		}
+
 		private int GetStringMemorySize(string value)
 		{
 			return (int)options.ptrSize + sizeof(int) + sizeof(char) + (value.Length * sizeof(char));// TODO: handle non-standard int & char sizes
@@ -1223,8 +1255,10 @@ namespace CS2X.Core.Transpilers
 			}
 			WriteParameters(method.Parameters);
 
+			// reset statement locals
+			allStatementLocals.Clear();
+
 			// write method block
-			StatementUnwinder.ResetAllLocals();
 			if (!writeBody)
 			{
 				writer.WriteLine(");");
@@ -1719,9 +1753,10 @@ namespace CS2X.Core.Transpilers
 		{
 			var localName = prefix + GetTypeFullName(type);
 			if (suffix != null) localName += suffix;
-			if (!StatementUnwinder.allLocals.ContainsKey(type))
+			if (!allStatementLocals.ContainsKey(type))
 			{
-				StatementUnwinder.allLocals.Add(type, localName);
+				allStatementLocals.Add(type, localName);
+				TrackPValueToIValueType(type);
 				var localVar = instructionalBody.specialLocals.FirstOrDefault(x => x.name == localName);
 				if (localVar == null) instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, GetTypeFullNameRef(type), localName));
 			}
@@ -1804,32 +1839,20 @@ namespace CS2X.Core.Transpilers
 			}
 			else
 			{
-				using (var statementUnwinderStream = new MemoryStream())
-				using (var subStatementUnwinder = new StatementUnwinder(statementUnwinderStream, writer))
-				{
-					subStatementUnwinder.disablePrefix = isCollectionPass;
-					var origWriter = writer;
-					var origStatementUnwinder = statementUnwinder;
-					writer = subStatementUnwinder;
-					statementUnwinder = subStatementUnwinder;
-
-					if (statement is ExpressionStatementSyntax) ExpressionStatement((ExpressionStatementSyntax)statement);
-					else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
-					else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
-					else if (statement is WhileStatementSyntax) WhileStatement((WhileStatementSyntax)statement);
-					else if (statement is DoStatementSyntax) DoStatement((DoStatementSyntax)statement);
-					else if (statement is ForStatementSyntax) ForStatement((ForStatementSyntax)statement);
-					else if (statement is ForEachStatementSyntax) ForEachStatement((ForEachStatementSyntax)statement);
-					else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
-					else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
-					else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
-					else if (statement is TryStatementSyntax) TryStatement((TryStatementSyntax)statement);
-					else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
-					else if (statement is UsingStatementSyntax) UsingStatement((UsingStatementSyntax)statement);
-					else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
-
-					writer = origWriter;
-				}
+				if (statement is ExpressionStatementSyntax) ExpressionStatement((ExpressionStatementSyntax)statement);
+				else if (statement is LocalDeclarationStatementSyntax) LocalDeclarationStatement((LocalDeclarationStatementSyntax)statement);
+				else if (statement is IfStatementSyntax) IfStatement((IfStatementSyntax)statement);
+				else if (statement is WhileStatementSyntax) WhileStatement((WhileStatementSyntax)statement);
+				else if (statement is DoStatementSyntax) DoStatement((DoStatementSyntax)statement);
+				else if (statement is ForStatementSyntax) ForStatement((ForStatementSyntax)statement);
+				else if (statement is ForEachStatementSyntax) ForEachStatement((ForEachStatementSyntax)statement);
+				else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
+				else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
+				else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
+				else if (statement is TryStatementSyntax) TryStatement((TryStatementSyntax)statement);
+				else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
+				else if (statement is UsingStatementSyntax) UsingStatement((UsingStatementSyntax)statement);
+				else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
 			}
 			BlockStartCallback = null;
 		}
@@ -2355,55 +2378,28 @@ namespace CS2X.Core.Transpilers
 			return ResolveType(callerExpression);
 		}
 
-		private bool WriteCallerThisArgument(ExpressionSyntax callerExpression, ExpressionSyntax expression, IMethodSymbol method, out string callerIValueLocal)
+		private void WriteCallerThisArgument(ExpressionSyntax callerExpression, ExpressionSyntax expression, IMethodSymbol method)
 		{
-			if (method.IsStatic)
-			{
-				callerIValueLocal = null;
-				return false;
-			}
+			if (method.IsStatic) throw new Exception("Can't write caller for static method: " + method.Name);
 			
 			var callerType = GetCallerType(callerExpression, expression);
 			if (!callerType.IsValueType)
 			{
-				callerIValueLocal = null;
-				return false;
+				WriteExpression(callerExpression);
 			}
-
-			// check if caller needs to be converted to a IValue local
-			if (!(callerExpression is IdentifierNameSyntax) && !(callerExpression is ThisExpressionSyntax))
+			else if (!(callerExpression is IdentifierNameSyntax) && !(callerExpression is ThisExpressionSyntax))// check if caller needs to be converted to a IValue local
 			{
 				// copy ivalue local to current block special locals
 				string localName = TryAddStatementLocal(callerType, "IVALUE_", null);
-
-				// write ivalue local expression
-				using (var stream = new MemoryStream())
-				using (var subWriter = new StreamWriterEx(stream, null))
-				{
-					var origWriter = writer;
-					writer = subWriter;
-					WriteExpression(callerExpression);
-					writer = origWriter;
-
-					instructionalBody.WritePrefix(localName);
-					instructionalBody.Write(" = ");
-
-					subWriter.Flush();
-					subWriter.BaseStream.Flush();
-					subWriter.BaseStream.Position = 0;
-					instructionalBody.Flush();
-					instructionalBody.BaseStream.Flush();
-					subWriter.BaseStream.CopyTo(instructionalBody.BaseStream);
-
-					instructionalBody.WriteLine(';');
-				}
-
-				callerIValueLocal = localName;
-				return true;
+				writer.Write($"CS2X_PValueToIValue_{GetTypeFullName(callerType)}(");
+				WriteExpression(callerExpression);
+				writer.Write($", &{localName})");
 			}
-
-			callerIValueLocal = null;
-			return false;
+			else
+			{
+				if (!method.IsExtensionMethod) writer.Write('&');
+				WriteExpression(callerExpression);
+			}
 		}
 
 		private string TryAddStringLiteral(string literalValue)
@@ -2589,10 +2585,7 @@ namespace CS2X.Core.Transpilers
 						WriteMethodInvoke(getMethod, expression);
 						writer.Write('(');
 						var caller = GetCaller(expression);
-						var callerType = GetCallerType(caller, expression);
-						if (callerType.IsValueType) writer.Write('&');
-						if (WriteCallerThisArgument(caller, expression, getMethod, out string callerIValueLocal)) writer.Write(callerIValueLocal);
-						else WriteCaller(expression);
+						WriteCallerThisArgument(caller, expression, getMethod);
 						writer.Write(')');
 					}
 					else
@@ -3058,9 +3051,8 @@ namespace CS2X.Core.Transpilers
 		{
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
 			var method = (IMethodSymbol)symbolInfo.Symbol;
-			bool isCallerValueType = false, isStaticExternCMethod = false;
+			bool isStaticExternCMethod = false;
 			ITypeSymbol callerType = null;
-			string callerIValueLocal = null;
 
 			// write delegate invoke
 			if (method.MethodKind == MethodKind.DelegateInvoke)
@@ -3088,21 +3080,18 @@ namespace CS2X.Core.Transpilers
 			}
 
 			// get non-static caller
+			ExpressionSyntax caller = null;
 			if (!method.IsStatic)
 			{
-				var caller = GetCaller(expression.Expression);
+				caller = GetCaller(expression.Expression);
 				if (caller is ThisExpressionSyntax) callerType = method.ContainingType;
 				else callerType = ResolveType(caller);
-				isCallerValueType = callerType.IsValueType;
 
 				if (callerType.TypeKind == TypeKind.Enum && !method.IsExtensionMethod) throw new NotImplementedException("Non extension Enum method not supported: " + expression.ToFullString());
 				if (callerType.IsValueType)
 				{
 					if (method.ContainingType == objectType) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
 					if (IsVirtualMethod(method)) throw new NotSupportedException("ValueType virtual invoke not supported: " + expression.ToFullString());
-
-					// check if caller needs to be converted to a IValue local
-					WriteCallerThisArgument(caller, expression.Expression, method, out callerIValueLocal);
 				}
 			}
 			else if (method.IsExtern)// write static extern method name
@@ -3130,9 +3119,7 @@ namespace CS2X.Core.Transpilers
 			writer.Write('(');
 			if (!method.IsStatic)
 			{
-				if (isCallerValueType && !method.IsExtensionMethod) writer.Write('&');
-				if (callerIValueLocal == null) WriteCaller(expression.Expression);
-				else writer.Write(callerIValueLocal);
+				WriteCallerThisArgument(caller, expression.Expression, method);
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}
 			WriteArgumentList(method, expression.ArgumentList);
@@ -3377,14 +3364,10 @@ namespace CS2X.Core.Transpilers
 					else
 					{
 						var getMethod = property.GetMethod;
-						WriteCallerThisArgument(expression.Expression, expression, getMethod, out string callerIValueLocal);
-						
 						writer.Write(GetMethodFullName(getMethod));
 						writer.Write('(');
 						ITypeSymbol callerType = GetCallerType(expression.Expression, expression);
-						if (callerType.IsValueType) writer.Write('&');
-						if (callerIValueLocal == null) WriteExpression(expression.Expression);
-						else writer.Write(callerIValueLocal);
+						WriteCallerThisArgument(expression.Expression, expression, getMethod);
 						writer.Write(", ");
 						WriteExpression(indexExpression);
 						writer.Write(')');
