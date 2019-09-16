@@ -520,7 +520,6 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	jmp_buf CS2X_JMP_LAST_1;
 	jmp_buf CS2X_JMP_1;
 	int CS2X_IS_JMP_1;
-	t_PortableTestApp_Program* GCREF_t_PortableTestApp_Program;
 	l_deli_0 = m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_1(m_intptr_t__ctor_3());
 	l_funcPtr_1 = m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_1(l_deli_0, &l_dPtr_2);
 	l_ppp_3 = m_PortableTestApp_Program_op_Explicit_0(0);
@@ -586,8 +585,8 @@ void m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	((rt_PortableTestApp_MyAbstractClass*)l_m2_12->CS2X_RuntimeType)->vTable_MyVirtMethod_0(l_m2_12);
 	l_myI_13 = 33;
 	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &l_myI_13);
-	((rt_PortableTestApp_MyAbstractClass*)l_m2_12->CS2X_RuntimeType)->vTable_MyFoo2_0(l_m2_12, &((t_PortableTestApp_Program*)CS2X_RefObjOnStack(&GCREF_t_PortableTestApp_Program, f_PortableTestApp_Program_program))->f_abc_1);
-	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &((t_PortableTestApp_Program*)CS2X_RefObjOnStack(&GCREF_t_PortableTestApp_Program, f_PortableTestApp_Program_program))->f_abc_1);
+	((rt_PortableTestApp_MyAbstractClass*)l_m2_12->CS2X_RuntimeType)->vTable_MyFoo2_0(l_m2_12, &f_PortableTestApp_Program_program->f_abc_1);
+	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &f_PortableTestApp_Program_program->f_abc_1);
 	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &l_ppp_3->f_abc_1);
 	m_PortableTestApp_MyAbstractClass_MyFoo_0(l_m_11, &f_PortableTestApp_Program_abcStatic);
 	l_a_14 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 5, &rt_System_Int32___ARRAY_OBJ);

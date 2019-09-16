@@ -26,7 +26,8 @@ namespace CS2X.Core.Test
 				ptrSize = Transpiler_C.Ptr_Size.Bit_64,
 				endianness = Transpiler_C.Endianness.Little,
 				storeRuntimeTypeStringLiteralMetadata = true,
-				stringLiteralMemoryLocation = Transpiler_C.StringLiteralMemoryLocation.GlobalProgramMemory_RAM
+				stringLiteralMemoryLocation = Transpiler_C.StringLiteralMemoryLocation.GlobalProgramMemory_RAM,
+				refNonLocalGCParamsOnStack = false
 			};
 			var transpiler = new Transpiler_C(solution, options);
 			transpiler.Transpile(Path.Combine(path, "TestOutput"));

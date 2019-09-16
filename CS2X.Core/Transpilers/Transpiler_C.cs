@@ -142,6 +142,12 @@ namespace CS2X.Core.Transpilers
 			/// Disables up casting checks for extra performance
 			/// </summary>
 			public bool disableUpCastingChecks;
+
+			/// <summary>
+			/// Reference Non-Local GC objects on the stack before passing them as 'ref' or 'out' parameters.
+			/// This may be needed for a GC that doesn't scan registers on a CPU that uses a calling convention where registers are used as parameters.
+			/// </summary>
+			public bool refNonLocalGCParamsOnStack;
 		}
 		#endregion
 
@@ -1706,9 +1712,10 @@ namespace CS2X.Core.Transpilers
 			return local;
 		}
 
-		private string TryAddStatementLocal(ITypeSymbol type, string prefix)
+		private string TryAddStatementLocal(ITypeSymbol type, string prefix, string suffix)
 		{
 			var localName = prefix + GetTypeFullName(type);
+			if (suffix != null) localName += suffix;
 			if (!StatementUnwinder.allLocals.ContainsKey(type))
 			{
 				StatementUnwinder.allLocals.Add(type, localName);
@@ -2364,7 +2371,7 @@ namespace CS2X.Core.Transpilers
 			if (!(callerExpression is IdentifierNameSyntax) && !(callerExpression is ThisExpressionSyntax))
 			{
 				// copy ivalue local to current block special locals
-				string localName = TryAddStatementLocal(callerType, "IVALUE_");
+				string localName = TryAddStatementLocal(callerType, "IVALUE_", null);
 
 				// write ivalue local expression
 				using (var stream = new MemoryStream())
@@ -2637,16 +2644,18 @@ namespace CS2X.Core.Transpilers
 			if (arguments.Count != 0)
 			{
 				var lastArg = arguments.Last();
+				int gcStackLocalCount = 0;// to help give each param in a method a unique name for non-local ref/out
 				foreach (var arg in arguments)
 				{
 					if (arg.RefKindKeyword.Text == "out" || arg.RefKindKeyword.Text == "ref")
 					{
 						writer.Write('&');
 						// check if expression needs to store non-local on stack to prevent potential GC collection
-						if (NotReferenceableOnStack(method, arg.Expression, semanticModel, out var expression, out var memberAccessExpression))
+						if (options.refNonLocalGCParamsOnStack && NotReferenceableOnStack(method, arg.Expression, semanticModel, out var expression, out var memberAccessExpression))
 						{
 							var argType = semanticModel.GetTypeInfo(expression).Type;
-							string localName = TryAddStatementLocal(argType, "GCREF_");
+							string localName = TryAddStatementLocal(argType, "GCREF_", '_' + gcStackLocalCount.ToString());
+							++gcStackLocalCount;
 							writer.Write($"(({GetTypeFullNameRef(argType)})CS2X_RefObjOnStack(&{localName}, ");
 							WriteExpression(expression);
 							writer.Write("))");
