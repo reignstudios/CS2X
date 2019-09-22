@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Symbols;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Runtime.InteropServices;
+using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace CS2X.Core.Transpilers
 {
@@ -757,11 +758,20 @@ namespace CS2X.Core.Transpilers
 				else writer.WriteLine("int main(int argc, char** argv)");
 				writer.WriteLine('{');
 				writer.AddTab();
+
+				bool wroteLocals = false;
+				if (!mainMethod.ReturnsVoid)
+				{
+					if (mainMethod.ReturnType.SpecialType != SpecialType.System_Int32) throw new Exception("Main method return type can only be void or int");
+					writer.WriteLinePrefix("int returnCode;");
+					wroteLocals = true;
+				}
 				if (mainMethod.Parameters.Length != 0)
 				{
 					writer.WriteLinePrefix("int i;");
-					writer.WriteLine();
+					wroteLocals = true;
 				}
+				if (wroteLocals) writer.WriteLine();
 
 				writer.WriteLinePrefix("/* Init main thread unahandled exeption jump */");
 				writer.WriteLinePrefix("jmp_buf CS2X_UnhandledThreadExceptionBuff;");
@@ -785,7 +795,10 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
 				if (mainMethod.Parameters.Length == 0)
 				{
-					writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}();");
+					// invoke managed main method
+					if (!mainMethod.ReturnsVoid) writer.WritePrefix("returnCode = ");
+					else writer.WritePrefix();
+					writer.WriteLine($"{GetMethodFullName(mainMethod)}();");
 				}
 				else
 				{
@@ -793,7 +806,7 @@ namespace CS2X.Core.Transpilers
 					var arrayType = project.compilation.CreateArrayTypeSymbol(stringType);
 					TrackArrayType(arrayType);
 
-					// GC allocate array
+					// GC allocate array and copy args
 					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgs = {GetNewArrayMethod(stringType)}(sizeof({GetTypeFullName(stringType)}), argc, &{GetRuntimeTypeObjFullName(arrayType)});");
 					writer.WriteLinePrefix("for (i = 0; i != argc; ++i)");
 					writer.WriteLinePrefix('{');
@@ -808,10 +821,15 @@ namespace CS2X.Core.Transpilers
 					writer.WriteLinePrefix($"for (i2 = 0; i2 != managedArgLength; ++i2) (&managedArgsRuntimeOffset[i]->{GetFieldFullName(firstCharField)})[i2] = (char16_t)argv[i][i2];");
 					writer.RemoveTab();
 					writer.WriteLinePrefix('}');
-					writer.WriteLinePrefix($"{GetMethodFullName(mainMethod)}(managedArgs);");
+
+					// invoke managed main method
+					if (!mainMethod.ReturnsVoid) writer.WritePrefix("returnCode = ");
+					else writer.WritePrefix();
+					writer.WriteLine($"{GetMethodFullName(mainMethod)}(managedArgs);");
 				}
 				writer.WriteLinePrefix("CS2X_GC_Collect();");
-				writer.WriteLinePrefix("return 0;");
+				if (!mainMethod.ReturnsVoid) writer.WriteLinePrefix("return returnCode;");
+				else writer.WriteLinePrefix("return 0;");
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}
@@ -895,9 +913,50 @@ namespace CS2X.Core.Transpilers
 						writer.WriteLine();
 						writer.WriteLinePrefix("/* Init runtime type vtabel */");
 					}
-					var highestMethod = FindHighestVirtualMethodSlot(type, method);
-					if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = {GetMethodFullName(highestMethod)};");
-					else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(method)} = 0;");
+					
+					var resolvedMethod = method;
+					void WriteResolvedMethod()
+					{
+						var highestMethod = FindHighestVirtualMethodSlot(type, resolvedMethod);
+						if (highestMethod.IsGenericMethod)
+						{
+							bool AllTypeArgsMatch(ImmutableArray<ITypeSymbol> args1, ImmutableArray<ITypeSymbol> args2)
+							{
+								if (args1.Length != args2.Length) return false;
+								for (int i = 0; i != args1.Length; ++i)
+								{
+									if (!args1[i].Equals(args2[i])) return false;
+								}
+								return true;
+							}
+
+							highestMethod = genericMethods.First
+							(
+								x =>
+								(x.Equals(highestMethod) || x.ConstructedFrom.Equals(highestMethod)) &&
+								AllTypeArgsMatch(x.TypeArguments, resolvedMethod.TypeArguments)
+							);
+						}
+						if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(resolvedMethod)} = {GetMethodFullName(highestMethod)};");
+						else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(resolvedMethod)} = 0;");
+					}
+
+					if (method.IsGenericMethod)
+					{
+						if (IsResolvedGenericMethod(method)) throw new Exception("Expected unresolved generic method");
+						foreach (var genericMethod in genericMethods)
+						{
+							if (genericMethod.ConstructedFrom.Equals(method))
+							{
+								resolvedMethod = genericMethod;
+								WriteResolvedMethod();
+							}
+						}
+					}
+					else
+					{
+						WriteResolvedMethod();
+					}
 				}
 			}
 		}
@@ -1017,12 +1076,34 @@ namespace CS2X.Core.Transpilers
 			{
 				if (method.MethodKind == MethodKind.DelegateInvoke) continue;// ignore delegate invoke virtual
 				if (method.IsStatic) throw new NotSupportedException("Virtual static method not supported: " + method.Name);
-				writer.WritePrefix($"{GetTypeFullNameRef(method.ReturnType)} (*{GetVTableMethodFullName(method)})(");
-				if (type.IsReferenceType) writer.Write($"{GetTypeFullNameRef(type)} self");
-				else writer.Write($"{GetTypeFullName(type)}* self");
-				if (method.Parameters.Length != 0) writer.Write(", ");
-				WriteParameters(method.Parameters);
-				writer.WriteLine(");");
+
+				var resolvedMethod = method;
+				void WriteResolvedMethod()
+				{
+					writer.WritePrefix($"{GetTypeFullNameRef(resolvedMethod.ReturnType)} (*{GetVTableMethodFullName(resolvedMethod)})(");
+					if (type.IsReferenceType) writer.Write($"{GetTypeFullNameRef(type)} self");
+					else writer.Write($"{GetTypeFullName(type)}* self");
+					if (resolvedMethod.Parameters.Length != 0) writer.Write(", ");
+					WriteParameters(resolvedMethod.Parameters);
+					writer.WriteLine(");");
+				}
+
+				if (method.IsGenericMethod)
+				{
+					if (IsResolvedGenericMethod(method)) throw new Exception("Expected unresolved generic method");
+					foreach (var genericMethod in genericMethods)
+					{
+						if (genericMethod.ConstructedFrom.Equals(method))
+						{
+							resolvedMethod = genericMethod;
+							WriteResolvedMethod();
+						}
+					}
+				}
+				else
+				{
+					WriteResolvedMethod();
+				}
 			}
 			writer.RemoveTab();
 			writer.WriteLine($"}} {runtimeTypeName};");
@@ -1140,15 +1221,17 @@ namespace CS2X.Core.Transpilers
 			if (method.ContainingType.SpecialType == SpecialType.System_Void) return false;
 			if (method.ContainingType.IsGenericType && !IsResolvedGenericType(method.ContainingType)) return false;
 			if (method.IsAbstract) return false;
-			if (method.IsGenericMethod && method.IsDefinition) return false;
+			if (method.IsGenericMethod && !IsResolvedGenericMethod(method)) return false;
+
+			// extra generic validation
 			if (method.IsGenericMethod)
 			{
-				if (method.TypeArguments.Length != method.TypeParameters.Length) throw new NotImplementedException("TypeArguments and TypeParameters for generic method length don't match: " + method.FullName());
+				if (method.TypeArguments.Length != method.TypeParameters.Length) throw new Exception("TypeArguments and TypeParameters for generic method length don't match: " + method.FullName());
 				for (int i = 0; i != method.TypeArguments.Length; ++i)
 				{
 					var arg = method.TypeArguments[i];
 					var param = method.TypeParameters[i];
-					if (arg == param) return false;
+					if (arg.Equals(param)) throw new Exception("TypeArguments and TypeParameters for generic method don't match: " + method.FullName());
 				}
 			}
 
@@ -1226,7 +1309,7 @@ namespace CS2X.Core.Transpilers
 							string ptr = string.Empty;
 							writer.Write(GetTypeFullNameRef(parameter.Type));
 							if (IsParameterPassByRef(parameter)) writer.Write('*');
-							if (parameter != lastParameter) writer.Write(", ");
+							if (!parameter.Equals(lastParameter)) writer.Write(", ");
 						}
 						writer.WriteLine(");");
 						return true;
@@ -1337,7 +1420,7 @@ namespace CS2X.Core.Transpilers
 										foreach (var parameter in baseConstructor.Parameters)
 										{
 											writer.Write(GetParameterFullName(parameter));
-											if (parameter != last) writer.Write(", ");
+											if (!parameter.Equals(last)) writer.Write(", ");
 										}
 										writer.WriteLine(");");
 									}
@@ -1355,10 +1438,9 @@ namespace CS2X.Core.Transpilers
 								}
 								else if (isVirtualAutoPropertyMethod)
 								{
-									string caller = string.Empty;
-									if (!method.IsStatic) caller = "self->";
-									if (method.MethodKind == MethodKind.PropertyGet) writer.WriteLinePrefix($"return {caller}{GetFieldFullName(virtualAutoPropertyField)};");
-									else if (method.MethodKind == MethodKind.PropertySet) writer.WriteLinePrefix($"{caller}{GetFieldFullName(virtualAutoPropertyField)} = {GetParameterFullName(method.Parameters[0])};");
+									if (method.IsStatic) throw new NotSupportedException("Virtual auto property cannot be static");
+									if (method.MethodKind == MethodKind.PropertyGet) writer.WriteLinePrefix($"return self->{GetFieldFullName(virtualAutoPropertyField)};");
+									else if (method.MethodKind == MethodKind.PropertySet) writer.WriteLinePrefix($"self->{GetFieldFullName(virtualAutoPropertyField)} = {GetParameterFullName(method.Parameters[0])};");
 									else throw new NotImplementedException("Virtual auto property method kind is invalid: " + method.MethodKind);
 								}
 								else
@@ -1616,7 +1698,7 @@ namespace CS2X.Core.Transpilers
 						foreach (var parameter in method.Parameters)
 						{
 							writer.Write(GetTypeFullNameRef(parameter.Type));
-							if (parameter != last) writer.Write(", ");
+							if (!parameter.Equals(last)) writer.Write(", ");
 						}
 					}
 
@@ -1626,7 +1708,7 @@ namespace CS2X.Core.Transpilers
 						foreach (var parameter in method.Parameters)
 						{
 							writer.Write(GetParameterFullName(parameter));
-							if (parameter != last) writer.Write(", ");
+							if (!parameter.Equals(last)) writer.Write(", ");
 						}
 					}
 
@@ -1730,7 +1812,7 @@ namespace CS2X.Core.Transpilers
 				string ptr = string.Empty;
 				if (IsParameterPassByRef(parameter)) ptr = "*";
 				writer.Write($"{GetTypeFullNameRef(parameter.Type)}{ptr} {GetParameterFullName(parameter)}");
-				if (parameter != lastParameter) writer.Write(", ");
+				if (!parameter.Equals(lastParameter)) writer.Write(", ");
 			}
 		}
 		#endregion
@@ -2338,7 +2420,11 @@ namespace CS2X.Core.Transpilers
 				var accessExpression = (MemberAccessExpressionSyntax)expression;
 				expression = accessExpression.Expression;
 			}
-			else if (expression is IdentifierNameSyntax && expression.Parent is MemberAccessExpressionSyntax && ((MemberAccessExpressionSyntax)expression.Parent).Expression != expression)
+			else if
+			(
+				(expression is IdentifierNameSyntax || expression is GenericNameSyntax) &&
+				expression.Parent is MemberAccessExpressionSyntax && ((MemberAccessExpressionSyntax)expression.Parent).Expression != expression
+			)
 			{
 				return GetCaller((MemberAccessExpressionSyntax)expression.Parent);
 			}
@@ -2347,9 +2433,9 @@ namespace CS2X.Core.Transpilers
 				var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 				if
 				(
-					!symbol.IsStatic &&
-					(symbol.ContainingType == method.ContainingType ||
-					(method.ContainingType.IsGenericType && !method.ContainingType.IsDefinition && symbol.ContainingType == method.ContainingType.ConstructedFrom))
+					!symbol.IsStatic && symbol.ContainingType != null &&
+					(symbol.ContainingType.Equals(method.ContainingType) ||
+					(method.ContainingType.IsGenericType && !method.ContainingType.IsDefinition && symbol.ContainingType.Equals(method.ContainingType.ConstructedFrom)))
 				)
 				{
 					expression = SyntaxFactory.ThisExpression();
@@ -2999,7 +3085,7 @@ namespace CS2X.Core.Transpilers
 					writer.Write(')');
 					return;
 				}
-				else if (method.MethodKind == MethodKind.BuiltinOperator && method.ContainingType != null && method.ContainingType.BaseType == multicastDelegateType)
+				else if (method.MethodKind == MethodKind.BuiltinOperator && method.ContainingType != null && multicastDelegateType.Equals(method.ContainingType.BaseType))
 				{
 					if (expression.OperatorToken.ValueText == "+=") method = FindMethodByName(delegateType, "Combine");
 					else if (expression.OperatorToken.ValueText == "-=") method = FindMethodByName(delegateType, "Remove");
@@ -3094,7 +3180,7 @@ namespace CS2X.Core.Transpilers
 				if (callerType.TypeKind == TypeKind.Enum && !method.IsExtensionMethod) throw new NotImplementedException("Non extension Enum method not supported: " + expression.ToFullString());
 				if (callerType.IsValueType)
 				{
-					if (method.ContainingType == objectType) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
+					if (method.ContainingType.Equals(objectType)) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
 					if (IsVirtualMethod(method)) throw new NotSupportedException("ValueType virtual invoke not supported: " + expression.ToFullString());
 				}
 			}
@@ -3217,10 +3303,10 @@ namespace CS2X.Core.Transpilers
 					if
 					(
 						expression.OperatorToken.ValueText == "+" &&
-						operatorMethod.ReturnType == type &&
+						operatorMethod.ReturnType.Equals(type) &&
 						operatorMethod.Parameters.Length == 2 &&
-						operatorMethod.Parameters[0].Type == type &&
-						operatorMethod.Parameters[1].Type == type
+						operatorMethod.Parameters[0].Type.Equals(type) &&
+						operatorMethod.Parameters[1].Type.Equals(type)
 					)
 					{
 						var delegateType = type.BaseType.BaseType;
@@ -3229,10 +3315,10 @@ namespace CS2X.Core.Transpilers
 					else if
 					(
 						expression.OperatorToken.ValueText == "-" &&
-						operatorMethod.ReturnType == type &&
+						operatorMethod.ReturnType.Equals(type) &&
 						operatorMethod.Parameters.Length == 2 &&
-						operatorMethod.Parameters[0].Type == type &&
-						operatorMethod.Parameters[1].Type == type
+						operatorMethod.Parameters[0].Type.Equals(type) &&
+						operatorMethod.Parameters[1].Type.Equals(type)
 					)
 					{
 						var delegateType = type.BaseType.BaseType;
@@ -3486,7 +3572,7 @@ namespace CS2X.Core.Transpilers
 			if (type.Kind == SymbolKind.NamedType)
 			{
 				var namedType = (INamedTypeSymbol)type;
-				if (namedType.IsGenericType) TrackGenericType(namedType);
+				if (IsResolvedGenericType(namedType)) TrackGenericType(namedType);
 			}
 			else if (type.Kind == SymbolKind.ArrayType)
 			{
@@ -3557,7 +3643,7 @@ namespace CS2X.Core.Transpilers
 			{
 				string result = type.FullName();
 				ParseImplementationDetail(ref result);
-				return $"t_{base.GetTypeFullName(type)}{result}GENERIC";
+				return $"t_{result}GENERIC";
 			}
 			else
 			{
@@ -3626,7 +3712,30 @@ namespace CS2X.Core.Transpilers
 
 		private void CheckIfSpecialMethod(IMethodSymbol method)
 		{
-			if (method.IsGenericMethod) TrackGenericMethod(method);
+			if (IsResolvedGenericMethod(method))
+			{
+				bool wasTracked = genericMethods.Contains(method);
+				TrackGenericMethod(method);
+
+				// check if any resolved generic classes methods overrides this generic method and track it too
+				if (!wasTracked && (method.IsVirtual || method.IsAbstract) && !method.ContainingType.IsSealed)
+				{
+					var task = SymbolFinder.FindOverridesAsync(method, solution.roslynSolution);
+					task.Wait();
+					if (!task.IsCompletedSuccessfully) throw new Exception("FindOverridesAsync failed");
+					var methodOverrides = task.Result;
+					foreach (IMethodSymbol methodOverride in methodOverrides)
+					{
+						var genricType = genericTypes.FirstOrDefault(x => x.ConstructedFrom.Equals(methodOverride.ContainingType));
+						if (genricType != null)
+						{
+							var resolvedMethod = (IMethodSymbol)genricType.GetMembers().First(x => x.OriginalDefinition.Equals(methodOverride.OriginalDefinition));
+							resolvedMethod = resolvedMethod.Construct(method.TypeArguments.ToArray());
+							TrackGenericMethod(resolvedMethod);
+						}
+					}
+				}
+			}
 		}
 
 		protected override string GetMethodFullName(IMethodSymbol method)
@@ -3634,7 +3743,12 @@ namespace CS2X.Core.Transpilers
 			CheckIfSpecialMethod(method);
 			using (allowTypePrefix.Disable())
 			{
-				return $"m_{GetTypeFullName(method.ContainingType)}_{base.GetMethodFullName(method)}_{GetMethodOverloadIndex(method)}";
+				int index = GetMethodOverloadIndex(method);
+				string methodName;
+				if (method.IsGenericMethod) methodName = method.Name();
+				else methodName = method.Name;
+				ParseImplementationDetail(ref methodName);
+				return $"m_{GetTypeFullName(method.ContainingType)}_{methodName}_{index}";
 			}
 		}
 
@@ -3643,7 +3757,9 @@ namespace CS2X.Core.Transpilers
 			if (!IsVirtualMethod(method)) throw new NotSupportedException("Non virtual method has no vtable method name: " + method.FullName());
 			CheckIfSpecialMethod(method);
 			int vTableIndex = GetVirtualMethodOverloadIndex(method);
-			string methodName = method.Name;
+			string methodName;
+			if (method.IsGenericMethod) methodName = method.Name();
+			else methodName = method.Name;
 			ParseImplementationDetail(ref methodName);
 			return $"vTable_{methodName}_{vTableIndex}";
 		}

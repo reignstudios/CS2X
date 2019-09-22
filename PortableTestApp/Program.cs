@@ -1,4 +1,4 @@
-﻿using CS2X;
+﻿/*using CS2X;
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
@@ -479,4 +479,41 @@ namespace PortableTestApp
 			i = -1;
         }
     }
+}*/
+
+using System;
+using PortableTestApp.Test;
+
+namespace PortableTestApp
+{
+	static class Program
+	{
+		static int Main(string[] args)
+		{
+			// print args
+			Console.WriteLine("Printing args...");
+			foreach (string arg in args)
+			{
+				Console.WriteLine("Arg: " + arg);
+			}
+			Console.WriteLine();
+
+			// run basic tests
+			Console.WriteLine("Running tests...");
+			Log(ClassNesting.RunTest(), "ClassNesting");
+			Log(ClassVsStruct.RunTest(), "ClassVsStruct");
+			Log(VirtualMethods.RunTest(), "VirtualMethods");
+			Log(Generics.RunTest(), "Generics");
+			Console.WriteLine("TESTS DONE!");
+
+			// return result code
+			return 99;
+		}
+
+		static void Log(bool success, string message)
+		{
+			if (success) Console.WriteLine("SUCCESS: " + message);
+			else Console.WriteLine("ERROR: " + message);
+		}
+	}
 }

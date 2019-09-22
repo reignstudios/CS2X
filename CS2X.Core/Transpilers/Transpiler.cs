@@ -118,7 +118,7 @@ namespace CS2X.Core.Transpilers
 		protected bool IsAutoProperty(IPropertySymbol property, out IFieldSymbol field)
 		{
 			var members = property.ContainingType.GetMembers();
-			field = (IFieldSymbol)members.FirstOrDefault(x => x.Kind == SymbolKind.Field && ((IFieldSymbol)x).AssociatedSymbol == property);
+			field = (IFieldSymbol)members.FirstOrDefault(x => x.Kind == SymbolKind.Field && property.Equals(((IFieldSymbol)x).AssociatedSymbol));
 			return field != null;
 		}
 
@@ -132,7 +132,7 @@ namespace CS2X.Core.Transpilers
 				return false;
 			}
 			property = method.AssociatedSymbol as IPropertySymbol;
-			return property != null && IsAutoProperty((IPropertySymbol)method.AssociatedSymbol, out field);
+			return property != null && IsAutoProperty(property, out field);
 		}
 
 		protected bool IsEmptyType(ITypeSymbol type, bool staticsDontCount = true)
@@ -243,7 +243,7 @@ namespace CS2X.Core.Transpilers
 				if (member.Kind == SymbolKind.Method)
 				{
 					var otherMethod = (IMethodSymbol)member;
-					if (otherMethod.Equals(method) || (method.IsExtensionMethod && method.ReducedFrom == otherMethod)) break;
+					if (otherMethod.Equals(method) || (method.IsExtensionMethod && otherMethod.Equals(method.ReducedFrom))) break;
 					else if (otherMethod.Name == method.Name) ++index;
 				}
 			}
@@ -265,7 +265,7 @@ namespace CS2X.Core.Transpilers
 				{
 					var memberMethod = member as IMethodSymbol;
 					if (memberMethod == null) continue;
-					if (method == memberMethod)
+					if (method.Equals(memberMethod) || (method.IsGenericMethod && method.ConstructedFrom.Equals(memberMethod)))
 					{
 						found = true;
 						break;
@@ -307,9 +307,11 @@ namespace CS2X.Core.Transpilers
 			{
 				foreach (var member in baseType.GetMembers())
 				{
-					if (member.Kind != SymbolKind.Method || (!member.IsOverride && !member.IsVirtual && !member.IsAbstract)) continue;
+					if (member.Kind != SymbolKind.Method) continue;
 					var method = (IMethodSymbol)member;
-					if (method == rootSlotMethod || method.OverriddenMethod == rootSlotMethod) return method;
+					if (!IsVirtualMethod(method)) continue;
+					if (method.Equals(rootSlotMethod) || rootSlotMethod.Equals(method.OverriddenMethod)) return method;
+					if (rootSlotMethod.IsGenericMethod && (rootSlotMethod.ConstructedFrom.Equals(method) || rootSlotMethod.ConstructedFrom.Equals(method.OverriddenMethod))) return method;
 				}
 				baseType = baseType.BaseType;
 			} while (baseType != null);
@@ -454,7 +456,7 @@ namespace CS2X.Core.Transpilers
 			var members = type.GetMembers();
 			var property = members.FirstOrDefault(x => x.Kind == SymbolKind.Property && x.Name == propertyName) as IPropertySymbol;
 			if (property == null) return null;
-			return members.FirstOrDefault(x => x.Kind == SymbolKind.Field && ((IFieldSymbol)x).AssociatedSymbol == property) as IFieldSymbol;
+			return members.FirstOrDefault(x => x.Kind == SymbolKind.Field && property.Equals(((IFieldSymbol)x).AssociatedSymbol)) as IFieldSymbol;
 		}
 
 		protected IMethodSymbol FindMethodByName(ITypeSymbol type, string methodName)
@@ -602,7 +604,7 @@ namespace CS2X.Core.Transpilers
 			var next = type;
 			while (next != null)
 			{
-				if (next == isType) return true;
+				if (next.Equals(isType)) return true;
 				next = next.BaseType;
 			}
 			return false;
@@ -636,7 +638,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (method.MethodKind != MethodKind.PropertyGet) return false;
 			if (!method.Name.EndsWith("get_Current")) return false;
-			if (method.ReturnType != objectType && HasInterface(method.ContainingType, ienumerator)) return false;
+			if (objectType.Equals(method.ReturnType) && HasInterface(method.ContainingType, ienumerator)) return false;
 			return true;
 		}
 
@@ -644,6 +646,13 @@ namespace CS2X.Core.Transpilers
 		{
 			if (!type.IsGenericType || type.IsDefinition) return false;
 			if (type.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
+			return true;
+		}
+
+		protected bool IsResolvedGenericMethod(IMethodSymbol method)
+		{
+			if (!method.IsGenericMethod || method.IsDefinition) return false;
+			if (method.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
 			return true;
 		}
 

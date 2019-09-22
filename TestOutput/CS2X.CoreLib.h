@@ -1172,6 +1172,7 @@ t_System_String* m_System_String_Concat_2(t_System_String* p_str0, t_System_Stri
 char m_System_String_op_Equality_0(t_System_String* p_value1, t_System_String* p_value2);
 char m_System_String_op_Inequality_0(t_System_String* p_value1, t_System_String* p_value2);
 char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value);
+void m_System_String__cctor_0();
 t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_handle);
 t_System_Type* m_System_Type__ctor_0(t_System_Type* self);
 t_System_ValueType* m_System_ValueType__ctor_0(t_System_ValueType* self);
@@ -1919,6 +1920,11 @@ char m_System_String_Equals_0(t_System_String* self, t_System_String* p_value)
 		}
 	}
 	return 1;
+}
+
+void m_System_String__cctor_0()
+{
+	f_System_String_Empty = StringLiteral_1;
 }
 
 t_System_Type* m_System_Type_GetTypeFromHandle_0(t_System_RuntimeTypeHandle p_handle)
@@ -3157,5 +3163,6 @@ void CS2X_InitDllImport_CS2X_CoreLib()
 void CS2X_InvokeStaticConstructors_CS2X_CoreLib()
 {
 	/* Init this project */
+	m_System_String__cctor_0();
 	m_System_Text_Encoding__cctor_0();
 }
