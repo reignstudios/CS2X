@@ -944,7 +944,7 @@ namespace CS2X.Core.Transpilers
 					if (method.IsGenericMethod)
 					{
 						if (IsResolvedGenericMethod(method)) throw new Exception("Expected unresolved generic method");
-						foreach (var genericMethod in genericMethods)
+						foreach (var genericMethod in genericMethods)// write all permutations
 						{
 							if (genericMethod.ConstructedFrom.Equals(method))
 							{
@@ -1091,7 +1091,7 @@ namespace CS2X.Core.Transpilers
 				if (method.IsGenericMethod)
 				{
 					if (IsResolvedGenericMethod(method)) throw new Exception("Expected unresolved generic method");
-					foreach (var genericMethod in genericMethods)
+					foreach (var genericMethod in genericMethods)// write all permutations
 					{
 						if (genericMethod.ConstructedFrom.Equals(method))
 						{
@@ -3714,11 +3714,11 @@ namespace CS2X.Core.Transpilers
 		{
 			if (IsResolvedGenericMethod(method))
 			{
-				bool wasTracked = genericMethods.Contains(method);
+				if (genericMethods.Contains(method)) return;
 				TrackGenericMethod(method);
 
-				// check if any resolved generic classes methods overrides this generic method and track it too
-				if (!wasTracked && (method.IsVirtual || method.IsAbstract) && !method.ContainingType.IsSealed)
+				// check method overrides of this generic method and track it too
+				if ((method.IsVirtual || method.IsAbstract) && !method.ContainingType.IsSealed)
 				{
 					var task = SymbolFinder.FindOverridesAsync(method, solution.roslynSolution);
 					task.Wait();
@@ -3726,13 +3726,36 @@ namespace CS2X.Core.Transpilers
 					var methodOverrides = task.Result;
 					foreach (IMethodSymbol methodOverride in methodOverrides)
 					{
-						var genricType = genericTypes.FirstOrDefault(x => x.ConstructedFrom.Equals(methodOverride.ContainingType));
-						if (genricType != null)
+						IMethodSymbol resolvedMethod = null;
+
+						// check if method is used in generic type
+						var genericType = genericTypes.FirstOrDefault(x => x.ConstructedFrom.Equals(methodOverride.ContainingType));
+						if (genericType != null)
 						{
-							var resolvedMethod = (IMethodSymbol)genricType.GetMembers().First(x => x.OriginalDefinition.Equals(methodOverride.OriginalDefinition));
-							resolvedMethod = resolvedMethod.Construct(method.TypeArguments.ToArray());
-							TrackGenericMethod(resolvedMethod);
+							resolvedMethod = (IMethodSymbol)genericType.GetMembers().First(x => x.OriginalDefinition.Equals(methodOverride.OriginalDefinition));
 						}
+
+						// construct method and track
+						if (resolvedMethod == null) resolvedMethod = methodOverride.Construct(method.TypeArguments.ToArray());
+						else resolvedMethod = resolvedMethod.Construct(method.TypeArguments.ToArray());
+
+						TrackGenericMethod(resolvedMethod);
+					}
+				}
+				
+				// check overridden methods of this generic method and track it too
+				if (method.IsOverride)
+				{
+					var overriddenMethod = method.ConstructedFrom.OverriddenMethod;
+					while (overriddenMethod != null)
+					{
+						IMethodSymbol resolvedMethod = null;
+
+						// check if method is used in generic type
+						resolvedMethod = overriddenMethod.Construct(method.TypeArguments.ToArray());
+						TrackGenericMethod(resolvedMethod);
+
+						overriddenMethod = overriddenMethod.OverriddenMethod;
 					}
 				}
 			}

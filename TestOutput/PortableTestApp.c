@@ -220,6 +220,7 @@ typedef struct rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC
 	t_System_RuntimeType runtimeType;
 	char (*vTable_MyVirt_Object__0)(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_Object* p_value);
 	char (*vTable_MyVirt_String__0)(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_String* p_value);
+	char (*vTable_MyVirt2_Object__0)(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_Object* p_value);
 } rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC;
 rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ;
 int8_t rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,67,0,108,0,97,0,115,0,115,0,50,0,60,0,68,0,111,0,117,0,98,0,108,0,101,0,62,0,0,0}; /* GenericClass2<Double> */
@@ -230,6 +231,7 @@ typedef struct rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC
 	t_System_RuntimeType runtimeType;
 	char (*vTable_MyVirt_Object__0)(t_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t_System_Object* p_value);
 	char (*vTable_MyVirt_String__0)(t_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t_System_String* p_value);
+	char (*vTable_MyVirt2_Object__0)(t_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t_System_Object* p_value);
 } rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC;
 rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ;
 int8_t rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,67,0,108,0,97,0,115,0,115,0,60,0,68,0,111,0,117,0,98,0,108,0,101,0,62,0,0,0}; /* GenericClass<Double> */
@@ -296,6 +298,8 @@ char m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__
 char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__1(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_Object* p_value);
 char m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__1(t_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t_System_String* p_value);
 char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__1(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_String* p_value);
+char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_Object* p_value);
+char m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1(t_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t_System_Object* p_value);
 char m_t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self, t_System_Object* p_t);
 
 /* =============================== */
@@ -417,7 +421,7 @@ char m_PortableTestApp_Test_Generics_RunTest_0()
 	l_obj2_1->f__p_k__BackingField_1 = l_obj_0;
 	l_obj5_4->f_i_1 = 77;
 	l_obj5_4->f_i2_1 = 0;
-	return m_PortableTestApp_Test_Generics_Foo_Int32__1(1) == 0 && m_PortableTestApp_Test_Generics_Foo_Object__1(1) == 0 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo_0(l_obj_0, 1) == 1 && m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo_0(l_obj2_1, l_obj_0) == l_obj_0 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__1(l_obj_0, l_obj_0, m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ))) == 2 && m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__1(l_obj2_1, l_obj2_1, m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ))) == l_obj_0 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__1(l_obj_0, 5, l_obj2_1) == l_obj2_1 && ((rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_3->CS2X_RuntimeType)->vTable_MyVirt_Object__0(l_obj4_3, l_obj3_2) && ((rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_3->CS2X_RuntimeType)->vTable_MyVirt_String__0(l_obj4_3, f_System_String_Empty) && m_t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(l_obj5_4, 0);
+	return m_PortableTestApp_Test_Generics_Foo_Int32__1(1) == 0 && m_PortableTestApp_Test_Generics_Foo_Object__1(1) == 0 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo_0(l_obj_0, 1) == 1 && m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo_0(l_obj2_1, l_obj_0) == l_obj_0 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__1(l_obj_0, l_obj_0, m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ))) == 2 && m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__1(l_obj2_1, l_obj2_1, m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ))) == l_obj_0 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__1(l_obj_0, 5, l_obj2_1) == l_obj2_1 && ((rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_3->CS2X_RuntimeType)->vTable_MyVirt_Object__0(l_obj4_3, l_obj3_2) && ((rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_3->CS2X_RuntimeType)->vTable_MyVirt_String__0(l_obj4_3, f_System_String_Empty) && ((rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC*)l_obj3_2->CS2X_RuntimeType)->vTable_MyVirt2_Object__0(l_obj3_2, l_obj3_2) && m_t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(l_obj5_4, 0);
 }
 
 char m_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t_PortableTestApp_Test_VirtualMethods_Base* self, char p_value)
@@ -584,6 +588,16 @@ char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String_
 	return p_value != 0;
 }
 
+char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_Object* p_value)
+{
+	return p_value != 0;
+}
+
+char m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1(t_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t_System_Object* p_value)
+{
+	return 0;
+}
+
 char m_t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self, t_System_Object* p_t)
 {
 	return p_t == 0;
@@ -713,8 +727,10 @@ void CS2X_InitLib_PortableTestApp()
 	/* Init runtime type vtabel */
 	rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt_Object__0 = m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__1;
 	rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt_String__0 = m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__1;
+	rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt2_Object__0 = m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1;
 	rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt_Object__0 = m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__1;
 	rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt_String__0 = m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__1;
+	rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt2_Object__0 = m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1;
 
 	/* <<< === Array Runtime Types === >>> */
 	/* Init runtime type objects */

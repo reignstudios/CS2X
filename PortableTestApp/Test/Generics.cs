@@ -20,6 +20,7 @@
 				obj.Foo2<object>(obj, new GenericClass<object>()) == 2 && obj2.Foo2(obj2, new GenericClass<object>()) == obj &&
 				obj.Boo<object>(5, obj2) == obj2 &&
 				obj4.MyVirt<object>(obj3) && obj4.MyVirt(string.Empty) &&
+				obj3.MyVirt2<object>(obj3) &&
 				obj5.Aaa<object>(null);
 		}
 
@@ -74,12 +75,23 @@
 		{
 			return false;
 		}
+
+		public virtual bool MyVirt2<E>(E value) where E : class
+		{
+			return false;
+		}
 	}
 
 	class GenericClass2<T> : GenericClass<T>
 	{
 		public override bool MyVirt<E>(E value)
 		{
+			return value != null;
+		}
+
+		public override bool MyVirt2<E>(E value)
+		{
+			//if (base.MyVirt2<E>(value)) return false;
 			return value != null;
 		}
 	}
