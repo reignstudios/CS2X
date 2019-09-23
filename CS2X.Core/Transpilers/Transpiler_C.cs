@@ -2405,6 +2405,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is BinaryExpressionSyntax) BinaryExpression((BinaryExpressionSyntax)expression);
 			else if (expression is CastExpressionSyntax) CastExpression((CastExpressionSyntax)expression);
 			else if (expression is ThisExpressionSyntax) ThisExpression((ThisExpressionSyntax)expression);
+			else if (expression is BaseExpressionSyntax) BaseExpression((BaseExpressionSyntax)expression);
 			else if (expression is ElementAccessExpressionSyntax) ElementAccessExpression((ElementAccessExpressionSyntax)expression);
 			else if (expression is ParenthesizedExpressionSyntax) ParenthesizedExpression((ParenthesizedExpressionSyntax)expression);
 			else if (expression is SizeOfExpressionSyntax) SizeOfExpression((SizeOfExpressionSyntax)expression);
@@ -2583,6 +2584,11 @@ namespace CS2X.Core.Transpilers
 				{
 					WriteCaller(expression);
 					writer.Write("->");
+				}
+				else if (caller is BaseExpressionSyntax)
+				{
+					writer.Write(GetMethodFullName(method));
+					return;
 				}
 				else
 				{
@@ -3412,6 +3418,12 @@ namespace CS2X.Core.Transpilers
 		}
 
 		private void ThisExpression(ThisExpressionSyntax expression)
+		{
+			if (method.ContainingType.IsReferenceType) writer.Write("self");
+			else writer.Write("(*self)");
+		}
+
+		private void BaseExpression(BaseExpressionSyntax expression)
 		{
 			if (method.ContainingType.IsReferenceType) writer.Write("self");
 			else writer.Write("(*self)");

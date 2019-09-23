@@ -590,6 +590,10 @@ char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String_
 
 char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_Object* p_value)
 {
+	if (m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1(self, p_value))
+	{
+		return 0;
+	}
 	return p_value != 0;
 }
 

@@ -582,7 +582,9 @@ namespace CS2X.Core.Transpilers
 				}
 
 				// make sure we're constructing from generic source
-				return method.OriginalDefinition.Construct(typeParams);
+				if (method.ConstructedFrom != null) method = method.ConstructedFrom.Construct(typeParams);
+				else method = method.OriginalDefinition.Construct(typeParams);
+				return ResolveMethod(method, usedWithinMethod, semanticModel);// keep processing until fully resolved
 			}
 			else if (method.ContainingType != null && method.ContainingType.IsGenericType && method.ContainingType.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
 			{
@@ -592,11 +594,14 @@ namespace CS2X.Core.Transpilers
 				{
 					if (member.Kind != SymbolKind.Method) continue;
 					var memberMethod = (IMethodSymbol)member;
-					if (method.OriginalDefinition.Equals(memberMethod.OriginalDefinition)) return memberMethod;
+					if (method.OriginalDefinition.Equals(memberMethod.OriginalDefinition))
+					{
+						return ResolveMethod(memberMethod, usedWithinMethod, semanticModel);// keep processing until fully resolved
+					}
 				}
 			}
 
-			return method;
+			return method;// full resolved
 		}
 
 		protected bool IsOfType(ITypeSymbol type, ITypeSymbol isType)

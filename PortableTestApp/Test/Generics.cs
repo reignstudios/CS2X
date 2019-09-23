@@ -91,7 +91,7 @@
 
 		public override bool MyVirt2<E>(E value)
 		{
-			//if (base.MyVirt2<E>(value)) return false;
+			if (base.MyVirt2<E>(value)) return false;
 			return value != null;
 		}
 	}
