@@ -2,10 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    
+    <!-- Prevent .NET Core 3+ from generating exe -->
+    <UseAppHost>false</UseAppHost>
 
 		<!--Disable .NET Core SDK libs-->
 		<NoStdLib>true</NoStdLib>
+    <NoStandardLibraries>true</NoStandardLibraries>
 		<DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
