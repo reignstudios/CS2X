@@ -72,7 +72,7 @@ Almost zero performance loss. C# code will generate in a manner as if hand writt
 ## Building
 * Prerequisites
 	* Visual Studios 2019 (VS for Mac / MonoDevelop or VSCode have not yet been tested)
-	* .NET Core 2.2
+	* .NET Core 3.0
 	* .NET Compiler Platform SDK
 * Run: CS2X.Core.Test proj in VS. This will build "PortableTestApp.csproj" to "TestOutput" folder
-* NOTE: Very early stages so nothing else is supported yet.
+* NOTE: Early stages so nothing else is supported yet.
