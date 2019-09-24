@@ -2741,9 +2741,18 @@ namespace CS2X.Core.Transpilers
 				var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
 				var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
 				writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}), ");
-				if (!method.IsStatic) WriteCaller(expression);
-				else writer.Write("0");
-				writer.Write($", &{GetMethodFullName(method)})");
+				if (!IsVirtualMethod(method))
+				{
+					if (!method.IsStatic) WriteCaller(expression);
+					else writer.Write("0");
+					writer.Write($", &{GetMethodFullName(method)})");
+				}
+				else
+				{
+					if (method.IsStatic) throw new NotSupportedException("Binding to a static virtual method is not supported: " + method.Name);
+					var methodType = ResolveType(method.ContainingType);
+					writer.Write($"DELEGATE_OBJ, (({GetRuntimeTypeFullName(methodType)}*)DELEGATE_OBJ->CS2X_RuntimeType)->{GetVTableMethodFullName(method)})");
+				}
 			}
 			else
 			{
@@ -3110,6 +3119,22 @@ namespace CS2X.Core.Transpilers
 					if (expression.OperatorToken.ValueText == "+=") method = FindMethodByName(delegateType, "Combine");
 					else if (expression.OperatorToken.ValueText == "-=") method = FindMethodByName(delegateType, "Remove");
 					else throw new NotSupportedException("Unsupported assignment method for delegate: " + method.FullName());
+
+					bool isBindingToVirtualMethod = false;
+					var rightSymbol = semanticModel.GetSymbolInfo(expression.Right).Symbol;
+					if (rightSymbol is IMethodSymbol rightMethod && IsVirtualMethod(rightMethod))
+					{
+						isBindingToVirtualMethod = true;
+						writer.WriteLine('{');
+						writer.AddTab();
+						var rightCaller = GetCaller(expression.Right);
+						var rightCallerType = ResolveType(semanticModel.GetTypeInfo(rightCaller).Type);
+						writer.WriteLinePrefix(GetTypeFullNameRef(rightCallerType) + " DELEGATE_OBJ;");
+						writer.WritePrefix("DELEGATE_OBJ = ");
+						WriteExpression(rightCaller);
+						writer.WriteLine(';');
+						writer.WritePrefix();
+					}
 					WriteExpression(expression.Left);
 					writer.Write(" = ");
 					writer.Write(GetMethodFullName(method));
@@ -3118,6 +3143,13 @@ namespace CS2X.Core.Transpilers
 					writer.Write(", ");
 					WriteExpression(expression.Right);
 					writer.Write(')');
+					if (isBindingToVirtualMethod)
+					{
+						isBindingToVirtualMethod = true;
+						writer.WriteLine(';');
+						writer.RemoveTab();
+						writer.WritePrefix('}');
+					}
 					return;
 				}
 			}
@@ -3683,7 +3715,7 @@ namespace CS2X.Core.Transpilers
 			string ptr = string.Empty;
 			while (true)
 			{
-				if (type .Kind == SymbolKind.ArrayType)
+				if (type.Kind == SymbolKind.ArrayType)
 				{
 					ptr += "*";
 					var t = (IArrayTypeSymbol)type;

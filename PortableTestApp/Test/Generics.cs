@@ -2,25 +2,26 @@
 {
 	static class Generics
 	{
-		private delegate bool FooCallback<T>(T value);
+		private delegate bool GenericFooCallback<T>(T value);
 
 		public static bool RunTest()
 		{
-			FooCallback<bool> callback2 = Poo<bool>;
-			callback2 += new FooCallback<bool>(Poo<bool>);
+			GenericFooCallback<bool> callback = Poo<bool>;
+			callback += new GenericFooCallback<bool>(Poo<bool>);
 
 			var obj = new GenericClass<int>();
 			var obj2 = new GenericClass<object>();
 			var obj3 = new GenericClass2<double>();
 			var obj4 = (GenericClass<double>)obj3;
 			var obj5 = new GenericClass<long>.B<object>();
+			callback += obj.TestVirt<bool>;
 			obj.i = 1;
 			obj.p = 2;
 			obj2.i = obj;
 			obj2.p = obj;
 			obj5.i = 77;
 			obj5.i2 = null;
-			return !callback2(true) &&
+			return !callback(true) &&
 				Poo<int>(true) == 0 && Poo<object>(true) == null &&
 				obj.Foo(1) == 1 && obj2.Foo(obj) == obj &&
 				obj.Foo2<object>(obj, new GenericClass<object>()) == 2 && obj2.Foo2(obj2, new GenericClass<object>()) == obj &&
@@ -77,6 +78,11 @@
 			}
 		}
 
+		public virtual bool TestVirt<E>(E value)
+		{
+			return false;
+		}
+
 		public virtual bool MyVirt<E>(E value) where E : class
 		{
 			return false;
@@ -90,6 +96,11 @@
 
 	class GenericClass2<T> : GenericClass<T>
 	{
+		public override bool TestVirt<E>(E value)
+		{
+			return true;
+		}
+
 		public override bool MyVirt<E>(E value)
 		{
 			return value != null;
