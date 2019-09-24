@@ -1727,21 +1727,30 @@ namespace CS2X.Core.Transpilers
 						callingConventionName = $"__{callingConventionValue.ToString().ToLower()} ";
 					}
 
-					writer.WritePrefix($"if (self->{selfFieldName} != 0) ((void ({callingConventionName}*)({GetTypeFullName(objectType)}*, ");
+					string returnTypeName = GetTypeFullNameRef(method.ReturnType);
+					if (!method.ReturnsVoid) writer.WriteLinePrefix(returnTypeName + " result;");
+					writer.WritePrefix($"if (self->{selfFieldName} != 0) ");
+					if (!method.ReturnsVoid) writer.Write("result = ");
+					writer.Write($"(({returnTypeName} ({callingConventionName}*)({GetTypeFullName(objectType)}*, ");
 					WriteParameterArgTypes();
 					writer.Write($"))self->{funcFieldName})(self->{selfFieldName}, ");
 					WriteParameterArgs();
 					writer.WriteLine(");");
 
-					writer.WritePrefix($"else ((void ({callingConventionName}*)(");
+					writer.WritePrefix($"else ");
+					if (!method.ReturnsVoid) writer.Write("result = ");
+					writer.Write($"(({returnTypeName} ({callingConventionName}*)(");
 					WriteParameterArgTypes();
 					writer.Write($"))self->{funcFieldName})(");
 					WriteParameterArgs();
 					writer.WriteLine(");");
 
-					writer.WritePrefix($"if (self->{nextFieldName} != 0) {GetMethodFullName(method)}(self->{nextFieldName}, ");
+					writer.WritePrefix($"if (self->{nextFieldName} != 0) ");
+					if (!method.ReturnsVoid) writer.Write("result = ");
+					writer.Write($"{GetMethodFullName(method)}(self->{nextFieldName}, ");
 					WriteParameterArgs();
 					writer.WriteLine(");");
+					if (!method.ReturnsVoid) writer.WriteLinePrefix("return result;");
 				}
 				else
 				{
@@ -2693,32 +2702,7 @@ namespace CS2X.Core.Transpilers
 			else if (symbol.Kind == SymbolKind.Method)
 			{
 				var method = (IMethodSymbol)symbol;
-				var operation = semanticModel.GetOperation(expression);
-				if (operation == null && expression.Parent != null) operation = semanticModel.GetOperation(expression.Parent);
-				if (operation != null && operation.Kind == OperationKind.MethodReference)
-				{
-					if (operation.Parent != null)
-					{
-						if (operation.Parent.Kind != OperationKind.DelegateCreation) throw new NotSupportedException("MethodReference operation has unsupported parent kind: " + operation.Parent.Kind);
-					}
-					else
-					{
-						throw new NotSupportedException("MethodReference operation has null parent");
-					}
-
-					var type = operation.Parent.Type;
-					var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
-					var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
-					var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
-					writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}), ");
-					if (!method.IsStatic) WriteCaller(expression);
-					else writer.Write("0");
-					writer.Write($", &{GetMethodFullName(method)})");
-				}
-				else
-				{
-					WriteMethodInvoke(method, expression);
-				}
+				WriteDelegateCreationOrMethodInvoke(expression, method);
 			}
 			else
 			{
@@ -2727,6 +2711,44 @@ namespace CS2X.Core.Transpilers
 
 			// close conversion method
 			if (requiredConversion) writer.Write(')');
+		}
+
+		private void WriteGenericName(GenericNameSyntax expression)
+		{
+			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+			if (symbol is IMethodSymbol method) WriteDelegateCreationOrMethodInvoke(expression, method);
+			else if (symbol != null) throw new NotSupportedException("Unsupported GenericNameSyntax: " + symbol.FullName());
+			else throw new NotSupportedException("Unsupported GenericNameSyntax");
+		}
+
+		private void WriteDelegateCreationOrMethodInvoke(ExpressionSyntax expression, IMethodSymbol method)
+		{
+			var operation = semanticModel.GetOperation(expression);
+			if (operation == null && expression.Parent != null) operation = semanticModel.GetOperation(expression.Parent);
+			if (operation != null && operation.Kind == OperationKind.MethodReference)
+			{
+				if (operation.Parent != null)
+				{
+					if (operation.Parent.Kind != OperationKind.DelegateCreation) throw new NotSupportedException("MethodReference operation has unsupported parent kind: " + operation.Parent.Kind);
+				}
+				else
+				{
+					throw new NotSupportedException("MethodReference operation has null parent");
+				}
+
+				var type = operation.Parent.Type;
+				var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
+				var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
+				var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
+				writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}), ");
+				if (!method.IsStatic) WriteCaller(expression);
+				else writer.Write("0");
+				writer.Write($", &{GetMethodFullName(method)})");
+			}
+			else
+			{
+				WriteMethodInvoke(method, expression);
+			}
 		}
 
 		private void WriteArgumentList(IMethodSymbol method, ArgumentListSyntax argumentList)
@@ -2795,14 +2817,6 @@ namespace CS2X.Core.Transpilers
 					if (i != method.Parameters.Length - 1) writer.Write(", ");
 				}
 			}
-		}
-
-		private void WriteGenericName(GenericNameSyntax expression)
-		{
-			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
-			if (symbol is IMethodSymbol) WriteMethodInvoke((IMethodSymbol)symbol, expression);
-			else if (symbol != null) throw new NotSupportedException("Unsupported GenericNameSyntax: " + symbol.FullName());
-			else throw new NotSupportedException("Unsupported GenericNameSyntax");
 		}
 
 		private void MemberAccessExpression(MemberAccessExpressionSyntax expression)

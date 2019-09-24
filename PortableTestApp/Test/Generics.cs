@@ -2,8 +2,13 @@
 {
 	static class Generics
 	{
+		private delegate bool FooCallback<T>(T value);
+
 		public static bool RunTest()
 		{
+			FooCallback<bool> callback2 = Poo<bool>;
+			callback2 += new FooCallback<bool>(Poo<bool>);
+
 			var obj = new GenericClass<int>();
 			var obj2 = new GenericClass<object>();
 			var obj3 = new GenericClass2<double>();
@@ -15,7 +20,8 @@
 			obj2.p = obj;
 			obj5.i = 77;
 			obj5.i2 = null;
-			return Foo<int>(true) == 0 && Foo<object>(true) == null &&
+			return !callback2(true) &&
+				Poo<int>(true) == 0 && Poo<object>(true) == null &&
 				obj.Foo(1) == 1 && obj2.Foo(obj) == obj &&
 				obj.Foo2<object>(obj, new GenericClass<object>()) == 2 && obj2.Foo2(obj2, new GenericClass<object>()) == obj &&
 				obj.Boo<object>(5, obj2) == obj2 &&
@@ -24,7 +30,7 @@
 				obj5.Aaa<object>(null);
 		}
 
-		private static T Foo<T>(bool value)
+		private static T Poo<T>(bool value)
 		{
 			if (value) return default(T);
 			else return default;
