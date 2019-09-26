@@ -14,9 +14,16 @@ typedef struct t_PortableTestApp_Test_ClassVsStruct_Struct t_PortableTestApp_Tes
 typedef struct t_PortableTestApp_Test_ClassVsStruct t_PortableTestApp_Test_ClassVsStruct;
 typedef struct t_PortableTestApp_Test_Delegates t_PortableTestApp_Test_Delegates;
 typedef struct t_PortableTestApp_Test_SuperDelegates t_PortableTestApp_Test_SuperDelegates;
+typedef struct t_PortableTestApp_Test_Enums t_PortableTestApp_Test_Enums;
+typedef struct t_PortableTestApp_Test_ExtensionMethods t_PortableTestApp_Test_ExtensionMethods;
+typedef struct t_PortableTestApp_Test_ExtensionMethods_MyClass t_PortableTestApp_Test_ExtensionMethods_MyClass;
+typedef struct t_PortableTestApp_Test_FieldsAndProperties t_PortableTestApp_Test_FieldsAndProperties;
 typedef struct t_PortableTestApp_Test_Generics t_PortableTestApp_Test_Generics;
 typedef struct t_PortableTestApp_Test_VirtualMethods_Base t_PortableTestApp_Test_VirtualMethods_Base;
 typedef struct t_PortableTestApp_Test_VirtualMethods t_PortableTestApp_Test_VirtualMethods;
+typedef struct t_PortableTestApp_Test_ExtensionMethods_MyStruct t_PortableTestApp_Test_ExtensionMethods_MyStruct;
+typedef struct t_PortableTestApp_Test_FieldsAndProperties_MyStruct t_PortableTestApp_Test_FieldsAndProperties_MyStruct;
+typedef uint8_t t_PortableTestApp_Test_Enums_MyEnum;
 typedef struct t_PortableTestApp_Test_Delegates_FooCallback t_PortableTestApp_Test_Delegates_FooCallback;
 
 /* =============================== */
@@ -81,6 +88,31 @@ struct t_PortableTestApp_Test_SuperDelegates
 	t_PortableTestApp_Test_Delegates* f_self_1;
 };
 
+struct t_PortableTestApp_Test_Enums
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t_PortableTestApp_Test_ExtensionMethods
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t_PortableTestApp_Test_ExtensionMethods_MyClass
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f_i_1;
+};
+
+struct t_PortableTestApp_Test_FieldsAndProperties
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f__myProperty2_k__BackingField_1;
+	int32_t f_myField_1;
+};
+int32_t f_PortableTestApp_Test_FieldsAndProperties__myStaticProperty2_k__BackingField;
+int32_t f_PortableTestApp_Test_FieldsAndProperties_myStaticField;
+
 struct t_PortableTestApp_Test_Generics
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -95,6 +127,20 @@ struct t_PortableTestApp_Test_VirtualMethods
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
 };
+
+struct t_PortableTestApp_Test_ExtensionMethods_MyStruct
+{
+	int32_t f_i_2;
+};
+
+struct t_PortableTestApp_Test_FieldsAndProperties_MyStruct
+{
+	int32_t f_i_2;
+};
+
+#define f_PortableTestApp_Test_Enums_MyEnum_A 6
+#define f_PortableTestApp_Test_Enums_MyEnum_B 7
+#define f_PortableTestApp_Test_Enums_MyEnum_C 1
 
 struct t_PortableTestApp_Test_Delegates_FooCallback
 {
@@ -220,6 +266,38 @@ rt_PortableTestApp_Test_SuperDelegates rt_PortableTestApp_Test_SuperDelegates_OB
 int8_t rt_PortableTestApp_Test_SuperDelegates_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,117,0,112,0,101,0,114,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,115,0,0,0}; /* SuperDelegates */
 int8_t rt_PortableTestApp_Test_SuperDelegates_METADATA_FullName[84] = {0,0,0,0,0,0,0,0,35,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,83,0,117,0,112,0,101,0,114,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,115,0,0,0}; /* PortableTestApp.Test.SuperDelegates */
 
+typedef struct rt_PortableTestApp_Test_Enums
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_Enums;
+rt_PortableTestApp_Test_Enums rt_PortableTestApp_Test_Enums_OBJ;
+int8_t rt_PortableTestApp_Test_Enums_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,69,0,110,0,117,0,109,0,115,0,0,0}; /* Enums */
+int8_t rt_PortableTestApp_Test_Enums_METADATA_FullName[66] = {0,0,0,0,0,0,0,0,26,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,69,0,110,0,117,0,109,0,115,0,0,0}; /* PortableTestApp.Test.Enums */
+
+typedef struct rt_PortableTestApp_Test_ExtensionMethods
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_ExtensionMethods;
+rt_PortableTestApp_Test_ExtensionMethods rt_PortableTestApp_Test_ExtensionMethods_OBJ;
+int8_t rt_PortableTestApp_Test_ExtensionMethods_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0}; /* ExtensionMethods */
+int8_t rt_PortableTestApp_Test_ExtensionMethods_METADATA_FullName[88] = {0,0,0,0,0,0,0,0,37,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0}; /* PortableTestApp.Test.ExtensionMethods */
+
+typedef struct rt_PortableTestApp_Test_ExtensionMethods_MyClass
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_ExtensionMethods_MyClass;
+rt_PortableTestApp_Test_ExtensionMethods_MyClass rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ;
+int8_t rt_PortableTestApp_Test_ExtensionMethods_MyClass_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,77,0,121,0,67,0,108,0,97,0,115,0,115,0,0,0}; /* MyClass */
+int8_t rt_PortableTestApp_Test_ExtensionMethods_MyClass_METADATA_FullName[104] = {0,0,0,0,0,0,0,0,45,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,46,0,77,0,121,0,67,0,108,0,97,0,115,0,115,0,0,0}; /* PortableTestApp.Test.ExtensionMethods.MyClass */
+
+typedef struct rt_PortableTestApp_Test_FieldsAndProperties
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_FieldsAndProperties;
+rt_PortableTestApp_Test_FieldsAndProperties rt_PortableTestApp_Test_FieldsAndProperties_OBJ;
+int8_t rt_PortableTestApp_Test_FieldsAndProperties_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,70,0,105,0,101,0,108,0,100,0,115,0,65,0,110,0,100,0,80,0,114,0,111,0,112,0,101,0,114,0,116,0,105,0,101,0,115,0,0,0}; /* FieldsAndProperties */
+int8_t rt_PortableTestApp_Test_FieldsAndProperties_METADATA_FullName[94] = {0,0,0,0,0,0,0,0,40,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,70,0,105,0,101,0,108,0,100,0,115,0,65,0,110,0,100,0,80,0,114,0,111,0,112,0,101,0,114,0,116,0,105,0,101,0,115,0,0,0}; /* PortableTestApp.Test.FieldsAndProperties */
+
 typedef struct rt_PortableTestApp_Test_Generics
 {
 	t_System_RuntimeType runtimeType;
@@ -247,6 +325,30 @@ typedef struct rt_PortableTestApp_Test_VirtualMethods
 rt_PortableTestApp_Test_VirtualMethods rt_PortableTestApp_Test_VirtualMethods_OBJ;
 int8_t rt_PortableTestApp_Test_VirtualMethods_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,86,0,105,0,114,0,116,0,117,0,97,0,108,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0}; /* VirtualMethods */
 int8_t rt_PortableTestApp_Test_VirtualMethods_METADATA_FullName[84] = {0,0,0,0,0,0,0,0,35,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,86,0,105,0,114,0,116,0,117,0,97,0,108,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0}; /* PortableTestApp.Test.VirtualMethods */
+
+typedef struct rt_PortableTestApp_Test_ExtensionMethods_MyStruct
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_ExtensionMethods_MyStruct;
+rt_PortableTestApp_Test_ExtensionMethods_MyStruct rt_PortableTestApp_Test_ExtensionMethods_MyStruct_OBJ;
+int8_t rt_PortableTestApp_Test_ExtensionMethods_MyStruct_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,77,0,121,0,83,0,116,0,114,0,117,0,99,0,116,0,0,0}; /* MyStruct */
+int8_t rt_PortableTestApp_Test_ExtensionMethods_MyStruct_METADATA_FullName[106] = {0,0,0,0,0,0,0,0,46,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,46,0,77,0,121,0,83,0,116,0,114,0,117,0,99,0,116,0,0,0}; /* PortableTestApp.Test.ExtensionMethods.MyStruct */
+
+typedef struct rt_PortableTestApp_Test_FieldsAndProperties_MyStruct
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_FieldsAndProperties_MyStruct;
+rt_PortableTestApp_Test_FieldsAndProperties_MyStruct rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_OBJ;
+int8_t rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,77,0,121,0,83,0,116,0,114,0,117,0,99,0,116,0,0,0}; /* MyStruct */
+int8_t rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_METADATA_FullName[112] = {0,0,0,0,0,0,0,0,49,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,70,0,105,0,101,0,108,0,100,0,115,0,65,0,110,0,100,0,80,0,114,0,111,0,112,0,101,0,114,0,116,0,105,0,101,0,115,0,46,0,77,0,121,0,83,0,116,0,114,0,117,0,99,0,116,0,0,0}; /* PortableTestApp.Test.FieldsAndProperties.MyStruct */
+
+typedef struct rt_PortableTestApp_Test_Enums_MyEnum
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_Enums_MyEnum;
+rt_PortableTestApp_Test_Enums_MyEnum rt_PortableTestApp_Test_Enums_MyEnum_OBJ;
+int8_t rt_PortableTestApp_Test_Enums_MyEnum_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0}; /* MyEnum */
+int8_t rt_PortableTestApp_Test_Enums_MyEnum_METADATA_FullName[80] = {0,0,0,0,0,0,0,0,33,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,69,0,110,0,117,0,109,0,115,0,46,0,77,0,121,0,69,0,110,0,117,0,109,0,0,0}; /* PortableTestApp.Test.Enums.MyEnum */
 
 typedef struct rt_PortableTestApp_Test_Delegates_FooCallback
 {
@@ -326,6 +428,15 @@ int8_t rt_System_String___ARRAY_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,83,
 int8_t rt_System_String___ARRAY_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,15,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,91,0,93,0,0,0}; /* System.String[] */
 
 /* =============================== */
+/* PValue to IValue inline helpers */
+/* =============================== */
+t_PortableTestApp_Test_FieldsAndProperties_MyStruct* CS2X_PValueToIValue_t_PortableTestApp_Test_FieldsAndProperties_MyStruct(t_PortableTestApp_Test_FieldsAndProperties_MyStruct pvalue, t_PortableTestApp_Test_FieldsAndProperties_MyStruct* ivalue)
+{
+	(*ivalue) = pvalue;
+	return ivalue;
+}
+
+/* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
 int32_t m_PortableTestApp_Program_Main_0(t_System_String** p_args);
@@ -348,6 +459,18 @@ char m_PortableTestApp_Test_Delegates_FooVirtual_0(t_PortableTestApp_Test_Delega
 t_PortableTestApp_Test_Delegates* m_PortableTestApp_Test_Delegates__ctor_0(t_PortableTestApp_Test_Delegates* self);
 char m_PortableTestApp_Test_SuperDelegates_FooVirtual_0(t_PortableTestApp_Test_SuperDelegates* self, char p_value);
 t_PortableTestApp_Test_SuperDelegates* m_PortableTestApp_Test_SuperDelegates__ctor_0(t_PortableTestApp_Test_SuperDelegates* self);
+char m_PortableTestApp_Test_Enums_RunTest_0();
+char m_PortableTestApp_Test_ExtensionMethods_RunTest_0();
+void m_PortableTestApp_Test_ExtensionMethods_FooClass_0(t_PortableTestApp_Test_ExtensionMethods_MyClass* p_self);
+void m_PortableTestApp_Test_ExtensionMethods_FooStruct_0(t_PortableTestApp_Test_ExtensionMethods_MyStruct p_self);
+t_PortableTestApp_Test_ExtensionMethods_MyClass* m_PortableTestApp_Test_ExtensionMethods_MyClass__ctor_0(t_PortableTestApp_Test_ExtensionMethods_MyClass* self);
+int32_t m_PortableTestApp_Test_FieldsAndProperties_get_myStaticProperty_0();
+int32_t m_PortableTestApp_Test_FieldsAndProperties_get_myProperty_0(t_PortableTestApp_Test_FieldsAndProperties* self);
+char m_PortableTestApp_Test_FieldsAndProperties_RunTest_0();
+t_PortableTestApp_Test_FieldsAndProperties* m_PortableTestApp_Test_FieldsAndProperties_Foo_0(t_PortableTestApp_Test_FieldsAndProperties* self);
+t_PortableTestApp_Test_FieldsAndProperties_MyStruct m_PortableTestApp_Test_FieldsAndProperties_Foo2_0(t_PortableTestApp_Test_FieldsAndProperties* self);
+t_PortableTestApp_Test_FieldsAndProperties* m_PortableTestApp_Test_FieldsAndProperties__ctor_0(t_PortableTestApp_Test_FieldsAndProperties* self);
+void m_PortableTestApp_Test_FieldsAndProperties__cctor_0();
 char m_PortableTestApp_Test_Generics_RunTest_0();
 char m_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t_PortableTestApp_Test_VirtualMethods_Base* self, char p_value);
 t_PortableTestApp_Test_VirtualMethods_Base* m_PortableTestApp_Test_VirtualMethods_Base__ctor_0(t_PortableTestApp_Test_VirtualMethods_Base* self);
@@ -355,6 +478,10 @@ char m_PortableTestApp_Test_VirtualMethods_VirtualFoo_0(t_PortableTestApp_Test_V
 char m_PortableTestApp_Test_VirtualMethods_AbstractFoo_0(t_PortableTestApp_Test_VirtualMethods* self, char p_value);
 char m_PortableTestApp_Test_VirtualMethods_RunTest_0();
 t_PortableTestApp_Test_VirtualMethods* m_PortableTestApp_Test_VirtualMethods__ctor_0(t_PortableTestApp_Test_VirtualMethods* self);
+t_PortableTestApp_Test_ExtensionMethods_MyStruct m_PortableTestApp_Test_ExtensionMethods_MyStruct__ctor_0();
+char m_PortableTestApp_Test_FieldsAndProperties_MyStruct_Foo_0(t_PortableTestApp_Test_FieldsAndProperties_MyStruct* self);
+t_PortableTestApp_Test_FieldsAndProperties_MyStruct m_PortableTestApp_Test_FieldsAndProperties_MyStruct__ctor_0();
+t_PortableTestApp_Test_Enums_MyEnum m_PortableTestApp_Test_Enums_MyEnum__ctor_0();
 t_PortableTestApp_Test_Delegates_FooCallback* m_PortableTestApp_Test_Delegates_FooCallback__ctor_0(t_PortableTestApp_Test_Delegates_FooCallback* self, t_System_Object* p_object, intptr_t p_method);
 char m_PortableTestApp_Test_Delegates_FooCallback_Invoke_0(t_PortableTestApp_Test_Delegates_FooCallback* self, char p_value);
 /* =============================== */
@@ -403,10 +530,13 @@ int32_t m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	m_System_Console_WriteLine_0(StringLiteral_4);
 	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_ClassNesting_RunTest_0(), StringLiteral_5);
 	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_ClassVsStruct_RunTest_0(), StringLiteral_6);
-	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_7);
-	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_8);
-	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_9);
-	m_System_Console_WriteLine_0(StringLiteral_10);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Enums_RunTest_0(), StringLiteral_7);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_ExtensionMethods_RunTest_0(), StringLiteral_8);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_FieldsAndProperties_RunTest_0(), StringLiteral_9);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_10);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_11);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_12);
+	m_System_Console_WriteLine_0(StringLiteral_13);
 	return 99;
 }
 
@@ -414,11 +544,11 @@ void m_PortableTestApp_Program_Log_0(char p_success, t_System_String* p_message)
 {
 	if (p_success)
 	{
-		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_11, p_message));
+		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_14, p_message));
 	}
 	else
 	{
-		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_12, p_message));
+		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_15, p_message));
 	}
 }
 
@@ -548,6 +678,90 @@ t_PortableTestApp_Test_SuperDelegates* m_PortableTestApp_Test_SuperDelegates__ct
 	return self;
 }
 
+char m_PortableTestApp_Test_Enums_RunTest_0()
+{
+	t_PortableTestApp_Test_Enums_MyEnum l_e_0;
+	l_e_0 = 7;
+	return (int32_t)l_e_0 == 7 && sizeof(t_PortableTestApp_Test_Enums_MyEnum) == sizeof(uint8_t);
+}
+
+char m_PortableTestApp_Test_ExtensionMethods_RunTest_0()
+{
+	t_PortableTestApp_Test_ExtensionMethods_MyClass* l_myClass_0;
+	t_PortableTestApp_Test_ExtensionMethods_MyStruct l_myStruct_1;
+	l_myClass_0 = m_PortableTestApp_Test_ExtensionMethods_MyClass__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_Test_ExtensionMethods_MyClass), &rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ));
+	l_myStruct_1 = m_PortableTestApp_Test_ExtensionMethods_MyStruct__ctor_0();
+	m_PortableTestApp_Test_ExtensionMethods_FooClass_0(l_myClass_0);
+	m_PortableTestApp_Test_ExtensionMethods_FooStruct_0(l_myStruct_1);
+	return l_myClass_0->f_i_1 == 123 && l_myStruct_1.f_i_2 == 0;
+}
+
+void m_PortableTestApp_Test_ExtensionMethods_FooClass_0(t_PortableTestApp_Test_ExtensionMethods_MyClass* p_self)
+{
+	p_self->f_i_1 = 123;
+}
+
+void m_PortableTestApp_Test_ExtensionMethods_FooStruct_0(t_PortableTestApp_Test_ExtensionMethods_MyStruct p_self)
+{
+	p_self.f_i_2 = 123;
+}
+
+t_PortableTestApp_Test_ExtensionMethods_MyClass* m_PortableTestApp_Test_ExtensionMethods_MyClass__ctor_0(t_PortableTestApp_Test_ExtensionMethods_MyClass* self)
+{
+	m_System_Object__ctor_0(self);
+	return self;
+}
+
+int32_t m_PortableTestApp_Test_FieldsAndProperties_get_myStaticProperty_0()
+{
+	return 33;
+}
+
+int32_t m_PortableTestApp_Test_FieldsAndProperties_get_myProperty_0(t_PortableTestApp_Test_FieldsAndProperties* self)
+{
+	return 33;
+}
+
+char m_PortableTestApp_Test_FieldsAndProperties_RunTest_0()
+{
+	t_PortableTestApp_Test_FieldsAndProperties* l_obj_0;
+	t_PortableTestApp_Test_FieldsAndProperties_MyStruct IVALUE_t_PortableTestApp_Test_FieldsAndProperties_MyStruct;
+	l_obj_0 = m_PortableTestApp_Test_FieldsAndProperties__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_Test_FieldsAndProperties), &rt_PortableTestApp_Test_FieldsAndProperties_OBJ));
+	f_PortableTestApp_Test_FieldsAndProperties__myStaticProperty2_k__BackingField = 34;
+	l_obj_0->f__myProperty2_k__BackingField_1 = 34;
+	if (m_PortableTestApp_Test_FieldsAndProperties_Foo_0(m_PortableTestApp_Test_FieldsAndProperties_Foo_0(l_obj_0))->f_myField_1 == 0)
+	{
+		return 0;
+	}
+	if (!m_PortableTestApp_Test_FieldsAndProperties_MyStruct_Foo_0(CS2X_PValueToIValue_t_PortableTestApp_Test_FieldsAndProperties_MyStruct(m_PortableTestApp_Test_FieldsAndProperties_Foo2_0(l_obj_0), &IVALUE_t_PortableTestApp_Test_FieldsAndProperties_MyStruct)))
+	{
+		return 0;
+	}
+	return m_PortableTestApp_Test_FieldsAndProperties_get_myStaticProperty_0() == m_PortableTestApp_Test_FieldsAndProperties_get_myProperty_0(l_obj_0) && f_PortableTestApp_Test_FieldsAndProperties_myStaticField == l_obj_0->f_myField_1 && f_PortableTestApp_Test_FieldsAndProperties__myStaticProperty2_k__BackingField == l_obj_0->f__myProperty2_k__BackingField_1;
+}
+
+t_PortableTestApp_Test_FieldsAndProperties* m_PortableTestApp_Test_FieldsAndProperties_Foo_0(t_PortableTestApp_Test_FieldsAndProperties* self)
+{
+	return self;
+}
+
+t_PortableTestApp_Test_FieldsAndProperties_MyStruct m_PortableTestApp_Test_FieldsAndProperties_Foo2_0(t_PortableTestApp_Test_FieldsAndProperties* self)
+{
+	return m_PortableTestApp_Test_FieldsAndProperties_MyStruct__ctor_0();
+}
+
+t_PortableTestApp_Test_FieldsAndProperties* m_PortableTestApp_Test_FieldsAndProperties__ctor_0(t_PortableTestApp_Test_FieldsAndProperties* self)
+{
+	m_System_Object__ctor_0(self);
+	self->f_myField_1 = 44;
+	return self;
+}
+
+void m_PortableTestApp_Test_FieldsAndProperties__cctor_0()
+{
+	f_PortableTestApp_Test_FieldsAndProperties_myStaticField = 44;
+}
+
 char m_PortableTestApp_Test_Generics_RunTest_0()
 {
 	t_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC* l_callback_0;
@@ -611,6 +825,29 @@ t_PortableTestApp_Test_VirtualMethods* m_PortableTestApp_Test_VirtualMethods__ct
 {
 	m_PortableTestApp_Test_VirtualMethods_Base__ctor_0(self);
 	return self;
+}
+
+t_PortableTestApp_Test_ExtensionMethods_MyStruct m_PortableTestApp_Test_ExtensionMethods_MyStruct__ctor_0()
+{
+	t_PortableTestApp_Test_ExtensionMethods_MyStruct selfObj = {0};
+	return selfObj;
+}
+
+char m_PortableTestApp_Test_FieldsAndProperties_MyStruct_Foo_0(t_PortableTestApp_Test_FieldsAndProperties_MyStruct* self)
+{
+	return (*self).f_i_2 == 0;
+}
+
+t_PortableTestApp_Test_FieldsAndProperties_MyStruct m_PortableTestApp_Test_FieldsAndProperties_MyStruct__ctor_0()
+{
+	t_PortableTestApp_Test_FieldsAndProperties_MyStruct selfObj = {0};
+	return selfObj;
+}
+
+t_PortableTestApp_Test_Enums_MyEnum m_PortableTestApp_Test_Enums_MyEnum__ctor_0()
+{
+	t_PortableTestApp_Test_Enums_MyEnum selfObj = {0};
+	return selfObj;
 }
 
 t_PortableTestApp_Test_Delegates_FooCallback* m_PortableTestApp_Test_Delegates_FooCallback__ctor_0(t_PortableTestApp_Test_Delegates_FooCallback* self, t_System_Object* p_object, intptr_t p_method)
@@ -865,6 +1102,26 @@ void CS2X_InitLib_PortableTestApp()
 	rt_PortableTestApp_Test_SuperDelegates_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_PortableTestApp_Test_Delegates_OBJ;
 	rt_PortableTestApp_Test_SuperDelegates_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_SuperDelegates_METADATA_Name;
 	rt_PortableTestApp_Test_SuperDelegates_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_SuperDelegates_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_Enums_OBJ, 0, sizeof(rt_PortableTestApp_Test_Enums));
+	rt_PortableTestApp_Test_Enums_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_Enums_OBJ;
+	rt_PortableTestApp_Test_Enums_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_PortableTestApp_Test_Enums_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Enums_METADATA_Name;
+	rt_PortableTestApp_Test_Enums_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Enums_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_ExtensionMethods_OBJ, 0, sizeof(rt_PortableTestApp_Test_ExtensionMethods));
+	rt_PortableTestApp_Test_ExtensionMethods_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_ExtensionMethods_OBJ;
+	rt_PortableTestApp_Test_ExtensionMethods_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_PortableTestApp_Test_ExtensionMethods_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_METADATA_Name;
+	rt_PortableTestApp_Test_ExtensionMethods_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ, 0, sizeof(rt_PortableTestApp_Test_ExtensionMethods_MyClass));
+	rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ;
+	rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyClass_METADATA_Name;
+	rt_PortableTestApp_Test_ExtensionMethods_MyClass_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyClass_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_FieldsAndProperties_OBJ, 0, sizeof(rt_PortableTestApp_Test_FieldsAndProperties));
+	rt_PortableTestApp_Test_FieldsAndProperties_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_FieldsAndProperties_OBJ;
+	rt_PortableTestApp_Test_FieldsAndProperties_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_PortableTestApp_Test_FieldsAndProperties_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_METADATA_Name;
+	rt_PortableTestApp_Test_FieldsAndProperties_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_METADATA_FullName;
 	memset(&rt_PortableTestApp_Test_Generics_OBJ, 0, sizeof(rt_PortableTestApp_Test_Generics));
 	rt_PortableTestApp_Test_Generics_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_Generics_OBJ;
 	rt_PortableTestApp_Test_Generics_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
@@ -880,6 +1137,21 @@ void CS2X_InitLib_PortableTestApp()
 	rt_PortableTestApp_Test_VirtualMethods_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_PortableTestApp_Test_VirtualMethods_Base_OBJ;
 	rt_PortableTestApp_Test_VirtualMethods_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_VirtualMethods_METADATA_Name;
 	rt_PortableTestApp_Test_VirtualMethods_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_VirtualMethods_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_ExtensionMethods_MyStruct_OBJ, 0, sizeof(rt_PortableTestApp_Test_ExtensionMethods_MyStruct));
+	rt_PortableTestApp_Test_ExtensionMethods_MyStruct_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_ExtensionMethods_MyStruct_OBJ;
+	rt_PortableTestApp_Test_ExtensionMethods_MyStruct_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_PortableTestApp_Test_ExtensionMethods_MyStruct_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyStruct_METADATA_Name;
+	rt_PortableTestApp_Test_ExtensionMethods_MyStruct_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyStruct_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_OBJ, 0, sizeof(rt_PortableTestApp_Test_FieldsAndProperties_MyStruct));
+	rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_OBJ;
+	rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_ValueType_OBJ;
+	rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_METADATA_Name;
+	rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_Enums_MyEnum_OBJ, 0, sizeof(rt_PortableTestApp_Test_Enums_MyEnum));
+	rt_PortableTestApp_Test_Enums_MyEnum_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_Enums_MyEnum_OBJ;
+	rt_PortableTestApp_Test_Enums_MyEnum_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Enum_OBJ;
+	rt_PortableTestApp_Test_Enums_MyEnum_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Enums_MyEnum_METADATA_Name;
+	rt_PortableTestApp_Test_Enums_MyEnum_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Enums_MyEnum_METADATA_FullName;
 	memset(&rt_PortableTestApp_Test_Delegates_FooCallback_OBJ, 0, sizeof(rt_PortableTestApp_Test_Delegates_FooCallback));
 	rt_PortableTestApp_Test_Delegates_FooCallback_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_Delegates_FooCallback_OBJ;
 	rt_PortableTestApp_Test_Delegates_FooCallback_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_MulticastDelegate_OBJ;
@@ -903,12 +1175,26 @@ void CS2X_InitLib_PortableTestApp()
 	((t_System_String*)rt_PortableTestApp_Test_Delegates_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_SuperDelegates_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_SuperDelegates_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Enums_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Enums_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyClass_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyClass_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Generics_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Generics_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_VirtualMethods_Base_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_VirtualMethods_Base_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_VirtualMethods_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_VirtualMethods_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyStruct_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_ExtensionMethods_MyStruct_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_MyStruct_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Enums_MyEnum_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Enums_MyEnum_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 
@@ -1005,6 +1291,7 @@ void CS2X_InvokeStaticConstructors_PortableTestApp()
 	/* Init this project */
 	m_PortableTestApp_Test_ClassNesting_SubClass__cctor_0();
 	m_PortableTestApp_Test_ClassNesting_SubClass_SubSubClass__cctor_0();
+	m_PortableTestApp_Test_FieldsAndProperties__cctor_0();
 }
 
 void CS2X_InitStringLiterals()
@@ -1022,6 +1309,9 @@ void CS2X_InitStringLiterals()
 	((t_System_String*)StringLiteral_10)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)StringLiteral_11)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)StringLiteral_12)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)StringLiteral_13)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)StringLiteral_14)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)StringLiteral_15)->CS2X_RuntimeType = &rt_System_String_OBJ;
 }
 
 /* =============================== */

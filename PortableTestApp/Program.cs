@@ -502,6 +502,9 @@ namespace PortableTestApp
 			Console.WriteLine("Running tests...");
 			Log(ClassNesting.RunTest(), "ClassNesting");
 			Log(ClassVsStruct.RunTest(), "ClassVsStruct");
+			Log(Enums.RunTest(), "Enums");
+			Log(ExtensionMethods.RunTest(), "ExtensionMethods");
+			Log(FieldsAndProperties.RunTest(), "FieldsAndProperties");
 			Log(VirtualMethods.RunTest(), "VirtualMethods");
 			Log(Generics.RunTest(), "Generics");
 			Log(Delegates.RunTest(), "Delegates");
