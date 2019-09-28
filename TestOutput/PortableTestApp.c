@@ -19,12 +19,15 @@ typedef struct t_PortableTestApp_Test_ExtensionMethods t_PortableTestApp_Test_Ex
 typedef struct t_PortableTestApp_Test_ExtensionMethods_MyClass t_PortableTestApp_Test_ExtensionMethods_MyClass;
 typedef struct t_PortableTestApp_Test_FieldsAndProperties t_PortableTestApp_Test_FieldsAndProperties;
 typedef struct t_PortableTestApp_Test_Generics t_PortableTestApp_Test_Generics;
+typedef struct t_PortableTestApp_Test_Interop t_PortableTestApp_Test_Interop;
 typedef struct t_PortableTestApp_Test_VirtualMethods_Base t_PortableTestApp_Test_VirtualMethods_Base;
 typedef struct t_PortableTestApp_Test_VirtualMethods t_PortableTestApp_Test_VirtualMethods;
 typedef struct t_PortableTestApp_Test_ExtensionMethods_MyStruct t_PortableTestApp_Test_ExtensionMethods_MyStruct;
 typedef struct t_PortableTestApp_Test_FieldsAndProperties_MyStruct t_PortableTestApp_Test_FieldsAndProperties_MyStruct;
 typedef uint8_t t_PortableTestApp_Test_Enums_MyEnum;
 typedef struct t_PortableTestApp_Test_Delegates_FooCallback t_PortableTestApp_Test_Delegates_FooCallback;
+typedef struct t_PortableTestApp_Test_Interop_MyDelegate t_PortableTestApp_Test_Interop_MyDelegate;
+typedef struct t_PortableTestApp_Test_Interop_FooDelegate t_PortableTestApp_Test_Interop_FooDelegate;
 
 /* =============================== */
 /* Forward declare Generic Types */
@@ -118,6 +121,13 @@ struct t_PortableTestApp_Test_Generics
 	t_System_RuntimeType* CS2X_RuntimeType;
 };
 
+struct t_PortableTestApp_Test_Interop
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+};
+char f_PortableTestApp_Test_Interop_fooStaticCalled;
+char f_PortableTestApp_Test_Interop_fooCalled;
+
 struct t_PortableTestApp_Test_VirtualMethods_Base
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
@@ -143,6 +153,22 @@ struct t_PortableTestApp_Test_FieldsAndProperties_MyStruct
 #define f_PortableTestApp_Test_Enums_MyEnum_C 1
 
 struct t_PortableTestApp_Test_Delegates_FooCallback
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	intptr_t f__methodPtr_1;
+	t_System_Object* f__target_1;
+	t_System_MulticastDelegate* f__next_2;
+};
+
+struct t_PortableTestApp_Test_Interop_MyDelegate
+{
+	t_System_RuntimeType* CS2X_RuntimeType;
+	intptr_t f__methodPtr_1;
+	t_System_Object* f__target_1;
+	t_System_MulticastDelegate* f__next_2;
+};
+
+struct t_PortableTestApp_Test_Interop_FooDelegate
 {
 	t_System_RuntimeType* CS2X_RuntimeType;
 	intptr_t f__methodPtr_1;
@@ -306,6 +332,14 @@ rt_PortableTestApp_Test_Generics rt_PortableTestApp_Test_Generics_OBJ;
 int8_t rt_PortableTestApp_Test_Generics_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,115,0,0,0}; /* Generics */
 int8_t rt_PortableTestApp_Test_Generics_METADATA_FullName[72] = {0,0,0,0,0,0,0,0,29,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,115,0,0,0}; /* PortableTestApp.Test.Generics */
 
+typedef struct rt_PortableTestApp_Test_Interop
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_Interop;
+rt_PortableTestApp_Test_Interop rt_PortableTestApp_Test_Interop_OBJ;
+int8_t rt_PortableTestApp_Test_Interop_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,0,0}; /* Interop */
+int8_t rt_PortableTestApp_Test_Interop_METADATA_FullName[70] = {0,0,0,0,0,0,0,0,28,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,0,0}; /* PortableTestApp.Test.Interop */
+
 typedef struct rt_PortableTestApp_Test_VirtualMethods_Base
 {
 	t_System_RuntimeType runtimeType;
@@ -357,6 +391,22 @@ typedef struct rt_PortableTestApp_Test_Delegates_FooCallback
 rt_PortableTestApp_Test_Delegates_FooCallback rt_PortableTestApp_Test_Delegates_FooCallback_OBJ;
 int8_t rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,70,0,111,0,111,0,67,0,97,0,108,0,108,0,98,0,97,0,99,0,107,0,0,0}; /* FooCallback */
 int8_t rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_FullName[98] = {0,0,0,0,0,0,0,0,42,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,115,0,46,0,70,0,111,0,111,0,67,0,97,0,108,0,108,0,98,0,97,0,99,0,107,0,0,0}; /* PortableTestApp.Test.Delegates.FooCallback */
+
+typedef struct rt_PortableTestApp_Test_Interop_MyDelegate
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_Interop_MyDelegate;
+rt_PortableTestApp_Test_Interop_MyDelegate rt_PortableTestApp_Test_Interop_MyDelegate_OBJ;
+int8_t rt_PortableTestApp_Test_Interop_MyDelegate_METADATA_Name[34] = {0,0,0,0,0,0,0,0,10,0,0,0,77,0,121,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* MyDelegate */
+int8_t rt_PortableTestApp_Test_Interop_MyDelegate_METADATA_FullName[92] = {0,0,0,0,0,0,0,0,39,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,46,0,77,0,121,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* PortableTestApp.Test.Interop.MyDelegate */
+
+typedef struct rt_PortableTestApp_Test_Interop_FooDelegate
+{
+	t_System_RuntimeType runtimeType;
+} rt_PortableTestApp_Test_Interop_FooDelegate;
+rt_PortableTestApp_Test_Interop_FooDelegate rt_PortableTestApp_Test_Interop_FooDelegate_OBJ;
+int8_t rt_PortableTestApp_Test_Interop_FooDelegate_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,70,0,111,0,111,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* FooDelegate */
+int8_t rt_PortableTestApp_Test_Interop_FooDelegate_METADATA_FullName[94] = {0,0,0,0,0,0,0,0,40,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,46,0,70,0,111,0,111,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* PortableTestApp.Test.Interop.FooDelegate */
 
 /* =============================== */
 /* Generic Runtime Types */
@@ -472,6 +522,13 @@ t_PortableTestApp_Test_FieldsAndProperties_MyStruct m_PortableTestApp_Test_Field
 t_PortableTestApp_Test_FieldsAndProperties* m_PortableTestApp_Test_FieldsAndProperties__ctor_0(t_PortableTestApp_Test_FieldsAndProperties* self);
 void m_PortableTestApp_Test_FieldsAndProperties__cctor_0();
 char m_PortableTestApp_Test_Generics_RunTest_0();
+uint32_t (__stdcall *m_PortableTestApp_Test_Interop_GetLastError_0)();
+intptr_t (*m_PortableTestApp_Test_Interop_GetFuncPtr_0)();
+void (*m_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0)(intptr_t, intptr_t);
+void m_PortableTestApp_Test_Interop_FooStatic_0();
+void m_PortableTestApp_Test_Interop_Foo_0(t_PortableTestApp_Test_Interop* self);
+char m_PortableTestApp_Test_Interop_RunTest_0();
+t_PortableTestApp_Test_Interop* m_PortableTestApp_Test_Interop__ctor_0(t_PortableTestApp_Test_Interop* self);
 char m_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t_PortableTestApp_Test_VirtualMethods_Base* self, char p_value);
 t_PortableTestApp_Test_VirtualMethods_Base* m_PortableTestApp_Test_VirtualMethods_Base__ctor_0(t_PortableTestApp_Test_VirtualMethods_Base* self);
 char m_PortableTestApp_Test_VirtualMethods_VirtualFoo_0(t_PortableTestApp_Test_VirtualMethods* self, char p_value);
@@ -484,6 +541,10 @@ t_PortableTestApp_Test_FieldsAndProperties_MyStruct m_PortableTestApp_Test_Field
 t_PortableTestApp_Test_Enums_MyEnum m_PortableTestApp_Test_Enums_MyEnum__ctor_0();
 t_PortableTestApp_Test_Delegates_FooCallback* m_PortableTestApp_Test_Delegates_FooCallback__ctor_0(t_PortableTestApp_Test_Delegates_FooCallback* self, t_System_Object* p_object, intptr_t p_method);
 char m_PortableTestApp_Test_Delegates_FooCallback_Invoke_0(t_PortableTestApp_Test_Delegates_FooCallback* self, char p_value);
+t_PortableTestApp_Test_Interop_MyDelegate* m_PortableTestApp_Test_Interop_MyDelegate__ctor_0(t_PortableTestApp_Test_Interop_MyDelegate* self, t_System_Object* p_object, intptr_t p_method);
+int32_t m_PortableTestApp_Test_Interop_MyDelegate_Invoke_0(t_PortableTestApp_Test_Interop_MyDelegate* self, int32_t p_value);
+t_PortableTestApp_Test_Interop_FooDelegate* m_PortableTestApp_Test_Interop_FooDelegate__ctor_0(t_PortableTestApp_Test_Interop_FooDelegate* self, t_System_Object* p_object, intptr_t p_method);
+void m_PortableTestApp_Test_Interop_FooDelegate_Invoke_0(t_PortableTestApp_Test_Interop_FooDelegate* self);
 /* =============================== */
 /* Forward decalre Generic Type Methods */
 /* =============================== */
@@ -512,6 +573,8 @@ char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String_
 char m_t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1(t_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t_System_Object* p_value);
 char m_t_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1(t_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t_System_Object* p_value);
 char m_t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self, t_System_Object* p_t);
+t_PortableTestApp_Test_Interop_MyDelegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__1(intptr_t p_ptr);
+intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__1(t_PortableTestApp_Test_Interop_FooDelegate* p_d, intptr_t* p_dThisPtr);
 
 /* =============================== */
 /* Method definitions */
@@ -533,10 +596,11 @@ int32_t m_PortableTestApp_Program_Main_0(t_System_String** p_args)
 	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Enums_RunTest_0(), StringLiteral_7);
 	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_ExtensionMethods_RunTest_0(), StringLiteral_8);
 	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_FieldsAndProperties_RunTest_0(), StringLiteral_9);
-	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_10);
-	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_11);
-	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_12);
-	m_System_Console_WriteLine_0(StringLiteral_13);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Interop_RunTest_0(), StringLiteral_10);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_11);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_12);
+	m_PortableTestApp_Program_Log_0(m_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_13);
+	m_System_Console_WriteLine_0(StringLiteral_14);
 	return 99;
 }
 
@@ -544,11 +608,11 @@ void m_PortableTestApp_Program_Log_0(char p_success, t_System_String* p_message)
 {
 	if (p_success)
 	{
-		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_14, p_message));
+		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_15, p_message));
 	}
 	else
 	{
-		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_15, p_message));
+		m_System_Console_WriteLine_0(m_System_String_Concat_0(StringLiteral_16, p_message));
 	}
 }
 
@@ -791,6 +855,56 @@ char m_PortableTestApp_Test_Generics_RunTest_0()
 	return !m_t_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_Invoke_0(l_callback_0, 1) && m_PortableTestApp_Test_Generics_Poo_Int32__1(1) == 0 && m_PortableTestApp_Test_Generics_Poo_Object__1(1) == 0 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo_0(l_obj_1, 1) == 1 && m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo_0(l_obj2_2, l_obj_1) == l_obj_1 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__1(l_obj_1, l_obj_1, m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ))) == 2 && m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__1(l_obj2_2, l_obj2_2, m_t_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ))) == l_obj_1 && m_t_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__1(l_obj_1, 5, l_obj2_2) == l_obj2_2 && ((rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_4->CS2X_RuntimeType)->vTable_MyVirt_Object__0(l_obj4_4, l_obj3_3) && ((rt_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_4->CS2X_RuntimeType)->vTable_MyVirt_String__0(l_obj4_4, f_System_String_Empty) && ((rt_PortableTestApp_Test_GenericClass2_System_Double_GENERIC*)l_obj3_3->CS2X_RuntimeType)->vTable_MyVirt2_Object__0(l_obj3_3, l_obj3_3) && m_t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(l_obj5_5, 0);
 }
 
+uint32_t m_PortableTestApp_Test_Interop_GetLastError_0_DllNotFoundException()
+{
+	CS2X_ThreadExceptionObject = m_System_DllNotFoundException__ctor_0(CS2X_AllocType(sizeof(t_System_DllNotFoundException), &rt_System_DllNotFoundException_OBJ));
+	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+}
+
+intptr_t m_PortableTestApp_Test_Interop_GetFuncPtr_0_DllNotFoundException()
+{
+	CS2X_ThreadExceptionObject = m_System_DllNotFoundException__ctor_0(CS2X_AllocType(sizeof(t_System_DllNotFoundException), &rt_System_DllNotFoundException_OBJ));
+	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+}
+
+void m_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0_DllNotFoundException(intptr_t p_delegateFuncPtr, intptr_t p_delegateThisPtr)
+{
+	CS2X_ThreadExceptionObject = m_System_DllNotFoundException__ctor_0(CS2X_AllocType(sizeof(t_System_DllNotFoundException), &rt_System_DllNotFoundException_OBJ));
+	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+}
+
+void m_PortableTestApp_Test_Interop_FooStatic_0()
+{
+	f_PortableTestApp_Test_Interop_fooStaticCalled = 1;
+}
+
+void m_PortableTestApp_Test_Interop_Foo_0(t_PortableTestApp_Test_Interop* self)
+{
+	f_PortableTestApp_Test_Interop_fooCalled = 1;
+}
+
+char m_PortableTestApp_Test_Interop_RunTest_0()
+{
+	intptr_t l_funcPtr_0;
+	t_PortableTestApp_Test_Interop_MyDelegate* l_myDelegate_1;
+	t_PortableTestApp_Test_Interop_FooDelegate* l_myFooDelegate_2;
+	intptr_t l_dFuncPtr_3;
+	intptr_t l_dThisPtr_4;
+	l_funcPtr_0 = (*m_PortableTestApp_Test_Interop_GetFuncPtr_0)();
+	l_myDelegate_1 = m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__1(l_funcPtr_0);
+	l_myFooDelegate_2 = m_PortableTestApp_Test_Interop_FooDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_Interop_FooDelegate), &rt_PortableTestApp_Test_Interop_FooDelegate_OBJ), 0, &m_PortableTestApp_Test_Interop_FooStatic_0);
+	l_myFooDelegate_2 = m_System_Delegate_Combine_0(l_myFooDelegate_2, m_PortableTestApp_Test_Interop_FooDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_Interop_FooDelegate), &rt_PortableTestApp_Test_Interop_FooDelegate_OBJ), m_PortableTestApp_Test_Interop__ctor_0(CS2X_AllocTypeAtomic(sizeof(t_PortableTestApp_Test_Interop), &rt_PortableTestApp_Test_Interop_OBJ)), &m_PortableTestApp_Test_Interop_Foo_0));
+	l_dFuncPtr_3 = m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__1(l_myFooDelegate_2, &l_dThisPtr_4);
+	(*m_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0)(l_dFuncPtr_3, l_dThisPtr_4);
+	return (*m_PortableTestApp_Test_Interop_GetLastError_0)() == 0 && m_PortableTestApp_Test_Interop_MyDelegate_Invoke_0(l_myDelegate_1, 123) == 123 && f_PortableTestApp_Test_Interop_fooStaticCalled && f_PortableTestApp_Test_Interop_fooCalled;
+}
+
+t_PortableTestApp_Test_Interop* m_PortableTestApp_Test_Interop__ctor_0(t_PortableTestApp_Test_Interop* self)
+{
+	m_System_Object__ctor_0(self);
+	return self;
+}
+
 char m_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t_PortableTestApp_Test_VirtualMethods_Base* self, char p_value)
 {
 	return 0;
@@ -865,6 +979,38 @@ char m_PortableTestApp_Test_Delegates_FooCallback_Invoke_0(t_PortableTestApp_Tes
 	else result = ((char (*)(char))self->f__methodPtr_1)(p_value);
 	if (self->f__next_2 != 0) result = m_PortableTestApp_Test_Delegates_FooCallback_Invoke_0(self->f__next_2, p_value);
 	return result;
+}
+
+t_PortableTestApp_Test_Interop_MyDelegate* m_PortableTestApp_Test_Interop_MyDelegate__ctor_0(t_PortableTestApp_Test_Interop_MyDelegate* self, t_System_Object* p_object, intptr_t p_method)
+{
+	m_System_MulticastDelegate__ctor_0(self);
+	self->f__target_1 = p_object;
+	self->f__methodPtr_1 = p_method;
+	return self;
+}
+
+int32_t m_PortableTestApp_Test_Interop_MyDelegate_Invoke_0(t_PortableTestApp_Test_Interop_MyDelegate* self, int32_t p_value)
+{
+	int32_t result;
+	if (self->f__target_1 != 0) result = ((int32_t (__cdecl *)(t_System_Object*, int32_t))self->f__methodPtr_1)(self->f__target_1, p_value);
+	else result = ((int32_t (__cdecl *)(int32_t))self->f__methodPtr_1)(p_value);
+	if (self->f__next_2 != 0) result = m_PortableTestApp_Test_Interop_MyDelegate_Invoke_0(self->f__next_2, p_value);
+	return result;
+}
+
+t_PortableTestApp_Test_Interop_FooDelegate* m_PortableTestApp_Test_Interop_FooDelegate__ctor_0(t_PortableTestApp_Test_Interop_FooDelegate* self, t_System_Object* p_object, intptr_t p_method)
+{
+	m_System_MulticastDelegate__ctor_0(self);
+	self->f__target_1 = p_object;
+	self->f__methodPtr_1 = p_method;
+	return self;
+}
+
+void m_PortableTestApp_Test_Interop_FooDelegate_Invoke_0(t_PortableTestApp_Test_Interop_FooDelegate* self)
+{
+	if (self->f__target_1 != 0) ((void (*)(t_System_Object*))self->f__methodPtr_1)(self->f__target_1);
+	else ((void (*)())self->f__methodPtr_1)();
+	if (self->f__next_2 != 0) m_PortableTestApp_Test_Interop_FooDelegate_Invoke_0(self->f__next_2);
 }
 
 
@@ -1053,6 +1199,19 @@ char m_t_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC
 	return p_t == 0;
 }
 
+t_PortableTestApp_Test_Interop_MyDelegate* m_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__1(intptr_t p_ptr)
+{
+	return m_PortableTestApp_Test_Interop_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t_PortableTestApp_Test_Interop_MyDelegate), &rt_PortableTestApp_Test_Interop_MyDelegate_OBJ), 0, p_ptr);
+}
+
+intptr_t m_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__1(t_PortableTestApp_Test_Interop_FooDelegate* p_d, intptr_t* p_dThisPtr)
+{
+	intptr_t result;
+	result = &m_PortableTestApp_Test_Interop_FooDelegate_Invoke_0;
+	*p_dThisPtr = (intptr_t)p_d;
+	return result;
+}
+
 /* =============================== */
 /* Init Library */
 /* =============================== */
@@ -1127,6 +1286,11 @@ void CS2X_InitLib_PortableTestApp()
 	rt_PortableTestApp_Test_Generics_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
 	rt_PortableTestApp_Test_Generics_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Generics_METADATA_Name;
 	rt_PortableTestApp_Test_Generics_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Generics_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_Interop_OBJ, 0, sizeof(rt_PortableTestApp_Test_Interop));
+	rt_PortableTestApp_Test_Interop_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_Interop_OBJ;
+	rt_PortableTestApp_Test_Interop_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
+	rt_PortableTestApp_Test_Interop_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Interop_METADATA_Name;
+	rt_PortableTestApp_Test_Interop_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Interop_METADATA_FullName;
 	memset(&rt_PortableTestApp_Test_VirtualMethods_Base_OBJ, 0, sizeof(rt_PortableTestApp_Test_VirtualMethods_Base));
 	rt_PortableTestApp_Test_VirtualMethods_Base_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_VirtualMethods_Base_OBJ;
 	rt_PortableTestApp_Test_VirtualMethods_Base_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_Object_OBJ;
@@ -1157,6 +1321,16 @@ void CS2X_InitLib_PortableTestApp()
 	rt_PortableTestApp_Test_Delegates_FooCallback_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_MulticastDelegate_OBJ;
 	rt_PortableTestApp_Test_Delegates_FooCallback_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_Name;
 	rt_PortableTestApp_Test_Delegates_FooCallback_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_Interop_MyDelegate_OBJ, 0, sizeof(rt_PortableTestApp_Test_Interop_MyDelegate));
+	rt_PortableTestApp_Test_Interop_MyDelegate_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_Interop_MyDelegate_OBJ;
+	rt_PortableTestApp_Test_Interop_MyDelegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_MulticastDelegate_OBJ;
+	rt_PortableTestApp_Test_Interop_MyDelegate_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Interop_MyDelegate_METADATA_Name;
+	rt_PortableTestApp_Test_Interop_MyDelegate_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Interop_MyDelegate_METADATA_FullName;
+	memset(&rt_PortableTestApp_Test_Interop_FooDelegate_OBJ, 0, sizeof(rt_PortableTestApp_Test_Interop_FooDelegate));
+	rt_PortableTestApp_Test_Interop_FooDelegate_OBJ.runtimeType.CS2X_RuntimeType = &rt_PortableTestApp_Test_Interop_FooDelegate_OBJ;
+	rt_PortableTestApp_Test_Interop_FooDelegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt_System_MulticastDelegate_OBJ;
+	rt_PortableTestApp_Test_Interop_FooDelegate_OBJ.runtimeType.f__Name_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Interop_FooDelegate_METADATA_Name;
+	rt_PortableTestApp_Test_Interop_FooDelegate_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t_System_String*)rt_PortableTestApp_Test_Interop_FooDelegate_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
 	((t_System_String*)rt_PortableTestApp_Program_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -1185,6 +1359,8 @@ void CS2X_InitLib_PortableTestApp()
 	((t_System_String*)rt_PortableTestApp_Test_FieldsAndProperties_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Generics_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Generics_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Interop_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Interop_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_VirtualMethods_Base_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_VirtualMethods_Base_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_VirtualMethods_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
@@ -1197,6 +1373,10 @@ void CS2X_InitLib_PortableTestApp()
 	((t_System_String*)rt_PortableTestApp_Test_Enums_MyEnum_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)rt_PortableTestApp_Test_Delegates_FooCallback_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Interop_MyDelegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Interop_MyDelegate_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Interop_FooDelegate_METADATA_Name)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)rt_PortableTestApp_Test_Interop_FooDelegate_METADATA_FullName)->CS2X_RuntimeType = &rt_System_String_OBJ;
 
 	/* Init runtime type vtabel */
 	rt_PortableTestApp_Test_Delegates_OBJ.vTable_FooVirtual_0 = m_PortableTestApp_Test_Delegates_FooVirtual_0;
@@ -1281,6 +1461,12 @@ void CS2X_InitDllImport_PortableTestApp()
 	CS2X_InitDllImport_CS2X_CoreLib();
 
 	/* Init this project */
+	m_PortableTestApp_Test_Interop_GetLastError_0 = GetProcAddress(LoadLibraryW(L"Kernel32.dll"), "GetLastError");
+	if (m_PortableTestApp_Test_Interop_GetLastError_0 == 0) m_PortableTestApp_Test_Interop_GetLastError_0 = &m_PortableTestApp_Test_Interop_GetLastError_0_DllNotFoundException;
+	m_PortableTestApp_Test_Interop_GetFuncPtr_0 = GetProcAddress(GetModuleHandleW(NULL), "GetFuncPtr");
+	if (m_PortableTestApp_Test_Interop_GetFuncPtr_0 == 0) m_PortableTestApp_Test_Interop_GetFuncPtr_0 = &m_PortableTestApp_Test_Interop_GetFuncPtr_0_DllNotFoundException;
+	m_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0 = GetProcAddress(GetModuleHandleW(NULL), "InvokeDelegateFuncPtr");
+	if (m_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0 == 0) m_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0 = &m_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0_DllNotFoundException;
 }
 
 void CS2X_InvokeStaticConstructors_PortableTestApp()
@@ -1312,6 +1498,7 @@ void CS2X_InitStringLiterals()
 	((t_System_String*)StringLiteral_13)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)StringLiteral_14)->CS2X_RuntimeType = &rt_System_String_OBJ;
 	((t_System_String*)StringLiteral_15)->CS2X_RuntimeType = &rt_System_String_OBJ;
+	((t_System_String*)StringLiteral_16)->CS2X_RuntimeType = &rt_System_String_OBJ;
 }
 
 /* =============================== */

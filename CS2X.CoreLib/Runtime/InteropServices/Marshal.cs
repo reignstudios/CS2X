@@ -45,10 +45,10 @@ namespace System.Runtime.InteropServices
 		/// </summary>
 		/// <typeparam name="TDelegate">The type of delegate to convert.</typeparam>
 		/// <param name="d">The delegate to be passed to unmanaged code.</param>
-		/// <param name="dPtr">The native 'this' ptr of the delegate (required when invoking the func ptr)</param>
+		/// <param name="dThisPtr">The native 'this' ptr of the delegate (required when invoking the func ptr)</param>
 		/// <returns>A value that can be passed to unmanaged code, which, in turn, can use it to call the underlying managed delegate.</returns>
 		[MethodImpl(MethodImplOptions.InternalCall)]
-		public static extern IntPtr GetFunctionPointerForDelegate<TDelegate>(TDelegate d, out IntPtr dPtr) where TDelegate : Delegate;
+		public static extern IntPtr GetFunctionPointerForDelegate<TDelegate>(TDelegate d, out IntPtr dThisPtr) where TDelegate : Delegate;
 
 		/// <summary>
 		/// Converts an unmanaged function pointer to a delegate of a specified type.

@@ -18,11 +18,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\PortableTestApp.c">
+      <Filter>Code</Filter>
+    </ClCompile>
     <ClCompile Include="PortableTestApp_VCPP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\PortableTestApp.c">
-      <Filter>Code</Filter>
+    <ClCompile Include="TestCode.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

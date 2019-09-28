@@ -1309,7 +1309,7 @@ namespace CS2X.Core.Transpilers
 							string ptr = string.Empty;
 							writer.Write(GetTypeFullNameRef(parameter.Type));
 							if (IsParameterPassByRef(parameter)) writer.Write('*');
-							if (!parameter.Equals(lastParameter)) writer.Write(", ");
+							if (lastParameter != null && !parameter.Equals(lastParameter)) writer.Write(", ");
 						}
 						writer.WriteLine(");");
 						return true;
@@ -1420,7 +1420,7 @@ namespace CS2X.Core.Transpilers
 										foreach (var parameter in baseConstructor.Parameters)
 										{
 											writer.Write(GetParameterFullName(parameter));
-											if (!parameter.Equals(last)) writer.Write(", ");
+											if (last != null && !parameter.Equals(last)) writer.Write(", ");
 										}
 										writer.WriteLine(");");
 									}
@@ -1694,21 +1694,21 @@ namespace CS2X.Core.Transpilers
 				{
 					void WriteParameterArgTypes()
 					{
-						var last = method.Parameters.Last();
+						var last = method.Parameters.LastOrDefault();
 						foreach (var parameter in method.Parameters)
 						{
 							writer.Write(GetTypeFullNameRef(parameter.Type));
-							if (!parameter.Equals(last)) writer.Write(", ");
+							if (last != null && !parameter.Equals(last)) writer.Write(", ");
 						}
 					}
 
 					void WriteParameterArgs()
 					{
-						var last = method.Parameters.Last();
+						var last = method.Parameters.LastOrDefault();
 						foreach (var parameter in method.Parameters)
 						{
 							writer.Write(GetParameterFullName(parameter));
-							if (!parameter.Equals(last)) writer.Write(", ");
+							if (last != null && !parameter.Equals(last)) writer.Write(", ");
 						}
 					}
 
@@ -1731,9 +1731,11 @@ namespace CS2X.Core.Transpilers
 					if (!method.ReturnsVoid) writer.WriteLinePrefix(returnTypeName + " result;");
 					writer.WritePrefix($"if (self->{selfFieldName} != 0) ");
 					if (!method.ReturnsVoid) writer.Write("result = ");
-					writer.Write($"(({returnTypeName} ({callingConventionName}*)({GetTypeFullName(objectType)}*, ");
+					writer.Write($"(({returnTypeName} ({callingConventionName}*)({GetTypeFullName(objectType)}*");
+					if (method.Parameters.Length != 0) writer.Write(", ");
 					WriteParameterArgTypes();
-					writer.Write($"))self->{funcFieldName})(self->{selfFieldName}, ");
+					writer.Write($"))self->{funcFieldName})(self->{selfFieldName}");
+					if (method.Parameters.Length != 0) writer.Write(", ");
 					WriteParameterArgs();
 					writer.WriteLine(");");
 
@@ -1747,7 +1749,8 @@ namespace CS2X.Core.Transpilers
 
 					writer.WritePrefix($"if (self->{nextFieldName} != 0) ");
 					if (!method.ReturnsVoid) writer.Write("result = ");
-					writer.Write($"{GetMethodFullName(method)}(self->{nextFieldName}, ");
+					writer.Write($"{GetMethodFullName(method)}(self->{nextFieldName}");
+					if (method.Parameters.Length != 0) writer.Write(", ");
 					WriteParameterArgs();
 					writer.WriteLine(");");
 					if (!method.ReturnsVoid) writer.WriteLinePrefix("return result;");
@@ -1821,7 +1824,7 @@ namespace CS2X.Core.Transpilers
 				string ptr = string.Empty;
 				if (IsParameterPassByRef(parameter)) ptr = "*";
 				writer.Write($"{GetTypeFullNameRef(parameter.Type)}{ptr} {GetParameterFullName(parameter)}");
-				if (!parameter.Equals(lastParameter)) writer.Write(", ");
+				if (lastParameter != null && !parameter.Equals(lastParameter)) writer.Write(", ");
 			}
 		}
 		#endregion
@@ -2766,7 +2769,7 @@ namespace CS2X.Core.Transpilers
 			var arguments = argumentList.Arguments;
 			if (arguments.Count != 0)
 			{
-				var lastArg = arguments.Last();
+				var lastArg = arguments.LastOrDefault();
 				int gcStackLocalCount = 0;// to help give each param in a method a unique name for non-local ref/out
 				foreach (var arg in arguments)
 				{
@@ -2798,7 +2801,7 @@ namespace CS2X.Core.Transpilers
 						WriteExpression(arg.Expression);
 					}
 
-					if (arg != lastArg) writer.Write(", ");
+					if (lastArg != null && arg != lastArg) writer.Write(", ");
 				}
 			}
 

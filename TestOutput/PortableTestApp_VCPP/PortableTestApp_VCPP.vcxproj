@@ -169,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="..\PortableTestApp.c" />
     <ClCompile Include="PortableTestApp_VCPP.cpp" />
+    <ClCompile Include="TestCode.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CS2X.CoreLib.h" />
