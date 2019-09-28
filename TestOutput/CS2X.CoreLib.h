@@ -1754,9 +1754,10 @@ t2_System_String* m2_System_String__ctor_0(t2_System_String* self, char16_t* p_v
 		++charOffset;
 		++length;
 	}
-	CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
+	self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
 	self->f__stringLength_1 = length;
 	memcpy(&self->f__firstChar_1, p_value, sizeof(char16_t) * length);
+	return self;
 }
 
 t2_System_String* m2_System_String__ctor_1(t2_System_String* self, char16_t* p_value)
@@ -1765,9 +1766,10 @@ t2_System_String* m2_System_String__ctor_1(t2_System_String* self, char16_t* p_v
 	char16_t* charBuffer;
 	length = p_value + sizeof(intptr_t);
 	charBuffer = p_value + sizeof(intptr_t) + sizeof(size_t);
-	CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
+	self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
 	self->f__stringLength_1 = length;
 	memcpy(&self->f__firstChar_1, charBuffer, sizeof(char16_t) * length);
+	return self;
 }
 
 char16_t m2_System_String_get_Item_0(t2_System_String* self, int32_t p_index)

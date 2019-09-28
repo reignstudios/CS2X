@@ -511,6 +511,7 @@ namespace PortableTestApp
 			Log(Delegates.RunTest(), "Delegates");
 			Log(Indexers.RunTest(), "Indexers");
 			Log(Operators.RunTest(), "Operators");
+			Log(StringEncoding.RunTest(), "StringEncoding");
 			Console.WriteLine("TESTS DONE!");
 
 			// return result code
