@@ -4,6 +4,7 @@
 Transpiles a C# subset to non .NET languages, platforms, runtimes and enviroments. (Powered by Roslyn)<br>
 
 ## WASM Demo
+Renders a 1280x720 image then prints how long it took in seconds.<br>
 http://reign-studios.com/wasm/cs2x/ray-trace-benchmark/cs2x.html
 
 ## Goals
