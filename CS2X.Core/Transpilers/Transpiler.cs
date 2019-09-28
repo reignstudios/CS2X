@@ -49,6 +49,36 @@ namespace CS2X.Core.Transpilers
 
 		public abstract void Transpile(string outputPath);
 
+		protected int NestedCount(ITypeSymbol type)
+		{
+			int count = 0;
+
+			// count nested types
+			var lastType = type;
+			type = type.ContainingType;
+			while (type != null)
+			{
+				lastType = type;
+				type = type.ContainingType;
+				++count;
+			}
+
+			// count nested namespaces
+			var nestedNamespace = lastType.ContainingNamespace;
+			while (nestedNamespace != null)
+			{
+				nestedNamespace = nestedNamespace.ContainingNamespace;
+				++count;
+			}
+
+			return count;
+		}
+
+		protected int NestedCount(IMethodSymbol method)
+		{
+			return NestedCount(method.ContainingType);
+		}
+
 		protected virtual string GetTypeFullName(ITypeSymbol type)
 		{
 			var result = new StringBuilder(type.Name);

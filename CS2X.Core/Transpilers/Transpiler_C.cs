@@ -1494,7 +1494,8 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "GetType")
 								{
-									writer.WriteLinePrefix("return (t_System_Type*)self->CS2X_RuntimeType;");
+									string typeName = GetTypeFullName(typeType);
+									writer.WriteLinePrefix($"return ({typeName}*)self->CS2X_RuntimeType;");
 								}
 								else
 								{
@@ -3055,7 +3056,7 @@ namespace CS2X.Core.Transpilers
 		private void AssignmentExpression(AssignmentExpressionSyntax expression)
 		{
 			// check if special property assignment is needed
-			if (expression.Left is IdentifierNameSyntax)
+			if (expression.Left is IdentifierNameSyntax || expression.Left is MemberAccessExpressionSyntax)
 			{
 				var property = semanticModel.GetSymbolInfo(expression.Left).Symbol as IPropertySymbol;
 				if (property != null && !IsAutoProperty(property))
@@ -3661,7 +3662,8 @@ namespace CS2X.Core.Transpilers
 			else if (type.Kind == SymbolKind.PointerType) fullname += "_PTR";
 			else if (type.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)type).IsGenericType) fullname += "GENERIC";
 			ParseImplementationDetail(ref fullname);
-			return "rt_" + fullname;
+			int nestingCount = NestedCount(type);
+			return $"rt{nestingCount}_" + fullname;
 		}
 
 		private string GetRuntimeTypeObjFullName(ITypeSymbol type)
@@ -3703,13 +3705,21 @@ namespace CS2X.Core.Transpilers
 			else if (type.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)type).IsGenericType)
 			{
 				string result = type.FullName();
+				int nestingCount = NestedCount(type);
 				ParseImplementationDetail(ref result);
-				return $"t_{result}GENERIC";
+				return $"t{nestingCount}_{result}GENERIC";
 			}
 			else
 			{
-				if (allowTypePrefix.enabled) return "t_" + base.GetTypeFullName(type);
-				else return base.GetTypeFullName(type);
+				if (allowTypePrefix.enabled)
+				{
+					int nestingCount = NestedCount(type);
+					return $"t{nestingCount}_" + base.GetTypeFullName(type);
+				}
+				else
+				{
+					return base.GetTypeFullName(type);
+				}
 			}
 		}
 
@@ -3832,7 +3842,8 @@ namespace CS2X.Core.Transpilers
 				if (method.IsGenericMethod) methodName = method.Name();
 				else methodName = method.Name;
 				ParseImplementationDetail(ref methodName);
-				return $"m_{GetTypeFullName(method.ContainingType)}_{methodName}_{index}";
+				int nestingCount = NestedCount(method);
+				return $"m{nestingCount}_{GetTypeFullName(method.ContainingType)}_{methodName}_{index}";
 			}
 		}
 

@@ -509,6 +509,8 @@ namespace PortableTestApp
 			Log(VirtualMethods.RunTest(), "VirtualMethods");
 			Log(Generics.RunTest(), "Generics");
 			Log(Delegates.RunTest(), "Delegates");
+			Log(Indexers.RunTest(), "Indexers");
+			Log(Operators.RunTest(), "Operators");
 			Console.WriteLine("TESTS DONE!");
 
 			// return result code
