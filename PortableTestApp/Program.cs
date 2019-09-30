@@ -505,6 +505,7 @@ namespace PortableTestApp
 			Log(Enums.RunTest(), "Enums");
 			Log(ExtensionMethods.RunTest(), "ExtensionMethods");
 			Log(FieldsAndProperties.RunTest(), "FieldsAndProperties");
+			Log(FlowControlAndEnumerators.RunTest(), "FlowControlAndEnumerators");
 			Log(Interop.RunTest(), "Interop");
 			Log(VirtualMethods.RunTest(), "VirtualMethods");
 			Log(Generics.RunTest(), "Generics");

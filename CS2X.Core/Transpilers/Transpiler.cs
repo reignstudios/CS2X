@@ -719,5 +719,17 @@ namespace CS2X.Core.Transpilers
 			memberAccessExpression = null;
 			return false;
 		}
+
+		protected bool IgnoredSpecialGenericInterfaceMethod(IMethodSymbol method)
+		{
+			foreach (var interfaceMethod in method.ExplicitInterfaceImplementations)
+			{
+				if (interfaceMethod.Equals(ienumerableT_GetEnumerator) || interfaceMethod.Equals(ienumerable_GetEnumerator) || interfaceMethod.Equals(ienumerator_GetEnumerator))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }

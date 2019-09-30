@@ -1222,6 +1222,7 @@ namespace CS2X.Core.Transpilers
 			if (method.ContainingType.IsGenericType && !IsResolvedGenericType(method.ContainingType)) return false;
 			if (method.IsAbstract) return false;
 			if (method.IsGenericMethod && !IsResolvedGenericMethod(method)) return false;
+			if (IgnoredSpecialGenericInterfaceMethod(method)) return false;
 
 			// extra generic validation
 			if (method.IsGenericMethod)
@@ -1943,6 +1944,7 @@ namespace CS2X.Core.Transpilers
 				else if (statement is DoStatementSyntax) DoStatement((DoStatementSyntax)statement);
 				else if (statement is ForStatementSyntax) ForStatement((ForStatementSyntax)statement);
 				else if (statement is ForEachStatementSyntax) ForEachStatement((ForEachStatementSyntax)statement);
+				else if (statement is SwitchStatementSyntax) SwitchStatement((SwitchStatementSyntax)statement);
 				else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
 				else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 				else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
@@ -2221,6 +2223,38 @@ namespace CS2X.Core.Transpilers
 			{
 				throw new NotSupportedException("Unsupported foreach collection kind: " + collectionType.Kind);
 			}
+		}
+
+		private void SwitchStatement(SwitchStatementSyntax statement)
+		{
+			writer.WritePrefix("switch (");
+			WriteExpression(statement.Expression);
+			writer.WriteLine(')');
+			writer.WriteLinePrefix('{');
+			writer.AddTab();
+			foreach (var section in statement.Sections)
+			foreach (var label in section.Labels)
+			{
+				writer.WritePrefix(label.Keyword.Text);
+				if (label is CaseSwitchLabelSyntax caseLabel)
+				{
+					writer.Write(' ');
+					WriteExpression(caseLabel.Value);
+				}
+				else if (!(label is DefaultSwitchLabelSyntax))
+				{
+					throw new NotSupportedException("Unsupported switch label type: " + label.GetType());
+				}
+				writer.WriteLine(':');
+				foreach (var sectionStatement in section.Statements)
+				{
+					if (!(sectionStatement is BlockSyntax)) writer.AddTab();
+					WriteStatement(sectionStatement);
+					if (!(sectionStatement is BlockSyntax)) writer.RemoveTab();
+				}
+			}
+			writer.RemoveTab();
+			writer.WriteLinePrefix('}');
 		}
 
 		private void BreakStatement(BreakStatementSyntax statement)

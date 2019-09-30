@@ -18,6 +18,7 @@ typedef struct t3_PortableTestApp_Test_Enums t3_PortableTestApp_Test_Enums;
 typedef struct t3_PortableTestApp_Test_ExtensionMethods t3_PortableTestApp_Test_ExtensionMethods;
 typedef struct t4_PortableTestApp_Test_ExtensionMethods_MyClass t4_PortableTestApp_Test_ExtensionMethods_MyClass;
 typedef struct t3_PortableTestApp_Test_FieldsAndProperties t3_PortableTestApp_Test_FieldsAndProperties;
+typedef struct t3_PortableTestApp_Test_FlowControlAndEnumerators t3_PortableTestApp_Test_FlowControlAndEnumerators;
 typedef struct t3_PortableTestApp_Test_Generics t3_PortableTestApp_Test_Generics;
 typedef struct t3_PortableTestApp_Test_Indexers t3_PortableTestApp_Test_Indexers;
 typedef struct t3_PortableTestApp_Test_Interop t3_PortableTestApp_Test_Interop;
@@ -121,6 +122,11 @@ struct t3_PortableTestApp_Test_FieldsAndProperties
 int32_t f_PortableTestApp_Test_FieldsAndProperties__myStaticProperty2_k__BackingField;
 int32_t f_PortableTestApp_Test_FieldsAndProperties__myStaticProperty3;
 int32_t f_PortableTestApp_Test_FieldsAndProperties_myStaticField;
+
+struct t3_PortableTestApp_Test_FlowControlAndEnumerators
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
 
 struct t3_PortableTestApp_Test_Generics
 {
@@ -352,6 +358,14 @@ rt3_PortableTestApp_Test_FieldsAndProperties rt3_PortableTestApp_Test_FieldsAndP
 int8_t rt3_PortableTestApp_Test_FieldsAndProperties_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,70,0,105,0,101,0,108,0,100,0,115,0,65,0,110,0,100,0,80,0,114,0,111,0,112,0,101,0,114,0,116,0,105,0,101,0,115,0,0,0}; /* FieldsAndProperties */
 int8_t rt3_PortableTestApp_Test_FieldsAndProperties_METADATA_FullName[94] = {0,0,0,0,0,0,0,0,40,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,70,0,105,0,101,0,108,0,100,0,115,0,65,0,110,0,100,0,80,0,114,0,111,0,112,0,101,0,114,0,116,0,105,0,101,0,115,0,0,0}; /* PortableTestApp.Test.FieldsAndProperties */
 
+typedef struct rt3_PortableTestApp_Test_FlowControlAndEnumerators
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_PortableTestApp_Test_FlowControlAndEnumerators;
+rt3_PortableTestApp_Test_FlowControlAndEnumerators rt3_PortableTestApp_Test_FlowControlAndEnumerators_OBJ;
+int8_t rt3_PortableTestApp_Test_FlowControlAndEnumerators_METADATA_Name[64] = {0,0,0,0,0,0,0,0,25,0,0,0,70,0,108,0,111,0,119,0,67,0,111,0,110,0,116,0,114,0,111,0,108,0,65,0,110,0,100,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0}; /* FlowControlAndEnumerators */
+int8_t rt3_PortableTestApp_Test_FlowControlAndEnumerators_METADATA_FullName[106] = {0,0,0,0,0,0,0,0,46,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,70,0,108,0,111,0,119,0,67,0,111,0,110,0,116,0,114,0,111,0,108,0,65,0,110,0,100,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0}; /* PortableTestApp.Test.FlowControlAndEnumerators */
+
 typedef struct rt3_PortableTestApp_Test_Generics
 {
 	t2_System_RuntimeType runtimeType;
@@ -529,6 +543,14 @@ int8_t rt4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENER
 /* =============================== */
 /* ARRAY Runtime Types */
 /* =============================== */
+typedef struct rt0_System_Int32___ARRAY
+{
+	t2_System_RuntimeType runtimeType;
+} rt0_System_Int32___ARRAY;
+rt0_System_Int32___ARRAY rt0_System_Int32___ARRAY_OBJ;
+int8_t rt0_System_Int32___ARRAY_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,73,0,110,0,116,0,51,0,50,0,91,0,93,0,0,0}; /* Int32[] */
+int8_t rt0_System_Int32___ARRAY_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,51,0,50,0,91,0,93,0,0,0}; /* System.Int32[] */
+
 typedef struct rt0_System_String___ARRAY
 {
 	t2_System_RuntimeType runtimeType;
@@ -585,6 +607,7 @@ t3_PortableTestApp_Test_FieldsAndProperties* m3_PortableTestApp_Test_FieldsAndPr
 t4_PortableTestApp_Test_FieldsAndProperties_MyStruct m3_PortableTestApp_Test_FieldsAndProperties_Foo2_0(t3_PortableTestApp_Test_FieldsAndProperties* self);
 t3_PortableTestApp_Test_FieldsAndProperties* m3_PortableTestApp_Test_FieldsAndProperties__ctor_0(t3_PortableTestApp_Test_FieldsAndProperties* self);
 void m3_PortableTestApp_Test_FieldsAndProperties__cctor_0();
+char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0();
 char m3_PortableTestApp_Test_Generics_RunTest_0();
 char16_t m3_PortableTestApp_Test_Indexers_get_Item_0(t3_PortableTestApp_Test_Indexers* self, int32_t p_index);
 void m3_PortableTestApp_Test_Indexers_set_Item_0(t3_PortableTestApp_Test_Indexers* self, int32_t p_index, char16_t p_value);
@@ -673,14 +696,15 @@ int32_t m2_PortableTestApp_Program_Main_0(t2_System_String** p_args)
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Enums_RunTest_0(), StringLiteral_7);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ExtensionMethods_RunTest_0(), StringLiteral_8);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FieldsAndProperties_RunTest_0(), StringLiteral_9);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Interop_RunTest_0(), StringLiteral_10);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_11);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_12);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_13);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Indexers_RunTest_0(), StringLiteral_14);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Operators_RunTest_0(), StringLiteral_15);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_StringEncoding_RunTest_0(), StringLiteral_16);
-	m2_System_Console_WriteLine_0(StringLiteral_17);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0(), StringLiteral_10);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Interop_RunTest_0(), StringLiteral_11);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_12);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_13);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_14);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Indexers_RunTest_0(), StringLiteral_15);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Operators_RunTest_0(), StringLiteral_16);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_StringEncoding_RunTest_0(), StringLiteral_17);
+	m2_System_Console_WriteLine_0(StringLiteral_18);
 	return 99;
 }
 
@@ -688,11 +712,11 @@ void m2_PortableTestApp_Program_Log_0(char p_success, t2_System_String* p_messag
 {
 	if (p_success)
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_18, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_19, p_message));
 	}
 	else
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_19, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_20, p_message));
 	}
 }
 
@@ -928,6 +952,85 @@ void m3_PortableTestApp_Test_FieldsAndProperties__cctor_0()
 	f_PortableTestApp_Test_FieldsAndProperties_myStaticField = 44;
 }
 
+char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0()
+{
+	int32_t* l_values_0;
+	int32_t* l_values2_1;
+	int32_t l_value_i_2;
+	int32_t l_value_3;
+	int32_t l_value2_i_4;
+	int32_t l_i_5;
+	int32_t l_i2_6;
+	int32_t l_l_7;
+	l_values_0 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 3, &rt0_System_Int32___ARRAY_OBJ);
+	((int32_t*)(((char*)l_values_0) + (sizeof(size_t)*2)))[0] = 1;
+	((int32_t*)(((char*)l_values_0) + (sizeof(size_t)*2)))[1] = 2;
+	((int32_t*)(((char*)l_values_0) + (sizeof(size_t)*2)))[2] = 3;
+	l_values2_1 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 3, &rt0_System_Int32___ARRAY_OBJ);
+	((int32_t*)(((char*)l_values2_1) + (sizeof(size_t)*2)))[0] = 3;
+	((int32_t*)(((char*)l_values2_1) + (sizeof(size_t)*2)))[1] = 2;
+	((int32_t*)(((char*)l_values2_1) + (sizeof(size_t)*2)))[2] = 1;
+	for (l_value_i_2 = 0; l_value_i_2 != m2_System_Array_get_Length_0((t2_System_Array*)l_values_0); ++l_value_i_2)
+	{
+		l_value_3 = ((int32_t*)(((char*)l_values_0) + (sizeof(size_t)*2)))[l_value_i_2];
+		for (l_value2_i_4 = 0; l_value2_i_4 != m2_System_Array_get_Length_0((t2_System_Array*)l_values2_1); ++l_value2_i_4)
+		{
+			int32_t l_value2_5;
+			l_value2_5 = ((int32_t*)(((char*)l_values2_1) + (sizeof(size_t)*2)))[l_value2_i_4];
+			if (l_value_3 == 0 || l_value2_5 == 0)
+			{
+				return 0;
+			}
+		}
+	}
+	for (l_i_5 = 0, l_i2_6 = 2; l_i_5 != m2_System_Array_get_Length_0(l_values_0); ++l_i_5, --l_i2_6)
+	{
+		if (((int32_t*)(((char*)l_values_0) + (sizeof(size_t)*2)))[l_i_5] != ((int32_t*)(((char*)l_values2_1) + (sizeof(size_t)*2)))[l_i2_6])
+		{
+			return 0;
+		}
+	}
+	l_l_7 = 0;
+	while (l_l_7 != 3)
+	{
+		l_l_7++;
+	}
+	do
+	{
+		l_l_7 -= 1;
+	}
+	while (l_l_7 != 0);
+	if (l_l_7 == 0)
+	{
+		switch (l_l_7)
+		{
+			case 5 + 0:
+				return 0;
+			case 6:
+				return 0;
+			case 0:
+				l_l_7 = 4;
+				break;
+			default:
+			{
+				return 0;
+			}
+		}
+	}
+	else
+	{
+		if (l_l_7 == -1)
+		{
+			return 0;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
 char m3_PortableTestApp_Test_Generics_RunTest_0()
 {
 	t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC* l_callback_0;
@@ -1072,7 +1175,7 @@ char m3_PortableTestApp_Test_StringEncoding_RunTest_0()
 	t2_System_String* l_convertString_0;
 	uint8_t* l_data_1;
 	t2_System_String* l_result_2;
-	l_convertString_0 = StringLiteral_20;
+	l_convertString_0 = StringLiteral_21;
 	l_data_1 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, l_convertString_0);
 	l_result_2 = m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__UTF8_k__BackingField, l_data_1);
 	return m2_System_String_Equals_0(l_result_2, l_convertString_0);
@@ -1479,6 +1582,11 @@ void CS2X_InitLib_PortableTestApp()
 	rt3_PortableTestApp_Test_FieldsAndProperties_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt3_PortableTestApp_Test_FieldsAndProperties_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_FieldsAndProperties_METADATA_Name;
 	rt3_PortableTestApp_Test_FieldsAndProperties_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_FieldsAndProperties_METADATA_FullName;
+	memset(&rt3_PortableTestApp_Test_FlowControlAndEnumerators_OBJ, 0, sizeof(rt3_PortableTestApp_Test_FlowControlAndEnumerators));
+	rt3_PortableTestApp_Test_FlowControlAndEnumerators_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_FlowControlAndEnumerators_OBJ;
+	rt3_PortableTestApp_Test_FlowControlAndEnumerators_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_PortableTestApp_Test_FlowControlAndEnumerators_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_FlowControlAndEnumerators_METADATA_Name;
+	rt3_PortableTestApp_Test_FlowControlAndEnumerators_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_FlowControlAndEnumerators_METADATA_FullName;
 	memset(&rt3_PortableTestApp_Test_Generics_OBJ, 0, sizeof(rt3_PortableTestApp_Test_Generics));
 	rt3_PortableTestApp_Test_Generics_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_Generics_OBJ;
 	rt3_PortableTestApp_Test_Generics_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -1575,6 +1683,8 @@ void CS2X_InitLib_PortableTestApp()
 	((t2_System_String*)rt4_PortableTestApp_Test_ExtensionMethods_MyClass_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_FieldsAndProperties_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_FieldsAndProperties_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_FlowControlAndEnumerators_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_FlowControlAndEnumerators_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Generics_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Generics_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Indexers_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -1670,6 +1780,11 @@ void CS2X_InitLib_PortableTestApp()
 
 	/* <<< === Array Runtime Types === >>> */
 	/* Init runtime type objects */
+	memset(&rt0_System_Int32___ARRAY_OBJ, 0, sizeof(rt0_System_Int32___ARRAY));
+	rt0_System_Int32___ARRAY_OBJ.runtimeType.CS2X_RuntimeType = &rt0_System_Int32___ARRAY_OBJ;
+	rt0_System_Int32___ARRAY_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Array_OBJ;
+	rt0_System_Int32___ARRAY_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt0_System_Int32___ARRAY_METADATA_Name;
+	rt0_System_Int32___ARRAY_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt0_System_Int32___ARRAY_METADATA_FullName;
 	memset(&rt0_System_String___ARRAY_OBJ, 0, sizeof(rt0_System_String___ARRAY));
 	rt0_System_String___ARRAY_OBJ.runtimeType.CS2X_RuntimeType = &rt0_System_String___ARRAY_OBJ;
 	rt0_System_String___ARRAY_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Array_OBJ;
@@ -1677,6 +1792,8 @@ void CS2X_InitLib_PortableTestApp()
 	rt0_System_String___ARRAY_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt0_System_String___ARRAY_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
+	((t2_System_String*)rt0_System_Int32___ARRAY_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt0_System_Int32___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt0_System_String___ARRAY_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt0_System_String___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 }
@@ -1729,6 +1846,7 @@ void CS2X_InitStringLiterals()
 	((t2_System_String*)StringLiteral_18)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_19)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_20)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_21)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 }
 
 /* =============================== */
