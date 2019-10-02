@@ -23,7 +23,10 @@ typedef struct t3_PortableTestApp_Test_Generics t3_PortableTestApp_Test_Generics
 typedef struct t3_PortableTestApp_Test_Indexers t3_PortableTestApp_Test_Indexers;
 typedef struct t3_PortableTestApp_Test_Interop t3_PortableTestApp_Test_Interop;
 typedef struct t3_PortableTestApp_Test_Operators t3_PortableTestApp_Test_Operators;
+typedef struct t3_PortableTestApp_Test_RefOutParameters t3_PortableTestApp_Test_RefOutParameters;
 typedef struct t3_PortableTestApp_Test_StringEncoding t3_PortableTestApp_Test_StringEncoding;
+typedef struct t3_PortableTestApp_Test_TryCatch t3_PortableTestApp_Test_TryCatch;
+typedef struct t3_PortableTestApp_Test_MyException t3_PortableTestApp_Test_MyException;
 typedef struct t3_PortableTestApp_Test_VirtualMethods_Base t3_PortableTestApp_Test_VirtualMethods_Base;
 typedef struct t3_PortableTestApp_Test_VirtualMethods t3_PortableTestApp_Test_VirtualMethods;
 typedef struct t4_PortableTestApp_Test_ExtensionMethods_MyStruct t4_PortableTestApp_Test_ExtensionMethods_MyStruct;
@@ -153,9 +156,25 @@ struct t3_PortableTestApp_Test_Operators
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
 
+struct t3_PortableTestApp_Test_RefOutParameters
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
 struct t3_PortableTestApp_Test_StringEncoding
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t3_PortableTestApp_Test_TryCatch
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t3_PortableTestApp_Test_MyException
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	t2_System_String* f__Message_k__BackingField_1;
 };
 
 struct t3_PortableTestApp_Test_VirtualMethods_Base
@@ -412,6 +431,14 @@ rt3_PortableTestApp_Test_Operators rt3_PortableTestApp_Test_Operators_OBJ;
 int8_t rt3_PortableTestApp_Test_Operators_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,79,0,112,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0}; /* Operators */
 int8_t rt3_PortableTestApp_Test_Operators_METADATA_FullName[74] = {0,0,0,0,0,0,0,0,30,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,79,0,112,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0}; /* PortableTestApp.Test.Operators */
 
+typedef struct rt3_PortableTestApp_Test_RefOutParameters
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_PortableTestApp_Test_RefOutParameters;
+rt3_PortableTestApp_Test_RefOutParameters rt3_PortableTestApp_Test_RefOutParameters_OBJ;
+int8_t rt3_PortableTestApp_Test_RefOutParameters_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,82,0,101,0,102,0,79,0,117,0,116,0,80,0,97,0,114,0,97,0,109,0,101,0,116,0,101,0,114,0,115,0,0,0}; /* RefOutParameters */
+int8_t rt3_PortableTestApp_Test_RefOutParameters_METADATA_FullName[88] = {0,0,0,0,0,0,0,0,37,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,82,0,101,0,102,0,79,0,117,0,116,0,80,0,97,0,114,0,97,0,109,0,101,0,116,0,101,0,114,0,115,0,0,0}; /* PortableTestApp.Test.RefOutParameters */
+
 typedef struct rt3_PortableTestApp_Test_StringEncoding
 {
 	t2_System_RuntimeType runtimeType;
@@ -419,6 +446,23 @@ typedef struct rt3_PortableTestApp_Test_StringEncoding
 rt3_PortableTestApp_Test_StringEncoding rt3_PortableTestApp_Test_StringEncoding_OBJ;
 int8_t rt3_PortableTestApp_Test_StringEncoding_METADATA_Name[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0}; /* StringEncoding */
 int8_t rt3_PortableTestApp_Test_StringEncoding_METADATA_FullName[84] = {0,0,0,0,0,0,0,0,35,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0}; /* PortableTestApp.Test.StringEncoding */
+
+typedef struct rt3_PortableTestApp_Test_TryCatch
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_PortableTestApp_Test_TryCatch;
+rt3_PortableTestApp_Test_TryCatch rt3_PortableTestApp_Test_TryCatch_OBJ;
+int8_t rt3_PortableTestApp_Test_TryCatch_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,84,0,114,0,121,0,67,0,97,0,116,0,99,0,104,0,0,0}; /* TryCatch */
+int8_t rt3_PortableTestApp_Test_TryCatch_METADATA_FullName[72] = {0,0,0,0,0,0,0,0,29,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,84,0,114,0,121,0,67,0,97,0,116,0,99,0,104,0,0,0}; /* PortableTestApp.Test.TryCatch */
+
+typedef struct rt3_PortableTestApp_Test_MyException
+{
+	t2_System_RuntimeType runtimeType;
+	t2_System_String* (*vTable_get_Message_0)(t3_PortableTestApp_Test_MyException* self);
+} rt3_PortableTestApp_Test_MyException;
+rt3_PortableTestApp_Test_MyException rt3_PortableTestApp_Test_MyException_OBJ;
+int8_t rt3_PortableTestApp_Test_MyException_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,77,0,121,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* MyException */
+int8_t rt3_PortableTestApp_Test_MyException_METADATA_FullName[78] = {0,0,0,0,0,0,0,0,32,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,77,0,121,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* PortableTestApp.Test.MyException */
 
 typedef struct rt3_PortableTestApp_Test_VirtualMethods_Base
 {
@@ -654,7 +698,13 @@ t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators_op_Explicit
 int32_t m3_PortableTestApp_Test_Operators_op_Implicit_0(t3_PortableTestApp_Test_Operators* p_value);
 char m3_PortableTestApp_Test_Operators_RunTest_0();
 t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators__ctor_0(t3_PortableTestApp_Test_Operators* self);
+char m3_PortableTestApp_Test_RefOutParameters_RunTest_0();
+void m3_PortableTestApp_Test_RefOutParameters_Foo_0(int32_t* p_value, int32_t* p_value2);
+void m3_PortableTestApp_Test_RefOutParameters_Foo2_0(t3_PortableTestApp_Test_RefOutParameters** p_obj, t3_PortableTestApp_Test_RefOutParameters** p_obj2);
+t3_PortableTestApp_Test_RefOutParameters* m3_PortableTestApp_Test_RefOutParameters__ctor_0(t3_PortableTestApp_Test_RefOutParameters* self);
 char m3_PortableTestApp_Test_StringEncoding_RunTest_0();
+char m3_PortableTestApp_Test_TryCatch_RunTest_0();
+t3_PortableTestApp_Test_MyException* m3_PortableTestApp_Test_MyException__ctor_0(t3_PortableTestApp_Test_MyException* self, t2_System_String* p_message);
 char m3_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t3_PortableTestApp_Test_VirtualMethods_Base* self, char p_value);
 t3_PortableTestApp_Test_VirtualMethods_Base* m3_PortableTestApp_Test_VirtualMethods_Base__ctor_0(t3_PortableTestApp_Test_VirtualMethods_Base* self);
 char m3_PortableTestApp_Test_VirtualMethods_VirtualFoo_0(t3_PortableTestApp_Test_VirtualMethods* self, char p_value);
@@ -733,17 +783,19 @@ int32_t m2_PortableTestApp_Program_Main_0(t2_System_String** p_args)
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ClassNesting_RunTest_0(), StringLiteral_5);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ClassVsStruct_RunTest_0(), StringLiteral_6);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Enums_RunTest_0(), StringLiteral_7);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ExtensionMethods_RunTest_0(), StringLiteral_8);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_RefOutParameters_RunTest_0(), StringLiteral_8);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FieldsAndProperties_RunTest_0(), StringLiteral_9);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0(), StringLiteral_10);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Interop_RunTest_0(), StringLiteral_11);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_12);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_13);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_14);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Indexers_RunTest_0(), StringLiteral_15);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Operators_RunTest_0(), StringLiteral_16);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_StringEncoding_RunTest_0(), StringLiteral_17);
-	m2_System_Console_WriteLine_0(StringLiteral_18);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ExtensionMethods_RunTest_0(), StringLiteral_11);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_TryCatch_RunTest_0(), StringLiteral_12);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Interop_RunTest_0(), StringLiteral_13);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_14);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_15);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_16);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Indexers_RunTest_0(), StringLiteral_17);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Operators_RunTest_0(), StringLiteral_18);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_StringEncoding_RunTest_0(), StringLiteral_19);
+	m2_System_Console_WriteLine_0(StringLiteral_20);
 	return 99;
 }
 
@@ -751,11 +803,11 @@ void m2_PortableTestApp_Program_Log_0(char p_success, t2_System_String* p_messag
 {
 	if (p_success)
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_19, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_21, p_message));
 	}
 	else
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_20, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_22, p_message));
 	}
 }
 
@@ -1224,15 +1276,129 @@ t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators__ctor_0(t3_
 	return self;
 }
 
+char m3_PortableTestApp_Test_RefOutParameters_RunTest_0()
+{
+	int32_t l_value_0;
+	int32_t l_value2_1;
+	t3_PortableTestApp_Test_RefOutParameters* l_obj_2;
+	t3_PortableTestApp_Test_RefOutParameters* l_obj2_3;
+	l_value_0 = 0;
+	m3_PortableTestApp_Test_RefOutParameters_Foo_0(&l_value_0, &l_value2_1);
+	l_obj_2 = 0;
+	m3_PortableTestApp_Test_RefOutParameters_Foo2_0(&l_obj_2, &l_obj2_3);
+	return l_value_0 == 1 && l_value2_1 == 2 && l_obj_2 != 0 && l_obj2_3 != 0;
+}
+
+void m3_PortableTestApp_Test_RefOutParameters_Foo_0(int32_t* p_value, int32_t* p_value2)
+{
+	(*p_value) = 1;
+	(*p_value2) = 2;
+}
+
+void m3_PortableTestApp_Test_RefOutParameters_Foo2_0(t3_PortableTestApp_Test_RefOutParameters** p_obj, t3_PortableTestApp_Test_RefOutParameters** p_obj2)
+{
+	(*p_obj) = m3_PortableTestApp_Test_RefOutParameters__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_RefOutParameters), &rt3_PortableTestApp_Test_RefOutParameters_OBJ));
+	(*p_obj2) = m3_PortableTestApp_Test_RefOutParameters__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_RefOutParameters), &rt3_PortableTestApp_Test_RefOutParameters_OBJ));
+}
+
+t3_PortableTestApp_Test_RefOutParameters* m3_PortableTestApp_Test_RefOutParameters__ctor_0(t3_PortableTestApp_Test_RefOutParameters* self)
+{
+	m2_System_Object__ctor_0(self);
+	return self;
+}
+
 char m3_PortableTestApp_Test_StringEncoding_RunTest_0()
 {
 	t2_System_String* l_convertString_0;
 	uint8_t* l_data_1;
 	t2_System_String* l_result_2;
-	l_convertString_0 = StringLiteral_21;
+	l_convertString_0 = StringLiteral_23;
 	l_data_1 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, l_convertString_0);
 	l_result_2 = m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__UTF8_k__BackingField, l_data_1);
 	return m2_System_String_Equals_0(l_result_2, l_convertString_0);
+}
+
+char m3_PortableTestApp_Test_TryCatch_RunTest_0()
+{
+	t2_System_String* l_value_0;
+	jmp_buf CS2X_JMP_LAST_0;
+	jmp_buf CS2X_JMP_0;
+	int CS2X_IS_JMP_0;
+	l_value_0 = StringLiteral_24;
+	/* try */
+	memcpy(CS2X_JMP_LAST_0, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
+	CS2X_IS_JMP_0 = setjmp(CS2X_JMP_0);
+	if (CS2X_IS_JMP_0 == 0)
+	{
+		jmp_buf CS2X_JMP_LAST_1;
+		jmp_buf CS2X_JMP_1;
+		int CS2X_IS_JMP_1;
+		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_0, sizeof(jmp_buf));
+		/* try */
+		memcpy(CS2X_JMP_LAST_1, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
+		CS2X_IS_JMP_1 = setjmp(CS2X_JMP_1);
+		if (CS2X_IS_JMP_1 == 0)
+		{
+			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_1, sizeof(jmp_buf));
+			CS2X_ThreadExceptionObject = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ), l_value_0);
+			longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+		}
+		else /* end try */
+		{
+			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_1, sizeof(jmp_buf));
+			if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt2_System_Exception_OBJ)) /* catch */
+			{
+				t2_System_Exception* l_e_1;
+				l_e_1 = CS2X_ThreadExceptionObject;
+				CS2X_ThreadExceptionObject = 0;
+				CS2X_ThreadExceptionObject = l_e_1;
+				longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+			}
+			if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */
+		}
+		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_1, sizeof(jmp_buf));
+		/* end catch */
+	}
+	else /* end try */
+	{
+		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
+		if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt3_PortableTestApp_Test_MyException_OBJ)) /* catch */
+		{
+			t3_PortableTestApp_Test_MyException* l_e_1;
+			l_e_1 = CS2X_ThreadExceptionObject;
+			CS2X_ThreadExceptionObject = 0;
+			/* protected return */
+			{
+				char CS2X_RETURN_1;
+				CS2X_RETURN_1 = m2_System_String_Equals_0(l_e_1->f__Message_k__BackingField_1, l_value_0);
+				memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
+				return CS2X_RETURN_1;
+			}
+		}
+		else if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt2_System_Exception_OBJ)) /* catch */
+		{
+			t2_System_Exception* l_e_1;
+			l_e_1 = CS2X_ThreadExceptionObject;
+			CS2X_ThreadExceptionObject = 0;
+			/* protected return */
+			{
+				char CS2X_RETURN_1;
+				CS2X_RETURN_1 = 0;
+				memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
+				return CS2X_RETURN_1;
+			}
+		}
+		if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */
+	}
+	memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
+	/* end catch */
+	return 0;
+}
+
+t3_PortableTestApp_Test_MyException* m3_PortableTestApp_Test_MyException__ctor_0(t3_PortableTestApp_Test_MyException* self, t2_System_String* p_message)
+{
+	m2_System_Exception__ctor_1(self, p_message);
+	return self;
 }
 
 char m3_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t3_PortableTestApp_Test_VirtualMethods_Base* self, char p_value)
@@ -1714,11 +1880,26 @@ void CS2X_InitLib_PortableTestApp()
 	rt3_PortableTestApp_Test_Operators_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt3_PortableTestApp_Test_Operators_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_Operators_METADATA_Name;
 	rt3_PortableTestApp_Test_Operators_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_Operators_METADATA_FullName;
+	memset(&rt3_PortableTestApp_Test_RefOutParameters_OBJ, 0, sizeof(rt3_PortableTestApp_Test_RefOutParameters));
+	rt3_PortableTestApp_Test_RefOutParameters_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_RefOutParameters_OBJ;
+	rt3_PortableTestApp_Test_RefOutParameters_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_PortableTestApp_Test_RefOutParameters_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_RefOutParameters_METADATA_Name;
+	rt3_PortableTestApp_Test_RefOutParameters_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_RefOutParameters_METADATA_FullName;
 	memset(&rt3_PortableTestApp_Test_StringEncoding_OBJ, 0, sizeof(rt3_PortableTestApp_Test_StringEncoding));
 	rt3_PortableTestApp_Test_StringEncoding_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_StringEncoding_OBJ;
 	rt3_PortableTestApp_Test_StringEncoding_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt3_PortableTestApp_Test_StringEncoding_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_StringEncoding_METADATA_Name;
 	rt3_PortableTestApp_Test_StringEncoding_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_StringEncoding_METADATA_FullName;
+	memset(&rt3_PortableTestApp_Test_TryCatch_OBJ, 0, sizeof(rt3_PortableTestApp_Test_TryCatch));
+	rt3_PortableTestApp_Test_TryCatch_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_TryCatch_OBJ;
+	rt3_PortableTestApp_Test_TryCatch_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_PortableTestApp_Test_TryCatch_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_TryCatch_METADATA_Name;
+	rt3_PortableTestApp_Test_TryCatch_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_TryCatch_METADATA_FullName;
+	memset(&rt3_PortableTestApp_Test_MyException_OBJ, 0, sizeof(rt3_PortableTestApp_Test_MyException));
+	rt3_PortableTestApp_Test_MyException_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_MyException_OBJ;
+	rt3_PortableTestApp_Test_MyException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Exception_OBJ;
+	rt3_PortableTestApp_Test_MyException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_MyException_METADATA_Name;
+	rt3_PortableTestApp_Test_MyException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_MyException_METADATA_FullName;
 	memset(&rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ, 0, sizeof(rt3_PortableTestApp_Test_VirtualMethods_Base));
 	rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ;
 	rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -1800,8 +1981,14 @@ void CS2X_InitLib_PortableTestApp()
 	((t2_System_String*)rt3_PortableTestApp_Test_Interop_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Operators_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Operators_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_RefOutParameters_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_RefOutParameters_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_StringEncoding_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_StringEncoding_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_TryCatch_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_TryCatch_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_MyException_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_MyException_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_VirtualMethods_Base_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_VirtualMethods_Base_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_VirtualMethods_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -1824,6 +2011,7 @@ void CS2X_InitLib_PortableTestApp()
 	/* Init runtime type vtabel */
 	rt3_PortableTestApp_Test_Delegates_OBJ.vTable_FooVirtual_0 = m3_PortableTestApp_Test_Delegates_FooVirtual_0;
 	rt3_PortableTestApp_Test_SuperDelegates_OBJ.vTable_FooVirtual_0 = m3_PortableTestApp_Test_SuperDelegates_FooVirtual_0;
+	rt3_PortableTestApp_Test_MyException_OBJ.vTable_get_Message_0 = m2_System_Exception_get_Message_0;
 	rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ.vTable_VirtualFoo_0 = m3_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0;
 	rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ.vTable_AbstractFoo_0 = 0;
 	rt3_PortableTestApp_Test_VirtualMethods_OBJ.vTable_VirtualFoo_0 = m3_PortableTestApp_Test_VirtualMethods_VirtualFoo_0;
@@ -1968,6 +2156,9 @@ void CS2X_InitStringLiterals()
 	((t2_System_String*)StringLiteral_19)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_20)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_21)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_22)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_23)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_24)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 }
 
 /* =============================== */

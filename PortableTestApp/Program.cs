@@ -503,9 +503,11 @@ namespace PortableTestApp
 			Log(ClassNesting.RunTest(), "ClassNesting");
 			Log(ClassVsStruct.RunTest(), "ClassVsStruct");
 			Log(Enums.RunTest(), "Enums");
-			Log(ExtensionMethods.RunTest(), "ExtensionMethods");
+			Log(RefOutParameters.RunTest(), "RefOutParameters");
 			Log(FieldsAndProperties.RunTest(), "FieldsAndProperties");
 			Log(FlowControlAndEnumerators.RunTest(), "FlowControlAndEnumerators");
+			Log(ExtensionMethods.RunTest(), "ExtensionMethods");
+			Log(TryCatch.RunTest(), "TryCatch");
 			Log(Interop.RunTest(), "Interop");
 			Log(VirtualMethods.RunTest(), "VirtualMethods");
 			Log(Generics.RunTest(), "Generics");
