@@ -282,6 +282,7 @@ namespace CS2X.Core.Transpilers
 		private void WriteProject(Project project)
 		{
 			this.project = project;
+			var dependencyOrderedGenerics = Project.DependencySortTypes(transpiledProject.genericTypes);
 
 			// writer info
 			WriteHeaderInfo(writer);
@@ -336,13 +337,13 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes) WriteType(type, false);
 
-			if (transpiledProject.genericTypes.Count != 0)
+			if (dependencyOrderedGenerics.Count != 0)
 			{
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Forward declare Generic Types */");
 				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.genericTypes.ToArray()) WriteType(type, false);
+				foreach (var type in dependencyOrderedGenerics) WriteType(type, false);
 			}
 
 			// type definitions
@@ -355,13 +356,13 @@ namespace CS2X.Core.Transpilers
 				if (WriteType(type, true)) writer.WriteLine();
 			}
 
-			if (transpiledProject.genericTypes.Count != 0)
+			if (dependencyOrderedGenerics.Count != 0)
 			{
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Generic Type definitions */");
 				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.genericTypes.ToArray())
+				foreach (var type in dependencyOrderedGenerics)
 				{
 					if (WriteType(type, true)) writer.WriteLine();
 				}
@@ -376,12 +377,12 @@ namespace CS2X.Core.Transpilers
 				if (WriteRuntimeType(type, writer)) writer.WriteLine();
 			}
 
-			if (transpiledProject.genericTypes.Count != 0)
+			if (dependencyOrderedGenerics.Count != 0)
 			{
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Generic Runtime Types */");
 				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.genericTypes.ToArray())
+				foreach (var type in dependencyOrderedGenerics)
 				{
 					if (WriteRuntimeType(type, writer)) writer.WriteLine();
 				}
@@ -441,12 +442,12 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			if (transpiledProject.genericTypes.Count != 0)
+			if (dependencyOrderedGenerics.Count != 0)
 			{
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Forward decalre Generic Type Methods */");
 				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.genericTypes.ToArray())
+				foreach (var type in dependencyOrderedGenerics)
 				{
 					if (type.TypeKind == TypeKind.Interface) continue;
 					foreach (var method in type.GetMembers())
@@ -576,13 +577,13 @@ namespace CS2X.Core.Transpilers
 				}
 			}
 
-			if (transpiledProject.genericTypes.Count != 0)
+			if (dependencyOrderedGenerics.Count != 0)
 			{
 				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Generic Type Method definitions */");
 				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.genericTypes.ToArray())
+				foreach (var type in dependencyOrderedGenerics)
 				{
 					if (type.TypeKind == TypeKind.Interface) continue;
 					foreach (var method in type.GetMembers())
@@ -618,11 +619,11 @@ namespace CS2X.Core.Transpilers
 
 			WriteInitRuntimeTypes(project.allTypes);
 
-			if (transpiledProject.genericTypes.Count != 0)
+			if (dependencyOrderedGenerics.Count != 0)
 			{
 				writer.WriteLine();
 				writer.WriteLinePrefix("/* <<< === Generic Runtime Types === >>> */");
-				WriteInitRuntimeTypes(transpiledProject.genericTypes.ToArray());
+				WriteInitRuntimeTypes(dependencyOrderedGenerics);
 			}
 
 			if (transpiledProject.arrayTypes.Count != 0)

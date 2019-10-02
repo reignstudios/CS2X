@@ -37,6 +37,8 @@ typedef struct t4_PortableTestApp_Test_Interop_FooDelegate t4_PortableTestApp_Te
 /* =============================== */
 /* Forward declare Generic Types */
 /* =============================== */
+typedef struct t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC;
+typedef struct t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC;
 typedef struct t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC;
 typedef struct t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC;
 typedef struct t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC;
@@ -214,6 +216,18 @@ struct t4_PortableTestApp_Test_Interop_FooDelegate
 /* =============================== */
 /* Generic Type definitions */
 /* =============================== */
+struct t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC
+{
+	int32_t f_i_2;
+	int32_t* f_collection_2;
+};
+
+struct t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC f_e_1;
+};
+
 struct t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
@@ -485,6 +499,22 @@ int8_t rt4_PortableTestApp_Test_Interop_FooDelegate_METADATA_FullName[94] = {0,0
 /* =============================== */
 /* Generic Runtime Types */
 /* =============================== */
+typedef struct rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC;
+rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_OBJ;
+int8_t rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,60,0,73,0,110,0,116,0,51,0,50,0,62,0,0,0}; /* MyEnumerator<Int32> */
+int8_t rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_METADATA_FullName[108] = {0,0,0,0,0,0,0,0,47,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,77,0,121,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,60,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,51,0,50,0,62,0,0,0}; /* PortableTestApp.Test.MyEnumerator<System.Int32> */
+
+typedef struct rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC;
+rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ;
+int8_t rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_METADATA_Name[52] = {0,0,0,0,0,0,0,0,19,0,0,0,77,0,121,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,98,0,108,0,101,0,60,0,73,0,110,0,116,0,51,0,50,0,62,0,0,0}; /* MyEnumerable<Int32> */
+int8_t rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_METADATA_FullName[108] = {0,0,0,0,0,0,0,0,47,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,77,0,121,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,98,0,108,0,101,0,60,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,51,0,50,0,62,0,0,0}; /* PortableTestApp.Test.MyEnumerable<System.Int32> */
+
 typedef struct rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC
 {
 	t2_System_RuntimeType runtimeType;
@@ -648,6 +678,15 @@ void m4_PortableTestApp_Test_Interop_FooDelegate_Invoke_0(t4_PortableTestApp_Tes
 /* =============================== */
 /* Forward decalre Generic Type Methods */
 /* =============================== */
+t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC__ctor_0(int32_t* p_collection);
+int32_t m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_get_Current_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self);
+char m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_MoveNext_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self);
+void m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_Reset_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self);
+void m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_Set_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self, int32_t p_value, int32_t p_index);
+t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC__ctor_1();
+t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_GetEnumerator_0(t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* self);
+void m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_Set_0(t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* self, int32_t p_value, int32_t p_index);
+t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC__ctor_0(t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* self);
 t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC* m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC__ctor_0(t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC* self, t2_System_Object* p_object, intptr_t p_method);
 char m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_Invoke_0(t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC* self, char p_value);
 int32_t m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo_0(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, int32_t p_value);
@@ -962,6 +1001,8 @@ char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0()
 	int32_t l_i_5;
 	int32_t l_i2_6;
 	int32_t l_l_7;
+	t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* l_myEnumerable_8;
+	t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC l_e_en_9;
 	l_values_0 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 3, &rt0_System_Int32___ARRAY_OBJ);
 	((int32_t*)(((char*)l_values_0) + (sizeof(size_t)*2)))[0] = 1;
 	((int32_t*)(((char*)l_values_0) + (sizeof(size_t)*2)))[1] = 2;
@@ -1024,6 +1065,19 @@ char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0()
 			return 0;
 		}
 		else
+		{
+			return 0;
+		}
+	}
+	l_myEnumerable_8 = m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC), &rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ));
+	m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_Set_0(l_myEnumerable_8, 40, 0);
+	m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_Set_0(l_myEnumerable_8, 41, 1);
+	m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_Set_0(l_myEnumerable_8, 42, 2);
+	for/*each*/ (l_e_en_9 = m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_GetEnumerator_0(l_myEnumerable_8); m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_MoveNext_0(&l_e_en_9);)
+	{
+		int32_t l_e_10;
+		l_e_10 = m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_get_Current_0(&l_e_en_9);
+		if (l_e_10 == 0)
 		{
 			return 0;
 		}
@@ -1318,6 +1372,59 @@ void m4_PortableTestApp_Test_Interop_FooDelegate_Invoke_0(t4_PortableTestApp_Tes
 /* =============================== */
 /* Generic Type Method definitions */
 /* =============================== */
+t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC__ctor_0(int32_t* p_collection)
+{
+	t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC selfObj;
+	t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self = &selfObj;
+	(*self).f_i_2 = -1;
+	(*self).f_collection_2 = p_collection;
+	return selfObj;
+}
+
+int32_t m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_get_Current_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self)
+{
+	return ((int32_t*)(((char*)(*self).f_collection_2) + (sizeof(size_t)*2)))[(*self).f_i_2];
+}
+
+char m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_MoveNext_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self)
+{
+	++(*self).f_i_2;
+	return (*self).f_i_2 < m2_System_Array_get_Length_0((*self).f_collection_2);
+}
+
+void m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_Reset_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self)
+{
+	(*self).f_i_2 = -1;
+}
+
+void m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_Set_0(t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC* self, int32_t p_value, int32_t p_index)
+{
+	((int32_t*)(((char*)(*self).f_collection_2) + (sizeof(size_t)*2)))[p_index] = p_value;
+}
+
+t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC__ctor_1()
+{
+	t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC selfObj = {0};
+	return selfObj;
+}
+
+t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_GetEnumerator_0(t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* self)
+{
+	return self->f_e_1;
+}
+
+void m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_Set_0(t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* self, int32_t p_value, int32_t p_index)
+{
+	m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_Set_0(&self->f_e_1, p_value, p_index);
+}
+
+t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* m3_t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC__ctor_0(t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* self)
+{
+	m2_System_Object__ctor_0(self);
+	self->f_e_1 = m3_t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC__ctor_0(CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 3, &rt0_System_Int32___ARRAY_OBJ));
+	return self;
+}
+
 t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC* m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC__ctor_0(t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC* self, t2_System_Object* p_object, intptr_t p_method)
 {
 	m2_System_MulticastDelegate__ctor_0(self);
@@ -1724,6 +1831,16 @@ void CS2X_InitLib_PortableTestApp()
 
 	/* <<< === Generic Runtime Types === >>> */
 	/* Init runtime type objects */
+	memset(&rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_OBJ, 0, sizeof(rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC));
+	rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_OBJ;
+	rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
+	rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_METADATA_Name;
+	rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_METADATA_FullName;
+	memset(&rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ, 0, sizeof(rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC));
+	rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ;
+	rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_METADATA_Name;
+	rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_METADATA_FullName;
 	memset(&rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ, 0, sizeof(rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC));
 	rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ.runtimeType.CS2X_RuntimeType = &rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ;
 	rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_MulticastDelegate_OBJ;
@@ -1756,6 +1873,10 @@ void CS2X_InitLib_PortableTestApp()
 	rt4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
+	((t2_System_String*)rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;

@@ -64,20 +64,20 @@ namespace PortableTestApp.Test
 				return false;
 			}
 
-			/*var myEnumerable = new MyEnumerable<int>();
+			var myEnumerable = new MyEnumerable<int>();
 			myEnumerable.Set(40, 0);
 			myEnumerable.Set(41, 1);
 			myEnumerable.Set(42, 2);
 			foreach (int e in myEnumerable)
 			{
-				if (e != 0) return false;
-			}*/
+				if (e == 0) return false;
+			}
 
 			return true;
 		}
 	}
 
-	/*// MyEnumerable<T> should be a class
+	// MyEnumerable<T> should be a class
 	class MyEnumerable<T> : IEnumerable<T>
     {
 		private MyEnumerator<T> e = new MyEnumerator<T>(new T[3]);
@@ -139,5 +139,5 @@ namespace PortableTestApp.Test
 		{
 			collection[index] = value;
 		}
-    }*/
+    }
 }

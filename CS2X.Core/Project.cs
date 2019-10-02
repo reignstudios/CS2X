@@ -97,8 +97,16 @@ namespace CS2X.Core
 			allTypesList.AddRange(delegateTypes);
 
 			// dependency sort all types
+			allTypes = DependencySortTypes(allTypesList);
+
+			// validate basic syntax rules
+			foreach (var type in allTypes) ValidateType(type);
+		}
+
+		public static List<INamedTypeSymbol> DependencySortTypes(IEnumerable<INamedTypeSymbol> types)
+		{
 			var allTypesDependencyOrderedList = new List<INamedTypeSymbol>();
-			foreach (var type in allTypesList)
+			foreach (var type in types)
 			{
 				int index = -1, i = 0;
 				foreach (var orderedType in allTypesDependencyOrderedList)
@@ -123,10 +131,7 @@ namespace CS2X.Core
 				if (index == -1) allTypesDependencyOrderedList.Add(type);
 				else allTypesDependencyOrderedList.Insert(index, type);
 			}
-			allTypes = allTypesDependencyOrderedList;
-
-			// validate basic syntax rules
-			foreach (var type in allTypes) ValidateType(type);
+			return allTypesDependencyOrderedList;
 		}
 
 		private void ValidateType(INamedTypeSymbol type)

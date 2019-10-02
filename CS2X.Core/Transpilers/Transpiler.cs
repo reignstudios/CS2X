@@ -673,7 +673,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (method.MethodKind != MethodKind.PropertyGet) return false;
 			if (!method.Name.EndsWith("get_Current")) return false;
-			if (objectType.Equals(method.ReturnType) && HasInterface(method.ContainingType, ienumerator)) return false;
+			if (!objectType.Equals(method.ReturnType) || !HasInterface(method.ContainingType, ienumerator)) return false;
 			return true;
 		}
 
