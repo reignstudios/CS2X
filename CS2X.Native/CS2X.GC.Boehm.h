@@ -12,17 +12,19 @@ void CS2X_GC_Collect()
 	GC_gcollect();
 }
 
-void* CS2X_GC_New(size_t size)
+void* CS2X_GC_New(size_t size, void* finalizerFuncPtr)
 {
 	void* ptr = GC_malloc(size);
 	if (ptr == 0) exit(-1);
+	if (finalizerFuncPtr != 0) GC_register_finalizer(ptr, finalizerFuncPtr, 0, 0, 0);
 	return ptr;
 }
 
-void* CS2X_GC_NewAtomic(size_t size)
+void* CS2X_GC_NewAtomic(size_t size, void* finalizerFuncPtr)
 {
 	void* ptr = GC_malloc_atomic(size);
 	if (ptr == 0) exit(-1);
+	if (finalizerFuncPtr != 0) GC_register_finalizer(ptr, finalizerFuncPtr, 0, 0, 0);
 	return ptr;
 }
 

@@ -1269,23 +1269,23 @@ t3_System_Reflection_MethodImplAttributes m3_System_Reflection_MethodImplAttribu
 /* =============================== */
 /* Helper runtime methods */
 /* =============================== */
-void* CS2X_AllocType(size_t size, t2_System_RuntimeType* runtimeType)
+void* CS2X_AllocType(size_t size, t2_System_RuntimeType* runtimeType, void* finalizerFuncPtr)
 {
-	t2_System_RuntimeType* ptr = CS2X_GC_New(size);
+	t2_System_RuntimeType* ptr = CS2X_GC_New(size, finalizerFuncPtr);
 	ptr->CS2X_RuntimeType = runtimeType;
 	return ptr;
 }
 
-void* CS2X_AllocTypeAtomic(size_t size, t2_System_RuntimeType* runtimeType)
+void* CS2X_AllocTypeAtomic(size_t size, t2_System_RuntimeType* runtimeType, void* finalizerFuncPtr)
 {
-	t2_System_RuntimeType* ptr = CS2X_GC_NewAtomic(size);
+	t2_System_RuntimeType* ptr = CS2X_GC_NewAtomic(size, finalizerFuncPtr);
 	ptr->CS2X_RuntimeType = runtimeType;
 	return ptr;
 }
 
 void* CS2X_AllocArrayType(size_t elementSize, size_t length, t2_System_RuntimeType* runtimeType)
 {
-	t2_System_RuntimeType* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length));
+	t2_System_RuntimeType* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length), 0);
 	ptr->CS2X_RuntimeType = runtimeType;
 	*((size_t*)ptr + 1) = length;
 	return ptr;
@@ -1293,7 +1293,7 @@ void* CS2X_AllocArrayType(size_t elementSize, size_t length, t2_System_RuntimeTy
 
 void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, t2_System_RuntimeType* runtimeType)
 {
-	t2_System_RuntimeType* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length));
+	t2_System_RuntimeType* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length), 0);
 	ptr->CS2X_RuntimeType = runtimeType;
 	*((size_t*)ptr + 1) = length;
 	return ptr;
@@ -1314,7 +1314,7 @@ t2_System_Object* CS2X_TestUpCast(t2_System_Object* self, t2_System_RuntimeType*
 {
 	if (self == 0) return 0;
 	if (CS2X_IsType(self->CS2X_RuntimeType, isRuntimeType)) return self;
-	CS2X_ThreadExceptionObject = m2_System_InvalidCastException__ctor_0(CS2X_AllocType(sizeof(t2_System_InvalidCastException), &rt2_System_InvalidCastException_OBJ));
+	CS2X_ThreadExceptionObject = m2_System_InvalidCastException__ctor_0(CS2X_AllocType(sizeof(t2_System_InvalidCastException), &rt2_System_InvalidCastException_OBJ, 0));
 	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 }
 
@@ -1788,7 +1788,7 @@ int32_t m2_System_String_get_Length_0(t2_System_String* self)
 
 t2_System_String* m2_System_String_FastAllocateString_0(int32_t p_length)
 {
-	t2_System_String* result = CS2X_GC_NewAtomic(sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * p_length));
+	t2_System_String* result = CS2X_GC_NewAtomic(sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * p_length), 0);
 	result->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	result->f__stringLength_1 = p_length;
 	return result;
@@ -1805,7 +1805,7 @@ void m2_System_String_FillStringChecked_0(t2_System_String* p_dest, int32_t p_de
 	char16_t* l_pSrc_1;
 	if (m2_System_String_get_Length_0(p_src) > m2_System_String_get_Length_0(p_dest) - p_destPos)
 	{
-		CS2X_ThreadExceptionObject = m2_System_IndexOutOfRangeException__ctor_0(CS2X_AllocType(sizeof(t2_System_IndexOutOfRangeException), &rt2_System_IndexOutOfRangeException_OBJ));
+		CS2X_ThreadExceptionObject = m2_System_IndexOutOfRangeException__ctor_0(CS2X_AllocType(sizeof(t2_System_IndexOutOfRangeException), &rt2_System_IndexOutOfRangeException_OBJ, 0));
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
 	l_pDest_0 = &p_dest->f__firstChar_1;
@@ -2244,19 +2244,19 @@ t4_System_Runtime_Versioning_TargetFrameworkAttribute* m4_System_Runtime_Version
 
 void m3_System_Text_Encoding__cctor_0()
 {
-	f_System_Text_Encoding__Default_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__Default_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ, 0));
 	f_System_Text_Encoding__Default_k__BackingField->f__CodePage_k__BackingField_1 = (int32_t)GetACP();
-	f_System_Text_Encoding__ASCII_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__ASCII_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ, 0));
 	f_System_Text_Encoding__ASCII_k__BackingField->f__CodePage_k__BackingField_1 = 20127;
-	f_System_Text_Encoding__UTF7_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__UTF7_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ, 0));
 	f_System_Text_Encoding__UTF7_k__BackingField->f__CodePage_k__BackingField_1 = 65000;
-	f_System_Text_Encoding__UTF8_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__UTF8_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ, 0));
 	f_System_Text_Encoding__UTF8_k__BackingField->f__CodePage_k__BackingField_1 = 65001;
-	f_System_Text_Encoding__Unicode_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__Unicode_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ, 0));
 	f_System_Text_Encoding__Unicode_k__BackingField->f__CodePage_k__BackingField_1 = 1200;
-	f_System_Text_Encoding__BigEndianUnicode_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__BigEndianUnicode_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ, 0));
 	f_System_Text_Encoding__BigEndianUnicode_k__BackingField->f__CodePage_k__BackingField_1 = 1201;
-	f_System_Text_Encoding__UTF32_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ));
+	f_System_Text_Encoding__UTF32_k__BackingField = m3_System_Text_StandardEncoding__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_System_Text_StandardEncoding), &rt3_System_Text_StandardEncoding_OBJ, 0));
 	f_System_Text_Encoding__UTF32_k__BackingField->f__CodePage_k__BackingField_1 = 12000;
 }
 
@@ -2451,7 +2451,7 @@ t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* s
 		l_bufferSize_2 = MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, 0, 0);
 		l_buffer_3 = alloca(sizeof(char16_t) * l_bufferSize_2);
 		MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, l_buffer_3, l_bufferSize_2);
-		return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ), l_buffer_3);
+		return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_buffer_3);
 	}
 }
 

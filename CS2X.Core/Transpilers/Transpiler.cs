@@ -523,6 +523,20 @@ namespace CS2X.Core.Transpilers
 			return null;
 		}
 
+		protected bool FindDestructor(ITypeSymbol type, out IMethodSymbol destructor)
+		{
+			foreach (var member in type.GetMembers())
+			{
+				if (member.Kind != SymbolKind.Method) continue;
+				var method = (IMethodSymbol)member;
+				if (method.MethodKind != MethodKind.Destructor || method.Parameters.Length != 0) continue;
+				destructor = method;
+				return true;
+			}
+			destructor = null;
+			return false;
+		}
+
 		protected IMethodSymbol FindDefaultConstructor(ITypeSymbol type)
 		{
 			foreach (var member in type.GetMembers())
@@ -535,7 +549,7 @@ namespace CS2X.Core.Transpilers
 			throw new Exception("Failed to find default constructor");
 		}
 
-		protected IMethodSymbol FindDelgateConstructor(ITypeSymbol type)
+		protected IMethodSymbol FindDelegateConstructor(ITypeSymbol type)
 		{
 			foreach (var member in type.GetMembers())
 			{

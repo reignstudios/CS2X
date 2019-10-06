@@ -11,7 +11,7 @@ void CS2X_GC_Collect()
 	// do nothing...
 }
 
-void* CS2X_GC_New(size_t size)
+void* CS2X_GC_New(size_t size, void* finalizerFuncPtr)
 {
 	void* ptr = malloc(size);
 	if (ptr == 0) exit(-1);
@@ -19,7 +19,7 @@ void* CS2X_GC_New(size_t size)
 	return ptr;
 }
 
-void* CS2X_GC_NewAtomic(size_t size)
+void* CS2X_GC_NewAtomic(size_t size, void* finalizerFuncPtr)
 {
 	void* ptr = malloc(size);
 	if (ptr == 0) exit(-1);

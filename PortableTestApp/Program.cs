@@ -24,6 +24,7 @@ namespace PortableTestApp
 			Log(FieldsAndProperties.RunTest(), "FieldsAndProperties");
 			Log(FlowControlAndEnumerators.RunTest(), "FlowControlAndEnumerators");
 			Log(ExtensionMethods.RunTest(), "ExtensionMethods");
+			Log(Destructors.RunTest(), "Destructors");
 			Log(TryCatch.RunTest(), "TryCatch");
 			Log(Interop.RunTest(), "Interop");
 			Log(VirtualMethods.RunTest(), "VirtualMethods");

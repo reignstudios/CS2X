@@ -472,10 +472,10 @@ namespace CS2X.Core.Transpilers
 				string runtimeTypeName = GetTypeFullName(runtimeType);
 
 				// alloc GC type and set runtime ptr helper
-				writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType)");
+				writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType, void* finalizerFuncPtr)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(size);");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(size, finalizerFuncPtr);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
 				writer.WriteLinePrefix("return ptr;");
 				writer.RemoveTab();
@@ -483,10 +483,10 @@ namespace CS2X.Core.Transpilers
 
 				// alloc atomic GC type and set runtime ptr helper
 				writer.WriteLine();
-				writer.WriteLine($"void* CS2X_AllocTypeAtomic(size_t size, {runtimeTypeName}* runtimeType)");
+				writer.WriteLine($"void* CS2X_AllocTypeAtomic(size_t size, {runtimeTypeName}* runtimeType, void* finalizerFuncPtr)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(size);");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(size, finalizerFuncPtr);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
 				writer.WriteLinePrefix("return ptr;");
 				writer.RemoveTab();
@@ -497,7 +497,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"void* CS2X_AllocArrayType(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length));");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length), 0);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
 				writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
 				writer.WriteLinePrefix("return ptr;");
@@ -509,7 +509,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length));");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length), 0);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
 				writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
 				writer.WriteLinePrefix("return ptr;");
@@ -544,7 +544,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLinePrefix("if (CS2X_IsType(self->CS2X_RuntimeType, isRuntimeType)) return self;");
 				var castExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.InvalidCastException");
 				var castExceptionTypeConstructor = FindDefaultConstructor(castExceptionType);
-				writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(castExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(castExceptionType)}), &{GetRuntimeTypeObjFullName(castExceptionType)}));");
+				writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(castExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(castExceptionType)}), &{GetRuntimeTypeObjFullName(castExceptionType)}, 0));");
 				writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
 				writer.RemoveTab();
 				writer.WriteLine('}');
@@ -828,7 +828,7 @@ namespace CS2X.Core.Transpilers
 					else writer.WritePrefix();
 					writer.WriteLine($"{GetMethodFullName(mainMethod)}(managedArgs);");
 				}
-				writer.WriteLinePrefix("CS2X_GC_Collect();");
+				//writer.WriteLinePrefix("CS2X_GC_Collect();");// copy .NET Core and don't collect when application exits
 				if (!mainMethod.ReturnsVoid) writer.WriteLinePrefix("return returnCode;");
 				else writer.WriteLinePrefix("return 0;");
 				writer.RemoveTab();
@@ -1267,6 +1267,7 @@ namespace CS2X.Core.Transpilers
 				case MethodKind.Ordinary:
 				case MethodKind.Constructor:
 				case MethodKind.StaticConstructor:
+				case MethodKind.Destructor:
 				case MethodKind.PropertyGet:
 				case MethodKind.PropertySet:
 				case MethodKind.UserDefinedOperator:
@@ -1429,7 +1430,17 @@ namespace CS2X.Core.Transpilers
 								}
 								WriteContrustorFieldInitializers(method);
 								if (syntax.Body != null) WriteBody(syntax.Body);
-								else throw new NotSupportedException("Cunstructor body cannot be emtpy: " + syntax.ToString());
+								else throw new NotSupportedException("Constructor body cannot be emtpy: " + syntax.ToString());
+							}
+							else if (syntaxDeclaration is DestructorDeclarationSyntax)
+							{
+								var syntax = (DestructorDeclarationSyntax)syntaxDeclaration;
+								if (syntax.Body != null) WriteBody(syntax.Body);
+								else throw new NotSupportedException("Destructor body cannot be emtpy: " + syntax.ToString());
+								if (method.ContainingType.BaseType != null && FindDestructor(method.ContainingType.BaseType, out var destructor))
+								{
+									writer.WriteLinePrefix(GetMethodFullName(destructor) + "(self);");
+								}
 							}
 							else if (syntaxDeclaration is AccessorDeclarationSyntax)
 							{
@@ -1528,7 +1539,7 @@ namespace CS2X.Core.Transpilers
 								{
 									var field = FindFieldByName(method.ContainingType, "_stringLength");
 									string lengthName = GetParameterFullName(method.Parameters[0]);
-									writer.WriteLinePrefix($"{GetTypeFullName(method.ContainingType)}* result = CS2X_GC_NewAtomic(sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * {lengthName}));");
+									writer.WriteLinePrefix($"{GetTypeFullName(method.ContainingType)}* result = CS2X_GC_NewAtomic(sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * {lengthName}), 0);");
 									writer.WriteLinePrefix($"result->CS2X_RuntimeType = &{GetRuntimeTypeObjFullName(method.ContainingType)};");
 									writer.WriteLinePrefix($"result->{GetFieldFullName(field)} = {lengthName};");
 									writer.WriteLinePrefix("return result;");
@@ -1638,8 +1649,8 @@ namespace CS2X.Core.Transpilers
 								else if (method.Name == "GetDelegateForFunctionPointer")
 								{
 									var delegateType = method.TypeArguments[0];
-									var constructor = FindDelgateConstructor(delegateType);
-									writer.WriteLinePrefix($"return {GetMethodFullName(constructor)}({GetNewObjectMethod(delegateType)}(sizeof({GetTypeFullName(delegateType)}), &{GetRuntimeTypeObjFullName(delegateType)}), 0, {GetParameterFullName(method.Parameters[0])});");
+									var constructor = FindDelegateConstructor(delegateType);
+									writer.WriteLinePrefix($"return {GetMethodFullName(constructor)}({GetNewObjectMethod(delegateType)}(sizeof({GetTypeFullName(delegateType)}), &{GetRuntimeTypeObjFullName(delegateType)}, 0), 0, {GetParameterFullName(method.Parameters[0])});");
 								}
 								else
 								{
@@ -1661,7 +1672,7 @@ namespace CS2X.Core.Transpilers
 						string objectTypeName = GetTypeFullName(objectType);
 						var dllNotFoundExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.DllNotFoundException");
 						var dllNotFoundExceptionTypeConstructor = FindDefaultConstructor(dllNotFoundExceptionType);
-						writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(dllNotFoundExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(dllNotFoundExceptionType)}), &{GetRuntimeTypeObjFullName(dllNotFoundExceptionType)}));");
+						writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(dllNotFoundExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(dllNotFoundExceptionType)}), &{GetRuntimeTypeObjFullName(dllNotFoundExceptionType)}, 0));");
 						writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
 					}
 					else if (method.ContainingType.SpecialType == SpecialType.System_IntPtr || method.ContainingType.SpecialType == SpecialType.System_UIntPtr)
@@ -2271,6 +2282,15 @@ namespace CS2X.Core.Transpilers
 
 		private void WriteReturnStatement(ReturnStatementSyntax statement)
 		{
+			if (method.MethodKind == MethodKind.Destructor)
+			{
+				writer.WriteLinePrefix("/* protected return */");
+				if (method.ContainingType.BaseType != null && FindDestructor(method.ContainingType.BaseType, out var destructor))
+				{
+					writer.WriteLinePrefix(GetMethodFullName(destructor) + "(self);");
+				}
+			}
+
 			if (tryCatchNestingLevel == 0)
 			{
 				writer.WritePrefix("return");
@@ -2781,7 +2801,7 @@ namespace CS2X.Core.Transpilers
 				var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
 				var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
 				var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
-				writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}), ");
+				writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}, 0), ");
 				if (!IsVirtualMethod(method))
 				{
 					if (!method.IsStatic) WriteCaller(expression);
@@ -2916,7 +2936,9 @@ namespace CS2X.Core.Transpilers
 			writer.Write('(');
 			if (method.ContainingType.IsReferenceType)
 			{
-				writer.Write($"{GetNewObjectMethod(method.ContainingType)}(sizeof({GetTypeFullName(method.ContainingType)}), &{GetRuntimeTypeObjFullName(method.ContainingType)})");
+				string finalizerMethod = "0";
+				if (FindDestructor(method.ContainingType, out var destructorMethod)) finalizerMethod = '&' + GetMethodFullName(destructorMethod);
+				writer.Write($"{GetNewObjectMethod(method.ContainingType)}(sizeof({GetTypeFullName(method.ContainingType)}), &{GetRuntimeTypeObjFullName(method.ContainingType)}, {finalizerMethod})");
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}
 
