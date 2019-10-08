@@ -44,3 +44,20 @@ void CS2X_GC_Delete(void* object)
 	// TODO
 	free(object);
 }
+
+char CS2X_GC_AutoCollections_Enabled = 1;
+char CS2X_GC_DisableAutoCollections()
+{
+	// TODO
+	char lastState = CS2X_GC_AutoCollections_Enabled;
+	CS2X_GC_AutoCollections_Enabled = 0;
+	return lastState;
+}
+
+char CS2X_GC_EnableAutoCollections()
+{
+	// TODO
+	char lastState = CS2X_GC_AutoCollections_Enabled;
+	CS2X_GC_AutoCollections_Enabled = 1;
+	return !lastState;
+}

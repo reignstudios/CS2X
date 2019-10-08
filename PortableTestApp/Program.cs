@@ -33,6 +33,7 @@ namespace PortableTestApp
 			Log(Indexers.RunTest(), "Indexers");
 			Log(Operators.RunTest(), "Operators");
 			Log(StringEncoding.RunTest(), "StringEncoding");
+			Log(CoreGenericCollections.RunTest(), "CoreGenericCollections");
 			Console.WriteLine("TESTS DONE!");
 
 			// return result code

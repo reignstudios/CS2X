@@ -32,8 +32,8 @@ void* CS2X_GC_Resize(void* object, size_t oldSize, size_t newSize)
 {
 	char* ptr = GC_realloc(object, newSize);
 	if (ptr == 0) exit(-1);
-	//size_t sizeDiff = newSize - oldSize;// GC_realloc will null memory ??
-	//if (sizeDiff > 0) memset(ptr + oldSize, 0, sizeDiff);
+	/* size_t sizeDiff = newSize - oldSize;// GC_realloc will null memory ?? */
+	/* if (sizeDiff > 0) memset(ptr + oldSize, 0, sizeDiff); */
 	return ptr;
 }
 
@@ -42,12 +42,19 @@ void CS2X_GC_Delete(void* object)
 	GC_free(object);
 }
 
-void CS2X_GC_DisableAutoCollections()
+char CS2X_GC_AutoCollections_Enabled = 1;
+char CS2X_GC_DisableAutoCollections()
 {
 	/* boehm doesn't support this (do nothing...) */
+	char lastState = CS2X_GC_AutoCollections_Enabled;
+	CS2X_GC_AutoCollections_Enabled = 0;
+	return lastState;
 }
 
-void CS2X_GC_EnableAutoCollections()
+char CS2X_GC_EnableAutoCollections()
 {
 	/* boehm doesn't support this (do nothing...) */
+	char lastState = CS2X_GC_AutoCollections_Enabled;
+	CS2X_GC_AutoCollections_Enabled = 1;
+	return !lastState;
 }

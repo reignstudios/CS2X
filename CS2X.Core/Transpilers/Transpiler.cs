@@ -49,6 +49,15 @@ namespace CS2X.Core.Transpilers
 
 		public abstract void Transpile(string outputPath);
 
+		protected CSharpCompilation GetCompilation(IAssemblySymbol assembly, Solution solution)
+		{
+			foreach (var project in solution.projects)
+			{
+				if (assembly.Equals(project.compilation.Assembly)) return project.compilation;
+			}
+			throw new Exception("Failed to find CSharpCompilation for assembly: " + assembly.Name);
+		}
+
 		protected int NestedCount(ITypeSymbol type)
 		{
 			int count = 0;
@@ -577,10 +586,20 @@ namespace CS2X.Core.Transpilers
 
 				// check if we need to resolve generic
 				if (!symbol.IsGenericType) return symbol;
+
+				// if nested generic, resolve containing type and find resolved symbol
+				if (symbol.TypeArguments.Length == 0)
+				{
+					if (symbol.ContainingType == null) throw new NotSupportedException("Unsupported generic type: " + type.FullName());
+					var containingType = (INamedTypeSymbol)ResolveType(symbol.ContainingType, usedWithinMethod, semanticModel);
+					symbol = (INamedTypeSymbol)containingType.GetMembers().First(x => x.OriginalDefinition.Equals(symbol.OriginalDefinition));
+				}
+
+				// check if all generic type args are resolved
 				if (!symbol.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return symbol;
 
 				// resolve generic parameters
-				var parameters = symbol.TypeParameters;
+				var parameters = symbol.TypeArguments;
 				var typeParams = new ITypeSymbol[parameters.Length];
 				for (int i = 0; i != typeParams.Length; ++i) typeParams[i] = ResolveType(parameters[i], usedWithinMethod, semanticModel);
 
@@ -602,9 +621,25 @@ namespace CS2X.Core.Transpilers
 			else if (type.Kind == SymbolKind.TypeParameter)
 			{
 				var symbol = (ITypeParameterSymbol)type;
-				if (symbol.TypeParameterKind == TypeParameterKind.Type) return usedWithinMethod.ContainingType.TypeArguments[symbol.Ordinal];
-				else if (symbol.TypeParameterKind == TypeParameterKind.Method) return usedWithinMethod.TypeArguments[symbol.Ordinal];
-				else throw new NotSupportedException("Unsupported ITypeParameterSymbol kind: " + symbol.TypeParameterKind);
+				if (symbol.TypeParameterKind == TypeParameterKind.Type)
+				{
+					var containingType = usedWithinMethod.ContainingType;
+					while (containingType != null)
+					{
+						if (containingType.OriginalDefinition.Equals(symbol.ContainingType.OriginalDefinition)) break;
+						containingType = containingType.ContainingType;
+					}
+					if (containingType == null) throw new Exception("Failed to find ITypeParameterSymbol type: " + symbol.Name);
+					return containingType.TypeArguments[symbol.Ordinal];
+				}
+				else if (symbol.TypeParameterKind == TypeParameterKind.Method)
+				{
+					return usedWithinMethod.TypeArguments[symbol.Ordinal];
+				}
+				else
+				{
+					throw new NotSupportedException("Unsupported ITypeParameterSymbol kind: " + symbol.TypeParameterKind);
+				}
 			}
 
 			return type;
@@ -616,7 +651,7 @@ namespace CS2X.Core.Transpilers
 			if (method.IsGenericMethod && method.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
 			{
 				// resolve generic parameters
-				var parameters = method.TypeParameters;
+				var parameters = method.TypeArguments;
 				var typeParams = new ITypeSymbol[parameters.Length];
 				for (int i = 0; i != typeParams.Length; ++i)
 				{
@@ -630,7 +665,7 @@ namespace CS2X.Core.Transpilers
 				else method = method.OriginalDefinition.Construct(typeParams);
 				return ResolveMethod(method, usedWithinMethod, semanticModel);// keep processing until fully resolved
 			}
-			else if (method.ContainingType != null && method.ContainingType.IsGenericType && method.ContainingType.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
+			else if (method.ContainingType != null && method.ContainingType.IsGenericType && !IsResolvedGenericType(method.ContainingType))
 			{
 				// resolve generic type method lives in and find its matching method
 				var resolvedType = ResolveType(method.ContainingType, usedWithinMethod, semanticModel);
@@ -694,7 +729,12 @@ namespace CS2X.Core.Transpilers
 		protected bool IsResolvedGenericType(INamedTypeSymbol type)
 		{
 			if (!type.IsGenericType || type.IsDefinition) return false;
-			if (type.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
+			var next = type;
+			while (next != null)
+			{
+				if (next.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
+				next = next.ContainingType;
+			}
 			return true;
 		}
 
@@ -702,7 +742,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (!method.IsGenericMethod || method.IsDefinition) return false;
 			if (method.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
-			return true;
+			return !method.ContainingType.IsGenericType || IsResolvedGenericType(method.ContainingType);
 		}
 
 		protected bool NotReferenceableOnStack(IMethodSymbol method, ExpressionSyntax expression, SemanticModel semanticModel, out ExpressionSyntax outExpression, out ExpressionSyntax memberAccessExpression)

@@ -16,6 +16,7 @@
 /* Forward declare Types */
 /* =============================== */
 typedef struct t2_System_Activator t2_System_Activator;
+typedef struct t2_System_ArgumentOutOfRangeException t2_System_ArgumentOutOfRangeException;
 typedef struct t2_System_Array t2_System_Array;
 typedef struct t2_System_Attribute t2_System_Attribute;
 typedef int32_t t2_System_AttributeTargets;
@@ -27,6 +28,7 @@ typedef struct t2_System_Delegate t2_System_Delegate;
 typedef struct t2_System_DllNotFoundException t2_System_DllNotFoundException;
 typedef struct t2_System_Enum t2_System_Enum;
 typedef struct t2_System_Environment t2_System_Environment;
+typedef struct t2_System_EqualityComparer t2_System_EqualityComparer;
 typedef struct t2_System_Exception t2_System_Exception;
 typedef struct t2_System_FlagsAttribute t2_System_FlagsAttribute;
 typedef struct t2_System_GC t2_System_GC;
@@ -75,6 +77,7 @@ typedef struct t3_System_Text_StringBuilder t3_System_Text_StringBuilder;
 typedef struct t2_System_DateTime t2_System_DateTime;
 typedef struct t2_System_RuntimeTypeHandle t2_System_RuntimeTypeHandle;
 typedef int32_t t3_System_Reflection_MethodImplAttributes;
+typedef int32_t t4_System_Runtime_InteropServices_UnmanagedType;
 
 /* =============================== */
 /* Type definitions */
@@ -82,6 +85,12 @@ typedef int32_t t3_System_Reflection_MethodImplAttributes;
 struct t2_System_Activator
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t2_System_ArgumentOutOfRangeException
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	t2_System_String* f__Message_k__BackingField_1;
 };
 
 struct t2_System_Array
@@ -153,6 +162,11 @@ struct t2_System_Enum
 };
 
 struct t2_System_Environment
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t2_System_EqualityComparer
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
@@ -471,6 +485,7 @@ struct t2_System_RuntimeTypeHandle
 #define f_System_Reflection_MethodImplAttributes_AggressiveOptimization 512
 #define f_System_Reflection_MethodImplAttributes_MaxMethodImplVal 65535
 
+
 /* =============================== */
 /* Runtime Types */
 /* =============================== */
@@ -481,6 +496,15 @@ typedef struct rt2_System_Activator
 rt2_System_Activator rt2_System_Activator_OBJ;
 int8_t rt2_System_Activator_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,65,0,99,0,116,0,105,0,118,0,97,0,116,0,111,0,114,0,0,0}; /* Activator */
 int8_t rt2_System_Activator_METADATA_FullName[46] = {0,0,0,0,0,0,0,0,16,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,65,0,99,0,116,0,105,0,118,0,97,0,116,0,111,0,114,0,0,0}; /* System.Activator */
+
+typedef struct rt2_System_ArgumentOutOfRangeException
+{
+	t2_System_RuntimeType runtimeType;
+	t2_System_String* (*vTable_get_Message_0)(t2_System_ArgumentOutOfRangeException* self);
+} rt2_System_ArgumentOutOfRangeException;
+rt2_System_ArgumentOutOfRangeException rt2_System_ArgumentOutOfRangeException_OBJ;
+int8_t rt2_System_ArgumentOutOfRangeException_METADATA_Name[68] = {0,0,0,0,0,0,0,0,27,0,0,0,65,0,114,0,103,0,117,0,109,0,101,0,110,0,116,0,79,0,117,0,116,0,79,0,102,0,82,0,97,0,110,0,103,0,101,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* ArgumentOutOfRangeException */
+int8_t rt2_System_ArgumentOutOfRangeException_METADATA_FullName[82] = {0,0,0,0,0,0,0,0,34,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,65,0,114,0,103,0,117,0,109,0,101,0,110,0,116,0,79,0,117,0,116,0,79,0,102,0,82,0,97,0,110,0,103,0,101,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* System.ArgumentOutOfRangeException */
 
 typedef struct rt2_System_Array
 {
@@ -586,6 +610,14 @@ typedef struct rt2_System_Environment
 rt2_System_Environment rt2_System_Environment_OBJ;
 int8_t rt2_System_Environment_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,69,0,110,0,118,0,105,0,114,0,111,0,110,0,109,0,101,0,110,0,116,0,0,0}; /* Environment */
 int8_t rt2_System_Environment_METADATA_FullName[50] = {0,0,0,0,0,0,0,0,18,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,69,0,110,0,118,0,105,0,114,0,111,0,110,0,109,0,101,0,110,0,116,0,0,0}; /* System.Environment */
+
+typedef struct rt2_System_EqualityComparer
+{
+	t2_System_RuntimeType runtimeType;
+} rt2_System_EqualityComparer;
+rt2_System_EqualityComparer rt2_System_EqualityComparer_OBJ;
+int8_t rt2_System_EqualityComparer_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,69,0,113,0,117,0,97,0,108,0,105,0,116,0,121,0,67,0,111,0,109,0,112,0,97,0,114,0,101,0,114,0,0,0}; /* EqualityComparer */
+int8_t rt2_System_EqualityComparer_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,69,0,113,0,117,0,97,0,108,0,105,0,116,0,121,0,67,0,111,0,109,0,112,0,97,0,114,0,101,0,114,0,0,0}; /* System.EqualityComparer */
 
 typedef struct rt2_System_Exception
 {
@@ -1071,6 +1103,14 @@ rt3_System_Reflection_MethodImplAttributes rt3_System_Reflection_MethodImplAttri
 int8_t rt3_System_Reflection_MethodImplAttributes_METADATA_Name[54] = {0,0,0,0,0,0,0,0,20,0,0,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,115,0,0,0}; /* MethodImplAttributes */
 int8_t rt3_System_Reflection_MethodImplAttributes_METADATA_FullName[90] = {0,0,0,0,0,0,0,0,38,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,101,0,102,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,46,0,77,0,101,0,116,0,104,0,111,0,100,0,73,0,109,0,112,0,108,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,115,0,0,0}; /* System.Reflection.MethodImplAttributes */
 
+typedef struct rt4_System_Runtime_InteropServices_UnmanagedType
+{
+	t2_System_RuntimeType runtimeType;
+} rt4_System_Runtime_InteropServices_UnmanagedType;
+rt4_System_Runtime_InteropServices_UnmanagedType rt4_System_Runtime_InteropServices_UnmanagedType_OBJ;
+int8_t rt4_System_Runtime_InteropServices_UnmanagedType_METADATA_Name[40] = {0,0,0,0,0,0,0,0,13,0,0,0,85,0,110,0,109,0,97,0,110,0,97,0,103,0,101,0,100,0,84,0,121,0,112,0,101,0,0,0}; /* UnmanagedType */
+int8_t rt4_System_Runtime_InteropServices_UnmanagedType_METADATA_FullName[102] = {0,0,0,0,0,0,0,0,44,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,117,0,110,0,116,0,105,0,109,0,101,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,83,0,101,0,114,0,118,0,105,0,99,0,101,0,115,0,46,0,85,0,110,0,109,0,97,0,110,0,97,0,103,0,101,0,100,0,84,0,121,0,112,0,101,0,0,0}; /* System.Runtime.InteropServices.UnmanagedType */
+
 /* =============================== */
 /* ARRAY Runtime Types */
 /* =============================== */
@@ -1104,9 +1144,12 @@ int8_t rt0_System_Void__PTR_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83
 /* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
+t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_0(t2_System_ArgumentOutOfRangeException* self);
+t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_1(t2_System_ArgumentOutOfRangeException* self, t2_System_String* p_message);
 int32_t m2_System_Array_get_Length_0(t2_System_Array* self);
 int64_t m2_System_Array_get_LongLength_0(t2_System_Array* self);
 int32_t m2_System_Array_get_Count_0(t2_System_Array* self);
+void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize);
 t2_System_Array* m2_System_Array__ctor_0(t2_System_Array* self);
 t2_System_Attribute* m2_System_Attribute__ctor_0(t2_System_Attribute* self);
 char m2_char__ctor_0();
@@ -1265,6 +1308,7 @@ uint64_t m2_uintptr_t_ToUInt64_0(uintptr_t* self);
 void* m2_uintptr_t_ToPointer_0(uintptr_t* self);
 uintptr_t m2_uintptr_t__ctor_3();
 t3_System_Reflection_MethodImplAttributes m3_System_Reflection_MethodImplAttributes__ctor_0();
+t4_System_Runtime_InteropServices_UnmanagedType m4_System_Runtime_InteropServices_UnmanagedType__ctor_0();
 
 /* =============================== */
 /* Helper runtime methods */
@@ -1321,19 +1365,40 @@ t2_System_Object* CS2X_TestUpCast(t2_System_Object* self, t2_System_RuntimeType*
 /* =============================== */
 /* Method definitions */
 /* =============================== */
+t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_0(t2_System_ArgumentOutOfRangeException* self)
+{
+	m2_System_Exception__ctor_0(self);
+	return self;
+}
+
+t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_1(t2_System_ArgumentOutOfRangeException* self, t2_System_String* p_message)
+{
+	m2_System_Exception__ctor_1(self, p_message);
+	return self;
+}
+
 int32_t m2_System_Array_get_Length_0(t2_System_Array* self)
 {
-	return (int32_t)(*((size_t*)self + 1));
+	return (int32_t)(*((intptr_t*)self + 1));
 }
 
 int64_t m2_System_Array_get_LongLength_0(t2_System_Array* self)
 {
-	return (int64_t)(*((size_t*)self + 1));
+	return (int64_t)(*((intptr_t*)self + 1));
 }
 
 int32_t m2_System_Array_get_Count_0(t2_System_Array* self)
 {
 	return m2_System_Array_get_Length_0(self);
+}
+
+void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize)
+{
+	t2_System_RuntimeType* runtimeType = (*p_array)->CS2X_RuntimeType;
+	size_t oldSize = (size_t)(*((intptr_t*)(*p_array) + 1));
+	(*p_array) = CS2X_GC_Resize((*p_array), oldSize, (size_t)(p_elementSize * p_newSize));
+	(*p_array)->CS2X_RuntimeType = runtimeType;
+	(*((intptr_t*)(*p_array) + 1)) = p_newSize;
 }
 
 t2_System_Array* m2_System_Array__ctor_0(t2_System_Array* self)
@@ -2591,6 +2656,12 @@ t3_System_Reflection_MethodImplAttributes m3_System_Reflection_MethodImplAttribu
 	return selfObj;
 }
 
+t4_System_Runtime_InteropServices_UnmanagedType m4_System_Runtime_InteropServices_UnmanagedType__ctor_0()
+{
+	t4_System_Runtime_InteropServices_UnmanagedType selfObj = {0};
+	return selfObj;
+}
+
 /* =============================== */
 /* Init Library */
 /* =============================== */
@@ -2602,6 +2673,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_Activator_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt2_System_Activator_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_Activator_METADATA_Name;
 	rt2_System_Activator_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_Activator_METADATA_FullName;
+	memset(&rt2_System_ArgumentOutOfRangeException_OBJ, 0, sizeof(rt2_System_ArgumentOutOfRangeException));
+	rt2_System_ArgumentOutOfRangeException_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_ArgumentOutOfRangeException_OBJ;
+	rt2_System_ArgumentOutOfRangeException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Exception_OBJ;
+	rt2_System_ArgumentOutOfRangeException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_ArgumentOutOfRangeException_METADATA_Name;
+	rt2_System_ArgumentOutOfRangeException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_ArgumentOutOfRangeException_METADATA_FullName;
 	memset(&rt2_System_Array_OBJ, 0, sizeof(rt2_System_Array));
 	rt2_System_Array_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Array_OBJ;
 	rt2_System_Array_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -2667,6 +2743,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_Environment_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt2_System_Environment_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_Environment_METADATA_Name;
 	rt2_System_Environment_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_Environment_METADATA_FullName;
+	memset(&rt2_System_EqualityComparer_OBJ, 0, sizeof(rt2_System_EqualityComparer));
+	rt2_System_EqualityComparer_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_EqualityComparer_OBJ;
+	rt2_System_EqualityComparer_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt2_System_EqualityComparer_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_EqualityComparer_METADATA_Name;
+	rt2_System_EqualityComparer_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_EqualityComparer_METADATA_FullName;
 	memset(&rt2_System_Exception_OBJ, 0, sizeof(rt2_System_Exception));
 	rt2_System_Exception_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Exception_OBJ;
 	rt2_System_Exception_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -2967,10 +3048,17 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt3_System_Reflection_MethodImplAttributes_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Enum_OBJ;
 	rt3_System_Reflection_MethodImplAttributes_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_Reflection_MethodImplAttributes_METADATA_Name;
 	rt3_System_Reflection_MethodImplAttributes_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_Reflection_MethodImplAttributes_METADATA_FullName;
+	memset(&rt4_System_Runtime_InteropServices_UnmanagedType_OBJ, 0, sizeof(rt4_System_Runtime_InteropServices_UnmanagedType));
+	rt4_System_Runtime_InteropServices_UnmanagedType_OBJ.runtimeType.CS2X_RuntimeType = &rt4_System_Runtime_InteropServices_UnmanagedType_OBJ;
+	rt4_System_Runtime_InteropServices_UnmanagedType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Enum_OBJ;
+	rt4_System_Runtime_InteropServices_UnmanagedType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt4_System_Runtime_InteropServices_UnmanagedType_METADATA_Name;
+	rt4_System_Runtime_InteropServices_UnmanagedType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt4_System_Runtime_InteropServices_UnmanagedType_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
 	((t2_System_String*)rt2_System_Activator_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Activator_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_ArgumentOutOfRangeException_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_ArgumentOutOfRangeException_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Array_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Array_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Attribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -2997,6 +3085,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_Enum_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Environment_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Environment_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_EqualityComparer_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_EqualityComparer_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Exception_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Exception_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_FlagsAttribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3117,13 +3207,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_UIntPtr_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Reflection_MethodImplAttributes_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Reflection_MethodImplAttributes_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt4_System_Runtime_InteropServices_UnmanagedType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt4_System_Runtime_InteropServices_UnmanagedType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 
 	/* Init runtime type vtabel */
-	rt2_System_DllNotFoundException_OBJ.vTable_get_Message_0 = m2_System_Exception_get_Message_0;
-	rt2_System_Exception_OBJ.vTable_get_Message_0 = m2_System_Exception_get_Message_0;
-	rt2_System_IndexOutOfRangeException_OBJ.vTable_get_Message_0 = m2_System_Exception_get_Message_0;
-	rt2_System_InvalidCastException_OBJ.vTable_get_Message_0 = m2_System_Exception_get_Message_0;
-	rt2_System_NotSupportedException_OBJ.vTable_get_Message_0 = m2_System_Exception_get_Message_0;
+	rt2_System_ArgumentOutOfRangeException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
+	rt2_System_DllNotFoundException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
+	rt2_System_Exception_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
+	rt2_System_IndexOutOfRangeException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
+	rt2_System_InvalidCastException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
+	rt2_System_NotSupportedException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 
 	/* <<< === Array Runtime Types === >>> */
 	/* Init runtime type objects */

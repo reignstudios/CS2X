@@ -82,15 +82,15 @@ namespace PortableTestApp.Test
     {
 		private MyEnumerator<T> e = new MyEnumerator<T>(new T[3]);
 
-		public MyEnumerator<T> GetEnumerator()
-        {
-            return e;
-        }
-
 		public void Set(T value, int index)
 		{
 			e.Set(value, index);
 		}
+
+		public MyEnumerator<T> GetEnumerator()
+        {
+            return e;
+        }
 
 		// Will be ignored by CS2X
 		#pragma warning disable CS0626

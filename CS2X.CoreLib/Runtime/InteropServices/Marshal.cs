@@ -32,6 +32,9 @@ namespace System.Runtime.InteropServices
 			Buffer.free((void*)hglobal);
 		}
 
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern int SizeOf<T>();
+
 		/// <summary>
 		/// Returns the native ptr for an object as IntPtr
 		/// </summary>

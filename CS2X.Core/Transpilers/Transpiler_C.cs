@@ -312,7 +312,7 @@ namespace CS2X.Core.Transpilers
 					case GC_Type.Micro: gcFileName = "CS2X.GC.Micro"; break;
 					default: throw new Exception("Unsupported GC option: " + options.gc);
 				}
-				
+
 				if (gcFileName != null)
 				{
 					gcFileName = Path.Combine(options.gcFolderPath, gcFileName);
@@ -748,7 +748,7 @@ namespace CS2X.Core.Transpilers
 					writer.RemoveTab();
 					writer.WriteLine('}');
 				}
-				
+
 				// entry point
 				var mainMethod = project.compilation.GetEntryPoint(new System.Threading.CancellationToken());
 				writer.WriteLine();
@@ -834,6 +834,26 @@ namespace CS2X.Core.Transpilers
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}
+
+			// make sure all generic types and methods are found by looping over them until no changed detected
+			while (isCollectionPass)
+			{
+				int typeCount = transpiledProject.genericTypes.Count;
+				int methodCount = transpiledProject.genericMethods.Count;
+				foreach (var type in transpiledProject.genericTypes.ToArray())
+				{
+					foreach (var method in type.GetMembers())
+					{
+						if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
+					}
+					WriteType(type, true);
+				}
+				foreach (var method in transpiledProject.genericMethods.ToArray()) WriteMethod(method, true);
+				if (typeCount == transpiledProject.genericTypes.Count && methodCount == transpiledProject.genericMethods.Count) break;
+			}
+
+			// mark project as written
+			transpiledProject.isWritten = true;
 		}
 
 		private void WriteInitRuntimeTypes(IEnumerable<ITypeSymbol> types)
@@ -938,7 +958,7 @@ namespace CS2X.Core.Transpilers
 								AllTypeArgsMatch(x.TypeArguments, resolvedMethod.TypeArguments)
 							);
 						}
-						if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(resolvedMethod)} = {GetMethodFullName(highestMethod)};");
+						if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(resolvedMethod)} = &{GetMethodFullName(highestMethod)};");
 						else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(resolvedMethod)} = 0;");
 					}
 
@@ -966,7 +986,7 @@ namespace CS2X.Core.Transpilers
 		{
 			foreach (var reference in transpiledProject.references)
 			{
-				if (collection.Any(x => x == value)) return true;
+				if (collection.Any(x => x.Equals(value))) return true;
 			}
 			return false;
 		}
@@ -1380,7 +1400,8 @@ namespace CS2X.Core.Transpilers
 						if (method.DeclaringSyntaxReferences.Length != 1) throw new Exception("Method can only be defined in one location: " + method.Name);
 						var reference = method.DeclaringSyntaxReferences.First();
 						var syntaxDeclaration = reference.GetSyntax();
-						semanticModel = project.compilation.GetSemanticModel(syntaxDeclaration.SyntaxTree);
+						var compilation = GetCompilation(method.ContainingAssembly, solution);
+						semanticModel = compilation.GetSemanticModel(syntaxDeclaration.SyntaxTree);
 						using (var stream = new MemoryStream())
 						using (instructionalBody = new InstructionalBody(stream, writer))
 						{
@@ -1585,9 +1606,29 @@ namespace CS2X.Core.Transpilers
 							}
 							else if (type.Name == "Array")
 							{
-								if (method.Name == "get_Length") writer.WriteLinePrefix($"return (int32_t)(*((size_t*)self + 1));");
-								else if (method.Name == "get_LongLength") writer.WriteLinePrefix($"return (int64_t)(*((size_t*)self + 1));");
-								else throw new NotSupportedException("Unsupported internal Array method: " + method.Name);
+								if (method.Name == "get_Length")
+								{
+									writer.WriteLinePrefix($"return (int32_t)(*((intptr_t*)self + 1));");
+								}
+								else if (method.Name == "get_LongLength")
+								{
+									writer.WriteLinePrefix($"return (int64_t)(*((intptr_t*)self + 1));");
+								}
+								else if (method.Name == "FastResize")
+								{
+									string arrayParamName = GetParameterFullName(method.Parameters[0]);
+									string newLengthParamName = GetParameterFullName(method.Parameters[1]);
+									string elementSizeParamName = GetParameterFullName(method.Parameters[2]);
+									writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)}* runtimeType = (*{arrayParamName})->CS2X_RuntimeType;");
+									writer.WriteLinePrefix($"size_t oldSize = (size_t)(*((intptr_t*)(*{arrayParamName}) + 1));");
+									writer.WriteLinePrefix($"(*{arrayParamName}) = CS2X_GC_Resize((*{arrayParamName}), oldSize, (size_t)({elementSizeParamName} * {newLengthParamName}));");
+									writer.WriteLinePrefix($"(*{arrayParamName})->CS2X_RuntimeType = runtimeType;");
+									writer.WriteLinePrefix($"(*((intptr_t*)(*{arrayParamName}) + 1)) = {newLengthParamName};");
+								}
+								else
+								{
+									throw new NotSupportedException("Unsupported internal Array method: " + method.Name);
+								}
 							}
 							else if (type.Name == "IntPtr" || type.Name == "UIntPtr")
 							{
@@ -1632,7 +1673,12 @@ namespace CS2X.Core.Transpilers
 						{
 							if (type.Name == "Marshal")
 							{
-								if (method.Name == "GetNativePointerForObject")
+								if (method.Name == "SizeOf")
+								{
+									var typeArg = method.TypeArguments[0];
+									writer.WriteLinePrefix($"return sizeof({GetTypeFullNameRef(typeArg)});");
+								}
+								else if (method.Name == "GetNativePointerForObject")
 								{
 									writer.WriteLinePrefix($"return ({GetTypeFullNameRef(method.ReturnType)}){GetParameterFullName(method.Parameters[0])};");
 								}
@@ -2502,11 +2548,13 @@ namespace CS2X.Core.Transpilers
 			else
 			{
 				var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
+				ITypeSymbol containingType = null;
+				if (symbol.ContainingType != null) containingType = ResolveType(symbol.ContainingType);
 				if
 				(
-					!symbol.IsStatic && symbol.ContainingType != null &&
-					(symbol.ContainingType.Equals(method.ContainingType) ||
-					(method.ContainingType.IsGenericType && !method.ContainingType.IsDefinition && symbol.ContainingType.Equals(method.ContainingType.ConstructedFrom)))
+					!symbol.IsStatic && containingType != null &&
+					(containingType.Equals(method.ContainingType) ||
+					(method.ContainingType.IsGenericType && !method.ContainingType.IsDefinition && containingType.Equals(method.ContainingType.ConstructedFrom)))
 				)
 				{
 					expression = SyntaxFactory.ThisExpression();
@@ -2911,7 +2959,7 @@ namespace CS2X.Core.Transpilers
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
-
+			
 			// grab method symbol
 			IMethodSymbol method;
 			bool isDelegateCreation = false;
@@ -2941,7 +2989,7 @@ namespace CS2X.Core.Transpilers
 				writer.Write($"{GetNewObjectMethod(method.ContainingType)}(sizeof({GetTypeFullName(method.ContainingType)}), &{GetRuntimeTypeObjFullName(method.ContainingType)}, {finalizerMethod})");
 				if (expression.ArgumentList.Arguments.Count != 0) writer.Write(", ");
 			}
-
+			
 			// write custom/special arguments
 			if (!isDelegateCreation)
 			{
