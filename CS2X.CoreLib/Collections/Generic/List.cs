@@ -16,9 +16,9 @@ namespace System.Collections.Generic
 		public int Count => _items.Length;
 
 		public Enumerator GetEnumerator()
-        {
-            return new Enumerator(_items);
-        }
+		{
+			return new Enumerator(_items);
+		}
 
 		// Will be ignored by CS2X
 		#pragma warning disable CS0626
