@@ -1149,11 +1149,6 @@ t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ct
 t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_1(t2_System_ArgumentOutOfRangeException* self, t2_System_String* p_message);
 int32_t m2_System_Array_get_Length_0(t2_System_Array* self);
 int64_t m2_System_Array_get_LongLength_0(t2_System_Array* self);
-int32_t m2_System_Array_get_Count_0(t2_System_Array* self);
-void m2_System_Array_Copy_0(t2_System_Array* p_sourceArray, int32_t p_sourceIndex, t2_System_Array* p_destinationArray, int32_t p_destinationIndex, int32_t p_length);
-void m2_System_Array_Copy_1(t2_System_Array* p_sourceArray, int64_t p_sourceIndex, t2_System_Array* p_destinationArray, int64_t p_destinationIndex, int64_t p_length);
-void m2_System_Array_Copy_2(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int32_t p_length);
-void m2_System_Array_Copy_3(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int64_t p_length);
 void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize);
 t2_System_Array* m2_System_Array__ctor_0(t2_System_Array* self);
 t2_System_Attribute* m2_System_Attribute__ctor_0(t2_System_Attribute* self);
@@ -1390,39 +1385,6 @@ int32_t m2_System_Array_get_Length_0(t2_System_Array* self)
 int64_t m2_System_Array_get_LongLength_0(t2_System_Array* self)
 {
 	return (int64_t)(*((intptr_t*)self + 1));
-}
-
-int32_t m2_System_Array_get_Count_0(t2_System_Array* self)
-{
-	return m2_System_Array_get_Length_0(self);
-}
-
-void m2_System_Array_Copy_0(t2_System_Array* p_sourceArray, int32_t p_sourceIndex, t2_System_Array* p_destinationArray, int32_t p_destinationIndex, int32_t p_length)
-{
-	intptr_t l_sourcePtr_0;
-	intptr_t l_destinationPtr_1;
-	l_sourcePtr_0 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_sourceArray);
-	l_destinationPtr_1 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_destinationArray);
-	m2_System_Buffer_MemoryCopy_0((void*)l_sourcePtr_0, (void*)l_destinationPtr_1, p_length, p_length);
-}
-
-void m2_System_Array_Copy_1(t2_System_Array* p_sourceArray, int64_t p_sourceIndex, t2_System_Array* p_destinationArray, int64_t p_destinationIndex, int64_t p_length)
-{
-	intptr_t l_sourcePtr_0;
-	intptr_t l_destinationPtr_1;
-	l_sourcePtr_0 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_sourceArray);
-	l_destinationPtr_1 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_destinationArray);
-	m2_System_Buffer_MemoryCopy_0((void*)l_sourcePtr_0, (void*)l_destinationPtr_1, p_length, p_length);
-}
-
-void m2_System_Array_Copy_2(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int32_t p_length)
-{
-	m2_System_Array_Copy_0(p_sourceArray, 0, p_destinationArray, 0, p_length);
-}
-
-void m2_System_Array_Copy_3(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int64_t p_length)
-{
-	m2_System_Array_Copy_1(p_sourceArray, 0, p_destinationArray, 0, p_length);
 }
 
 void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize)

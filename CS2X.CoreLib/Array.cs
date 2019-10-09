@@ -17,28 +17,26 @@ namespace System
             get;
         }
 
-		internal int Count => Length;
-
-		public unsafe static void Copy(Array sourceArray, int sourceIndex, Array destinationArray, int destinationIndex, int length)
+		public unsafe static void Copy<T>(T[] sourceArray, int sourceIndex, T[] destinationArray, int destinationIndex, int length)
 		{
-			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray);
-			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray);
+			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray) + (sourceIndex * Marshal.SizeOf<T>());
+			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray) + (destinationIndex * Marshal.SizeOf<T>());
 			Buffer.MemoryCopy((void*)sourcePtr, (void*)destinationPtr, length, length);
 		}
 
-		public unsafe static void Copy(Array sourceArray, long sourceIndex, Array destinationArray, long destinationIndex, long length)
+		public unsafe static void Copy<T>(T[] sourceArray, long sourceIndex, T[] destinationArray, long destinationIndex, long length)
 		{
-			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray);
-			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray);
+			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray) + (int)(sourceIndex * Marshal.SizeOf<T>());
+			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray) + (int)(destinationIndex * Marshal.SizeOf<T>());
 			Buffer.MemoryCopy((void*)sourcePtr, (void*)destinationPtr, length, length);
 		}
 
-		public static void Copy(Array sourceArray, Array destinationArray, int length)
+		public static void Copy<T>(T[] sourceArray, T[] destinationArray, int length)
 		{
 			Copy(sourceArray, 0, destinationArray, 0, length);
 		}
 
-		public static void Copy(Array sourceArray, Array destinationArray, long length)
+		public static void Copy<T>(T[] sourceArray, T[] destinationArray, long length)
 		{
 			Copy(sourceArray, 0, destinationArray, 0, length);
 		}

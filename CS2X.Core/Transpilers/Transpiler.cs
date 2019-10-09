@@ -282,7 +282,7 @@ namespace CS2X.Core.Transpilers
 				if (member.Kind == SymbolKind.Method)
 				{
 					var otherMethod = (IMethodSymbol)member;
-					if (otherMethod.Equals(method) || (method.IsExtensionMethod && otherMethod.Equals(method.ReducedFrom))) break;
+					if (otherMethod.OriginalDefinition.Equals(method.OriginalDefinition) || (method.IsExtensionMethod && otherMethod.Equals(method.ReducedFrom))) break;
 					else if (otherMethod.Name == method.Name) ++index;
 				}
 			}

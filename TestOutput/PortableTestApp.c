@@ -893,26 +893,28 @@ t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* m3_t3_PortableTestA
 double m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_Foo_0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, double p_value);
 t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC__ctor_0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self);
 t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC__ctor_0(t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self);
-char m3_PortableTestApp_Test_Generics_Poo_Boolean__1(char p_value);
-char m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_TestVirt_Boolean__1(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, char p_value);
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_TestVirt_Boolean__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, char p_value);
-int32_t m3_PortableTestApp_Test_Generics_Poo_Int32__1(char p_value);
-t2_System_Object* m3_PortableTestApp_Test_Generics_Poo_Object__1(char p_value);
-int32_t m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__1(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2);
-t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__1(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2);
-t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__1(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, int32_t p_value1, t2_System_Object* p_value2);
-char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__1(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value);
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value);
-char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__1(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_String* p_value);
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_String* p_value);
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value);
-char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value);
-char m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self, t2_System_Object* p_t);
-t4_PortableTestApp_Test_Interop_MyDelegate* m4_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__1(intptr_t p_ptr);
-intptr_t m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__1(t4_PortableTestApp_Test_Interop_FooDelegate* p_d, intptr_t* p_dThisPtr);
-void m2_System_Array_Resize_Int32__1(int32_t** p_array, int32_t p_newSize);
-char m2_System_EqualityComparer_GenericCompare_Int32__1(int32_t p_value1, int32_t p_value2);
-int32_t m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__1();
+char m3_PortableTestApp_Test_Generics_Poo_Boolean__0(char p_value);
+char m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_TestVirt_Boolean__0(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, char p_value);
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_TestVirt_Boolean__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, char p_value);
+int32_t m3_PortableTestApp_Test_Generics_Poo_Int32__0(char p_value);
+t2_System_Object* m3_PortableTestApp_Test_Generics_Poo_Object__0(char p_value);
+int32_t m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__0(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2);
+t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__0(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2);
+t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__0(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, int32_t p_value1, t2_System_Object* p_value2);
+char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value);
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value);
+char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_String* p_value);
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_String* p_value);
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value);
+char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value);
+char m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__0(t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self, t2_System_Object* p_t);
+t4_PortableTestApp_Test_Interop_MyDelegate* m4_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__0(intptr_t p_ptr);
+intptr_t m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__0(t4_PortableTestApp_Test_Interop_FooDelegate* p_d, intptr_t* p_dThisPtr);
+void m2_System_Array_Resize_Int32__0(int32_t** p_array, int32_t p_newSize);
+char m2_System_EqualityComparer_GenericCompare_Int32__0(int32_t p_value1, int32_t p_value2);
+void m2_System_Array_Copy_Int32__2(int32_t* p_sourceArray, int32_t* p_destinationArray, int32_t p_length);
+int32_t m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__0();
+void m2_System_Array_Copy_Int32__0(int32_t* p_sourceArray, int32_t p_sourceIndex, int32_t* p_destinationArray, int32_t p_destinationIndex, int32_t p_length);
 
 /* =============================== */
 /* Method definitions */
@@ -1369,8 +1371,8 @@ char m3_PortableTestApp_Test_Generics_RunTest_0()
 	t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* l_obj3_3;
 	t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* l_obj4_4;
 	t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* l_obj5_5;
-	l_callback_0 = m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC__ctor_0(CS2X_AllocType(sizeof(t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC), &rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ, 0), 0, &m3_PortableTestApp_Test_Generics_Poo_Boolean__1);
-	l_callback_0 = m2_System_Delegate_Combine_0(l_callback_0, m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC__ctor_0(CS2X_AllocType(sizeof(t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC), &rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ, 0), 0, &m3_PortableTestApp_Test_Generics_Poo_Boolean__1));
+	l_callback_0 = m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC__ctor_0(CS2X_AllocType(sizeof(t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC), &rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ, 0), 0, &m3_PortableTestApp_Test_Generics_Poo_Boolean__0);
+	l_callback_0 = m2_System_Delegate_Combine_0(l_callback_0, m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC__ctor_0(CS2X_AllocType(sizeof(t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC), &rt4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_OBJ, 0), 0, &m3_PortableTestApp_Test_Generics_Poo_Boolean__0));
 	l_obj_1 = m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC), &rt3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_OBJ, 0));
 	l_obj2_2 = m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ, 0));
 	l_obj3_3 = m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC), &rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ, 0));
@@ -1387,7 +1389,7 @@ char m3_PortableTestApp_Test_Generics_RunTest_0()
 	l_obj2_2->f__p_k__BackingField_1 = l_obj_1;
 	l_obj5_5->f_i_1 = 77;
 	l_obj5_5->f_i2_1 = 0;
-	return !m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_Invoke_0(l_callback_0, 1) && m3_PortableTestApp_Test_Generics_Poo_Int32__1(1) == 0 && m3_PortableTestApp_Test_Generics_Poo_Object__1(1) == 0 && m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo_0(l_obj_1, 1) == 1 && m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo_0(l_obj2_2, l_obj_1) == l_obj_1 && m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__1(l_obj_1, l_obj_1, m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ, 0))) == 2 && m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__1(l_obj2_2, l_obj2_2, m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ, 0))) == l_obj_1 && m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__1(l_obj_1, 5, l_obj2_2) == l_obj2_2 && ((rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_4->CS2X_RuntimeType)->vTable_MyVirt_Object__0(l_obj4_4, l_obj3_3) && ((rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_4->CS2X_RuntimeType)->vTable_MyVirt_String__0(l_obj4_4, f_System_String_Empty) && ((rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC*)l_obj3_3->CS2X_RuntimeType)->vTable_MyVirt2_Object__0(l_obj3_3, l_obj3_3) && m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(l_obj5_5, 0);
+	return !m4_t4_PortableTestApp_Test_Generics_GenericFooCallback_System_Boolean_GENERIC_Invoke_0(l_callback_0, 1) && m3_PortableTestApp_Test_Generics_Poo_Int32__0(1) == 0 && m3_PortableTestApp_Test_Generics_Poo_Object__0(1) == 0 && m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo_0(l_obj_1, 1) == 1 && m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo_0(l_obj2_2, l_obj_1) == l_obj_1 && m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__0(l_obj_1, l_obj_1, m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ, 0))) == 2 && m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__0(l_obj2_2, l_obj2_2, m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC), &rt3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_OBJ, 0))) == l_obj_1 && m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__0(l_obj_1, 5, l_obj2_2) == l_obj2_2 && ((rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_4->CS2X_RuntimeType)->vTable_MyVirt_Object__0(l_obj4_4, l_obj3_3) && ((rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC*)l_obj4_4->CS2X_RuntimeType)->vTable_MyVirt_String__0(l_obj4_4, f_System_String_Empty) && ((rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC*)l_obj3_3->CS2X_RuntimeType)->vTable_MyVirt2_Object__0(l_obj3_3, l_obj3_3) && m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__0(l_obj5_5, 0);
 }
 
 char16_t m3_PortableTestApp_Test_Indexers_get_Item_0(t3_PortableTestApp_Test_Indexers* self, int32_t p_index)
@@ -1454,10 +1456,10 @@ char m3_PortableTestApp_Test_Interop_RunTest_0()
 	intptr_t l_dFuncPtr_3;
 	intptr_t l_dThisPtr_4;
 	l_funcPtr_0 = (*m3_PortableTestApp_Test_Interop_GetFuncPtr_0)();
-	l_myDelegate_1 = m4_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__1(l_funcPtr_0);
+	l_myDelegate_1 = m4_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__0(l_funcPtr_0);
 	l_myFooDelegate_2 = m4_PortableTestApp_Test_Interop_FooDelegate__ctor_0(CS2X_AllocType(sizeof(t4_PortableTestApp_Test_Interop_FooDelegate), &rt4_PortableTestApp_Test_Interop_FooDelegate_OBJ, 0), 0, &m3_PortableTestApp_Test_Interop_FooStatic_0);
 	l_myFooDelegate_2 = m2_System_Delegate_Combine_0(l_myFooDelegate_2, m4_PortableTestApp_Test_Interop_FooDelegate__ctor_0(CS2X_AllocType(sizeof(t4_PortableTestApp_Test_Interop_FooDelegate), &rt4_PortableTestApp_Test_Interop_FooDelegate_OBJ, 0), m3_PortableTestApp_Test_Interop__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_Interop), &rt3_PortableTestApp_Test_Interop_OBJ, 0)), &m3_PortableTestApp_Test_Interop_Foo_0));
-	l_dFuncPtr_3 = m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__1(l_myFooDelegate_2, &l_dThisPtr_4);
+	l_dFuncPtr_3 = m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__0(l_myFooDelegate_2, &l_dThisPtr_4);
 	(*m3_PortableTestApp_Test_Interop_InvokeDelegateFuncPtr_0)(l_dFuncPtr_3, l_dThisPtr_4);
 	return (*m3_PortableTestApp_Test_Interop_GetLastError_0)() == 0 && m4_PortableTestApp_Test_Interop_MyDelegate_Invoke_0(l_myDelegate_1, 123) == 123 && f_PortableTestApp_Test_Interop_fooStaticCalled && f_PortableTestApp_Test_Interop_fooCalled;
 }
@@ -1872,7 +1874,7 @@ void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(t4_System_
 {
 	int32_t l_index_0;
 	l_index_0 = m2_System_Array_get_Length_0(self->f__items_1);
-	m2_System_Array_Resize_Int32__1(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) + 1);
+	m2_System_Array_Resize_Int32__0(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) + 1);
 	((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[l_index_0] = p_item;
 }
 
@@ -1881,17 +1883,17 @@ void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Remove_0(t4_Syst
 	int32_t l_i_0;
 	for (l_i_0 = m2_System_Array_get_Length_0(self->f__items_1) - 1; l_i_0 != -1; --l_i_0)
 	{
-		if (m2_System_EqualityComparer_GenericCompare_Int32__1(p_item, ((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[l_i_0]))
+		if (m2_System_EqualityComparer_GenericCompare_Int32__0(p_item, ((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[l_i_0]))
 		{
 			m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsDown_0(self, l_i_0);
-			m2_System_Array_Resize_Int32__1(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) - 1);
+			m2_System_Array_Resize_Int32__0(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) - 1);
 		}
 	}
 }
 
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Clear_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self)
 {
-	m2_System_Array_Resize_Int32__1(&self->f__items_1, 0);
+	m2_System_Array_Resize_Int32__0(&self->f__items_1, 0);
 }
 
 char m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Contains_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item)
@@ -1901,7 +1903,7 @@ char m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Contains_0(t4_Sy
 	{
 		int32_t l_i_1;
 		l_i_1 = ((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[l_i_i_0];
-		if (m2_System_EqualityComparer_GenericCompare_Int32__1(p_item, l_i_1))
+		if (m2_System_EqualityComparer_GenericCompare_Int32__0(p_item, l_i_1))
 		{
 			return 1;
 		}
@@ -1914,7 +1916,7 @@ int32_t m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_IndexOf_0(t4_
 	int32_t l_i_0;
 	for (l_i_0 = 0; l_i_0 != m2_System_Array_get_Length_0(self->f__items_1); ++l_i_0)
 	{
-		if (m2_System_EqualityComparer_GenericCompare_Int32__1(p_item, ((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[l_i_0]))
+		if (m2_System_EqualityComparer_GenericCompare_Int32__0(p_item, ((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[l_i_0]))
 		{
 			return l_i_0;
 		}
@@ -1929,7 +1931,7 @@ void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Insert_0(t4_Syst
 		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_0(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0));
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
-	m2_System_Array_Resize_Int32__1(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) + 1);
+	m2_System_Array_Resize_Int32__0(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) + 1);
 	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsUp_0(self, p_index);
 	((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[p_index] = p_item;
 }
@@ -1942,7 +1944,7 @@ void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_RemoveAt_0(t4_Sy
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
 	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsDown_0(self, p_index);
-	m2_System_Array_Resize_Int32__1(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) - 1);
+	m2_System_Array_Resize_Int32__0(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) - 1);
 }
 
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Reverse_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self)
@@ -1966,7 +1968,7 @@ int32_t* m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ToArray_0(t4
 {
 	int32_t* l_itemsCopy_0;
 	l_itemsCopy_0 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), m2_System_Array_get_Length_0(self->f__items_1), &rt0_System_Int32___ARRAY_OBJ);
-	m2_System_Array_Copy_2(self->f__items_1, l_itemsCopy_0, m2_System_Array_get_Length_0(self->f__items_1));
+	m2_System_Array_Copy_Int32__2(self->f__items_1, l_itemsCopy_0, m2_System_Array_get_Length_0(self->f__items_1));
 	return l_itemsCopy_0;
 }
 
@@ -2121,7 +2123,7 @@ t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* m4_t
 	return self;
 }
 
-char m3_PortableTestApp_Test_Generics_Poo_Boolean__1(char p_value)
+char m3_PortableTestApp_Test_Generics_Poo_Boolean__0(char p_value)
 {
 	if (p_value)
 	{
@@ -2133,17 +2135,17 @@ char m3_PortableTestApp_Test_Generics_Poo_Boolean__1(char p_value)
 	}
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_TestVirt_Boolean__1(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, char p_value)
+char m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_TestVirt_Boolean__0(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, char p_value)
 {
 	return 0;
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_TestVirt_Boolean__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, char p_value)
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_TestVirt_Boolean__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, char p_value)
 {
 	return 1;
 }
 
-int32_t m3_PortableTestApp_Test_Generics_Poo_Int32__1(char p_value)
+int32_t m3_PortableTestApp_Test_Generics_Poo_Int32__0(char p_value)
 {
 	if (p_value)
 	{
@@ -2155,7 +2157,7 @@ int32_t m3_PortableTestApp_Test_Generics_Poo_Int32__1(char p_value)
 	}
 }
 
-t2_System_Object* m3_PortableTestApp_Test_Generics_Poo_Object__1(char p_value)
+t2_System_Object* m3_PortableTestApp_Test_Generics_Poo_Object__0(char p_value)
 {
 	if (p_value)
 	{
@@ -2167,7 +2169,7 @@ t2_System_Object* m3_PortableTestApp_Test_Generics_Poo_Object__1(char p_value)
 	}
 }
 
-int32_t m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__1(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2)
+int32_t m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object__0(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2)
 {
 	if (p_value1 == 0)
 	{
@@ -2180,7 +2182,7 @@ int32_t m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Foo2_Object
 	return p_value1->f__p_k__BackingField_1;
 }
 
-t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__1(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2)
+t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_Foo2_Object__0(t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* self, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value1, t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC* p_value2)
 {
 	if (p_value1 == 0)
 	{
@@ -2193,7 +2195,7 @@ t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Object_GENERIC_
 	return p_value1->f__p_k__BackingField_1;
 }
 
-t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__1(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, int32_t p_value1, t2_System_Object* p_value2)
+t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_Boo_Object__0(t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC* self, int32_t p_value1, t2_System_Object* p_value2)
 {
 	if (p_value2 == 0)
 	{
@@ -2202,51 +2204,51 @@ t2_System_Object* m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_B
 	return p_value2;
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__1(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value)
+char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value)
 {
 	return 0;
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value)
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value)
 {
 	return p_value != 0;
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__1(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_String* p_value)
+char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_String* p_value)
 {
 	return 0;
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_String* p_value)
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_String* p_value)
 {
 	return p_value != 0;
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value)
+char m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__0(t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC* self, t2_System_Object* p_value)
 {
-	if (m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1(self, p_value))
+	if (m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__0(self, p_value))
 	{
 		return 0;
 	}
 	return p_value != 0;
 }
 
-char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value)
+char m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__0(t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC* self, t2_System_Object* p_value)
 {
 	return 0;
 }
 
-char m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__1(t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self, t2_System_Object* p_t)
+char m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_Aaa_Object__0(t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC* self, t2_System_Object* p_t)
 {
 	return p_t == 0;
 }
 
-t4_PortableTestApp_Test_Interop_MyDelegate* m4_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__1(intptr_t p_ptr)
+t4_PortableTestApp_Test_Interop_MyDelegate* m4_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__0(intptr_t p_ptr)
 {
 	return m4_PortableTestApp_Test_Interop_MyDelegate__ctor_0(CS2X_AllocType(sizeof(t4_PortableTestApp_Test_Interop_MyDelegate), &rt4_PortableTestApp_Test_Interop_MyDelegate_OBJ, 0), 0, p_ptr);
 }
 
-intptr_t m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__1(t4_PortableTestApp_Test_Interop_FooDelegate* p_d, intptr_t* p_dThisPtr)
+intptr_t m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__0(t4_PortableTestApp_Test_Interop_FooDelegate* p_d, intptr_t* p_dThisPtr)
 {
 	intptr_t result;
 	result = &m4_PortableTestApp_Test_Interop_FooDelegate_Invoke_0;
@@ -2254,7 +2256,7 @@ intptr_t m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate
 	return result;
 }
 
-void m2_System_Array_Resize_Int32__1(int32_t** p_array, int32_t p_newSize)
+void m2_System_Array_Resize_Int32__0(int32_t** p_array, int32_t p_newSize)
 {
 	if (p_newSize < 0)
 	{
@@ -2270,19 +2272,33 @@ void m2_System_Array_Resize_Int32__1(int32_t** p_array, int32_t p_newSize)
 	{
 		t2_System_Array* l_arrayRef_0;
 		l_arrayRef_0 = (*p_array);
-		m2_System_Array_FastResize_0(&l_arrayRef_0, p_newSize, m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__1());
+		m2_System_Array_FastResize_0(&l_arrayRef_0, p_newSize, m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__0());
 		(*p_array) = (int32_t*)CS2X_TestUpCast(l_arrayRef_0, &rt0_System_Int32___ARRAY_OBJ);
 	}
 }
 
-char m2_System_EqualityComparer_GenericCompare_Int32__1(int32_t p_value1, int32_t p_value2)
+char m2_System_EqualityComparer_GenericCompare_Int32__0(int32_t p_value1, int32_t p_value2)
 {
 	return p_value1 == p_value2;
 }
 
-int32_t m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__1()
+void m2_System_Array_Copy_Int32__2(int32_t* p_sourceArray, int32_t* p_destinationArray, int32_t p_length)
+{
+	m2_System_Array_Copy_Int32__0(p_sourceArray, 0, p_destinationArray, 0, p_length);
+}
+
+int32_t m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__0()
 {
 	return sizeof(int32_t);
+}
+
+void m2_System_Array_Copy_Int32__0(int32_t* p_sourceArray, int32_t p_sourceIndex, int32_t* p_destinationArray, int32_t p_destinationIndex, int32_t p_length)
+{
+	intptr_t l_sourcePtr_0;
+	intptr_t l_destinationPtr_1;
+	l_sourcePtr_0 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_sourceArray) + (p_sourceIndex * m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__0());
+	l_destinationPtr_1 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_destinationArray) + (p_destinationIndex * m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__0());
+	m2_System_Buffer_MemoryCopy_0((void*)l_sourcePtr_0, (void*)l_destinationPtr_1, p_length, p_length);
 }
 
 /* =============================== */
@@ -2629,13 +2645,13 @@ void CS2X_InitLib_PortableTestApp()
 	((t2_System_String*)rt4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENERIC_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 
 	/* Init runtime type vtabel */
-	rt3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_OBJ.vTable_TestVirt_Boolean__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_TestVirt_Boolean__1;
-	rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__1;
-	rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt_String__0 = &m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__1;
-	rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt2_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__1;
-	rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__1;
-	rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt_String__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__1;
-	rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt2_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__1;
+	rt3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_OBJ.vTable_TestVirt_Boolean__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Int32_GENERIC_TestVirt_Boolean__0;
+	rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_Object__0;
+	rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt_String__0 = &m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt_String__0;
+	rt3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_OBJ.vTable_MyVirt2_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass2_System_Double_GENERIC_MyVirt2_Object__0;
+	rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_Object__0;
+	rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt_String__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt_String__0;
+	rt3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_OBJ.vTable_MyVirt2_Object__0 = &m3_t3_PortableTestApp_Test_GenericClass_System_Double_GENERIC_MyVirt2_Object__0;
 
 	/* <<< === Array Runtime Types === >>> */
 	/* Init runtime type objects */
