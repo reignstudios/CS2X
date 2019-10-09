@@ -322,6 +322,9 @@ namespace CS2X.Core.Transpilers
 
 				// include string literals
 				writer.WriteLine($"#include \"{stringLiteralsHeader}\"");
+
+				// array size offset
+				writer.WriteLine("#define ArrayOffset (sizeof(intptr_t) + sizeof(size_t))");
 			}
 
 			// include references
@@ -497,7 +500,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"void* CS2X_AllocArrayType(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length), 0);");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(ArrayOffset + (elementSize * length), 0);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
 				writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
 				writer.WriteLinePrefix("return ptr;");
@@ -509,7 +512,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
 				writer.WriteLine('{');
 				writer.AddTab();
-				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length), 0);");
+				writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(ArrayOffset + (elementSize * length), 0);");
 				writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
 				writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
 				writer.WriteLinePrefix("return ptr;");
@@ -814,7 +817,7 @@ namespace CS2X.Core.Transpilers
 					writer.AddTab();
 					writer.WriteLinePrefix("int i2, managedArgLength;");
 					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgsRuntimeOffset;");
-					writer.WriteLinePrefix("managedArgsRuntimeOffset = ((char*)managedArgs) + (sizeof(size_t) * 2);");
+					writer.WriteLinePrefix("managedArgsRuntimeOffset = ((char*)managedArgs) + ArrayOffset;");
 					writer.WriteLinePrefix("managedArgLength = strlen(argv[i]);");
 					var allocMethod = FindMethodByName(stringType, "FastAllocateString");
 					writer.WriteLinePrefix($"managedArgsRuntimeOffset[i] = {GetMethodFullName(allocMethod)}(managedArgLength);");
@@ -1593,7 +1596,7 @@ namespace CS2X.Core.Transpilers
 									writer.WriteLinePrefix("int length = 0;");
 									writer.WriteLinePrefix("char16_t* charBuffer;");
 									writer.WriteLinePrefix($"length = {parameterName} + sizeof(intptr_t);");
-									writer.WriteLinePrefix($"charBuffer = {parameterName} + sizeof(intptr_t) + sizeof(size_t);");
+									writer.WriteLinePrefix($"charBuffer = {parameterName} + ArrayOffset;");
 									writer.WriteLinePrefix("self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));");
 									writer.WriteLinePrefix($"self->{GetFieldFullName(stringLengthField)} = length;");
 									writer.WriteLinePrefix($"memcpy(&self->{GetFieldFullName(firstCharField)}, charBuffer, sizeof(char16_t) * length);");
@@ -1621,7 +1624,7 @@ namespace CS2X.Core.Transpilers
 									string elementSizeParamName = GetParameterFullName(method.Parameters[2]);
 									writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)}* runtimeType = (*{arrayParamName})->CS2X_RuntimeType;");
 									writer.WriteLinePrefix($"size_t oldSize = (size_t)(*((intptr_t*)(*{arrayParamName}) + 1));");
-									writer.WriteLinePrefix($"(*{arrayParamName}) = CS2X_GC_Resize((*{arrayParamName}), oldSize, (size_t)({elementSizeParamName} * {newLengthParamName}));");
+									writer.WriteLinePrefix($"(*{arrayParamName}) = CS2X_GC_Resize((*{arrayParamName}), oldSize, (size_t)(ArrayOffset + ({elementSizeParamName} * {newLengthParamName})));");
 									writer.WriteLinePrefix($"(*{arrayParamName})->CS2X_RuntimeType = runtimeType;");
 									writer.WriteLinePrefix($"(*((intptr_t*)(*{arrayParamName}) + 1)) = {newLengthParamName};");
 								}
@@ -2066,7 +2069,7 @@ namespace CS2X.Core.Transpilers
 
 					if (fixedArrayOffset)
 					{
-						writer.Write(") + (sizeof(size_t)*2))");
+						writer.Write(") + ArrayOffset)");
 					}
 					else if (fixedStringOffset)
 					{
@@ -2179,7 +2182,14 @@ namespace CS2X.Core.Transpilers
 					}
 					else if (symbol.Kind == SymbolKind.Field)
 					{
-						identifierName = GetFieldFullName((IFieldSymbol)symbol);
+						// check if caller is 'this' else handle as new local below
+						var caller = GetCaller(statement.Expression);
+						if (caller is ThisExpressionSyntax)
+						{
+							if (method.ContainingType.IsReferenceType) identifierName = "self->";
+							else identifierName = "self.";
+							identifierName += GetFieldFullName((IFieldSymbol)symbol);
+						}
 					}
 					else if (symbol.Kind == SymbolKind.Property)
 					{
@@ -3606,7 +3616,7 @@ namespace CS2X.Core.Transpilers
 			{
 				writer.Write($"(({GetTypeFullNameRef(type)})(((char*)");
 				writeExpressionCallback();
-				writer.Write(") + (sizeof(size_t)*2)))");
+				writer.Write(") + ArrayOffset))");
 			}
 			else
 			{

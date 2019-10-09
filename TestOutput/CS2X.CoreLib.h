@@ -11,6 +11,7 @@
 #include "..\CS2X.Native\CS2X.GC.Boehm.h"
 #include "..\CS2X.Native\CS2X.InstructionHelpers.h"
 #include "_StringLiterals.h"
+#define ArrayOffset (sizeof(intptr_t) + sizeof(size_t))
 
 /* =============================== */
 /* Forward declare Types */
@@ -1149,6 +1150,10 @@ t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ct
 int32_t m2_System_Array_get_Length_0(t2_System_Array* self);
 int64_t m2_System_Array_get_LongLength_0(t2_System_Array* self);
 int32_t m2_System_Array_get_Count_0(t2_System_Array* self);
+void m2_System_Array_Copy_0(t2_System_Array* p_sourceArray, int32_t p_sourceIndex, t2_System_Array* p_destinationArray, int32_t p_destinationIndex, int32_t p_length);
+void m2_System_Array_Copy_1(t2_System_Array* p_sourceArray, int64_t p_sourceIndex, t2_System_Array* p_destinationArray, int64_t p_destinationIndex, int64_t p_length);
+void m2_System_Array_Copy_2(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int32_t p_length);
+void m2_System_Array_Copy_3(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int64_t p_length);
 void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize);
 t2_System_Array* m2_System_Array__ctor_0(t2_System_Array* self);
 t2_System_Attribute* m2_System_Attribute__ctor_0(t2_System_Attribute* self);
@@ -1329,7 +1334,7 @@ void* CS2X_AllocTypeAtomic(size_t size, t2_System_RuntimeType* runtimeType, void
 
 void* CS2X_AllocArrayType(size_t elementSize, size_t length, t2_System_RuntimeType* runtimeType)
 {
-	t2_System_RuntimeType* ptr = CS2X_GC_New((sizeof(size_t) * 2) + (elementSize * length), 0);
+	t2_System_RuntimeType* ptr = CS2X_GC_New(ArrayOffset + (elementSize * length), 0);
 	ptr->CS2X_RuntimeType = runtimeType;
 	*((size_t*)ptr + 1) = length;
 	return ptr;
@@ -1337,7 +1342,7 @@ void* CS2X_AllocArrayType(size_t elementSize, size_t length, t2_System_RuntimeTy
 
 void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, t2_System_RuntimeType* runtimeType)
 {
-	t2_System_RuntimeType* ptr = CS2X_GC_NewAtomic((sizeof(size_t) * 2) + (elementSize * length), 0);
+	t2_System_RuntimeType* ptr = CS2X_GC_NewAtomic(ArrayOffset + (elementSize * length), 0);
 	ptr->CS2X_RuntimeType = runtimeType;
 	*((size_t*)ptr + 1) = length;
 	return ptr;
@@ -1392,11 +1397,39 @@ int32_t m2_System_Array_get_Count_0(t2_System_Array* self)
 	return m2_System_Array_get_Length_0(self);
 }
 
+void m2_System_Array_Copy_0(t2_System_Array* p_sourceArray, int32_t p_sourceIndex, t2_System_Array* p_destinationArray, int32_t p_destinationIndex, int32_t p_length)
+{
+	intptr_t l_sourcePtr_0;
+	intptr_t l_destinationPtr_1;
+	l_sourcePtr_0 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_sourceArray);
+	l_destinationPtr_1 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_destinationArray);
+	m2_System_Buffer_MemoryCopy_0((void*)l_sourcePtr_0, (void*)l_destinationPtr_1, p_length, p_length);
+}
+
+void m2_System_Array_Copy_1(t2_System_Array* p_sourceArray, int64_t p_sourceIndex, t2_System_Array* p_destinationArray, int64_t p_destinationIndex, int64_t p_length)
+{
+	intptr_t l_sourcePtr_0;
+	intptr_t l_destinationPtr_1;
+	l_sourcePtr_0 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_sourceArray);
+	l_destinationPtr_1 = m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(p_destinationArray);
+	m2_System_Buffer_MemoryCopy_0((void*)l_sourcePtr_0, (void*)l_destinationPtr_1, p_length, p_length);
+}
+
+void m2_System_Array_Copy_2(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int32_t p_length)
+{
+	m2_System_Array_Copy_0(p_sourceArray, 0, p_destinationArray, 0, p_length);
+}
+
+void m2_System_Array_Copy_3(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int64_t p_length)
+{
+	m2_System_Array_Copy_1(p_sourceArray, 0, p_destinationArray, 0, p_length);
+}
+
 void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize)
 {
 	t2_System_RuntimeType* runtimeType = (*p_array)->CS2X_RuntimeType;
 	size_t oldSize = (size_t)(*((intptr_t*)(*p_array) + 1));
-	(*p_array) = CS2X_GC_Resize((*p_array), oldSize, (size_t)(p_elementSize * p_newSize));
+	(*p_array) = CS2X_GC_Resize((*p_array), oldSize, (size_t)(ArrayOffset + (p_elementSize * p_newSize)));
 	(*p_array)->CS2X_RuntimeType = runtimeType;
 	(*((intptr_t*)(*p_array) + 1)) = p_newSize;
 }
@@ -1830,7 +1863,7 @@ t2_System_String* m2_System_String__ctor_1(t2_System_String* self, char16_t* p_v
 	int length = 0;
 	char16_t* charBuffer;
 	length = p_value + sizeof(intptr_t);
-	charBuffer = p_value + sizeof(intptr_t) + sizeof(size_t);
+	charBuffer = p_value + ArrayOffset;
 	self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
 	self->f__stringLength_1 = length;
 	memcpy(&self->f__firstChar_1, charBuffer, sizeof(char16_t) * length);
@@ -2344,7 +2377,7 @@ int32_t m3_System_Text_Encoding_GetByteCount_1(t3_System_Text_Encoding* self, t2
 int32_t m3_System_Text_Encoding_GetByteCount_2(t3_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count)
 {
 	char16_t* l_charsPtr_0;
-	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
+	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + ArrayOffset);
 	{
 		uint32_t l_codePage_1;
 		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
@@ -2367,7 +2400,7 @@ uint8_t* m3_System_Text_Encoding_GetBytes_0(t3_System_Text_Encoding* self, char1
 uint8_t* m3_System_Text_Encoding_GetBytes_1(t3_System_Text_Encoding* self, char16_t* p_chars, int32_t p_index, int32_t p_count)
 {
 	char16_t* l_charsPtr_0;
-	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
+	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + ArrayOffset);
 	{
 		uint32_t l_codePage_1;
 		int32_t l_bufferSize_2;
@@ -2376,7 +2409,7 @@ uint8_t* m3_System_Text_Encoding_GetBytes_1(t3_System_Text_Encoding* self, char1
 		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
 		l_bufferSize_2 = WideCharToMultiByte(l_codePage_1, 0, l_charsPtr_0, -1, 0, 0, 0, 0);
 		l_buffer_3 = CS2X_AllocArrayTypeAtomic(sizeof(uint8_t), l_bufferSize_2, &rt0_System_Byte___ARRAY_OBJ);
-		l_bufferPtr_4 = (uint8_t*)(((char*)l_buffer_3) + (sizeof(size_t)*2));
+		l_bufferPtr_4 = (uint8_t*)(((char*)l_buffer_3) + ArrayOffset);
 		WideCharToMultiByte(l_codePage_1, 0, l_charsPtr_0 + p_index, p_count, l_bufferPtr_4, l_bufferSize_2, 0, 0);
 		return l_buffer_3;
 	}
@@ -2386,8 +2419,8 @@ int32_t m3_System_Text_Encoding_GetBytes_2(t3_System_Text_Encoding* self, char16
 {
 	char16_t* l_charsPtr_0;
 	uint8_t* l_bytesPtr_1;
-	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
-	l_bytesPtr_1 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	l_charsPtr_0 = (char16_t*)(((char*)p_chars) + ArrayOffset);
+	l_bytesPtr_1 = (uint8_t*)(((char*)p_bytes) + ArrayOffset);
 	{
 		uint32_t l_codePage_2;
 		l_codePage_2 = (uint32_t)self->f__CodePage_k__BackingField_1;
@@ -2400,7 +2433,7 @@ int32_t m3_System_Text_Encoding_GetBytes_3(t3_System_Text_Encoding* self, t2_Sys
 	char16_t* l_sBuffer_0;
 	uint8_t* l_bytesPtr_1;
 	l_sBuffer_0 = &p_s->f__firstChar_1;
-	l_bytesPtr_1 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	l_bytesPtr_1 = (uint8_t*)(((char*)p_bytes) + ArrayOffset);
 	{
 		uint32_t l_codePage_2;
 		l_codePage_2 = (uint32_t)self->f__CodePage_k__BackingField_1;
@@ -2427,7 +2460,7 @@ uint8_t* m3_System_Text_Encoding_GetBytes_5(t3_System_Text_Encoding* self, t2_Sy
 		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
 		l_bufferSize_2 = WideCharToMultiByte(l_codePage_1, 0, l_sBuffer_0, -1, 0, 0, 0, 0);
 		l_buffer_3 = CS2X_AllocArrayTypeAtomic(sizeof(uint8_t), l_bufferSize_2, &rt0_System_Byte___ARRAY_OBJ);
-		l_bufferPtr_4 = (uint8_t*)(((char*)l_buffer_3) + (sizeof(size_t)*2));
+		l_bufferPtr_4 = (uint8_t*)(((char*)l_buffer_3) + ArrayOffset);
 		WideCharToMultiByte(l_codePage_1, 0, l_sBuffer_0, -1, l_bufferPtr_4, l_bufferSize_2, 0, 0);
 		return l_buffer_3;
 	}
@@ -2441,7 +2474,7 @@ int32_t m3_System_Text_Encoding_GetCharCount_0(t3_System_Text_Encoding* self, ui
 int32_t m3_System_Text_Encoding_GetCharCount_1(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
 {
 	uint8_t* l_bytesPtr_0;
-	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + ArrayOffset);
 	{
 		uint32_t l_codePage_1;
 		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
@@ -2471,7 +2504,7 @@ char16_t* m3_System_Text_Encoding_GetChars_1(t3_System_Text_Encoding* self, uint
 char16_t* m3_System_Text_Encoding_GetChars_2(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
 {
 	uint8_t* l_bytesPtr_0;
-	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + ArrayOffset);
 	{
 		uint32_t l_codePage_1;
 		int32_t l_bufferSize_2;
@@ -2480,7 +2513,7 @@ char16_t* m3_System_Text_Encoding_GetChars_2(t3_System_Text_Encoding* self, uint
 		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
 		l_bufferSize_2 = MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, 0, 0);
 		l_buffer_3 = CS2X_AllocArrayTypeAtomic(sizeof(char16_t), l_bufferSize_2, &rt0_System_Char___ARRAY_OBJ);
-		l_bufferPtr_4 = (char16_t*)(((char*)l_buffer_3) + (sizeof(size_t)*2));
+		l_bufferPtr_4 = (char16_t*)(((char*)l_buffer_3) + ArrayOffset);
 		MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, l_bufferPtr_4, l_bufferSize_2);
 		return l_buffer_3;
 	}
@@ -2490,8 +2523,8 @@ int32_t m3_System_Text_Encoding_GetChars_3(t3_System_Text_Encoding* self, uint8_
 {
 	uint8_t* l_bytesPtr_0;
 	char16_t* l_charsPtr_1;
-	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
-	l_charsPtr_1 = (char16_t*)(((char*)p_chars) + (sizeof(size_t)*2));
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + ArrayOffset);
+	l_charsPtr_1 = (char16_t*)(((char*)p_chars) + ArrayOffset);
 	{
 		uint32_t l_codePage_2;
 		l_codePage_2 = (uint32_t)self->f__CodePage_k__BackingField_1;
@@ -2507,7 +2540,7 @@ t2_System_String* m3_System_Text_Encoding_GetString_0(t3_System_Text_Encoding* s
 t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
 {
 	uint8_t* l_bytesPtr_0;
-	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + (sizeof(size_t)*2));
+	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + ArrayOffset);
 	{
 		uint32_t l_codePage_1;
 		int32_t l_bufferSize_2;

@@ -19,6 +19,30 @@ namespace System
 
 		internal int Count => Length;
 
+		public unsafe static void Copy(Array sourceArray, int sourceIndex, Array destinationArray, int destinationIndex, int length)
+		{
+			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray);
+			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray);
+			Buffer.MemoryCopy((void*)sourcePtr, (void*)destinationPtr, length, length);
+		}
+
+		public unsafe static void Copy(Array sourceArray, long sourceIndex, Array destinationArray, long destinationIndex, long length)
+		{
+			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray);
+			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray);
+			Buffer.MemoryCopy((void*)sourcePtr, (void*)destinationPtr, length, length);
+		}
+
+		public static void Copy(Array sourceArray, Array destinationArray, int length)
+		{
+			Copy(sourceArray, 0, destinationArray, 0, length);
+		}
+
+		public static void Copy(Array sourceArray, Array destinationArray, long length)
+		{
+			Copy(sourceArray, 0, destinationArray, 0, length);
+		}
+
 		public static void Resize<T>(ref T[] array, int newSize)
 		{
 			if (newSize < 0) throw new ArgumentOutOfRangeException("'newSize' must be 0 or greater");

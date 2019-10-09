@@ -25,7 +25,10 @@ namespace PortableTestApp.Test
 				if (list[i] == 2) return false;
 			}
 
-			return list.Count == 2;
+			if (list.Count != 2) return false;
+
+			list.Clear();
+			return list.Count == 0;
 		}
 	}
 }
