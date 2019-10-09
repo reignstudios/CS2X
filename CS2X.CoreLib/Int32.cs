@@ -12,7 +12,7 @@ namespace System
 		//	return Number.FormatInt32(m_value, null, null);
 		//}
 
-		public new string ToString()
+		public string ToString()
 		{
 			return string.Empty;
 		}

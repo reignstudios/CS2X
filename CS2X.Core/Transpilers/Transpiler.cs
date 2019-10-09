@@ -362,6 +362,24 @@ namespace CS2X.Core.Transpilers
 			return method.IsOverride || method.IsVirtual || method.IsAbstract;
 		}
 
+		protected bool HasNewOverride(ISymbol symbol)
+		{
+			var declaringSyntaxReferences = symbol.DeclaringSyntaxReferences;
+			if (declaringSyntaxReferences != null && declaringSyntaxReferences.Length != 0)
+			{
+				var syntaxRef = symbol.DeclaringSyntaxReferences[0];
+				var syntax = syntaxRef.GetSyntax() as MemberDeclarationSyntax;
+				if (syntax != null)
+				{
+					if (syntax.Modifiers.Any(x => x.IsKind(SyntaxKind.NewKeyword)))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
 		protected bool IsInternalCall(IMethodSymbol method)
 		{
 			foreach (var a in method.GetAttributes())

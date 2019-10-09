@@ -25,6 +25,8 @@ typedef struct t3_PortableTestApp_Test_FlowControlAndEnumerators t3_PortableTest
 typedef struct t3_PortableTestApp_Test_Generics t3_PortableTestApp_Test_Generics;
 typedef struct t3_PortableTestApp_Test_Indexers t3_PortableTestApp_Test_Indexers;
 typedef struct t3_PortableTestApp_Test_Interop t3_PortableTestApp_Test_Interop;
+typedef struct t3_PortableTestApp_Test_NewOverrides t3_PortableTestApp_Test_NewOverrides;
+typedef struct t3_PortableTestApp_Test_NewOverridesSuper t3_PortableTestApp_Test_NewOverridesSuper;
 typedef struct t3_PortableTestApp_Test_Operators t3_PortableTestApp_Test_Operators;
 typedef struct t3_PortableTestApp_Test_RefOutParameters t3_PortableTestApp_Test_RefOutParameters;
 typedef struct t3_PortableTestApp_Test_StringEncoding t3_PortableTestApp_Test_StringEncoding;
@@ -173,6 +175,19 @@ struct t3_PortableTestApp_Test_Interop
 };
 char f_PortableTestApp_Test_Interop_fooStaticCalled;
 char f_PortableTestApp_Test_Interop_fooCalled;
+
+struct t3_PortableTestApp_Test_NewOverrides
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f_i_1;
+};
+
+struct t3_PortableTestApp_Test_NewOverridesSuper
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	int32_t f_i_1;
+	int32_t f_i_2;
+};
 
 struct t3_PortableTestApp_Test_Operators
 {
@@ -482,6 +497,24 @@ rt3_PortableTestApp_Test_Interop rt3_PortableTestApp_Test_Interop_OBJ;
 int8_t rt3_PortableTestApp_Test_Interop_METADATA_Name[28] = {0,0,0,0,0,0,0,0,7,0,0,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,0,0}; /* Interop */
 int8_t rt3_PortableTestApp_Test_Interop_METADATA_FullName[70] = {0,0,0,0,0,0,0,0,28,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,0,0}; /* PortableTestApp.Test.Interop */
 
+typedef struct rt3_PortableTestApp_Test_NewOverrides
+{
+	t2_System_RuntimeType runtimeType;
+	int32_t (*vTable_Foo2_0)(t3_PortableTestApp_Test_NewOverrides* self);
+} rt3_PortableTestApp_Test_NewOverrides;
+rt3_PortableTestApp_Test_NewOverrides rt3_PortableTestApp_Test_NewOverrides_OBJ;
+int8_t rt3_PortableTestApp_Test_NewOverrides_METADATA_Name[38] = {0,0,0,0,0,0,0,0,12,0,0,0,78,0,101,0,119,0,79,0,118,0,101,0,114,0,114,0,105,0,100,0,101,0,115,0,0,0}; /* NewOverrides */
+int8_t rt3_PortableTestApp_Test_NewOverrides_METADATA_FullName[80] = {0,0,0,0,0,0,0,0,33,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,78,0,101,0,119,0,79,0,118,0,101,0,114,0,114,0,105,0,100,0,101,0,115,0,0,0}; /* PortableTestApp.Test.NewOverrides */
+
+typedef struct rt3_PortableTestApp_Test_NewOverridesSuper
+{
+	t2_System_RuntimeType runtimeType;
+	int32_t (*vTable_Foo2_0)(t3_PortableTestApp_Test_NewOverridesSuper* self);
+} rt3_PortableTestApp_Test_NewOverridesSuper;
+rt3_PortableTestApp_Test_NewOverridesSuper rt3_PortableTestApp_Test_NewOverridesSuper_OBJ;
+int8_t rt3_PortableTestApp_Test_NewOverridesSuper_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,78,0,101,0,119,0,79,0,118,0,101,0,114,0,114,0,105,0,100,0,101,0,115,0,83,0,117,0,112,0,101,0,114,0,0,0}; /* NewOverridesSuper */
+int8_t rt3_PortableTestApp_Test_NewOverridesSuper_METADATA_FullName[90] = {0,0,0,0,0,0,0,0,38,0,0,0,80,0,111,0,114,0,116,0,97,0,98,0,108,0,101,0,84,0,101,0,115,0,116,0,65,0,112,0,112,0,46,0,84,0,101,0,115,0,116,0,46,0,78,0,101,0,119,0,79,0,118,0,101,0,114,0,114,0,105,0,100,0,101,0,115,0,83,0,117,0,112,0,101,0,114,0,0,0}; /* PortableTestApp.Test.NewOverridesSuper */
+
 typedef struct rt3_PortableTestApp_Test_Operators
 {
 	t2_System_RuntimeType runtimeType;
@@ -776,6 +809,15 @@ void m3_PortableTestApp_Test_Interop_FooStatic_0();
 void m3_PortableTestApp_Test_Interop_Foo_0(t3_PortableTestApp_Test_Interop* self);
 char m3_PortableTestApp_Test_Interop_RunTest_0();
 t3_PortableTestApp_Test_Interop* m3_PortableTestApp_Test_Interop__ctor_0(t3_PortableTestApp_Test_Interop* self);
+int32_t m3_PortableTestApp_Test_NewOverrides_get_i2_0(t3_PortableTestApp_Test_NewOverrides* self);
+char m3_PortableTestApp_Test_NewOverrides_RunTest_0();
+int32_t m3_PortableTestApp_Test_NewOverrides_Foo_0(t3_PortableTestApp_Test_NewOverrides* self);
+int32_t m3_PortableTestApp_Test_NewOverrides_Foo2_0(t3_PortableTestApp_Test_NewOverrides* self);
+t3_PortableTestApp_Test_NewOverrides* m3_PortableTestApp_Test_NewOverrides__ctor_0(t3_PortableTestApp_Test_NewOverrides* self);
+int32_t m3_PortableTestApp_Test_NewOverridesSuper_get_i2_0(t3_PortableTestApp_Test_NewOverridesSuper* self);
+int32_t m3_PortableTestApp_Test_NewOverridesSuper_Foo_0(t3_PortableTestApp_Test_NewOverridesSuper* self);
+int32_t m3_PortableTestApp_Test_NewOverridesSuper_Foo2_0(t3_PortableTestApp_Test_NewOverridesSuper* self);
+t3_PortableTestApp_Test_NewOverridesSuper* m3_PortableTestApp_Test_NewOverridesSuper__ctor_0(t3_PortableTestApp_Test_NewOverridesSuper* self);
 t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators_op_Explicit_0(int32_t p_value);
 int32_t m3_PortableTestApp_Test_Operators_op_Implicit_0(t3_PortableTestApp_Test_Operators* p_value);
 char m3_PortableTestApp_Test_Operators_RunTest_0();
@@ -891,7 +933,8 @@ int32_t m2_PortableTestApp_Program_Main_0(t2_System_String** p_args)
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Operators_RunTest_0(), StringLiteral_19);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_StringEncoding_RunTest_0(), StringLiteral_20);
 	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_CoreGenericCollections_RunTest_0(), StringLiteral_21);
-	m2_System_Console_WriteLine_0(StringLiteral_22);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_NewOverrides_RunTest_0(), StringLiteral_22);
+	m2_System_Console_WriteLine_0(StringLiteral_23);
 	return 99;
 }
 
@@ -899,11 +942,11 @@ void m2_PortableTestApp_Program_Log_0(char p_success, t2_System_String* p_messag
 {
 	if (p_success)
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_23, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_24, p_message));
 	}
 	else
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_24, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_25, p_message));
 	}
 }
 
@@ -1398,6 +1441,57 @@ t3_PortableTestApp_Test_Interop* m3_PortableTestApp_Test_Interop__ctor_0(t3_Port
 	return self;
 }
 
+int32_t m3_PortableTestApp_Test_NewOverrides_get_i2_0(t3_PortableTestApp_Test_NewOverrides* self)
+{
+	return 88;
+}
+
+char m3_PortableTestApp_Test_NewOverrides_RunTest_0()
+{
+	t3_PortableTestApp_Test_NewOverridesSuper* l_obj_0;
+	l_obj_0 = m3_PortableTestApp_Test_NewOverridesSuper__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_NewOverridesSuper), &rt3_PortableTestApp_Test_NewOverridesSuper_OBJ, 0));
+	return l_obj_0->f_i_2 == 44 && m3_PortableTestApp_Test_NewOverridesSuper_get_i2_0(l_obj_0) == 99 && m3_PortableTestApp_Test_NewOverridesSuper_Foo_0(l_obj_0) == 66 && m3_PortableTestApp_Test_NewOverridesSuper_Foo2_0(l_obj_0) == 2;
+}
+
+int32_t m3_PortableTestApp_Test_NewOverrides_Foo_0(t3_PortableTestApp_Test_NewOverrides* self)
+{
+	return 55;
+}
+
+int32_t m3_PortableTestApp_Test_NewOverrides_Foo2_0(t3_PortableTestApp_Test_NewOverrides* self)
+{
+	return 1;
+}
+
+t3_PortableTestApp_Test_NewOverrides* m3_PortableTestApp_Test_NewOverrides__ctor_0(t3_PortableTestApp_Test_NewOverrides* self)
+{
+	m2_System_Object__ctor_0(self);
+	self->f_i_1 = 33;
+	return self;
+}
+
+int32_t m3_PortableTestApp_Test_NewOverridesSuper_get_i2_0(t3_PortableTestApp_Test_NewOverridesSuper* self)
+{
+	return 99;
+}
+
+int32_t m3_PortableTestApp_Test_NewOverridesSuper_Foo_0(t3_PortableTestApp_Test_NewOverridesSuper* self)
+{
+	return 66;
+}
+
+int32_t m3_PortableTestApp_Test_NewOverridesSuper_Foo2_0(t3_PortableTestApp_Test_NewOverridesSuper* self)
+{
+	return 2;
+}
+
+t3_PortableTestApp_Test_NewOverridesSuper* m3_PortableTestApp_Test_NewOverridesSuper__ctor_0(t3_PortableTestApp_Test_NewOverridesSuper* self)
+{
+	m3_PortableTestApp_Test_NewOverrides__ctor_0(self);
+	self->f_i_2 = 44;
+	return self;
+}
+
 t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators_op_Explicit_0(int32_t p_value)
 {
 	return 0;
@@ -1466,7 +1560,7 @@ char m3_PortableTestApp_Test_StringEncoding_RunTest_0()
 	t2_System_String* l_convertString_0;
 	uint8_t* l_data_1;
 	t2_System_String* l_result_2;
-	l_convertString_0 = StringLiteral_25;
+	l_convertString_0 = StringLiteral_26;
 	l_data_1 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, l_convertString_0);
 	l_result_2 = m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__UTF8_k__BackingField, l_data_1);
 	return m2_System_String_Equals_0(l_result_2, l_convertString_0);
@@ -1478,7 +1572,7 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 	jmp_buf CS2X_JMP_LAST_0;
 	jmp_buf CS2X_JMP_0;
 	int CS2X_IS_JMP_0;
-	l_value_0 = StringLiteral_26;
+	l_value_0 = StringLiteral_27;
 	/* try */
 	memcpy(CS2X_JMP_LAST_0, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
 	CS2X_IS_JMP_0 = setjmp(CS2X_JMP_0);
@@ -2016,7 +2110,7 @@ void m2_System_Array_Resize_Int32__1(int32_t** p_array, int32_t p_newSize)
 {
 	if (p_newSize < 0)
 	{
-		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_27);
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_28);
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
 	if ((*p_array) == 0)
@@ -2142,6 +2236,16 @@ void CS2X_InitLib_PortableTestApp()
 	rt3_PortableTestApp_Test_Interop_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt3_PortableTestApp_Test_Interop_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_Interop_METADATA_Name;
 	rt3_PortableTestApp_Test_Interop_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_Interop_METADATA_FullName;
+	memset(&rt3_PortableTestApp_Test_NewOverrides_OBJ, 0, sizeof(rt3_PortableTestApp_Test_NewOverrides));
+	rt3_PortableTestApp_Test_NewOverrides_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_NewOverrides_OBJ;
+	rt3_PortableTestApp_Test_NewOverrides_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_PortableTestApp_Test_NewOverrides_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_NewOverrides_METADATA_Name;
+	rt3_PortableTestApp_Test_NewOverrides_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_NewOverrides_METADATA_FullName;
+	memset(&rt3_PortableTestApp_Test_NewOverridesSuper_OBJ, 0, sizeof(rt3_PortableTestApp_Test_NewOverridesSuper));
+	rt3_PortableTestApp_Test_NewOverridesSuper_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_NewOverridesSuper_OBJ;
+	rt3_PortableTestApp_Test_NewOverridesSuper_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt3_PortableTestApp_Test_NewOverrides_OBJ;
+	rt3_PortableTestApp_Test_NewOverridesSuper_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_NewOverridesSuper_METADATA_Name;
+	rt3_PortableTestApp_Test_NewOverridesSuper_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_PortableTestApp_Test_NewOverridesSuper_METADATA_FullName;
 	memset(&rt3_PortableTestApp_Test_Operators_OBJ, 0, sizeof(rt3_PortableTestApp_Test_Operators));
 	rt3_PortableTestApp_Test_Operators_OBJ.runtimeType.CS2X_RuntimeType = &rt3_PortableTestApp_Test_Operators_OBJ;
 	rt3_PortableTestApp_Test_Operators_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -2252,6 +2356,10 @@ void CS2X_InitLib_PortableTestApp()
 	((t2_System_String*)rt3_PortableTestApp_Test_Indexers_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Interop_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Interop_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_NewOverrides_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_NewOverrides_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_NewOverridesSuper_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_PortableTestApp_Test_NewOverridesSuper_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Operators_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_Operators_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_PortableTestApp_Test_RefOutParameters_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -2284,6 +2392,8 @@ void CS2X_InitLib_PortableTestApp()
 	/* Init runtime type vtabel */
 	rt3_PortableTestApp_Test_Delegates_OBJ.vTable_FooVirtual_0 = &m3_PortableTestApp_Test_Delegates_FooVirtual_0;
 	rt3_PortableTestApp_Test_SuperDelegates_OBJ.vTable_FooVirtual_0 = &m3_PortableTestApp_Test_SuperDelegates_FooVirtual_0;
+	rt3_PortableTestApp_Test_NewOverrides_OBJ.vTable_Foo2_0 = &m3_PortableTestApp_Test_NewOverrides_Foo2_0;
+	rt3_PortableTestApp_Test_NewOverridesSuper_OBJ.vTable_Foo2_0 = &m3_PortableTestApp_Test_NewOverrides_Foo2_0;
 	rt3_PortableTestApp_Test_MyException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ.vTable_VirtualFoo_0 = &m3_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0;
 	rt3_PortableTestApp_Test_VirtualMethods_Base_OBJ.vTable_AbstractFoo_0 = 0;
@@ -2450,6 +2560,7 @@ void CS2X_InitStringLiterals()
 	((t2_System_String*)StringLiteral_25)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_26)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_27)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_28)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 }
 
 /* =============================== */
