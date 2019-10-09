@@ -18,7 +18,14 @@ namespace PortableTestApp.Test
 				if (item == 0) return false;
 			}
 
-			return list.Count == 3;
+			list.Remove(2);
+
+			for (int i = 0; i != list.Count; ++i)
+			{
+				if (list[i] == 2) return false;
+			}
+
+			return list.Count == 2;
 		}
 	}
 }

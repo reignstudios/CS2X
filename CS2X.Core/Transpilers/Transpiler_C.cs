@@ -1664,6 +1664,19 @@ namespace CS2X.Core.Transpilers
 									throw new NotSupportedException($"Unsupported constructor {type.Name} method: " + method.Name);
 								}
 							}
+							else if (type.Name == "EqualityComparer")
+							{
+								if (method.Name == "GenericCompare")
+								{
+									var param1 = method.Parameters[0];
+									var param2 = method.Parameters[1];
+									writer.WriteLinePrefix($"return {GetParameterFullName(param1)} == {GetParameterFullName(param2)};");
+								}
+								else
+								{
+									throw new NotSupportedException($"Unsupported EqualityComparer method: " + method.Name);
+								}
+							}
 							else
 							{
 								throw new NotSupportedException("Unsupported internal method in type: " + type.Name);

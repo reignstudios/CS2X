@@ -26,6 +26,18 @@ namespace System.Collections.Generic
 		extern IEnumerator IEnumerable.GetEnumerator();
 		#pragma warning restore CS0626
 
+		public T this[int index]
+		{
+			get
+			{
+				return _items[index];
+			}
+			set
+			{
+				_items[index] = value;
+			}
+		}
+
 		public void Add(T item)
 		{
 			int index = _items.Length;
@@ -37,10 +49,20 @@ namespace System.Collections.Generic
 		{
 			for (int i = _items.Length - 1; i != -1; --i)
 			{
-				//if (EqualityComparer.GenericCompare<T>(item, _items[i]))
+				if (EqualityComparer.GenericCompare<T>(item, _items[i]))
 				{
-					//Array.Resize<T>(ref _items, _items.Length - 1);
+					ShiftItemsDown(i);
+					Array.Resize<T>(ref _items, _items.Length - 1);
 				}
+			}
+		}
+
+		private void ShiftItemsDown(int index)
+		{
+			for (int i = index; i < (_items.Length - 1); ++i)
+			{
+				int i2 = i + 1;
+				_items[i] = _items[i2];
 			}
 		}
 

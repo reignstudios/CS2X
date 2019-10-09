@@ -855,8 +855,11 @@ void m4_PortableTestApp_Test_Interop_FooDelegate_Invoke_0(t4_PortableTestApp_Tes
 t4_System_Collections_Generic_List_System_Int32_GENERIC* m4_t4_System_Collections_Generic_List_System_Int32_GENERIC__ctor_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self);
 int32_t m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_get_Count_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self);
 t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_GetEnumerator_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self);
+int32_t m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_get_Item_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index);
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_set_Item_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index, int32_t p_value);
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item);
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Remove_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item);
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsDown_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index);
 t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC m5_t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC__ctor_0(int32_t* p__items);
 int32_t m5_t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC_get_Current_0(t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC* self);
 char m5_t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC_MoveNext_0(t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC* self);
@@ -899,6 +902,7 @@ char m4_t4_PortableTestApp_Test_GenericClass_System_Int64__B_System_Object_GENER
 t4_PortableTestApp_Test_Interop_MyDelegate* m4_System_Runtime_InteropServices_Marshal_GetDelegateForFunctionPointer_MyDelegate__1(intptr_t p_ptr);
 intptr_t m4_System_Runtime_InteropServices_Marshal_GetFunctionPointerForDelegate_FooDelegate__1(t4_PortableTestApp_Test_Interop_FooDelegate* p_d, intptr_t* p_dThisPtr);
 void m2_System_Array_Resize_Int32__1(int32_t** p_array, int32_t p_newSize);
+char m2_System_EqualityComparer_GenericCompare_Int32__1(int32_t p_value1, int32_t p_value2);
 int32_t m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__1();
 
 /* =============================== */
@@ -1020,6 +1024,7 @@ char m3_PortableTestApp_Test_CoreGenericCollections_RunTest_0()
 {
 	t4_System_Collections_Generic_List_System_Int32_GENERIC* l_list_0;
 	t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC l_item_en_1;
+	int32_t l_i_2;
 	l_list_0 = m4_t4_System_Collections_Generic_List_System_Int32_GENERIC__ctor_0(CS2X_AllocType(sizeof(t4_System_Collections_Generic_List_System_Int32_GENERIC), &rt4_System_Collections_Generic_List_System_Int32_GENERIC_OBJ, 0));
 	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_list_0, 1);
 	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_list_0, 2);
@@ -1033,7 +1038,15 @@ char m3_PortableTestApp_Test_CoreGenericCollections_RunTest_0()
 			return 0;
 		}
 	}
-	return m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_get_Count_0(l_list_0) == 3;
+	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Remove_0(l_list_0, 2);
+	for (l_i_2 = 0; l_i_2 != m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_get_Count_0(l_list_0); ++l_i_2)
+	{
+		if (m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_get_Item_0(l_list_0, l_i_2) == 2)
+		{
+			return 0;
+		}
+	}
+	return m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_get_Count_0(l_list_0) == 2;
 }
 
 char m3_PortableTestApp_Test_Delegates_RunTest_0()
@@ -1809,6 +1822,16 @@ t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC m4_t4_System_
 	return m5_t5_System_Collections_Generic_List_System_Int32__EnumeratorGENERIC__ctor_0(self->f__items_1);
 }
 
+int32_t m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_get_Item_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index)
+{
+	return ((int32_t*)(((char*)self->f__items_1) + (sizeof(size_t)*2)))[p_index];
+}
+
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_set_Item_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index, int32_t p_value)
+{
+	((int32_t*)(((char*)self->f__items_1) + (sizeof(size_t)*2)))[p_index] = p_value;
+}
+
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item)
 {
 	int32_t l_index_0;
@@ -1822,8 +1845,22 @@ void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Remove_0(t4_Syst
 	int32_t l_i_0;
 	for (l_i_0 = m2_System_Array_get_Length_0(self->f__items_1) - 1; l_i_0 != -1; --l_i_0)
 	{
+		if (m2_System_EqualityComparer_GenericCompare_Int32__1(p_item, ((int32_t*)(((char*)self->f__items_1) + (sizeof(size_t)*2)))[l_i_0]))
 		{
+			m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsDown_0(self, l_i_0);
+			m2_System_Array_Resize_Int32__1(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) - 1);
 		}
+	}
+}
+
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsDown_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index)
+{
+	int32_t l_i_0;
+	for (l_i_0 = p_index; l_i_0 < (m2_System_Array_get_Length_0(self->f__items_1) - 1); ++l_i_0)
+	{
+		int32_t l_i2_1;
+		l_i2_1 = l_i_0 + 1;
+		((int32_t*)(((char*)self->f__items_1) + (sizeof(size_t)*2)))[l_i_0] = ((int32_t*)(((char*)self->f__items_1) + (sizeof(size_t)*2)))[l_i2_1];
 	}
 }
 
@@ -2125,6 +2162,11 @@ void m2_System_Array_Resize_Int32__1(int32_t** p_array, int32_t p_newSize)
 		m2_System_Array_FastResize_0(&l_arrayRef_0, p_newSize, m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__1());
 		(*p_array) = (int32_t*)CS2X_TestUpCast(l_arrayRef_0, &rt0_System_Int32___ARRAY_OBJ);
 	}
+}
+
+char m2_System_EqualityComparer_GenericCompare_Int32__1(int32_t p_value1, int32_t p_value2)
+{
+	return p_value1 == p_value2;
 }
 
 int32_t m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__1()
