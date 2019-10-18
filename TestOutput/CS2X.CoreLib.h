@@ -1410,6 +1410,16 @@ void m2_System_Array_Copy_0(t2_System_Array* p_sourceArray, int32_t p_sourceInde
 		CS2X_ThreadExceptionObject = m2_System_Exception__ctor_1(CS2X_AllocType(sizeof(t2_System_Exception), &rt2_System_Exception_OBJ, 0), StringLiteral_0);
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
+	if (p_sourceIndex < 0 || (p_sourceIndex + p_length) > m2_System_Array_get_Length_0(p_sourceArray))
+	{
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_1);
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
+	if (p_destinationIndex < 0 || (p_destinationIndex + p_length) > m2_System_Array_get_Length_0(p_destinationArray))
+	{
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_2);
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
 	l_elementSize_0 = m2_System_Array_GetElementSize_0(p_sourceArray);
 	l_sourcePtr_1 = (uint8_t*)m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(p_sourceArray) + (p_sourceIndex * l_elementSize_0);
 	l_destinationPtr_2 = (uint8_t*)m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(p_destinationArray) + (p_destinationIndex * l_elementSize_0);
@@ -1424,6 +1434,16 @@ void m2_System_Array_Copy_1(t2_System_Array* p_sourceArray, int64_t p_sourceInde
 	if (m2_System_Object_GetType_0(p_sourceArray) != m2_System_Object_GetType_0(p_destinationArray))
 	{
 		CS2X_ThreadExceptionObject = m2_System_Exception__ctor_1(CS2X_AllocType(sizeof(t2_System_Exception), &rt2_System_Exception_OBJ, 0), StringLiteral_0);
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
+	if (p_sourceIndex < 0 || (p_sourceIndex + p_length) > m2_System_Array_get_Length_0(p_sourceArray))
+	{
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_1);
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
+	if (p_destinationIndex < 0 || (p_destinationIndex + p_length) > m2_System_Array_get_Length_0(p_destinationArray))
+	{
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_2);
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
 	l_elementSize_0 = m2_System_Array_GetElementSize_0(p_sourceArray);
@@ -1720,7 +1740,7 @@ t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self)
 
 t2_System_String* m2_System_Environment_get_NewLine_0()
 {
-	return StringLiteral_1;
+	return StringLiteral_3;
 }
 
 t2_System_Exception* m2_System_Exception__ctor_0(t2_System_Exception* self)
@@ -2041,7 +2061,7 @@ char m2_System_String_Equals_0(t2_System_String* self, t2_System_String* p_value
 
 void m2_System_String__cctor_0()
 {
-	f_System_String_Empty = StringLiteral_2;
+	f_System_String_Empty = StringLiteral_4;
 }
 
 t2_System_Type* m2_System_Type_GetTypeFromHandle_0(t2_System_RuntimeTypeHandle p_handle)

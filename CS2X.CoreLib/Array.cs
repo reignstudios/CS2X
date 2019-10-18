@@ -23,6 +23,8 @@ namespace System
 		public unsafe static void Copy(Array sourceArray, int sourceIndex, Array destinationArray, int destinationIndex, int length)
 		{
 			if (sourceArray.GetType() != destinationArray.GetType()) throw new Exception("Array types don't match");
+			if (sourceIndex < 0 || (sourceIndex + length) > sourceArray.Length) throw new ArgumentOutOfRangeException("sourceIndex out of range");
+			if (destinationIndex < 0 || (destinationIndex + length) > destinationArray.Length) throw new ArgumentOutOfRangeException("destinationIndex out of range");
 			int elementSize = GetElementSize(sourceArray);
 			byte* sourcePtr = (byte*)Marshal.GetNativePointerForArray(sourceArray) + (sourceIndex * elementSize);
 			byte* destinationPtr = (byte*)Marshal.GetNativePointerForArray(destinationArray) + (destinationIndex * elementSize);
@@ -32,6 +34,8 @@ namespace System
 		public unsafe static void Copy(Array sourceArray, long sourceIndex, Array destinationArray, long destinationIndex, long length)
 		{
 			if (sourceArray.GetType() != destinationArray.GetType()) throw new Exception("Array types don't match");
+			if (sourceIndex < 0 || (sourceIndex + length) > sourceArray.Length) throw new ArgumentOutOfRangeException("sourceIndex out of range");
+			if (destinationIndex < 0 || (destinationIndex + length) > destinationArray.Length) throw new ArgumentOutOfRangeException("destinationIndex out of range");
 			int elementSize = GetElementSize(sourceArray);
 			byte* sourcePtr = (byte*)Marshal.GetNativePointerForArray(sourceArray) + (sourceIndex * elementSize);
 			byte* destinationPtr = (byte*)Marshal.GetNativePointerForArray(destinationArray) + (destinationIndex * elementSize);
