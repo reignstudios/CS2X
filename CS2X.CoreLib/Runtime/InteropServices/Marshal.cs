@@ -44,6 +44,14 @@ namespace System.Runtime.InteropServices
 		public static extern IntPtr GetNativePointerForObject(object o);
 
 		/// <summary>
+		/// Returns the native ptr for an Array as IntPtr thats offset by the runtime header
+		/// </summary>
+		/// <param name="a">Array to get pointer from</param>
+		/// <returns>Pointer to native array buffer</returns>
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern IntPtr GetNativePointerForArray(Array a);
+
+		/// <summary>
 		/// Converts a delegate into a function pointer that is callable from unmanaged code.
 		/// </summary>
 		/// <typeparam name="TDelegate">The type of delegate to convert.</typeparam>

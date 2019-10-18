@@ -983,6 +983,22 @@ namespace CS2X.Core.Transpilers
 					}
 				}
 			}
+
+			// init array element sizes
+			first = true;
+			foreach (var type in types)
+			{
+				if (type.Kind != SymbolKind.ArrayType) continue;
+				if (first)
+				{
+					first = false;
+					writer.WriteLine();
+					writer.WriteLinePrefix("/* Init array runtime type element size */");
+				}
+
+				var arrayType = (IArrayTypeSymbol)type;
+				writer.WriteLinePrefix($"{GetRuntimeTypeObjFullName(type)}.elementSize = sizeof({GetTypeFullNameRef(arrayType.ElementType)});");
+			}
 		}
 
 		private bool ExistsInReference<T>(HashSet<T> collection, T value) where T : class
@@ -1094,7 +1110,14 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine($"typedef struct {runtimeTypeName}");
 			writer.WriteLine('{');
 			writer.AddTab();
+
+			// runtime type pointer
 			writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)} runtimeType;");
+
+			// array element size
+			if (type.Kind == SymbolKind.ArrayType) writer.WriteLinePrefix("size_t elementSize;");
+
+			// vtable methods
 			var virtualMethods = GetOrderedVirtualMethods(type);
 			foreach (var method in virtualMethods)
 			{
@@ -1611,11 +1634,17 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "get_Length")
 								{
-									writer.WriteLinePrefix($"return (int32_t)(*((intptr_t*)self + 1));");
+									writer.WriteLinePrefix("return (int32_t)(*((intptr_t*)self + 1));");
 								}
 								else if (method.Name == "get_LongLength")
 								{
-									writer.WriteLinePrefix($"return (int64_t)(*((intptr_t*)self + 1));");
+									writer.WriteLinePrefix("return (int64_t)(*((intptr_t*)self + 1));");
+								}
+								else if (method.Name == "GetElementSize")
+								{
+									string arrayParamName = GetParameterFullName(method.Parameters[0]);
+									string runtimeTypeName = GetTypeFullName(runtimeType);
+									writer.WriteLinePrefix($"return *(int32_t*)((char*){arrayParamName}->CS2X_RuntimeType + sizeof({runtimeTypeName}));");
 								}
 								else if (method.Name == "FastResize")
 								{
@@ -1697,6 +1726,10 @@ namespace CS2X.Core.Transpilers
 								else if (method.Name == "GetNativePointerForObject")
 								{
 									writer.WriteLinePrefix($"return ({GetTypeFullNameRef(method.ReturnType)}){GetParameterFullName(method.Parameters[0])};");
+								}
+								else if (method.Name == "GetNativePointerForArray")
+								{
+									writer.WriteLinePrefix($"return (intptr_t)((char*){GetParameterFullName(method.Parameters[0])} + ArrayOffset);");
 								}
 								else if (method.Name == "GetFunctionPointerForDelegate")
 								{

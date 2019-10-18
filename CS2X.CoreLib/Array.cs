@@ -17,26 +17,33 @@ namespace System
             get;
         }
 
-		public unsafe static void Copy<T>(T[] sourceArray, int sourceIndex, T[] destinationArray, int destinationIndex, int length)
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		internal static extern int GetElementSize(Array array);
+
+		public unsafe static void Copy(Array sourceArray, int sourceIndex, Array destinationArray, int destinationIndex, int length)
 		{
-			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray) + (sourceIndex * Marshal.SizeOf<T>());
-			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray) + (destinationIndex * Marshal.SizeOf<T>());
-			Buffer.MemoryCopy((void*)sourcePtr, (void*)destinationPtr, length, length);
+			if (sourceArray.GetType() != destinationArray.GetType()) throw new Exception("Array types don't match");
+			int elementSize = GetElementSize(sourceArray);
+			byte* sourcePtr = (byte*)Marshal.GetNativePointerForArray(sourceArray) + (sourceIndex * elementSize);
+			byte* destinationPtr = (byte*)Marshal.GetNativePointerForArray(destinationArray) + (destinationIndex * elementSize);
+			Buffer.MemoryCopy((void*)sourcePtr, (void*)destinationPtr, length * elementSize, length * elementSize);
 		}
 
-		public unsafe static void Copy<T>(T[] sourceArray, long sourceIndex, T[] destinationArray, long destinationIndex, long length)
+		public unsafe static void Copy(Array sourceArray, long sourceIndex, Array destinationArray, long destinationIndex, long length)
 		{
-			IntPtr sourcePtr = Marshal.GetNativePointerForObject(sourceArray) + (int)(sourceIndex * Marshal.SizeOf<T>());
-			IntPtr destinationPtr = Marshal.GetNativePointerForObject(destinationArray) + (int)(destinationIndex * Marshal.SizeOf<T>());
-			Buffer.MemoryCopy((void*)sourcePtr, (void*)destinationPtr, length, length);
+			if (sourceArray.GetType() != destinationArray.GetType()) throw new Exception("Array types don't match");
+			int elementSize = GetElementSize(sourceArray);
+			byte* sourcePtr = (byte*)Marshal.GetNativePointerForArray(sourceArray) + (sourceIndex * elementSize);
+			byte* destinationPtr = (byte*)Marshal.GetNativePointerForArray(destinationArray) + (destinationIndex * elementSize);
+			Buffer.MemoryCopy(sourcePtr, destinationPtr, length, length);
 		}
 
-		public static void Copy<T>(T[] sourceArray, T[] destinationArray, int length)
+		public static void Copy(Array sourceArray, Array destinationArray, int length)
 		{
 			Copy(sourceArray, 0, destinationArray, 0, length);
 		}
 
-		public static void Copy<T>(T[] sourceArray, T[] destinationArray, long length)
+		public static void Copy(Array sourceArray, Array destinationArray, long length)
 		{
 			Copy(sourceArray, 0, destinationArray, 0, length);
 		}

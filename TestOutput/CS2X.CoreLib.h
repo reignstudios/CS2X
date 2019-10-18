@@ -1118,6 +1118,7 @@ int8_t rt4_System_Runtime_InteropServices_UnmanagedType_METADATA_FullName[102] =
 typedef struct rt0_System_Byte___ARRAY
 {
 	t2_System_RuntimeType runtimeType;
+	size_t elementSize;
 } rt0_System_Byte___ARRAY;
 rt0_System_Byte___ARRAY rt0_System_Byte___ARRAY_OBJ;
 int8_t rt0_System_Byte___ARRAY_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,66,0,121,0,116,0,101,0,91,0,93,0,0,0}; /* Byte[] */
@@ -1126,6 +1127,7 @@ int8_t rt0_System_Byte___ARRAY_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0
 typedef struct rt0_System_Char___ARRAY
 {
 	t2_System_RuntimeType runtimeType;
+	size_t elementSize;
 } rt0_System_Char___ARRAY;
 rt0_System_Char___ARRAY rt0_System_Char___ARRAY_OBJ;
 int8_t rt0_System_Char___ARRAY_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,67,0,104,0,97,0,114,0,91,0,93,0,0,0}; /* Char[] */
@@ -1149,6 +1151,11 @@ t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ct
 t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_1(t2_System_ArgumentOutOfRangeException* self, t2_System_String* p_message);
 int32_t m2_System_Array_get_Length_0(t2_System_Array* self);
 int64_t m2_System_Array_get_LongLength_0(t2_System_Array* self);
+int32_t m2_System_Array_GetElementSize_0(t2_System_Array* p_array);
+void m2_System_Array_Copy_0(t2_System_Array* p_sourceArray, int32_t p_sourceIndex, t2_System_Array* p_destinationArray, int32_t p_destinationIndex, int32_t p_length);
+void m2_System_Array_Copy_1(t2_System_Array* p_sourceArray, int64_t p_sourceIndex, t2_System_Array* p_destinationArray, int64_t p_destinationIndex, int64_t p_length);
+void m2_System_Array_Copy_2(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int32_t p_length);
+void m2_System_Array_Copy_3(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int64_t p_length);
 void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize);
 t2_System_Array* m2_System_Array__ctor_0(t2_System_Array* self);
 t2_System_Attribute* m2_System_Attribute__ctor_0(t2_System_Attribute* self);
@@ -1259,6 +1266,7 @@ intptr_t m4_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t2_Syst
 intptr_t m4_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t2_System_String* p_s);
 void m4_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal);
 intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(t2_System_Object* p_o);
+intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(t2_System_Array* p_a);
 t4_System_Runtime_InteropServices_OutAttribute* m4_System_Runtime_InteropServices_OutAttribute__ctor_0(t4_System_Runtime_InteropServices_OutAttribute* self);
 t4_System_Runtime_InteropServices_LayoutKind m4_System_Runtime_InteropServices_LayoutKind__ctor_0();
 t4_System_Runtime_InteropServices_StructLayoutAttribute* m4_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t4_System_Runtime_InteropServices_StructLayoutAttribute* self, t4_System_Runtime_InteropServices_LayoutKind p_layoutKind);
@@ -1387,6 +1395,53 @@ int64_t m2_System_Array_get_LongLength_0(t2_System_Array* self)
 	return (int64_t)(*((intptr_t*)self + 1));
 }
 
+int32_t m2_System_Array_GetElementSize_0(t2_System_Array* p_array)
+{
+	return *(int32_t*)((char*)p_array->CS2X_RuntimeType + sizeof(t2_System_RuntimeType));
+}
+
+void m2_System_Array_Copy_0(t2_System_Array* p_sourceArray, int32_t p_sourceIndex, t2_System_Array* p_destinationArray, int32_t p_destinationIndex, int32_t p_length)
+{
+	int32_t l_elementSize_0;
+	uint8_t* l_sourcePtr_1;
+	uint8_t* l_destinationPtr_2;
+	if (m2_System_Object_GetType_0(p_sourceArray) != m2_System_Object_GetType_0(p_destinationArray))
+	{
+		CS2X_ThreadExceptionObject = m2_System_Exception__ctor_1(CS2X_AllocType(sizeof(t2_System_Exception), &rt2_System_Exception_OBJ, 0), StringLiteral_0);
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
+	l_elementSize_0 = m2_System_Array_GetElementSize_0(p_sourceArray);
+	l_sourcePtr_1 = (uint8_t*)m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(p_sourceArray) + (p_sourceIndex * l_elementSize_0);
+	l_destinationPtr_2 = (uint8_t*)m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(p_destinationArray) + (p_destinationIndex * l_elementSize_0);
+	m2_System_Buffer_MemoryCopy_0((void*)l_sourcePtr_1, (void*)l_destinationPtr_2, p_length * l_elementSize_0, p_length * l_elementSize_0);
+}
+
+void m2_System_Array_Copy_1(t2_System_Array* p_sourceArray, int64_t p_sourceIndex, t2_System_Array* p_destinationArray, int64_t p_destinationIndex, int64_t p_length)
+{
+	int32_t l_elementSize_0;
+	uint8_t* l_sourcePtr_1;
+	uint8_t* l_destinationPtr_2;
+	if (m2_System_Object_GetType_0(p_sourceArray) != m2_System_Object_GetType_0(p_destinationArray))
+	{
+		CS2X_ThreadExceptionObject = m2_System_Exception__ctor_1(CS2X_AllocType(sizeof(t2_System_Exception), &rt2_System_Exception_OBJ, 0), StringLiteral_0);
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
+	l_elementSize_0 = m2_System_Array_GetElementSize_0(p_sourceArray);
+	l_sourcePtr_1 = (uint8_t*)m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(p_sourceArray) + (p_sourceIndex * l_elementSize_0);
+	l_destinationPtr_2 = (uint8_t*)m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(p_destinationArray) + (p_destinationIndex * l_elementSize_0);
+	m2_System_Buffer_MemoryCopy_0(l_sourcePtr_1, l_destinationPtr_2, p_length, p_length);
+}
+
+void m2_System_Array_Copy_2(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int32_t p_length)
+{
+	m2_System_Array_Copy_0(p_sourceArray, 0, p_destinationArray, 0, p_length);
+}
+
+void m2_System_Array_Copy_3(t2_System_Array* p_sourceArray, t2_System_Array* p_destinationArray, int64_t p_length)
+{
+	m2_System_Array_Copy_1(p_sourceArray, 0, p_destinationArray, 0, p_length);
+}
+
 void m2_System_Array_FastResize_0(t2_System_Array** p_array, int32_t p_newSize, int32_t p_elementSize)
 {
 	t2_System_RuntimeType* runtimeType = (*p_array)->CS2X_RuntimeType;
@@ -1440,7 +1495,7 @@ int32_t m2_System_BitConverter_SingleToInt32Bits_0(float p_value)
 
 void m2_System_Buffer_MemoryCopy_0(void* p_source, void* p_destination, int64_t p_destinationSizeInBytes, int64_t p_sourceBytesToCopy)
 {
-	m2_System_Buffer_MemoryCopy_0(p_source, p_destination, p_destinationSizeInBytes, p_sourceBytesToCopy);
+	m2_System_Buffer_MemoryCopy_1(p_source, p_destination, (uint64_t)p_destinationSizeInBytes, (uint64_t)p_sourceBytesToCopy);
 }
 
 void m2_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t p_destinationSizeInBytes, uint64_t p_sourceBytesToCopy)
@@ -1665,7 +1720,7 @@ t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self)
 
 t2_System_String* m2_System_Environment_get_NewLine_0()
 {
-	return StringLiteral_0;
+	return StringLiteral_1;
 }
 
 t2_System_Exception* m2_System_Exception__ctor_0(t2_System_Exception* self)
@@ -1986,7 +2041,7 @@ char m2_System_String_Equals_0(t2_System_String* self, t2_System_String* p_value
 
 void m2_System_String__cctor_0()
 {
-	f_System_String_Empty = StringLiteral_1;
+	f_System_String_Empty = StringLiteral_2;
 }
 
 t2_System_Type* m2_System_Type_GetTypeFromHandle_0(t2_System_RuntimeTypeHandle p_handle)
@@ -2260,6 +2315,11 @@ void m4_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal)
 intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(t2_System_Object* p_o)
 {
 	return (intptr_t)p_o;
+}
+
+intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(t2_System_Array* p_a)
+{
+	return (intptr_t)((char*)p_a + ArrayOffset);
 }
 
 t4_System_Runtime_InteropServices_OutAttribute* m4_System_Runtime_InteropServices_OutAttribute__ctor_0(t4_System_Runtime_InteropServices_OutAttribute* self)
@@ -3231,6 +3291,10 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt0_System_Byte___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt0_System_Char___ARRAY_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt0_System_Char___ARRAY_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+
+	/* Init array runtime type element size */
+	rt0_System_Byte___ARRAY_OBJ.elementSize = sizeof(uint8_t);
+	rt0_System_Char___ARRAY_OBJ.elementSize = sizeof(char16_t);
 
 	/* <<< === Pointer Runtime Types === >>> */
 	/* Init runtime type objects */

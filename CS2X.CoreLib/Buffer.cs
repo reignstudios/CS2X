@@ -15,7 +15,7 @@ namespace System
 
 		public static unsafe void MemoryCopy(void* source, void* destination, long destinationSizeInBytes, long sourceBytesToCopy)
 		{
-			MemoryCopy(source, destination, destinationSizeInBytes, sourceBytesToCopy);
+			MemoryCopy(source, destination, (ulong)destinationSizeInBytes, (ulong)sourceBytesToCopy);
 		}
 
 		public static unsafe void MemoryCopy(void* source, void* destination, ulong destinationSizeInBytes, ulong sourceBytesToCopy)

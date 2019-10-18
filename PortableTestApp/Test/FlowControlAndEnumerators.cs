@@ -7,6 +7,12 @@ namespace PortableTestApp.Test
 	{
 		public static bool RunTest()
 		{
+			var valuesList = new List<int>();
+			valuesList.Add(1);
+			valuesList.Add(2);
+			valuesList.Add(3);
+			var valuesFromList = valuesList.ToArray();
+
 			var values = new int[3]
 			{
 				1, 2, 3
@@ -19,8 +25,9 @@ namespace PortableTestApp.Test
 
 			foreach (int value in values)
 			foreach (int value2 in values2)
+			foreach (int value3 in valuesFromList)
 			{
-				if (value == 0 || value2 == 0) return false;
+				if (value == 0 || value2 == 0 || value3 == 0) return false;
 			}
 
 			for (int i = 0, i2 = 2; i != values.Length; ++i, --i2)
