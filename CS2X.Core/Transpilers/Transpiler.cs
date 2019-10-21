@@ -819,5 +819,15 @@ namespace CS2X.Core.Transpilers
 			}
 			return false;
 		}
+
+		protected bool IsNumericType(Type type)
+		{
+			return
+				type == typeof(Byte) || type == typeof(SByte) ||
+				type == typeof(Int16) || type == typeof(Int32) || type == typeof(Int64) ||
+				type == typeof(UInt16) || type == typeof(UInt32) || type == typeof(UInt64) ||
+				type == typeof(Single) || type == typeof(Double) ||
+				type == typeof(Char);
+		}
 	}
 }

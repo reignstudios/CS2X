@@ -294,6 +294,7 @@ namespace CS2X.Core.Transpilers
 				// std
 				writer.WriteLine("#include <stdio.h>");
 				writer.WriteLine("#include <math.h>");
+				writer.WriteLine("#include <float.h>");
 				writer.WriteLine("#include <stdint.h>");
 				writer.WriteLine("#include <uchar.h>");
 				writer.WriteLine("#include <locale.h>");
@@ -2137,6 +2138,7 @@ namespace CS2X.Core.Transpilers
 
 		private void LocalDeclarationStatement(LocalDeclarationStatementSyntax statement)
 		{
+			if (statement.IsConst) return;
 			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false, false);
 		}
 
@@ -2647,6 +2649,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (method.IsStatic) throw new Exception("Can't write caller for static method: " + method.Name);
 			
+			bool convertToIVALUE = false;
 			var callerType = GetCallerType(callerExpression, expression);
 			if (!callerType.IsValueType)
 			{
@@ -2654,16 +2657,38 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (!(callerExpression is IdentifierNameSyntax) && !(callerExpression is ThisExpressionSyntax))// check if caller needs to be converted to a IValue local
 			{
-				// copy ivalue local to current block special locals
+				convertToIVALUE = true;
+			}
+			else
+			{
+				// check if caller needs to be converted to a IValue local
+				var symbol = semanticModel.GetSymbolInfo(callerExpression).Symbol;
+				if (symbol.Kind == SymbolKind.Local)
+				{
+					var local = (ILocalSymbol)symbol;
+					convertToIVALUE = local.IsConst;
+				}
+				else if (symbol.Kind == SymbolKind.Field)
+				{
+					var field = (IFieldSymbol)symbol;
+					convertToIVALUE = field.IsConst;
+				}
+
+				if (!convertToIVALUE)
+				{
+					// write non-constant
+					if (!method.IsExtensionMethod) writer.Write('&');
+					WriteExpression(callerExpression);
+				}
+			}
+
+			// copy ivalue local to current block special locals
+			if (convertToIVALUE)
+			{
 				string localName = TryAddStatementLocal(callerType, "IVALUE_", null);
 				writer.Write($"CS2X_PValueToIValue_{GetTypeFullName(callerType)}(");
 				WriteExpression(callerExpression);
 				writer.Write($", &{localName})");
-			}
-			else
-			{
-				if (!method.IsExtensionMethod) writer.Write('&');
-				WriteExpression(callerExpression);
 			}
 		}
 
@@ -2799,9 +2824,16 @@ namespace CS2X.Core.Transpilers
 			if (symbol.Kind == SymbolKind.Local)
 			{
 				var local = (ILocalSymbol)symbol;
-				var type = ResolveType(local.Type);
-				var localObj = instructionalBody.locals.First(x => x.Equals(expression.Identifier.ValueText, type));
-				writer.Write(localObj.name);
+				if (local.IsConst)
+				{
+					writer.Write(GetFormatedConstValue(local.ConstantValue));
+				}
+				else
+				{
+					var type = ResolveType(local.Type);
+					var localObj = instructionalBody.locals.First(x => x.Equals(expression.Identifier.ValueText, type));
+					writer.Write(localObj.name);
+				}
 			}
 			else if (symbol.Kind == SymbolKind.Parameter)
 			{
@@ -2942,7 +2974,7 @@ namespace CS2X.Core.Transpilers
 						// check if expression needs to store non-local on stack to prevent potential GC collection
 						if (options.refNonLocalGCParamsOnStack && NotReferenceableOnStack(method, arg.Expression, semanticModel, out var expression, out var memberAccessExpression))
 						{
-							var argType = semanticModel.GetTypeInfo(expression).Type;
+							var argType = ResolveType(expression);
 							string localName = TryAddStatementLocal(argType, "GCREF_", '_' + gcStackLocalCount.ToString());
 							++gcStackLocalCount;
 							writer.Write($"(({GetTypeFullNameRef(argType)})CS2X_RefObjOnStack(&{localName}, ");
@@ -3029,7 +3061,7 @@ namespace CS2X.Core.Transpilers
 		private void ObjectCreationExpression(ObjectCreationExpressionSyntax expression)
 		{
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
-			
+
 			// grab method symbol
 			IMethodSymbol method;
 			bool isDelegateCreation = false;
@@ -3223,7 +3255,7 @@ namespace CS2X.Core.Transpilers
 
 		private void DeclarationExpression(DeclarationExpressionSyntax expression)
 		{
-			var type = semanticModel.GetTypeInfo(expression.Type).Type;
+			var type = ResolveType(expression);
 			var designation = expression.Designation as SingleVariableDesignationSyntax;
 			if (designation == null) throw new NotSupportedException("DeclarationExpressionSyntax.Designation must be SingleVariableDesignationSyntax");
 			var local = TryAddLocal(designation.Identifier.ValueText, type);
@@ -3309,7 +3341,7 @@ namespace CS2X.Core.Transpilers
 						writer.WriteLine('{');
 						writer.AddTab();
 						var rightCaller = GetCaller(expression.Right);
-						var rightCallerType = ResolveType(semanticModel.GetTypeInfo(rightCaller).Type);
+						var rightCallerType = ResolveType(rightCaller);
 						writer.WriteLinePrefix(GetTypeFullNameRef(rightCallerType) + " DELEGATE_OBJ;");
 						writer.WritePrefix("DELEGATE_OBJ = ");
 						WriteExpression(rightCaller);
@@ -3461,13 +3493,16 @@ namespace CS2X.Core.Transpilers
 		private void BinaryExpression(BinaryExpressionSyntax expression)
 		{
 			// check if binary expression can be resolved to single string literal
-			// optimization to avoid needless string concatenations / GC allocations
+			// optimization to avoid needless string concatenations / GC allocations or arithmetic
 			var constantValue = semanticModel.GetConstantValue(expression).Value;
-			if (constantValue is string constantStringValue)
+			if (constantValue != null)
 			{
-				string literal = TryAddStringLiteral(constantStringValue);
-				writer.Write(literal);
-				return;
+				var constType = constantValue.GetType();
+				if (constType == typeof(string) || IsNumericType(constType))
+				{
+					writer.Write(GetFormatedConstValue(constantValue));
+					return;
+				}
 			}
 
 			// write standard binary operations
@@ -3770,18 +3805,52 @@ namespace CS2X.Core.Transpilers
 
 		private string GetFormatedConstValue(object value)
 		{
-			string result = value.ToString();
 			var type = value.GetType();
-			if (type == typeof(float) || type == typeof(double))
+			if (type == typeof(float))
 			{
-				if (!result.Contains('.') && !result.Contains('E')) result += ".0";
-				if (type == typeof(float)) result += 'f';
+				float castValue = (float)value;
+				if (castValue >= float.MaxValue)
+				{
+					return "FLT_MAX";
+				}
+				else if (castValue <= float.MinValue)
+				{
+					return "FLT_MIN";
+				}
+				else
+				{
+					string result = castValue.ToString();
+					if (!result.Contains('.') && !result.Contains('E')) result += ".0";
+					result += 'f';
+					return result;
+				}
+			}
+			else if (type == typeof(double))
+			{
+				double castValue = (double)value;
+				if (castValue >= double.MaxValue)
+				{
+					return "DBL_MAX";
+				}
+				else if (castValue <= double.MinValue)
+				{
+					return "DBL_MIN";
+				}
+				else
+				{
+					string result = castValue.ToString();
+					if (!result.Contains('.') && !result.Contains('E')) result += ".0";
+					return result;
+				}
 			}
 			else if (type == typeof(string))
 			{
-				result = TryAddStringLiteral(value.ToString());
+				return TryAddStringLiteral(value.ToString());
 			}
-			return result;
+			else
+			{
+				return value.ToString();
+			}
 		}
 
 		private string GetPrimitiveName(ITypeSymbol type)

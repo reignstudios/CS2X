@@ -802,6 +802,18 @@ uint64_t* CS2X_PValueToIValue_uint64_t(uint64_t pvalue, uint64_t* ivalue)
 	return ivalue;
 }
 
+float* CS2X_PValueToIValue_float(float pvalue, float* ivalue)
+{
+	(*ivalue) = pvalue;
+	return ivalue;
+}
+
+double* CS2X_PValueToIValue_double(double pvalue, double* ivalue)
+{
+	(*ivalue) = pvalue;
+	return ivalue;
+}
+
 /* =============================== */
 /* Forward decalre Methods */
 /* =============================== */
@@ -1388,7 +1400,7 @@ char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0()
 	{
 		switch (l_l_11)
 		{
-			case 5 + 0:
+			case 5:
 				return 0;
 			case 6:
 				return 0;
@@ -1600,12 +1612,20 @@ char m3_PortableTestApp_Test_NumbersToStrings_RunTest_0()
 	t2_System_String* l_ui32_Min_9;
 	t2_System_String* l_ui64_Max_10;
 	t2_System_String* l_ui64_Min_11;
+	t2_System_String* l_float32_Max_12;
+	t2_System_String* l_float32_Min_13;
+	t2_System_String* l_float32_14;
+	t2_System_String* l_float64_Max_15;
+	t2_System_String* l_float64_Min_16;
+	t2_System_String* l_float64_17;
 	int16_t IVALUE_int16_t;
 	int32_t IVALUE_int32_t;
 	int64_t IVALUE_int64_t;
 	uint16_t IVALUE_uint16_t;
 	uint32_t IVALUE_uint32_t;
 	uint64_t IVALUE_uint64_t;
+	float IVALUE_float;
+	double IVALUE_double;
 	l_i16_Max_0 = m2_int16_t_ToString_0(CS2X_PValueToIValue_int16_t(32767, &IVALUE_int16_t));
 	l_i16_Min_1 = m2_int16_t_ToString_0(CS2X_PValueToIValue_int16_t(-32768, &IVALUE_int16_t));
 	l_i32_Max_2 = m2_int32_t_ToString_0(CS2X_PValueToIValue_int32_t(2147483647, &IVALUE_int32_t));
@@ -1618,7 +1638,13 @@ char m3_PortableTestApp_Test_NumbersToStrings_RunTest_0()
 	l_ui32_Min_9 = m2_uint32_t_ToString_0(CS2X_PValueToIValue_uint32_t(0, &IVALUE_uint32_t));
 	l_ui64_Max_10 = m2_uint64_t_ToString_0(CS2X_PValueToIValue_uint64_t(18446744073709551615, &IVALUE_uint64_t));
 	l_ui64_Min_11 = m2_uint64_t_ToString_0(CS2X_PValueToIValue_uint64_t(0, &IVALUE_uint64_t));
-	return m2_System_String_Equals_0(l_i16_Max_0, StringLiteral_30) && m2_System_String_Equals_0(l_i16_Min_1, StringLiteral_31) && m2_System_String_Equals_0(l_ui16_Max_6, StringLiteral_32) && m2_System_String_Equals_0(l_ui16_Min_7, StringLiteral_33) && m2_System_String_Equals_0(l_i32_Max_2, StringLiteral_34) && m2_System_String_Equals_0(l_i32_Min_3, StringLiteral_35) && m2_System_String_Equals_0(l_ui32_Max_8, StringLiteral_36) && m2_System_String_Equals_0(l_ui32_Min_9, StringLiteral_33) && m2_System_String_Equals_0(l_i64_Max_4, StringLiteral_37) && m2_System_String_Equals_0(l_i64_Min_5, StringLiteral_38) && m2_System_String_Equals_0(l_ui64_Max_10, StringLiteral_39) && m2_System_String_Equals_0(l_ui64_Min_11, StringLiteral_33);
+	l_float32_Max_12 = m2_float_ToString_0(CS2X_PValueToIValue_float(FLT_MAX, &IVALUE_float));
+	l_float32_Min_13 = m2_float_ToString_0(CS2X_PValueToIValue_float(FLT_MIN, &IVALUE_float));
+	l_float32_14 = m2_float_ToString_0(CS2X_PValueToIValue_float(1234.4321f, &IVALUE_float));
+	l_float64_Max_15 = m2_double_ToString_0(CS2X_PValueToIValue_double(DBL_MAX, &IVALUE_double));
+	l_float64_Min_16 = m2_double_ToString_0(CS2X_PValueToIValue_double(DBL_MIN, &IVALUE_double));
+	l_float64_17 = m2_double_ToString_0(CS2X_PValueToIValue_double(1234.4321, &IVALUE_double));
+	return m2_System_String_Equals_0(l_i16_Max_0, StringLiteral_30) && m2_System_String_Equals_0(l_i16_Min_1, StringLiteral_31) && m2_System_String_Equals_0(l_ui16_Max_6, StringLiteral_32) && m2_System_String_Equals_0(l_ui16_Min_7, StringLiteral_33) && m2_System_String_Equals_0(l_i32_Max_2, StringLiteral_34) && m2_System_String_Equals_0(l_i32_Min_3, StringLiteral_35) && m2_System_String_Equals_0(l_ui32_Max_8, StringLiteral_36) && m2_System_String_Equals_0(l_ui32_Min_9, StringLiteral_33) && m2_System_String_Equals_0(l_i64_Max_4, StringLiteral_37) && m2_System_String_Equals_0(l_i64_Min_5, StringLiteral_38) && m2_System_String_Equals_0(l_ui64_Max_10, StringLiteral_39) && m2_System_String_Equals_0(l_ui64_Min_11, StringLiteral_33) && m2_System_String_Equals_0(l_float32_Max_12, StringLiteral_40) && m2_System_String_Equals_0(l_float32_Min_13, StringLiteral_41) && m2_System_String_Equals_0(l_float32_14, StringLiteral_42) && m2_System_String_Equals_0(l_float64_Max_15, StringLiteral_43) && m2_System_String_Equals_0(l_float64_Min_16, StringLiteral_44) && m2_System_String_Equals_0(l_float64_17, StringLiteral_42);
 }
 
 t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators_op_Explicit_0(int32_t p_value)
@@ -1686,22 +1712,18 @@ t3_PortableTestApp_Test_RefOutParameters* m3_PortableTestApp_Test_RefOutParamete
 
 char m3_PortableTestApp_Test_StringEncoding_RunTest_0()
 {
-	t2_System_String* l_convertString_0;
-	uint8_t* l_data_1;
-	t2_System_String* l_result_2;
-	l_convertString_0 = StringLiteral_40;
-	l_data_1 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, l_convertString_0);
-	l_result_2 = m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__UTF8_k__BackingField, l_data_1);
-	return m2_System_String_Equals_0(l_result_2, l_convertString_0);
+	uint8_t* l_data_0;
+	t2_System_String* l_result_1;
+	l_data_0 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, StringLiteral_45);
+	l_result_1 = m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__UTF8_k__BackingField, l_data_0);
+	return m2_System_String_Equals_0(l_result_1, StringLiteral_45);
 }
 
 char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 {
-	t2_System_String* l_value_0;
 	jmp_buf CS2X_JMP_LAST_0;
 	jmp_buf CS2X_JMP_0;
 	int CS2X_IS_JMP_0;
-	l_value_0 = StringLiteral_41;
 	/* try */
 	memcpy(CS2X_JMP_LAST_0, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
 	CS2X_IS_JMP_0 = setjmp(CS2X_JMP_0);
@@ -1717,7 +1739,7 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 		if (CS2X_IS_JMP_1 == 0)
 		{
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_1, sizeof(jmp_buf));
-			CS2X_ThreadExceptionObject = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), l_value_0);
+			CS2X_ThreadExceptionObject = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_46);
 			longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 		}
 		else /* end try */
@@ -1725,10 +1747,10 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_1, sizeof(jmp_buf));
 			if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt2_System_Exception_OBJ)) /* catch */
 			{
-				t2_System_Exception* l_e_1;
-				l_e_1 = CS2X_ThreadExceptionObject;
+				t2_System_Exception* l_e_0;
+				l_e_0 = CS2X_ThreadExceptionObject;
 				CS2X_ThreadExceptionObject = 0;
-				CS2X_ThreadExceptionObject = l_e_1;
+				CS2X_ThreadExceptionObject = l_e_0;
 				longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 			}
 			if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */
@@ -1741,21 +1763,21 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
 		if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt3_PortableTestApp_Test_MyException_OBJ)) /* catch */
 		{
-			t3_PortableTestApp_Test_MyException* l_e_1;
-			l_e_1 = CS2X_ThreadExceptionObject;
+			t3_PortableTestApp_Test_MyException* l_e_0;
+			l_e_0 = CS2X_ThreadExceptionObject;
 			CS2X_ThreadExceptionObject = 0;
 			/* protected return */
 			{
 				char CS2X_RETURN_1;
-				CS2X_RETURN_1 = m2_System_String_Equals_0(l_e_1->f__Message_k__BackingField_1, l_value_0);
+				CS2X_RETURN_1 = m2_System_String_Equals_0(l_e_0->f__Message_k__BackingField_1, StringLiteral_46);
 				memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
 				return CS2X_RETURN_1;
 			}
 		}
 		else if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt2_System_Exception_OBJ)) /* catch */
 		{
-			t2_System_Exception* l_e_1;
-			l_e_1 = CS2X_ThreadExceptionObject;
+			t2_System_Exception* l_e_0;
+			l_e_0 = CS2X_ThreadExceptionObject;
 			CS2X_ThreadExceptionObject = 0;
 			/* protected return */
 			{
@@ -2360,7 +2382,7 @@ void m2_System_Array_Resize_Int32__0(int32_t** p_array, int32_t p_newSize)
 {
 	if (p_newSize < 0)
 	{
-		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_42);
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_47);
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
 	if ((*p_array) == 0)
@@ -2841,6 +2863,11 @@ void CS2X_InitStringLiterals()
 	((t2_System_String*)StringLiteral_40)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_41)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_42)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_43)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_44)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_45)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_46)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_47)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 }
 
 /* =============================== */

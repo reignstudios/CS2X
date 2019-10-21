@@ -4,6 +4,7 @@
 #pragma once
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
 #include <stdint.h>
 #include <uchar.h>
 #include <locale.h>
@@ -1227,9 +1228,11 @@ t2_System_String* m2_System_Exception_get_Message_0(t2_System_Exception* self);
 t2_System_FlagsAttribute* m2_System_FlagsAttribute__ctor_0(t2_System_FlagsAttribute* self);
 t2_System_IndexOutOfRangeException* m2_System_IndexOutOfRangeException__ctor_0(t2_System_IndexOutOfRangeException* self);
 t2_System_InvalidCastException* m2_System_InvalidCastException__ctor_0(t2_System_InvalidCastException* self);
+t2_System_String* m2_double_ToString_0(double* self);
 double m2_double__ctor_0();
 char m2_float_IsNaN_0(float p_f);
 char m2_float_IsNegative_0(float p_f);
+t2_System_String* m2_float_ToString_0(float* self);
 float m2_float__ctor_0();
 t2_System_MulticastDelegate* m2_System_MulticastDelegate__ctor_0(t2_System_MulticastDelegate* self);
 t2_System_NotSupportedException* m2_System_NotSupportedException__ctor_0(t2_System_NotSupportedException* self, t2_System_String* p_message);
@@ -1821,6 +1824,24 @@ t2_System_InvalidCastException* m2_System_InvalidCastException__ctor_0(t2_System
 	return self;
 }
 
+t2_System_String* m2_double_ToString_0(double* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (770));
+	l_length_1 = sprintf(l_str_0, "%G", (*self));
+	l_str_0[769] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
 double m2_double__ctor_0()
 {
 	double selfObj = {0};
@@ -1837,6 +1858,24 @@ char m2_float_IsNaN_0(float p_f)
 char m2_float_IsNegative_0(float p_f)
 {
 	return m2_System_BitConverter_SingleToInt32Bits_0(p_f) < 0;
+}
+
+t2_System_String* m2_float_ToString_0(float* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (115));
+	l_length_1 = sprintf(l_str_0, "%G", (*self));
+	l_str_0[114] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
 }
 
 float m2_float__ctor_0()
@@ -1863,7 +1902,7 @@ t2_System_String* m2_int32_t_ToString_0(int32_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (11 + 1));
+	l_str_0 = alloca(sizeof(uint8_t) * (12));
 	l_length_1 = sprintf(l_str_0, "%d", (*self));
 	l_str_0[11] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
@@ -2713,7 +2752,7 @@ t2_System_String* m2_int16_t_ToString_0(int16_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (6 + 1));
+	l_str_0 = alloca(sizeof(uint8_t) * (7));
 	l_length_1 = sprintf(l_str_0, "%d", (*self));
 	l_str_0[6] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
@@ -2737,7 +2776,7 @@ t2_System_String* m2_int64_t_ToString_0(int64_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (20 + 1));
+	l_str_0 = alloca(sizeof(uint8_t) * (21));
 	l_length_1 = sprintf(l_str_0, "%lld", (*self));
 	l_str_0[20] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
@@ -2781,7 +2820,7 @@ t2_System_String* m2_uint16_t_ToString_0(uint16_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (6 + 1));
+	l_str_0 = alloca(sizeof(uint8_t) * (7));
 	l_length_1 = sprintf(l_str_0, "%u", (*self));
 	l_str_0[6] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
@@ -2805,7 +2844,7 @@ t2_System_String* m2_uint32_t_ToString_0(uint32_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (11 + 1));
+	l_str_0 = alloca(sizeof(uint8_t) * (12));
 	l_length_1 = sprintf(l_str_0, "%u", (*self));
 	l_str_0[11] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
@@ -2829,7 +2868,7 @@ t2_System_String* m2_uint64_t_ToString_0(uint64_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (21 + 1));
+	l_str_0 = alloca(sizeof(uint8_t) * (22));
 	l_length_1 = sprintf(l_str_0, "%llu", (*self));
 	l_str_0[21] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));

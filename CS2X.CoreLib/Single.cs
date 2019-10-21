@@ -4,12 +4,12 @@ namespace System
 {
 	public readonly struct Single
 	{
-		public const float MinValue = -3.40282346638528859e+38f;
-        public const float Epsilon = 1.4e-45f;
-        public const float MaxValue = 3.40282346638528859e+38f;
-        public const float PositiveInfinity = 1.0f / 0.0f;
-        public const float NegativeInfinity = -1.0f / 0.0f;
-        public const float NaN = 0.0f / 0.0f;
+		public const Single MaxValue = (float)3.40282346638528859e+38;
+		public const Single MinValue = (float)-3.40282346638528859e+38;
+		public const Single Epsilon = (float)1.4e-45;
+		public const Single PositiveInfinity = (float)1.0 / (float)0.0;
+		public const Single NegativeInfinity = (float)-1.0 / (float)0.0;
+		public const Single NaN = (float)0.0 / (float)0.0;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static unsafe bool IsNaN(float f)
@@ -23,5 +23,16 @@ namespace System
         {
             return BitConverter.SingleToInt32Bits(f) < 0;
         }
+
+		public unsafe string ToString()
+		{
+			byte* str = stackalloc byte[Number.SingleNumberBufferLength + 1];
+			int length = Number.sprintf(str, "%G", this);
+			str[Number.SingleNumberBufferLength] = 0;
+			var charArray = stackalloc char[length + 1];
+			for (int i = 0; i != length; ++i) charArray[i] = (char)str[i];
+			charArray[length] = '\0';
+			return new string(charArray);
+		}
 	}
 }
