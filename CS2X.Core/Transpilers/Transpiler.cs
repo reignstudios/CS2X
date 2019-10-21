@@ -479,6 +479,22 @@ namespace CS2X.Core.Transpilers
 			return false;
 		}
 
+		protected bool GetNativeStringParamAttribute(IParameterSymbol parameter, out AttributeData attribute)
+		{
+			foreach (var a in parameter.GetAttributes())
+			{
+				var type = a.AttributeClass;
+				if (type.ContainingNamespace.Name == "CS2X" && type.Name == "NativeStringParamAttribute")
+				{
+					attribute = a;
+					return true;
+				}
+			}
+
+			attribute = null;
+			return false;
+		}
+
 		protected bool GetDllImportAttribute(IMethodSymbol method, out AttributeData attribute)
 		{
 			attribute = FindAttributeByName(method, "System.Runtime.InteropServices.DllImportAttribute");

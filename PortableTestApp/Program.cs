@@ -35,6 +35,7 @@ namespace PortableTestApp
 			Log(StringEncoding.RunTest(), "StringEncoding");
 			Log(CoreGenericCollections.RunTest(), "CoreGenericCollections");
 			Log(NewOverrides.RunTest(), "NewOverrides");
+			Log(NumbersToStrings.RunTest(), "NumbersToStrings");
 			Console.WriteLine("TESTS DONE!");
 
 			// return result code

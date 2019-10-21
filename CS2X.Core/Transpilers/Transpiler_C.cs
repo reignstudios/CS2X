@@ -2933,8 +2933,9 @@ namespace CS2X.Core.Transpilers
 			{
 				var lastArg = arguments.LastOrDefault();
 				int gcStackLocalCount = 0;// to help give each param in a method a unique name for non-local ref/out
-				foreach (var arg in arguments)
+				for (int i = 0; i != arguments.Count; ++i)
 				{
+					var arg = arguments[i];
 					if (arg.RefKindKeyword.Text == "out" || arg.RefKindKeyword.Text == "ref")
 					{
 						writer.Write('&');
@@ -2960,7 +2961,20 @@ namespace CS2X.Core.Transpilers
 					}
 					else
 					{
-						WriteExpression(arg.Expression);
+						// check method parameter for special string literal expression
+						if (GetNativeStringParamAttribute(method.Parameters[i], out var attribute))
+						{
+							if (!(arg.Expression is LiteralExpressionSyntax literal) || !literal.IsKind(SyntaxKind.StringLiteralExpression)) throw new NotSupportedException("NativeStringType must be string literal");
+							var value = attribute.ConstructorArguments[0];
+							var valueEnum = (NativeStringType)value.Value;
+							if (valueEnum == NativeStringType.Char) writer.Write($"\"{literal.Token.ValueText}\"");
+							else if (valueEnum == NativeStringType.WideChar) writer.Write($"L\"{literal.Token.ValueText}\"");
+							else throw new NotSupportedException("Unsupported NativeStringType: " + valueEnum);
+						}
+						else
+						{
+							WriteExpression(arg.Expression);
+						}
 					}
 
 					if (lastArg != null && arg != lastArg) writer.Write(", ");
@@ -3167,9 +3181,9 @@ namespace CS2X.Core.Transpilers
 			var ptrType = (IPointerTypeSymbol)type;
 			if (arrayType.RankSpecifiers.Count != 1) throw new NotSupportedException("stackalloc only supports single rank");
 			if (arrayType.RankSpecifiers[0].Sizes.Count != 1) throw new NotSupportedException("stackalloc only supports single rank size");
-			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * ");
+			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * (");
 			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// fixed arrays should always support this form
-			writer.Write(')');
+			writer.Write("))");
 			
 			// write initializer
 			if (expression.Initializer != null)

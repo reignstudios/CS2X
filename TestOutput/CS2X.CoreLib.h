@@ -75,6 +75,8 @@ typedef struct t4_System_Runtime_Versioning_TargetFrameworkAttribute t4_System_R
 typedef struct t3_System_Text_Encoding t3_System_Text_Encoding;
 typedef struct t3_System_Text_StandardEncoding t3_System_Text_StandardEncoding;
 typedef struct t3_System_Text_StringBuilder t3_System_Text_StringBuilder;
+typedef int32_t t2_CS2X_NativeStringType;
+typedef struct t2_CS2X_NativeStringParamAttribute t2_CS2X_NativeStringParamAttribute;
 typedef struct t2_System_DateTime t2_System_DateTime;
 typedef struct t2_System_RuntimeTypeHandle t2_System_RuntimeTypeHandle;
 typedef int32_t t3_System_Reflection_MethodImplAttributes;
@@ -232,6 +234,14 @@ struct t2_System_Number
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
+int32_t f_System_Number_Int16NumberBufferLength;
+int32_t f_System_Number_Int32NumberBufferLength;
+int32_t f_System_Number_Int64NumberBufferLength;
+int32_t f_System_Number_UInt16NumberBufferLength;
+int32_t f_System_Number_UInt32NumberBufferLength;
+int32_t f_System_Number_UInt64NumberBufferLength;
+int32_t f_System_Number_SingleNumberBufferLength;
+int32_t f_System_Number_DoubleNumberBufferLength;
 
 struct t2_System_Object
 {
@@ -456,6 +466,15 @@ struct t3_System_Text_StringBuilder
 	t2_System_RuntimeType* CS2X_RuntimeType;
 	int32_t f__stringLength_1;
 	char16_t f__firstChar_1;
+};
+
+#define f_CS2X_NativeStringType_Char 0
+#define f_CS2X_NativeStringType_WideChar 1
+
+struct t2_CS2X_NativeStringParamAttribute
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	t2_CS2X_NativeStringType f_type_2;
 };
 
 struct t2_System_DateTime
@@ -712,6 +731,14 @@ rt2_System_NotSupportedException rt2_System_NotSupportedException_OBJ;
 int8_t rt2_System_NotSupportedException_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,78,0,111,0,116,0,83,0,117,0,112,0,112,0,111,0,114,0,116,0,101,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* NotSupportedException */
 int8_t rt2_System_NotSupportedException_METADATA_FullName[70] = {0,0,0,0,0,0,0,0,28,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,78,0,111,0,116,0,83,0,117,0,112,0,112,0,111,0,114,0,116,0,101,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* System.NotSupportedException */
 
+typedef struct rt2_System_Int32
+{
+	t2_System_RuntimeType runtimeType;
+} rt2_System_Int32;
+rt2_System_Int32 rt2_System_Int32_OBJ;
+int8_t rt2_System_Int32_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* Int32 */
+int8_t rt2_System_Int32_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* System.Int32 */
+
 typedef struct rt2_System_Number
 {
 	t2_System_RuntimeType runtimeType;
@@ -751,14 +778,6 @@ typedef struct rt2_System_Char
 rt2_System_Char rt2_System_Char_OBJ;
 int8_t rt2_System_Char_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,67,0,104,0,97,0,114,0,0,0}; /* Char */
 int8_t rt2_System_Char_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,104,0,97,0,114,0,0,0}; /* System.Char */
-
-typedef struct rt2_System_Int32
-{
-	t2_System_RuntimeType runtimeType;
-} rt2_System_Int32;
-rt2_System_Int32 rt2_System_Int32_OBJ;
-int8_t rt2_System_Int32_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* Int32 */
-int8_t rt2_System_Int32_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* System.Int32 */
 
 typedef struct rt2_System_String
 {
@@ -1016,6 +1035,22 @@ rt3_System_Text_StringBuilder rt3_System_Text_StringBuilder_OBJ;
 int8_t rt3_System_Text_StringBuilder_METADATA_Name[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* StringBuilder */
 int8_t rt3_System_Text_StringBuilder_METADATA_FullName[64] = {0,0,0,0,0,0,0,0,25,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,84,0,101,0,120,0,116,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* System.Text.StringBuilder */
 
+typedef struct rt2_CS2X_NativeStringType
+{
+	t2_System_RuntimeType runtimeType;
+} rt2_CS2X_NativeStringType;
+rt2_CS2X_NativeStringType rt2_CS2X_NativeStringType_OBJ;
+int8_t rt2_CS2X_NativeStringType_METADATA_Name[46] = {0,0,0,0,0,0,0,0,16,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,83,0,116,0,114,0,105,0,110,0,103,0,84,0,121,0,112,0,101,0,0,0}; /* NativeStringType */
+int8_t rt2_CS2X_NativeStringType_METADATA_FullName[56] = {0,0,0,0,0,0,0,0,21,0,0,0,67,0,83,0,50,0,88,0,46,0,78,0,97,0,116,0,105,0,118,0,101,0,83,0,116,0,114,0,105,0,110,0,103,0,84,0,121,0,112,0,101,0,0,0}; /* CS2X.NativeStringType */
+
+typedef struct rt2_CS2X_NativeStringParamAttribute
+{
+	t2_System_RuntimeType runtimeType;
+} rt2_CS2X_NativeStringParamAttribute;
+rt2_CS2X_NativeStringParamAttribute rt2_CS2X_NativeStringParamAttribute_OBJ;
+int8_t rt2_CS2X_NativeStringParamAttribute_METADATA_Name[66] = {0,0,0,0,0,0,0,0,26,0,0,0,78,0,97,0,116,0,105,0,118,0,101,0,83,0,116,0,114,0,105,0,110,0,103,0,80,0,97,0,114,0,97,0,109,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* NativeStringParamAttribute */
+int8_t rt2_CS2X_NativeStringParamAttribute_METADATA_FullName[76] = {0,0,0,0,0,0,0,0,31,0,0,0,67,0,83,0,50,0,88,0,46,0,78,0,97,0,116,0,105,0,118,0,101,0,83,0,116,0,114,0,105,0,110,0,103,0,80,0,97,0,114,0,97,0,109,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* CS2X.NativeStringParamAttribute */
+
 typedef struct rt2_System_Byte
 {
 	t2_System_RuntimeType runtimeType;
@@ -1198,6 +1233,8 @@ char m2_float_IsNegative_0(float p_f);
 float m2_float__ctor_0();
 t2_System_MulticastDelegate* m2_System_MulticastDelegate__ctor_0(t2_System_MulticastDelegate* self);
 t2_System_NotSupportedException* m2_System_NotSupportedException__ctor_0(t2_System_NotSupportedException* self, t2_System_String* p_message);
+t2_System_String* m2_int32_t_ToString_0(int32_t* self);
+int32_t m2_int32_t__ctor_0();
 t2_System_Type* m2_System_Object_GetType_0(t2_System_Object* self);
 t2_System_Object* m2_System_Object__ctor_0(t2_System_Object* self);
 t2_System_ObsoleteAttribute* m2_System_ObsoleteAttribute__ctor_0(t2_System_ObsoleteAttribute* self);
@@ -1207,8 +1244,6 @@ char m2_System_ObsoleteAttribute_get_IsError_0(t2_System_ObsoleteAttribute* self
 t2_System_String* m2_System_ObsoleteAttribute_get_Message_0(t2_System_ObsoleteAttribute* self);
 t2_System_RuntimeType* m2_System_RuntimeType__ctor_0(t2_System_RuntimeType* self);
 char16_t m2_char16_t__ctor_0();
-t2_System_String* m2_int32_t_ToString_0(int32_t* self);
-int32_t m2_int32_t__ctor_0();
 t2_System_String* m2_System_String__ctor_0(t2_System_String* self, char16_t* p_value);
 t2_System_String* m2_System_String__ctor_1(t2_System_String* self, char16_t* p_value);
 char16_t m2_System_String_get_Item_0(t2_System_String* self, int32_t p_index);
@@ -1296,17 +1331,24 @@ t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* s
 t3_System_Text_Encoding* m3_System_Text_Encoding__ctor_0(t3_System_Text_Encoding* self);
 t3_System_Text_StandardEncoding* m3_System_Text_StandardEncoding__ctor_0(t3_System_Text_StandardEncoding* self);
 t3_System_Text_StringBuilder* m3_System_Text_StringBuilder__ctor_0(t3_System_Text_StringBuilder* self);
+t2_CS2X_NativeStringType m2_CS2X_NativeStringType__ctor_0();
+t2_CS2X_NativeStringParamAttribute* m2_CS2X_NativeStringParamAttribute__ctor_0(t2_CS2X_NativeStringParamAttribute* self, t2_CS2X_NativeStringType p_type);
 uint8_t m2_uint8_t__ctor_0();
 time_t m2_time_t__ctor_0();
 int64_t m2_System_DateTime_TODO_0(t2_System_DateTime* self);
 t2_System_DateTime m2_System_DateTime__ctor_0();
+t2_System_String* m2_int16_t_ToString_0(int16_t* self);
 int16_t m2_int16_t__ctor_0();
+t2_System_String* m2_int64_t_ToString_0(int64_t* self);
 int64_t m2_int64_t__ctor_0();
 t2_System_RuntimeTypeHandle m2_System_RuntimeTypeHandle__ctor_0(t2_System_RuntimeType* p_type);
 t2_System_RuntimeTypeHandle m2_System_RuntimeTypeHandle__ctor_1();
 int8_t m2_int8_t__ctor_0();
+t2_System_String* m2_uint16_t_ToString_0(uint16_t* self);
 uint16_t m2_uint16_t__ctor_0();
+t2_System_String* m2_uint32_t_ToString_0(uint32_t* self);
 uint32_t m2_uint32_t__ctor_0();
+t2_System_String* m2_uint64_t_ToString_0(uint64_t* self);
 uint64_t m2_uint64_t__ctor_0();
 uintptr_t m2_uintptr_t__ctor_0(uint32_t p_value);
 uintptr_t m2_uintptr_t__ctor_1(uint64_t p_value);
@@ -1531,7 +1573,7 @@ void m2_System_Console_Write_0(t2_System_String* p_s)
 	char16_t* l_printBuff_0;
 	int32_t l_count_1;
 	char16_t* l_ptr_2;
-	l_printBuff_0 = alloca(sizeof(char16_t) * 2);
+	l_printBuff_0 = alloca(sizeof(char16_t) * (2));
 	l_printBuff_0[1] = 0x0000;
 	l_count_1 = 0;
 	l_ptr_2 = &p_s->f__firstChar_1;
@@ -1815,6 +1857,30 @@ t2_System_NotSupportedException* m2_System_NotSupportedException__ctor_0(t2_Syst
 	return self;
 }
 
+t2_System_String* m2_int32_t_ToString_0(int32_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (11 + 1));
+	l_length_1 = sprintf(l_str_0, "%d", (*self));
+	l_str_0[11] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
+int32_t m2_int32_t__ctor_0()
+{
+	int32_t selfObj = {0};
+	return selfObj;
+}
+
 t2_System_Type* m2_System_Object_GetType_0(t2_System_Object* self)
 {
 	return (t2_System_Type*)self->CS2X_RuntimeType;
@@ -1865,17 +1931,6 @@ t2_System_RuntimeType* m2_System_RuntimeType__ctor_0(t2_System_RuntimeType* self
 char16_t m2_char16_t__ctor_0()
 {
 	char16_t selfObj = {0};
-	return selfObj;
-}
-
-t2_System_String* m2_int32_t_ToString_0(int32_t* self)
-{
-	return f_System_String_Empty;
-}
-
-int32_t m2_int32_t__ctor_0()
-{
-	int32_t selfObj = {0};
 	return selfObj;
 }
 
@@ -2589,7 +2644,7 @@ t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* s
 		char16_t* l_buffer_3;
 		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
 		l_bufferSize_2 = MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, 0, 0);
-		l_buffer_3 = alloca(sizeof(char16_t) * l_bufferSize_2);
+		l_buffer_3 = alloca(sizeof(char16_t) * (l_bufferSize_2));
 		MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, l_buffer_3, l_bufferSize_2);
 		return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_buffer_3);
 	}
@@ -2610,6 +2665,19 @@ t3_System_Text_StandardEncoding* m3_System_Text_StandardEncoding__ctor_0(t3_Syst
 t3_System_Text_StringBuilder* m3_System_Text_StringBuilder__ctor_0(t3_System_Text_StringBuilder* self)
 {
 	m2_System_Object__ctor_0(self);
+	return self;
+}
+
+t2_CS2X_NativeStringType m2_CS2X_NativeStringType__ctor_0()
+{
+	t2_CS2X_NativeStringType selfObj = {0};
+	return selfObj;
+}
+
+t2_CS2X_NativeStringParamAttribute* m2_CS2X_NativeStringParamAttribute__ctor_0(t2_CS2X_NativeStringParamAttribute* self, t2_CS2X_NativeStringType p_type)
+{
+	m2_System_Attribute__ctor_0(self);
+	self->f_type_2 = p_type;
 	return self;
 }
 
@@ -2639,10 +2707,46 @@ t2_System_DateTime m2_System_DateTime__ctor_0()
 	return selfObj;
 }
 
+t2_System_String* m2_int16_t_ToString_0(int16_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (6 + 1));
+	l_length_1 = sprintf(l_str_0, "%d", (*self));
+	l_str_0[6] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
 int16_t m2_int16_t__ctor_0()
 {
 	int16_t selfObj = {0};
 	return selfObj;
+}
+
+t2_System_String* m2_int64_t_ToString_0(int64_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (20 + 1));
+	l_length_1 = sprintf(l_str_0, "%lld", (*self));
+	l_str_0[20] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
 }
 
 int64_t m2_int64_t__ctor_0()
@@ -2671,16 +2775,70 @@ int8_t m2_int8_t__ctor_0()
 	return selfObj;
 }
 
+t2_System_String* m2_uint16_t_ToString_0(uint16_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (6 + 1));
+	l_length_1 = sprintf(l_str_0, "%u", (*self));
+	l_str_0[6] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
 uint16_t m2_uint16_t__ctor_0()
 {
 	uint16_t selfObj = {0};
 	return selfObj;
 }
 
+t2_System_String* m2_uint32_t_ToString_0(uint32_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (11 + 1));
+	l_length_1 = sprintf(l_str_0, "%u", (*self));
+	l_str_0[11] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
 uint32_t m2_uint32_t__ctor_0()
 {
 	uint32_t selfObj = {0};
 	return selfObj;
+}
+
+t2_System_String* m2_uint64_t_ToString_0(uint64_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (21 + 1));
+	l_length_1 = sprintf(l_str_0, "%llu", (*self));
+	l_str_0[21] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
 }
 
 uint64_t m2_uint64_t__ctor_0()
@@ -2878,6 +3036,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_NotSupportedException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Exception_OBJ;
 	rt2_System_NotSupportedException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_NotSupportedException_METADATA_Name;
 	rt2_System_NotSupportedException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_NotSupportedException_METADATA_FullName;
+	memset(&rt2_System_Int32_OBJ, 0, sizeof(rt2_System_Int32));
+	rt2_System_Int32_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Int32_OBJ;
+	rt2_System_Int32_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
+	rt2_System_Int32_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_Int32_METADATA_Name;
+	rt2_System_Int32_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_Int32_METADATA_FullName;
 	memset(&rt2_System_Number_OBJ, 0, sizeof(rt2_System_Number));
 	rt2_System_Number_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Number_OBJ;
 	rt2_System_Number_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -2903,11 +3066,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_Char_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
 	rt2_System_Char_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_Char_METADATA_Name;
 	rt2_System_Char_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_Char_METADATA_FullName;
-	memset(&rt2_System_Int32_OBJ, 0, sizeof(rt2_System_Int32));
-	rt2_System_Int32_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Int32_OBJ;
-	rt2_System_Int32_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
-	rt2_System_Int32_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_Int32_METADATA_Name;
-	rt2_System_Int32_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_Int32_METADATA_FullName;
 	memset(&rt2_System_String_OBJ, 0, sizeof(rt2_System_String));
 	rt2_System_String_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_String_OBJ;
 	rt2_System_String_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -3068,6 +3226,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt3_System_Text_StringBuilder_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt3_System_Text_StringBuilder_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_Text_StringBuilder_METADATA_Name;
 	rt3_System_Text_StringBuilder_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_Text_StringBuilder_METADATA_FullName;
+	memset(&rt2_CS2X_NativeStringType_OBJ, 0, sizeof(rt2_CS2X_NativeStringType));
+	rt2_CS2X_NativeStringType_OBJ.runtimeType.CS2X_RuntimeType = &rt2_CS2X_NativeStringType_OBJ;
+	rt2_CS2X_NativeStringType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Enum_OBJ;
+	rt2_CS2X_NativeStringType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_CS2X_NativeStringType_METADATA_Name;
+	rt2_CS2X_NativeStringType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_CS2X_NativeStringType_METADATA_FullName;
+	memset(&rt2_CS2X_NativeStringParamAttribute_OBJ, 0, sizeof(rt2_CS2X_NativeStringParamAttribute));
+	rt2_CS2X_NativeStringParamAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt2_CS2X_NativeStringParamAttribute_OBJ;
+	rt2_CS2X_NativeStringParamAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Attribute_OBJ;
+	rt2_CS2X_NativeStringParamAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_CS2X_NativeStringParamAttribute_METADATA_Name;
+	rt2_CS2X_NativeStringParamAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_CS2X_NativeStringParamAttribute_METADATA_FullName;
 	memset(&rt2_System_Byte_OBJ, 0, sizeof(rt2_System_Byte));
 	rt2_System_Byte_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Byte_OBJ;
 	rt2_System_Byte_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
@@ -3184,6 +3352,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_MulticastDelegate_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_NotSupportedException_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_NotSupportedException_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_Int32_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_Int32_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Number_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Number_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Object_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3194,8 +3364,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_RuntimeType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Char_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Char_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
-	((t2_System_String*)rt2_System_Int32_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
-	((t2_System_String*)rt2_System_Int32_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_String_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_String_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Type_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3260,6 +3428,10 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt3_System_Text_StandardEncoding_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Text_StringBuilder_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Text_StringBuilder_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_CS2X_NativeStringType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_CS2X_NativeStringType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_CS2X_NativeStringParamAttribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_CS2X_NativeStringParamAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Byte_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Byte_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_DateTime_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;

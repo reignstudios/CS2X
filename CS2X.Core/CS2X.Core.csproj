@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\CS2X.CoreLib\CS2X\NativeStringType.cs" Link="NativeStringType.cs" />
     <Compile Include="..\CS2X.CoreLib\CS2X\NativeTarget.cs" Link="NativeTarget.cs" />
   </ItemGroup>
 
