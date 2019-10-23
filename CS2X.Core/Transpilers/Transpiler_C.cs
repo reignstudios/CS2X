@@ -1088,13 +1088,23 @@ namespace CS2X.Core.Transpilers
 			// write string unicode data
 			byte[] binaryData;
 			if (options.endianness == Endianness.Little) binaryData = Encoding.Unicode.GetBytes(value);
-			else binaryData = Encoding.BigEndianUnicode.GetBytes(value);
+			else if (options.endianness == Endianness.Big) binaryData = Encoding.BigEndianUnicode.GetBytes(value);
+			else throw new NotImplementedException("String endiannes not implemented: " + options.endianness);
 			WriteBinary(binaryData);
 
 			// null-terminated char
 			result.Append("0,0}");
 
 			return result.ToString();
+		}
+
+		private string CharToLiteral(char value)
+		{
+			byte[] data;
+			if (options.endianness == Endianness.Little) data = Encoding.Unicode.GetBytes(new char[1] {value});
+			else if (options.endianness == Endianness.Big) data = Encoding.BigEndianUnicode.GetBytes(new char[1] {value});
+			else throw new NotImplementedException("Char endiannes not implemented: " + options.endianness);
+			return $"0x{BitConverter.ToString(data).Replace("-", "")}";
 		}
 		#endregion
 
@@ -1607,7 +1617,7 @@ namespace CS2X.Core.Transpilers
 									writer.WriteLinePrefix("++length;");
 									writer.RemoveTab();
 									writer.WriteLinePrefix('}');
-									writer.WriteLinePrefix("self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));");
+									writer.WriteLinePrefix("self = CS2X_GC_Resize(self, ArrayOffset + sizeof(char16_t), ArrayOffset + sizeof(char16_t) + (sizeof(char16_t) * length));");
 									writer.WriteLinePrefix($"self->{GetFieldFullName(stringLengthField)} = length;");
 									writer.WriteLinePrefix($"memcpy(&self->{GetFieldFullName(firstCharField)}, {parameterName}, sizeof(char16_t) * length);");
 									writer.WriteLinePrefix("return self;");
@@ -1619,11 +1629,25 @@ namespace CS2X.Core.Transpilers
 									string parameterName = GetParameterFullName(method.Parameters[0]);
 									writer.WriteLinePrefix("int length = 0;");
 									writer.WriteLinePrefix("char16_t* charBuffer;");
-									writer.WriteLinePrefix($"length = {parameterName} + sizeof(intptr_t);");
+									writer.WriteLinePrefix($"length = *(int*)(((char*){parameterName}) + sizeof(intptr_t));");
 									writer.WriteLinePrefix($"charBuffer = {parameterName} + ArrayOffset;");
-									writer.WriteLinePrefix("self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));");
+									writer.WriteLinePrefix("self = CS2X_GC_Resize(self, ArrayOffset + sizeof(char16_t), ArrayOffset + sizeof(char16_t) + (sizeof(char16_t) * length));");
 									writer.WriteLinePrefix($"self->{GetFieldFullName(stringLengthField)} = length;");
 									writer.WriteLinePrefix($"memcpy(&self->{GetFieldFullName(firstCharField)}, charBuffer, sizeof(char16_t) * length);");
+									writer.WriteLinePrefix("return self;");
+								}
+								else if (method.MethodKind == MethodKind.Constructor && method.Parameters.Length == 2 && method.Parameters[0].Type.SpecialType == SpecialType.System_Char && method.Parameters[1].Type.SpecialType == SpecialType.System_Int32)
+								{
+									var stringLengthField = FindFieldByName(method.ContainingType, "_stringLength");
+									var firstCharField = FindFieldByName(method.ContainingType, "_firstChar");
+									string parameterChar = GetParameterFullName(method.Parameters[0]);
+									string parameterLength = GetParameterFullName(method.Parameters[1]);
+									writer.WriteLinePrefix("int i;");
+									writer.WriteLinePrefix("char16_t* charBuff;");
+									writer.WriteLinePrefix($"self = CS2X_GC_Resize(self, ArrayOffset + sizeof(char16_t), ArrayOffset + sizeof(char16_t) + (sizeof(char16_t) * {parameterLength}));");
+									writer.WriteLinePrefix($"self->{GetFieldFullName(stringLengthField)} = {parameterLength};");
+									writer.WriteLinePrefix($"charBuff = &self->{GetFieldFullName(firstCharField)};");
+									writer.WriteLinePrefix($"for (i = 0; i != {parameterLength}; ++i) charBuff[i] = {parameterChar};");
 									writer.WriteLinePrefix("return self;");
 								}
 								else
@@ -2734,11 +2758,9 @@ namespace CS2X.Core.Transpilers
 			}
 			else if (expression.IsKind(SyntaxKind.CharacterLiteralExpression))
 			{
-				byte[] data;
-				if (options.endianness == Endianness.Little) data = Encoding.Unicode.GetBytes(expression.Token.ValueText);
-				else if (options.endianness == Endianness.Big) data = Encoding.BigEndianUnicode.GetBytes(expression.Token.ValueText);
-				else throw new NotImplementedException("Char endiannes not implemented: " + options.endianness);
-				writer.Write($"0x{BitConverter.ToString(data).Replace("-","")}");
+				string value = expression.Token.ValueText;
+				if (value.Length != 1) throw new Exception("char literal length != 1: " + value);
+				writer.Write(CharToLiteral(value[0]));
 			}
 			else if (expression.IsKind(SyntaxKind.TrueLiteralExpression))
 			{
@@ -3842,6 +3864,11 @@ namespace CS2X.Core.Transpilers
 					if (!result.Contains('.') && !result.Contains('E')) result += ".0";
 					return result;
 				}
+			}
+			else if (type == typeof(char))
+			{
+				char castValue = (char)value;
+				return CharToLiteral(castValue);
 			}
 			else if (type == typeof(string))
 			{

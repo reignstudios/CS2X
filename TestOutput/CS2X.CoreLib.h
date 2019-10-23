@@ -235,9 +235,11 @@ struct t2_System_Number
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
+int32_t f_System_Number_Int8NumberBufferLength;
 int32_t f_System_Number_Int16NumberBufferLength;
 int32_t f_System_Number_Int32NumberBufferLength;
 int32_t f_System_Number_Int64NumberBufferLength;
+int32_t f_System_Number_UInt8NumberBufferLength;
 int32_t f_System_Number_UInt16NumberBufferLength;
 int32_t f_System_Number_UInt32NumberBufferLength;
 int32_t f_System_Number_UInt64NumberBufferLength;
@@ -1246,9 +1248,11 @@ t2_System_ObsoleteAttribute* m2_System_ObsoleteAttribute__ctor_2(t2_System_Obsol
 char m2_System_ObsoleteAttribute_get_IsError_0(t2_System_ObsoleteAttribute* self);
 t2_System_String* m2_System_ObsoleteAttribute_get_Message_0(t2_System_ObsoleteAttribute* self);
 t2_System_RuntimeType* m2_System_RuntimeType__ctor_0(t2_System_RuntimeType* self);
+t2_System_String* m2_char16_t_ToString_0(char16_t* self);
 char16_t m2_char16_t__ctor_0();
 t2_System_String* m2_System_String__ctor_0(t2_System_String* self, char16_t* p_value);
 t2_System_String* m2_System_String__ctor_1(t2_System_String* self, char16_t* p_value);
+t2_System_String* m2_System_String__ctor_2(t2_System_String* self, char16_t p_c, int32_t p_count);
 char16_t m2_System_String_get_Item_0(t2_System_String* self, int32_t p_index);
 int32_t m2_System_String_get_Length_0(t2_System_String* self);
 t2_System_String* m2_System_String_FastAllocateString_0(int32_t p_length);
@@ -1336,6 +1340,7 @@ t3_System_Text_StandardEncoding* m3_System_Text_StandardEncoding__ctor_0(t3_Syst
 t3_System_Text_StringBuilder* m3_System_Text_StringBuilder__ctor_0(t3_System_Text_StringBuilder* self);
 t2_CS2X_NativeStringType m2_CS2X_NativeStringType__ctor_0();
 t2_CS2X_NativeStringParamAttribute* m2_CS2X_NativeStringParamAttribute__ctor_0(t2_CS2X_NativeStringParamAttribute* self, t2_CS2X_NativeStringType p_type);
+t2_System_String* m2_uint8_t_ToString_0(uint8_t* self);
 uint8_t m2_uint8_t__ctor_0();
 time_t m2_time_t__ctor_0();
 int64_t m2_System_DateTime_TODO_0(t2_System_DateTime* self);
@@ -1346,6 +1351,7 @@ t2_System_String* m2_int64_t_ToString_0(int64_t* self);
 int64_t m2_int64_t__ctor_0();
 t2_System_RuntimeTypeHandle m2_System_RuntimeTypeHandle__ctor_0(t2_System_RuntimeType* p_type);
 t2_System_RuntimeTypeHandle m2_System_RuntimeTypeHandle__ctor_1();
+t2_System_String* m2_int8_t_ToString_0(int8_t* self);
 int8_t m2_int8_t__ctor_0();
 t2_System_String* m2_uint16_t_ToString_0(uint16_t* self);
 uint16_t m2_uint16_t__ctor_0();
@@ -1967,6 +1973,11 @@ t2_System_RuntimeType* m2_System_RuntimeType__ctor_0(t2_System_RuntimeType* self
 	return self;
 }
 
+t2_System_String* m2_char16_t_ToString_0(char16_t* self)
+{
+	return m2_System_String__ctor_2(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), (*self), 1);
+}
+
 char16_t m2_char16_t__ctor_0()
 {
 	char16_t selfObj = {0};
@@ -1983,7 +1994,7 @@ t2_System_String* m2_System_String__ctor_0(t2_System_String* self, char16_t* p_v
 		++charOffset;
 		++length;
 	}
-	self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
+	self = CS2X_GC_Resize(self, ArrayOffset + sizeof(char16_t), ArrayOffset + sizeof(char16_t) + (sizeof(char16_t) * length));
 	self->f__stringLength_1 = length;
 	memcpy(&self->f__firstChar_1, p_value, sizeof(char16_t) * length);
 	return self;
@@ -1993,11 +2004,22 @@ t2_System_String* m2_System_String__ctor_1(t2_System_String* self, char16_t* p_v
 {
 	int length = 0;
 	char16_t* charBuffer;
-	length = p_value + sizeof(intptr_t);
+	length = *(int*)(((char*)p_value) + sizeof(intptr_t));
 	charBuffer = p_value + ArrayOffset;
-	self = CS2X_GC_Resize(self, sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t), sizeof(intptr_t) + sizeof(int32_t) + sizeof(char16_t) + (sizeof(char16_t) * length));
+	self = CS2X_GC_Resize(self, ArrayOffset + sizeof(char16_t), ArrayOffset + sizeof(char16_t) + (sizeof(char16_t) * length));
 	self->f__stringLength_1 = length;
 	memcpy(&self->f__firstChar_1, charBuffer, sizeof(char16_t) * length);
+	return self;
+}
+
+t2_System_String* m2_System_String__ctor_2(t2_System_String* self, char16_t p_c, int32_t p_count)
+{
+	int i;
+	char16_t* charBuff;
+	self = CS2X_GC_Resize(self, ArrayOffset + sizeof(char16_t), ArrayOffset + sizeof(char16_t) + (sizeof(char16_t) * p_count));
+	self->f__stringLength_1 = p_count;
+	charBuff = &self->f__firstChar_1;
+	for (i = 0; i != p_count; ++i) charBuff[i] = p_c;
 	return self;
 }
 
@@ -2720,6 +2742,24 @@ t2_CS2X_NativeStringParamAttribute* m2_CS2X_NativeStringParamAttribute__ctor_0(t
 	return self;
 }
 
+t2_System_String* m2_uint8_t_ToString_0(uint8_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (4));
+	l_length_1 = sprintf(l_str_0, "%u", (*self));
+	l_str_0[3] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
 uint8_t m2_uint8_t__ctor_0()
 {
 	uint8_t selfObj = {0};
@@ -2808,6 +2848,24 @@ t2_System_RuntimeTypeHandle m2_System_RuntimeTypeHandle__ctor_1()
 	return selfObj;
 }
 
+t2_System_String* m2_int8_t_ToString_0(int8_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (5));
+	l_length_1 = sprintf(l_str_0, "%d", (*self));
+	l_str_0[4] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
 int8_t m2_int8_t__ctor_0()
 {
 	int8_t selfObj = {0};
@@ -2820,9 +2878,9 @@ t2_System_String* m2_uint16_t_ToString_0(uint16_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (7));
+	l_str_0 = alloca(sizeof(uint8_t) * (6));
 	l_length_1 = sprintf(l_str_0, "%u", (*self));
-	l_str_0[6] = 0;
+	l_str_0[5] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
 	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
 	{
@@ -2844,9 +2902,9 @@ t2_System_String* m2_uint32_t_ToString_0(uint32_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (12));
+	l_str_0 = alloca(sizeof(uint8_t) * (11));
 	l_length_1 = sprintf(l_str_0, "%u", (*self));
-	l_str_0[11] = 0;
+	l_str_0[10] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
 	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
 	{
@@ -2868,9 +2926,9 @@ t2_System_String* m2_uint64_t_ToString_0(uint64_t* self)
 	int32_t l_length_1;
 	char16_t* l_charArray_2;
 	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (22));
+	l_str_0 = alloca(sizeof(uint8_t) * (21));
 	l_length_1 = sprintf(l_str_0, "%llu", (*self));
-	l_str_0[21] = 0;
+	l_str_0[20] = 0;
 	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
 	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
 	{

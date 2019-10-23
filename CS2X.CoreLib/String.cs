@@ -15,6 +15,9 @@ namespace System
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public extern String(char[] value);
 
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public extern String(char c, int count);
+
 		public unsafe char this[int index]
         {
 			get
