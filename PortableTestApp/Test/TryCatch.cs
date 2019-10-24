@@ -10,11 +10,16 @@ namespace PortableTestApp.Test
 		{
 			const string value = "YAHOO";
 
+			MyException objRef = null;
 			try
 			{
 				try
 				{
-					throw new MyException(value);
+					using (var obj = new MyException(value))
+					{
+						objRef = obj;
+						throw new MyException(value);
+					}
 				}
 				catch (Exception e)
 				{
@@ -23,7 +28,7 @@ namespace PortableTestApp.Test
 			}
 			catch (MyException e)
 			{
-				return e.Message == value;
+				return e.Message == value && objRef.isDisposed;
 			}
 			catch (Exception e)
 			{
@@ -34,10 +39,17 @@ namespace PortableTestApp.Test
 		}
 	}
 
-	class MyException : Exception
+	class MyException : Exception, IDisposable
 	{
+		public bool isDisposed;
+
 		public MyException(string message)
 		: base(message)
 		{}
+
+		public void Dispose()
+		{
+			isDisposed = true;
+		}
 	}
 }

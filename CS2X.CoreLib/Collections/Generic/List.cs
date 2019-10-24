@@ -61,6 +61,18 @@ namespace System.Collections.Generic
 			_items[index] = item;
 		}
 
+		public void AddRange(T[] collection)
+		{
+			int index = _items.Length;
+			Array.Resize<T>(ref _items, _items.Length + collection.Length);
+			Array.Copy(collection, 0, _items, index, collection.Length);
+		}
+
+		public void AddRange(List<T> collection)
+		{
+			AddRange(collection._items);
+		}
+
 		public void Remove(T item)
 		{
 			for (int i = _items.Length - 1; i != -1; --i)

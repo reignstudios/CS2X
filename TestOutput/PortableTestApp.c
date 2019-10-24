@@ -219,6 +219,7 @@ struct t3_PortableTestApp_Test_MyException
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 	t2_System_String* f__Message_k__BackingField_1;
+	char f_isDisposed_2;
 };
 
 struct t3_PortableTestApp_Test_VirtualMethods_Base
@@ -912,6 +913,7 @@ t3_PortableTestApp_Test_RefOutParameters* m3_PortableTestApp_Test_RefOutParamete
 char m3_PortableTestApp_Test_StringEncoding_RunTest_0();
 char m3_PortableTestApp_Test_TryCatch_RunTest_0();
 t3_PortableTestApp_Test_MyException* m3_PortableTestApp_Test_MyException__ctor_0(t3_PortableTestApp_Test_MyException* self, t2_System_String* p_message);
+void m3_PortableTestApp_Test_MyException_Dispose_0(t3_PortableTestApp_Test_MyException* self);
 char m3_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t3_PortableTestApp_Test_VirtualMethods_Base* self, char p_value);
 t3_PortableTestApp_Test_VirtualMethods_Base* m3_PortableTestApp_Test_VirtualMethods_Base__ctor_0(t3_PortableTestApp_Test_VirtualMethods_Base* self);
 char m3_PortableTestApp_Test_VirtualMethods_VirtualFoo_0(t3_PortableTestApp_Test_VirtualMethods* self, char p_value);
@@ -943,6 +945,8 @@ void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_set_Item_0(t4_Sy
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsDown_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index);
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ShiftItemsUp_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_index);
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item);
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_AddRange_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t* p_collection);
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_AddRange_1(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, t4_System_Collections_Generic_List_System_Int32_GENERIC* p_collection);
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Remove_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item);
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Clear_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self);
 char m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Contains_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item);
@@ -1354,8 +1358,8 @@ void m3_PortableTestApp_Test_FieldsAndProperties__cctor_0()
 char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0()
 {
 	t4_System_Collections_Generic_List_System_Int32_GENERIC* l_valuesList_0;
-	int32_t* l_valuesFromList_1;
-	int32_t* l_values_2;
+	int32_t* l_values_1;
+	int32_t* l_valuesFromList_2;
 	int32_t* l_values2_3;
 	int32_t l_value_i_4;
 	int32_t l_value_5;
@@ -1368,28 +1372,29 @@ char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0()
 	t3_PortableTestApp_Test_MyEnumerable_System_Int32_GENERIC* l_myEnumerable_12;
 	t3_PortableTestApp_Test_MyEnumerator_System_Int32_GENERIC l_e_en_13;
 	l_valuesList_0 = m4_t4_System_Collections_Generic_List_System_Int32_GENERIC__ctor_0(CS2X_AllocType(sizeof(t4_System_Collections_Generic_List_System_Int32_GENERIC), &rt4_System_Collections_Generic_List_System_Int32_GENERIC_OBJ, 0));
-	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_valuesList_0, 1);
-	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_valuesList_0, 2);
-	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_valuesList_0, 3);
-	l_valuesFromList_1 = m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ToArray_0(l_valuesList_0);
-	l_values_2 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 3, &rt0_System_Int32___ARRAY_OBJ);
-	((int32_t*)(((char*)l_values_2) + ArrayOffset))[0] = 1;
-	((int32_t*)(((char*)l_values_2) + ArrayOffset))[1] = 2;
-	((int32_t*)(((char*)l_values_2) + ArrayOffset))[2] = 3;
+	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_valuesList_0, 4);
+	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_valuesList_0, 5);
+	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(l_valuesList_0, 6);
+	l_values_1 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 3, &rt0_System_Int32___ARRAY_OBJ);
+	((int32_t*)(((char*)l_values_1) + ArrayOffset))[0] = 1;
+	((int32_t*)(((char*)l_values_1) + ArrayOffset))[1] = 2;
+	((int32_t*)(((char*)l_values_1) + ArrayOffset))[2] = 3;
+	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_AddRange_0(l_valuesList_0, l_values_1);
+	l_valuesFromList_2 = m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_ToArray_0(l_valuesList_0);
 	l_values2_3 = CS2X_AllocArrayTypeAtomic(sizeof(int32_t), 3, &rt0_System_Int32___ARRAY_OBJ);
 	((int32_t*)(((char*)l_values2_3) + ArrayOffset))[0] = 3;
 	((int32_t*)(((char*)l_values2_3) + ArrayOffset))[1] = 2;
 	((int32_t*)(((char*)l_values2_3) + ArrayOffset))[2] = 1;
-	for (l_value_i_4 = 0; l_value_i_4 != m2_System_Array_get_Length_0((t2_System_Array*)l_values_2); ++l_value_i_4)
+	for (l_value_i_4 = 0; l_value_i_4 != m2_System_Array_get_Length_0((t2_System_Array*)l_values_1); ++l_value_i_4)
 	{
-		l_value_5 = ((int32_t*)(((char*)l_values_2) + ArrayOffset))[l_value_i_4];
+		l_value_5 = ((int32_t*)(((char*)l_values_1) + ArrayOffset))[l_value_i_4];
 		for (l_value2_i_6 = 0; l_value2_i_6 != m2_System_Array_get_Length_0((t2_System_Array*)l_values2_3); ++l_value2_i_6)
 		{
 			l_value2_7 = ((int32_t*)(((char*)l_values2_3) + ArrayOffset))[l_value2_i_6];
-			for (l_value3_i_8 = 0; l_value3_i_8 != m2_System_Array_get_Length_0((t2_System_Array*)l_valuesFromList_1); ++l_value3_i_8)
+			for (l_value3_i_8 = 0; l_value3_i_8 != m2_System_Array_get_Length_0((t2_System_Array*)l_valuesFromList_2); ++l_value3_i_8)
 			{
 				int32_t l_value3_9;
-				l_value3_9 = ((int32_t*)(((char*)l_valuesFromList_1) + ArrayOffset))[l_value3_i_8];
+				l_value3_9 = ((int32_t*)(((char*)l_valuesFromList_2) + ArrayOffset))[l_value3_i_8];
 				if (l_value_5 == 0 || l_value2_7 == 0 || l_value3_9 == 0)
 				{
 					return 0;
@@ -1397,9 +1402,9 @@ char m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0()
 			}
 		}
 	}
-	for (l_i_9 = 0, l_i2_10 = 2; l_i_9 != m2_System_Array_get_Length_0(l_values_2); ++l_i_9, --l_i2_10)
+	for (l_i_9 = 0, l_i2_10 = 2; l_i_9 != m2_System_Array_get_Length_0(l_values_1); ++l_i_9, --l_i2_10)
 	{
-		if (((int32_t*)(((char*)l_values_2) + ArrayOffset))[l_i_9] != ((int32_t*)(((char*)l_values2_3) + ArrayOffset))[l_i2_10])
+		if (((int32_t*)(((char*)l_values_1) + ArrayOffset))[l_i_9] != ((int32_t*)(((char*)l_values2_3) + ArrayOffset))[l_i2_10])
 		{
 			return 0;
 		}
@@ -1754,9 +1759,11 @@ char m3_PortableTestApp_Test_StringEncoding_RunTest_0()
 
 char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 {
+	t3_PortableTestApp_Test_MyException* l_objRef_0;
 	jmp_buf CS2X_JMP_LAST_0;
 	jmp_buf CS2X_JMP_0;
 	int CS2X_IS_JMP_0;
+	l_objRef_0 = 0;
 	/* try */
 	memcpy(CS2X_JMP_LAST_0, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
 	CS2X_IS_JMP_0 = setjmp(CS2X_JMP_0);
@@ -1771,19 +1778,36 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 		CS2X_IS_JMP_1 = setjmp(CS2X_JMP_1);
 		if (CS2X_IS_JMP_1 == 0)
 		{
+			t3_PortableTestApp_Test_MyException* l_obj_1;
+			jmp_buf CS2X_JMP_LAST_2;
+			jmp_buf CS2X_JMP_2;
+			int CS2X_IS_JMP_2;
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_1, sizeof(jmp_buf));
-			CS2X_ThreadExceptionObject = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_51);
-			longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+			/* using */
+			l_obj_1 = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_51);
+			memcpy(CS2X_JMP_LAST_2, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
+			CS2X_IS_JMP_2 = setjmp(CS2X_JMP_2);
+			if (CS2X_IS_JMP_2 == 0)
+			{
+				memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_2, sizeof(jmp_buf));
+				l_objRef_0 = l_obj_1;
+				CS2X_ThreadExceptionObject = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_51);
+				longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+			}
+			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_2, sizeof(jmp_buf));
+			m3_PortableTestApp_Test_MyException_Dispose_0(l_obj_1);
+			if (CS2X_IS_JMP_2 != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw caught exception */
+			/* end-using */
 		}
 		else /* end try */
 		{
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_1, sizeof(jmp_buf));
 			if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt2_System_Exception_OBJ)) /* catch */
 			{
-				t2_System_Exception* l_e_0;
-				l_e_0 = CS2X_ThreadExceptionObject;
+				t2_System_Exception* l_e_1;
+				l_e_1 = CS2X_ThreadExceptionObject;
 				CS2X_ThreadExceptionObject = 0;
-				CS2X_ThreadExceptionObject = l_e_0;
+				CS2X_ThreadExceptionObject = l_e_1;
 				longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 			}
 			if (CS2X_ThreadExceptionObject != 0) longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw unhandled exception */
@@ -1796,21 +1820,21 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 		memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
 		if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt3_PortableTestApp_Test_MyException_OBJ)) /* catch */
 		{
-			t3_PortableTestApp_Test_MyException* l_e_0;
-			l_e_0 = CS2X_ThreadExceptionObject;
+			t3_PortableTestApp_Test_MyException* l_e_1;
+			l_e_1 = CS2X_ThreadExceptionObject;
 			CS2X_ThreadExceptionObject = 0;
 			/* protected return */
 			{
 				char CS2X_RETURN_1;
-				CS2X_RETURN_1 = m2_System_String_Equals_0(l_e_0->f__Message_k__BackingField_1, StringLiteral_51);
+				CS2X_RETURN_1 = m2_System_String_Equals_0(l_e_1->f__Message_k__BackingField_1, StringLiteral_51) && l_objRef_0->f_isDisposed_2;
 				memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
 				return CS2X_RETURN_1;
 			}
 		}
 		else if (CS2X_IsType(((t2_System_Object*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &rt2_System_Exception_OBJ)) /* catch */
 		{
-			t2_System_Exception* l_e_0;
-			l_e_0 = CS2X_ThreadExceptionObject;
+			t2_System_Exception* l_e_1;
+			l_e_1 = CS2X_ThreadExceptionObject;
 			CS2X_ThreadExceptionObject = 0;
 			/* protected return */
 			{
@@ -1831,6 +1855,11 @@ t3_PortableTestApp_Test_MyException* m3_PortableTestApp_Test_MyException__ctor_0
 {
 	m2_System_Exception__ctor_1(self, p_message);
 	return self;
+}
+
+void m3_PortableTestApp_Test_MyException_Dispose_0(t3_PortableTestApp_Test_MyException* self)
+{
+	self->f_isDisposed_2 = 1;
 }
 
 char m3_PortableTestApp_Test_VirtualMethods_Base_VirtualFoo_0(t3_PortableTestApp_Test_VirtualMethods_Base* self, char p_value)
@@ -2031,6 +2060,19 @@ void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Add_0(t4_System_
 	l_index_0 = m2_System_Array_get_Length_0(self->f__items_1);
 	m2_System_Array_Resize_Int32__0(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) + 1);
 	((int32_t*)(((char*)self->f__items_1) + ArrayOffset))[l_index_0] = p_item;
+}
+
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_AddRange_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t* p_collection)
+{
+	int32_t l_index_0;
+	l_index_0 = m2_System_Array_get_Length_0(self->f__items_1);
+	m2_System_Array_Resize_Int32__0(&self->f__items_1, m2_System_Array_get_Length_0(self->f__items_1) + m2_System_Array_get_Length_0(p_collection));
+	m2_System_Array_Copy_0(p_collection, 0, self->f__items_1, l_index_0, m2_System_Array_get_Length_0(p_collection));
+}
+
+void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_AddRange_1(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, t4_System_Collections_Generic_List_System_Int32_GENERIC* p_collection)
+{
+	m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_AddRange_0(self, p_collection->f__items_1);
 }
 
 void m4_t4_System_Collections_Generic_List_System_Int32_GENERIC_Remove_0(t4_System_Collections_Generic_List_System_Int32_GENERIC* self, int32_t p_item)

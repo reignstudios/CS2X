@@ -8,15 +8,17 @@ namespace PortableTestApp.Test
 		public static bool RunTest()
 		{
 			var valuesList = new List<int>();
-			valuesList.Add(1);
-			valuesList.Add(2);
-			valuesList.Add(3);
-			var valuesFromList = valuesList.ToArray();
+			valuesList.Add(4);
+			valuesList.Add(5);
+			valuesList.Add(6);
 
 			var values = new int[3]
 			{
 				1, 2, 3
 			};
+
+			valuesList.AddRange(values);
+			var valuesFromList = valuesList.ToArray();
 
 			var values2 = new int[3];
 			values2[0] = 3;

@@ -20,10 +20,7 @@ namespace System
 
 		public static unsafe void MemoryCopy(void* source, void* destination, ulong destinationSizeInBytes, ulong sourceBytesToCopy)
 		{
-			if (sourceBytesToCopy > destinationSizeInBytes)
-			{
-				//ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.sourceBytesToCopy);// TODO
-			}
+			if (sourceBytesToCopy > destinationSizeInBytes) throw new ArgumentOutOfRangeException();
 			memcpy(destination, source, (void*)sourceBytesToCopy);
 		}
 	}

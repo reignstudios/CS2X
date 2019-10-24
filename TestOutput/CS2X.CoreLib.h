@@ -1575,6 +1575,8 @@ void m2_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t
 {
 	if (p_sourceBytesToCopy > p_destinationSizeInBytes)
 	{
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_0(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0));
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
 	memcpy(p_destination, p_source, (void*)p_sourceBytesToCopy);
 }
