@@ -218,6 +218,16 @@ namespace System.Text
 		#endregion
 
 		#region GetString
+		public unsafe string GetString(byte* bytes, int byteCount)
+		{
+			uint codePage = (uint)CodePage;
+			int bufferSize = MultiByteToWideChar(codePage, 0, bytes, byteCount, null, 0);
+			char* buffer = stackalloc char[bufferSize + 1];
+			MultiByteToWideChar(codePage, 0, bytes, byteCount, buffer, bufferSize);
+			buffer[bufferSize] = '\0';
+			return new string(buffer);
+		}
+
 		public string GetString(byte[] bytes)
 		{
 			return GetString(bytes, 0, bytes.Length);
@@ -227,11 +237,7 @@ namespace System.Text
 		{
 			fixed (byte* bytesPtr = bytes)
 			{
-				uint codePage = (uint)CodePage;
-				int bufferSize = MultiByteToWideChar(codePage, 0, bytesPtr + index, count, null, 0);
-				char* buffer = stackalloc char[bufferSize];
-				MultiByteToWideChar(codePage, 0, bytesPtr + index, count, buffer, bufferSize);
-				return new string(buffer);
+				return GetString(bytesPtr + index, count);
 			}
 		}
 		#endregion

@@ -1748,7 +1748,7 @@ char m3_PortableTestApp_Test_StringEncoding_RunTest_0()
 	uint8_t* l_data_0;
 	t2_System_String* l_result_1;
 	l_data_0 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, StringLiteral_50);
-	l_result_1 = m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__UTF8_k__BackingField, l_data_0);
+	l_result_1 = m3_System_Text_Encoding_GetString_1(f_System_Text_Encoding__UTF8_k__BackingField, l_data_0);
 	return m2_System_String_Equals_0(l_result_1, StringLiteral_50);
 }
 

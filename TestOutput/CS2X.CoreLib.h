@@ -1207,6 +1207,7 @@ void m2_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t
 void m2_System_Console_Write_0(t2_System_String* p_s);
 void m2_System_Console_WriteLine_0(t2_System_String* p_s);
 void m2_System_Console_WriteLine_1();
+t2_System_String* m2_System_Console_ReadLine_0();
 intptr_t m2_intptr_t__ctor_0(int32_t p_value);
 intptr_t m2_intptr_t__ctor_1(int64_t p_value);
 intptr_t m2_intptr_t__ctor_2(void* p_value);
@@ -1333,8 +1334,9 @@ int32_t m3_System_Text_Encoding_GetChars_0(t3_System_Text_Encoding* self, uint8_
 char16_t* m3_System_Text_Encoding_GetChars_1(t3_System_Text_Encoding* self, uint8_t* p_bytes);
 char16_t* m3_System_Text_Encoding_GetChars_2(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
 int32_t m3_System_Text_Encoding_GetChars_3(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_byteIndex, int32_t p_byteCount, char16_t* p_chars, int32_t p_charIndex);
-t2_System_String* m3_System_Text_Encoding_GetString_0(t3_System_Text_Encoding* self, uint8_t* p_bytes);
-t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
+t2_System_String* m3_System_Text_Encoding_GetString_0(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_byteCount);
+t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* self, uint8_t* p_bytes);
+t2_System_String* m3_System_Text_Encoding_GetString_2(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count);
 t3_System_Text_Encoding* m3_System_Text_Encoding__ctor_0(t3_System_Text_Encoding* self);
 t3_System_Text_StandardEncoding* m3_System_Text_StandardEncoding__ctor_0(t3_System_Text_StandardEncoding* self);
 t3_System_Text_StringBuilder* m3_System_Text_StringBuilder__ctor_0(t3_System_Text_StringBuilder* self);
@@ -1579,27 +1581,20 @@ void m2_System_Buffer_MemoryCopy_1(void* p_source, void* p_destination, uint64_t
 
 void m2_System_Console_Write_0(t2_System_String* p_s)
 {
-	char16_t* l_printBuff_0;
-	int32_t l_count_1;
-	char16_t* l_ptr_2;
-	l_printBuff_0 = alloca(sizeof(char16_t) * (2));
-	l_printBuff_0[1] = 0x0000;
-	l_count_1 = 0;
-	l_ptr_2 = &p_s->f__firstChar_1;
+	uint8_t* l_printBuff_0;
+	char16_t* l_ptr_1;
+	l_printBuff_0 = alloca(sizeof(uint8_t) * (m2_System_String_get_Length_0(p_s) + 1));
+	l_printBuff_0[m2_System_String_get_Length_0(p_s)] = 0;
+	l_ptr_1 = &p_s->f__firstChar_1;
 	{
-		char16_t* l_ptrOffset_3;
-		l_ptrOffset_3 = l_ptr_2;
-		while (*l_ptrOffset_3 != 0x0000)
+		char16_t* l_ptrOffset_2;
+		int32_t l_i_3;
+		l_ptrOffset_2 = l_ptr_1;
+		for (l_i_3 = 0; l_i_3 != m2_System_String_get_Length_0(p_s); ++l_i_3)
 		{
-			if (l_count_1 == m2_System_String_get_Length_0(p_s))
-			{
-				break;
-			}
-			l_printBuff_0[0] = *l_ptrOffset_3;
-			wprintf(l_printBuff_0);
-			++l_ptrOffset_3;
-			++l_count_1;
+			l_printBuff_0[l_i_3] = (uint8_t)l_ptrOffset_2[l_i_3];
 		}
+		printf(l_printBuff_0);
 	}
 }
 
@@ -1611,6 +1606,17 @@ void m2_System_Console_WriteLine_0(t2_System_String* p_s)
 void m2_System_Console_WriteLine_1()
 {
 	m2_System_Console_Write_0(m2_System_Environment_get_NewLine_0());
+}
+
+t2_System_String* m2_System_Console_ReadLine_0()
+{
+	uint8_t* l_str_0;
+	l_str_0 = alloca(sizeof(uint8_t) * (1024));
+	if (gets(l_str_0) == 0)
+	{
+		return f_System_String_Empty;
+	}
+	return m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__ASCII_k__BackingField, l_str_0, (int32_t)strlen(l_str_0));
 }
 
 intptr_t m2_intptr_t__ctor_0(int32_t p_value)
@@ -2690,24 +2696,30 @@ int32_t m3_System_Text_Encoding_GetChars_3(t3_System_Text_Encoding* self, uint8_
 	}
 }
 
-t2_System_String* m3_System_Text_Encoding_GetString_0(t3_System_Text_Encoding* self, uint8_t* p_bytes)
+t2_System_String* m3_System_Text_Encoding_GetString_0(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_byteCount)
 {
-	return m3_System_Text_Encoding_GetString_1(self, p_bytes, 0, m2_System_Array_get_Length_0(p_bytes));
+	uint32_t l_codePage_0;
+	int32_t l_bufferSize_1;
+	char16_t* l_buffer_2;
+	l_codePage_0 = (uint32_t)self->f__CodePage_k__BackingField_1;
+	l_bufferSize_1 = MultiByteToWideChar(l_codePage_0, 0, p_bytes, p_byteCount, 0, 0);
+	l_buffer_2 = alloca(sizeof(char16_t) * (l_bufferSize_1 + 1));
+	MultiByteToWideChar(l_codePage_0, 0, p_bytes, p_byteCount, l_buffer_2, l_bufferSize_1);
+	l_buffer_2[l_bufferSize_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_buffer_2);
 }
 
-t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
+t2_System_String* m3_System_Text_Encoding_GetString_1(t3_System_Text_Encoding* self, uint8_t* p_bytes)
+{
+	return m3_System_Text_Encoding_GetString_2(self, p_bytes, 0, m2_System_Array_get_Length_0(p_bytes));
+}
+
+t2_System_String* m3_System_Text_Encoding_GetString_2(t3_System_Text_Encoding* self, uint8_t* p_bytes, int32_t p_index, int32_t p_count)
 {
 	uint8_t* l_bytesPtr_0;
 	l_bytesPtr_0 = (uint8_t*)(((char*)p_bytes) + ArrayOffset);
 	{
-		uint32_t l_codePage_1;
-		int32_t l_bufferSize_2;
-		char16_t* l_buffer_3;
-		l_codePage_1 = (uint32_t)self->f__CodePage_k__BackingField_1;
-		l_bufferSize_2 = MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, 0, 0);
-		l_buffer_3 = alloca(sizeof(char16_t) * (l_bufferSize_2));
-		MultiByteToWideChar(l_codePage_1, 0, l_bytesPtr_0 + p_index, p_count, l_buffer_3, l_bufferSize_2);
-		return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_buffer_3);
+		return m3_System_Text_Encoding_GetString_0(self, l_bytesPtr_0 + p_index, p_count);
 	}
 }
 
