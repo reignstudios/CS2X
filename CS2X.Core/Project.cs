@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using CS2X.Core.SyntaxValidation;
 
 namespace CS2X.Core
 {
@@ -43,9 +44,6 @@ namespace CS2X.Core
 			isCoreLib = roslynProject.AllProjectReferences.Count == 0;
 			
 			// validate compiler options
-			//var parseOptions = (CSharpParseOptions)roslynProject.ParseOptions;
-			//if (parseOptions.LanguageVersion != LanguageVersion.CSharp3) throw new Exception("Project lang version must be 3.0: " + roslynProject.FilePath);
-
 			var compilationOptions = roslynProject.CompilationOptions;
 			if (compilationOptions.Platform != Platform.AnyCpu) throw new Exception("Project platform must be AnyCpu: " + roslynProject.FilePath);
 
@@ -63,6 +61,14 @@ namespace CS2X.Core
 		{
 			if (isParsed) return;
 			isParsed = true;
+
+			// validate syntax rules
+			/*var options = new ProjectAnalyzer.Options()
+			{
+				breakOnError = true
+			};
+			var analyzer = new ProjectAnalyzer(options);
+			if (!await analyzer.Analyze(roslynProject)) throw new Exception("Failed to Analyze project: " + roslynProject.FilePath);*/
 
 			// gather references
 			var references = new List<Project>();
