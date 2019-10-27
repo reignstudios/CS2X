@@ -1,13 +1,12 @@
 ﻿using RoslynProject = Microsoft.CodeAnalysis.Project;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace CS2X.Analyzer.SyntaxValidation
 {
@@ -36,6 +35,8 @@ namespace CS2X.Analyzer.SyntaxValidation
 		private readonly Options options;
 		private readonly SpecialTypes specialTypes;
 
+		private const string boxingErrorMessage = "Runtime does not support boxing";
+
 		public delegate void SyntaxErrorCallbackMethod(SyntaxError error);
 		public event SyntaxErrorCallbackMethod SyntaxErrorCallback;
 
@@ -60,18 +61,33 @@ namespace CS2X.Analyzer.SyntaxValidation
 
 		public async Task<bool> Analyze(RoslynProject project)
 		{
+			bool success = true;
 			foreach (var document in project.Documents)
 			{
 				var syntaxTree = await document.GetSyntaxTreeAsync();
-				if (!Analyze(syntaxTree) && options.breakOnError) return false;
+				if (!Analyze(syntaxTree))
+				{
+					if (options.breakOnError) return false;
+					success = false;
+				}
 			}
-			return true;
+			return success;
 		}
 
 		public bool Analyze(SyntaxTree tree)
 		{
 			var root = tree.GetRoot();
-			return Analyze(root);
+			var nodes = root.DescendantNodes();
+			bool success = true;
+			foreach (var node in nodes)
+			{
+				if (!Analyze(node))
+				{
+					if (options.breakOnError) return false;
+					success = false;
+				}
+			}
+			return success;
 		}
 
 		public bool Analyze(SyntaxNode syntax)
@@ -79,9 +95,10 @@ namespace CS2X.Analyzer.SyntaxValidation
 			var kind = syntax.Kind();
 			switch (kind)
 			{
-				// break and analyze childeren
+				// assume valid
 				case SyntaxKind.CompilationUnit:
 				case SyntaxKind.NamespaceDeclaration:
+				case SyntaxKind.InterfaceDeclaration:
 				case SyntaxKind.EnumDeclaration:
 				case SyntaxKind.EnumMemberDeclaration:
 				case SyntaxKind.ConstructorDeclaration:
@@ -96,7 +113,6 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.VariableDeclarator:
 				case SyntaxKind.SimpleMemberAccessExpression:
 				case SyntaxKind.ArgumentList:
-				case SyntaxKind.Argument:
 				case SyntaxKind.CharacterLiteralExpression:
 				case SyntaxKind.StringLiteralExpression:
 				case SyntaxKind.NumericLiteralExpression:
@@ -137,7 +153,6 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.ReturnStatement:
 				case SyntaxKind.BreakStatement:
 				case SyntaxKind.ContinueStatement:
-				case SyntaxKind.EqualsValueClause:
 				case SyntaxKind.ObjectCreationExpression:
 				case SyntaxKind.ArrayCreationExpression:
 				case SyntaxKind.StackAllocArrayCreationExpression:
@@ -146,14 +161,12 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.PointerIndirectionExpression:
 				case SyntaxKind.PointerMemberAccessExpression:
 				case SyntaxKind.AddressOfExpression:
-				case SyntaxKind.SimpleAssignmentExpression:
 				case SyntaxKind.GenericName:
 				case SyntaxKind.TypeArgumentList:
 				case SyntaxKind.TypeParameterList:
 				case SyntaxKind.TypeParameter:
 				case SyntaxKind.ElementAccessExpression:
 				case SyntaxKind.BracketedArgumentList:
-				case SyntaxKind.CastExpression:
 				case SyntaxKind.ThisExpression:
 				case SyntaxKind.BaseExpression:
 				case SyntaxKind.SizeOfExpression:
@@ -187,28 +200,37 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.ConditionalExpression:
 				case SyntaxKind.FieldDeclaration:
 				case SyntaxKind.OmittedArraySizeExpression:
-					break;
-
-				// skip and assume valid
+				case SyntaxKind.ThrowExpression:
+				case SyntaxKind.SimpleBaseType:
 				case SyntaxKind.UsingDirective:
 				case SyntaxKind.IdentifierName:
 				case SyntaxKind.QualifiedName:
 				case SyntaxKind.BaseList:
 				case SyntaxKind.AttributeList:
+				case SyntaxKind.AttributeArgumentList:
+				case SyntaxKind.AttributeArgument:
+				case SyntaxKind.Attribute:
+				case SyntaxKind.AttributeTargetSpecifier:
+				case SyntaxKind.AliasQualifiedName:
+				case SyntaxKind.PredefinedType:
+				case SyntaxKind.IncompleteMember:
 					return true;
 
 				// further analysis needed
 				case SyntaxKind.ClassDeclaration: return Analyze((ClassDeclarationSyntax)syntax);
 				case SyntaxKind.StructDeclaration: return Analyze((StructDeclarationSyntax)syntax);
-				case SyntaxKind.InterfaceDeclaration: return Analyze((InterfaceDeclarationSyntax)syntax);
 				case SyntaxKind.MethodDeclaration: return Analyze((MethodDeclarationSyntax)syntax);
+				case SyntaxKind.PropertyDeclaration: return Analyze((PropertyDeclarationSyntax)syntax);
 				case SyntaxKind.DelegateDeclaration: return Analyze((DelegateDeclarationSyntax)syntax);
 				case SyntaxKind.ParameterList: return Analyze((ParameterListSyntax)syntax);
 				case SyntaxKind.VariableDeclaration: return Analyze((VariableDeclarationSyntax)syntax);
-				case SyntaxKind.PropertyDeclaration: return Analyze((PropertyDeclarationSyntax)syntax);
-				case SyntaxKind.PredefinedType: return Analyze((PredefinedTypeSyntax)syntax);
 				case SyntaxKind.ArrayRankSpecifier: return Analyze((ArrayRankSpecifierSyntax)syntax);
 				case SyntaxKind.UsingStatement: return Analyze((UsingStatementSyntax)syntax);
+				case SyntaxKind.NameEquals: return Analyze((NameEqualsSyntax)syntax);
+				case SyntaxKind.EqualsValueClause: return Analyze((EqualsValueClauseSyntax)syntax);
+				case SyntaxKind.Argument: return Analyze((ArgumentSyntax)syntax);
+				case SyntaxKind.SimpleAssignmentExpression: return Analyze((AssignmentExpressionSyntax)syntax);
+				case SyntaxKind.CastExpression: return Analyze((CastExpressionSyntax)syntax);
 
 				case SyntaxKind.ObjectInitializerExpression:
 				case SyntaxKind.ArrayInitializerExpression:
@@ -219,123 +241,89 @@ namespace CS2X.Analyzer.SyntaxValidation
 					FireSyntaxErrorCallback(syntax, "Unsupported SyntaxKind: " + kind.ToString());
 					return false;
 			}
-
-			// analyze child nodes
-			return Analyze(syntax.ChildNodes());
-		}
-
-		public bool Analyze(IEnumerable<SyntaxNode> syntaxNodes)
-		{
-			if (!options.scanChilderen) return true;
-
-			// analyze child nodes
-			bool success = true;
-			foreach (var node in syntaxNodes)
-			{
-				if (!Analyze(node))
-				{
-					if (options.breakOnError) return false;
-					success = false;
-				}
-			}
-
-			return success;
 		}
 
 		public bool Analyze(ClassDeclarationSyntax syntax)
 		{
-			bool success = true;
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			var type = semanticModel.GetDeclaredSymbol(syntax);
-			if (type.Interfaces.Contains(specialTypes.ienumeratorT) || type.Interfaces.Contains(specialTypes.ienumerator))
+			if (type.Interfaces.Any(x => x.OriginalDefinition.Equals(specialTypes.ienumeratorT)) || type.Interfaces.Any(x => x.OriginalDefinition.Equals(specialTypes.ienumerator)))
 			{
 				FireSyntaxErrorCallback(syntax, "Only structs can implement IEnumerator");
-				if (options.breakOnError) return false;
-				success = false;
+				return false;
 			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
 		}
 
 		public bool Analyze(StructDeclarationSyntax syntax)
 		{
-			bool success = true;
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			var type = semanticModel.GetDeclaredSymbol(syntax);
 			if (type.Interfaces.Contains(specialTypes.ienumerableT) || type.Interfaces.Contains(specialTypes.ienumerable))
 			{
 				FireSyntaxErrorCallback(syntax, "Only classes can implement IEnumerable");
-				if (options.breakOnError) return false;
-				success = false;
+				return false;
 			}
-			return Analyze(syntax.ChildNodes()) && success;
-		}
-
-		public bool Analyze(InterfaceDeclarationSyntax syntax)
-		{
-			bool success = true;
-			var childeren = syntax.ChildNodes();
-			foreach (var child in childeren)
-			{
-				var kind = child.Kind();
-				if (kind == SyntaxKind.MethodDeclaration)
-				{
-					var method = (MethodDeclarationSyntax)child;
-					if (method.Body != null)
-					{
-						FireSyntaxErrorCallback(syntax, "Method cannot have a body");
-						if (options.breakOnError) return false;
-						success = false;
-					}
-				}
-				else if (kind == SyntaxKind.PropertyDeclaration)
-				{
-					var property = (PropertyDeclarationSyntax)child;
-					if (property.ExpressionBody != null || property.Initializer != null)
-					{
-						FireSyntaxErrorCallback(syntax, "Property cannot have a body");
-						if (options.breakOnError) return false;
-						success = false;
-					}
-				}
-			}
-			return Analyze(childeren) && success;
+			return true;
 		}
 
 		public bool Analyze(MethodDeclarationSyntax syntax)
 		{
-			bool success = true;
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			var method = semanticModel.GetDeclaredSymbol(syntax);
+			if (method.ContainingType.TypeKind == TypeKind.Interface && syntax.Body != null)
+			{
+				FireSyntaxErrorCallback(syntax, "Interface method cannot have body");
+				return false;
+			}
 			if (method.ContainingType.TypeKind != TypeKind.Interface && !specialTypes.IgnoredSpecialGenericInterfaceMethod(method))
 			{
 				var returnType = semanticModel.GetTypeInfo(syntax.ReturnType).Type;
 				if (returnType != null && returnType.TypeKind == TypeKind.Interface)
 				{
 					FireSyntaxErrorCallback(syntax, "Return type cannot be interface");
-					if (options.breakOnError) return false;
-					success = false;
+					return false;
 				}
 			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
+		}
+
+		public bool Analyze(PropertyDeclarationSyntax syntax)
+		{
+			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+			var property = semanticModel.GetDeclaredSymbol(syntax);
+			if
+			(
+				property.ContainingType.TypeKind == TypeKind.Interface &&
+				(syntax.AccessorList != null && syntax.AccessorList.Accessors.Any(x => x.Body != null) || syntax.ExpressionBody != null || syntax.Initializer != null)
+			)
+			{
+				FireSyntaxErrorCallback(syntax, "Interface property cannot have 'get' or 'set' body");
+				return false;
+			}
+			var type = semanticModel.GetTypeInfo(syntax.Type).Type;
+			if (type != null && type.TypeKind == TypeKind.Interface)
+			{
+				FireSyntaxErrorCallback(syntax, "Property type cannot be interface");
+				return false;
+			}
+			return true;
 		}
 
 		public bool Analyze(DelegateDeclarationSyntax syntax)
 		{
-			bool success = true;
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			var returnType = semanticModel.GetTypeInfo(syntax.ReturnType).Type;
 			if (returnType != null && returnType.TypeKind == TypeKind.Interface)
 			{
 				FireSyntaxErrorCallback(syntax, "Return type cannot be interface");
-				if (options.breakOnError) return false;
-				success = false;
+				return false;
 			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
 		}
 
 		public bool Analyze(ParameterListSyntax syntax)
 		{
-			bool success = true;
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			foreach (var parameter in syntax.Parameters)
 			{
@@ -343,91 +331,141 @@ namespace CS2X.Analyzer.SyntaxValidation
 				if (type != null && type.TypeKind == TypeKind.Interface)
 				{
 					FireSyntaxErrorCallback(syntax, "Type cannot be interface");
-					if (options.breakOnError) return false;
-					success = false;
+					return false;
 				}
 			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
 		}
 
 		public bool Analyze(VariableDeclarationSyntax syntax)
 		{
-			bool success = true;
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			var type = semanticModel.GetTypeInfo(syntax.Type).Type;
 			if (type != null && type.TypeKind == TypeKind.Interface)
 			{
 				FireSyntaxErrorCallback(syntax, "Type cannot be interface");
-				if (options.breakOnError) return false;
-				success = false;
+				return false;
 			}
-			return Analyze(syntax.ChildNodes()) && success;
-		}
-
-		public bool Analyze(PropertyDeclarationSyntax syntax)
-		{
-			bool success = true;
-			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
-			var type = semanticModel.GetTypeInfo(syntax.Type).Type;
-			if (type != null && type.TypeKind == TypeKind.Interface)
-			{
-				FireSyntaxErrorCallback(syntax, "Property type cannot be interface");
-				if (options.breakOnError) return false;
-				success = false;
-			}
-			return Analyze(syntax.ChildNodes()) && success;
-		}
-
-		public bool Analyze(PredefinedTypeSyntax syntax)
-		{
-			bool success = true;
-			if (syntax.Keyword.ValueText == "decimal")
-			{
-				FireSyntaxErrorCallback(syntax, "Decimal types not supported");
-				if (options.breakOnError) return false;
-				success = false;
-			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
 		}
 
 		public bool Analyze(ArrayRankSpecifierSyntax syntax)
 		{
-			bool success = true;
 			if (syntax.Rank != 1)
 			{
 				FireSyntaxErrorCallback(syntax, "Multi-rank arrays not supported supported");
-				if (options.breakOnError) return false;
-				success = false;
+				return false;
 			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
 		}
 
 		public bool Analyze(InitializerExpressionSyntax syntax)
 		{
-			bool success = false;
 			if (syntax.Parent is ObjectCreationExpressionSyntax || syntax.Parent is ArrayCreationExpressionSyntax)
 			{
-				success = syntax.Parent.Parent is EqualsValueClauseSyntax;
+				if (!(syntax.Parent.Parent is EqualsValueClauseSyntax))
+				{
+					FireSyntaxErrorCallback(syntax, "Initializers only supported after 'EqualsValueClause' contexts");
+					return false;
+				}
 			}
-
-			if (!success)
-			{
-				FireSyntaxErrorCallback(syntax, "Initializers only supported after 'EqualsValueClause' contexts");
-				if (options.breakOnError) return false;
-			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
 		}
 
 		public bool Analyze(UsingStatementSyntax syntax)
 		{
-			bool success = true;
 			if (syntax.Expression != null)
 			{
 				FireSyntaxErrorCallback(syntax, "Multi-rank arrays not supported supported");
-				if (options.breakOnError) return false;
-				success = false;
+				return false;
 			}
-			return Analyze(syntax.ChildNodes()) && success;
+			return true;
+		}
+
+		public bool Analyze(NameEqualsSyntax syntax)
+		{
+			if (!(syntax.Parent is AttributeArgumentSyntax))
+			{
+				FireSyntaxErrorCallback(syntax, "You cannot set type elements in this mannor");
+				return false;
+			}
+			return true;
+		}
+
+		public bool Analyze(EqualsValueClauseSyntax syntax)
+		{
+			return ValidateBoxing(syntax, syntax.Value);
+		}
+
+		public bool Analyze(ArgumentSyntax syntax)
+		{
+			return ValidateBoxing(syntax, syntax.Expression);
+		}
+
+		public bool Analyze(AssignmentExpressionSyntax syntax)
+		{
+			return ValidateBoxing(syntax, syntax.Left, syntax.Right);
+		}
+
+		public bool Analyze(CastExpressionSyntax syntax)
+		{
+			return ValidateBoxing(syntax, syntax.Type, syntax.Expression);
+		}
+
+		private bool ValidateBoxing(SyntaxNode syntax, SyntaxNode right)
+		{
+			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+			var op = semanticModel.GetOperation(syntax);
+			if (op != null && op.Children != null && op.Children.Count() != 0)
+			{
+				var first = op.Children.First();
+				if (first.Kind == OperationKind.Conversion)
+				{
+					var conversionOp = (IConversionOperation)op.Children.First();
+					var leftType = conversionOp.Type;
+					var rightType = semanticModel.GetTypeInfo(right).Type;
+					if
+					(
+						(leftType.SpecialType == SpecialType.System_Object && rightType.IsValueType) ||
+						(leftType.IsValueType && rightType.SpecialType == SpecialType.System_Object)
+					)
+					{
+						if (!conversionOp.Conversion.IsUserDefined)
+						{
+							FireSyntaxErrorCallback(syntax, boxingErrorMessage);
+							return false;
+						}
+					}
+				}
+			}
+			return true;
+		}
+
+		private bool ValidateBoxing(SyntaxNode syntax, SyntaxNode left, SyntaxNode right)
+		{
+			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+			var conversion = semanticModel.GetConversion(syntax);
+			if (conversion.IsBoxing || conversion.IsUnboxing)
+			{
+				FireSyntaxErrorCallback(syntax, boxingErrorMessage);
+				return false;
+			}
+
+			var leftType = semanticModel.GetTypeInfo(left).Type;
+			var rightType = semanticModel.GetTypeInfo(right).Type;
+			if
+			(
+				(leftType.SpecialType == SpecialType.System_Object && rightType.IsValueType) ||
+				(leftType.IsValueType && rightType.SpecialType == SpecialType.System_Object)
+			)
+			{
+				if (!conversion.IsUserDefined)
+				{
+					FireSyntaxErrorCallback(syntax, boxingErrorMessage);
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 }

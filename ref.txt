@@ -33,3 +33,6 @@ To uninstall all packaged for clean updates
 using Microsoft.CodeAnalysis.FindSymbols;
 SymbolFinder.FindReferencesAsync(...)
 Inherit from SymbolVisitor<ITypeSymbol> (just a helper class)
+
+<<< Test for special syntax rules >>>
+SyntaxFacts

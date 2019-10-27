@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetRuntime", "DotNetRuntime\DotNetRuntime.csproj", "{0B52FE02-2C49-4024-A4A5-0C02CE0FBEAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetRuntime", "DotNetRuntime\DotNetRuntime.csproj", "{0B52FE02-2C49-4024-A4A5-0C02CE0FBEAA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS2X.CoreLib", "..\CS2X.CoreLib\CS2X.CoreLib.csproj", "{58F06A61-ECFB-4003-9610-A708CC48330A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortableTestApp", "..\PortableTestApp\PortableTestApp.csproj", "{57443B64-66AD-41C4-BE42-258E64BC06E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{0B52FE02-2C49-4024-A4A5-0C02CE0FBEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B52FE02-2C49-4024-A4A5-0C02CE0FBEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B52FE02-2C49-4024-A4A5-0C02CE0FBEAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58F06A61-ECFB-4003-9610-A708CC48330A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58F06A61-ECFB-4003-9610-A708CC48330A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58F06A61-ECFB-4003-9610-A708CC48330A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58F06A61-ECFB-4003-9610-A708CC48330A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57443B64-66AD-41C4-BE42-258E64BC06E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57443B64-66AD-41C4-BE42-258E64BC06E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57443B64-66AD-41C4-BE42-258E64BC06E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57443B64-66AD-41C4-BE42-258E64BC06E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
