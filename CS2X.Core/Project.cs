@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
-using CS2X.Core.SyntaxValidation;
+using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core
 {
@@ -69,7 +69,8 @@ namespace CS2X.Core
 			var options = new ProjectAnalyzer.Options()
 			{
 				breakOnError = false,
-				writeSyntaxSuffix = true
+				writeSyntaxSuffix = true,
+				scanChilderen = true
 			};
 			var analyzer = new ProjectAnalyzer(compilation, options);
 			if (!await analyzer.Analyze(roslynProject)) throw new Exception("Failed to Analyze project: " + roslynProject.FilePath);

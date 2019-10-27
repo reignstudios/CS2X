@@ -6,7 +6,8 @@ namespace DotNetRuntime
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			var i = new int[] { 2 };
+			Console.WriteLine("Hello World!" + new int[] { 3 });
 		}
 	}
 }

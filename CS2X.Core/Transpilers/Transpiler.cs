@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using CS2X.Core.SyntaxValidation;
+using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core.Transpilers
 {

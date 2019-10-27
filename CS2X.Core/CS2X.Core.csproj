@@ -16,4 +16,8 @@
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CS2X.Analyzer\CS2X.Analyzer.csproj" />
+  </ItemGroup>
+
 </Project>

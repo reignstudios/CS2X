@@ -1,4 +1,4 @@
-﻿/*using RoslynProject = Microsoft.CodeAnalysis.Project;
+﻿using RoslynProject = Microsoft.CodeAnalysis.Project;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CS2X.Core.SyntaxValidation
+namespace CS2X.Analyzer.SyntaxValidation
 {
 	public class SyntaxError
 	{
@@ -29,9 +29,10 @@ namespace CS2X.Core.SyntaxValidation
 		{
 			public bool breakOnError;
 			public bool writeSyntaxSuffix;
+			public bool scanChilderen;
 		}
 
-		private readonly CSharpCompilation compilation;
+		private CSharpCompilation compilation;
 		private readonly Options options;
 		private readonly SpecialTypes specialTypes;
 
@@ -50,6 +51,11 @@ namespace CS2X.Core.SyntaxValidation
 			this.compilation = compilation;
 			this.options = options;
 			specialTypes = new SpecialTypes(compilation);
+		}
+
+		public void SetCompilation(CSharpCompilation compilation)
+		{
+			this.compilation = compilation;
 		}
 
 		public async Task<bool> Analyze(RoslynProject project)
@@ -220,6 +226,8 @@ namespace CS2X.Core.SyntaxValidation
 
 		public bool Analyze(IEnumerable<SyntaxNode> syntaxNodes)
 		{
+			if (!options.scanChilderen) return true;
+
 			// analyze child nodes
 			bool success = true;
 			foreach (var node in syntaxNodes)
@@ -423,4 +431,3 @@ namespace CS2X.Core.SyntaxValidation
 		}
 	}
 }
-*/
