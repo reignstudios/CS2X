@@ -201,8 +201,8 @@ namespace CS2X.Core.Transpilers
 
 		public override void Transpile(string outputPath)
 		{
-			stringTypeName = GetTypeFullName(stringType);
-			stringRuntimeTypeName = GetRuntimeTypeObjFullName(stringType);
+			stringTypeName = GetTypeFullName(specialTypes.stringType);
+			stringRuntimeTypeName = GetRuntimeTypeObjFullName(specialTypes.stringType);
 
 			allStatementLocals = new Dictionary<ITypeSymbol, string>();
 			genericMethods = new HashSet<IMethodSymbol>();
@@ -473,7 +473,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Helper runtime methods */");
 				writer.WriteLine("/* =============================== */");
-				string runtimeTypeName = GetTypeFullName(runtimeType);
+				string runtimeTypeName = GetTypeFullName(specialTypes.runtimeType);
 
 				// alloc GC type and set runtime ptr helper
 				writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType, void* finalizerFuncPtr)");
@@ -521,7 +521,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine('}');
 
 				// 'is' type helper method
-				var runtimeTypeBaseTypeField = FindAutoPropertyFieldByName(typeType, "BaseType");
+				var runtimeTypeBaseTypeField = FindAutoPropertyFieldByName(specialTypes.typeType, "BaseType");
 				writer.WriteLine();
 				writer.WriteLine($"char CS2X_IsType({runtimeTypeName}* runtimeType, {runtimeTypeName}* isRuntimeType)");
 				writer.WriteLine('{');
@@ -539,7 +539,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine('}');
 
 				// 'up-cast' type helper method
-				string objectTypeName = GetTypeFullName(objectType);
+				string objectTypeName = GetTypeFullName(specialTypes.objectType);
 				writer.WriteLine();
 				writer.WriteLine($"{objectTypeName}* CS2X_TestUpCast({objectTypeName}* self, {runtimeTypeName}* isRuntimeType)");
 				writer.WriteLine('{');
@@ -808,11 +808,11 @@ namespace CS2X.Core.Transpilers
 				else
 				{
 					// create array type and make sure its runtime type is tracked
-					var arrayType = project.compilation.CreateArrayTypeSymbol(stringType);
+					var arrayType = project.compilation.CreateArrayTypeSymbol(specialTypes.stringType);
 					TrackArrayType(arrayType);
 
 					// GC allocate array and copy args
-					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgs = {GetNewArrayMethod(stringType)}(sizeof({GetTypeFullName(stringType)}), argc, &{GetRuntimeTypeObjFullName(arrayType)});");
+					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgs = {GetNewArrayMethod(specialTypes.stringType)}(sizeof({GetTypeFullName(specialTypes.stringType)}), argc, &{GetRuntimeTypeObjFullName(arrayType)});");
 					writer.WriteLinePrefix("for (i = 0; i != argc; ++i)");
 					writer.WriteLinePrefix('{');
 					writer.AddTab();
@@ -820,9 +820,9 @@ namespace CS2X.Core.Transpilers
 					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgsRuntimeOffset;");
 					writer.WriteLinePrefix("managedArgsRuntimeOffset = ((char*)managedArgs) + ArrayOffset;");
 					writer.WriteLinePrefix("managedArgLength = strlen(argv[i]);");
-					var allocMethod = FindMethodByName(stringType, "FastAllocateString");
+					var allocMethod = FindMethodByName(specialTypes.stringType, "FastAllocateString");
 					writer.WriteLinePrefix($"managedArgsRuntimeOffset[i] = {GetMethodFullName(allocMethod)}(managedArgLength);");
-					var firstCharField = FindFieldByName(stringType, "_firstChar");
+					var firstCharField = FindFieldByName(specialTypes.stringType, "_firstChar");
 					writer.WriteLinePrefix($"for (i2 = 0; i2 != managedArgLength; ++i2) (&managedArgsRuntimeOffset[i]->{GetFieldFullName(firstCharField)})[i2] = (char16_t)argv[i][i2];");
 					writer.RemoveTab();
 					writer.WriteLinePrefix('}');
@@ -866,9 +866,9 @@ namespace CS2X.Core.Transpilers
 
 			// init runtime type objects
 			writer.WriteLinePrefix("/* Init runtime type objects */");
-			string baseTypeFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "BaseType"));
-			string nameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "Name"));
-			string fullNameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(typeType, "FullName"));
+			string baseTypeFieldName = GetFieldFullName(FindAutoPropertyFieldByName(specialTypes.typeType, "BaseType"));
+			string nameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(specialTypes.typeType, "Name"));
+			string fullNameFieldName = GetFieldFullName(FindAutoPropertyFieldByName(specialTypes.typeType, "FullName"));
 			foreach (var type in types)
 			{
 				if (type.SpecialType == SpecialType.System_Void) continue;
@@ -1123,7 +1123,7 @@ namespace CS2X.Core.Transpilers
 			writer.AddTab();
 
 			// runtime type pointer
-			writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)} runtimeType;");
+			writer.WriteLinePrefix($"{GetTypeFullName(specialTypes.runtimeType)} runtimeType;");
 
 			// array element size
 			if (type.Kind == SymbolKind.ArrayType) writer.WriteLinePrefix("size_t elementSize;");
@@ -1244,7 +1244,7 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine($"struct {GetTypeFullName(type)}");
 				writer.WriteLine('{');
 				writer.AddTab();
-				if (type.IsReferenceType) writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)}* CS2X_RuntimeType;");
+				if (type.IsReferenceType) writer.WriteLinePrefix($"{GetTypeFullName(specialTypes.runtimeType)}* CS2X_RuntimeType;");
 				foreach (var subType in objTypeChain)
 				{
 					foreach (var member in subType.GetMembers())
@@ -1280,7 +1280,7 @@ namespace CS2X.Core.Transpilers
 			if (method.ContainingType.IsGenericType && !IsResolvedGenericType(method.ContainingType)) return false;
 			if (method.IsAbstract) return false;
 			if (method.IsGenericMethod && !IsResolvedGenericMethod(method)) return false;
-			if (IgnoredSpecialGenericInterfaceMethod(method)) return false;
+			if (specialTypes.IgnoredSpecialGenericInterfaceMethod(method)) return false;
 
 			// extra generic validation
 			if (method.IsGenericMethod)
@@ -1565,7 +1565,7 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "GetType")
 								{
-									string typeName = GetTypeFullName(typeType);
+									string typeName = GetTypeFullName(specialTypes.typeType);
 									writer.WriteLinePrefix($"return ({typeName}*)self->CS2X_RuntimeType;");
 								}
 								else
@@ -1668,7 +1668,7 @@ namespace CS2X.Core.Transpilers
 								else if (method.Name == "GetElementSize")
 								{
 									string arrayParamName = GetParameterFullName(method.Parameters[0]);
-									string runtimeTypeName = GetTypeFullName(runtimeType);
+									string runtimeTypeName = GetTypeFullName(specialTypes.runtimeType);
 									writer.WriteLinePrefix($"return *(int32_t*)((char*){arrayParamName}->CS2X_RuntimeType + sizeof({runtimeTypeName}));");
 								}
 								else if (method.Name == "FastResize")
@@ -1676,7 +1676,7 @@ namespace CS2X.Core.Transpilers
 									string arrayParamName = GetParameterFullName(method.Parameters[0]);
 									string newLengthParamName = GetParameterFullName(method.Parameters[1]);
 									string elementSizeParamName = GetParameterFullName(method.Parameters[2]);
-									writer.WriteLinePrefix($"{GetTypeFullName(runtimeType)}* runtimeType = (*{arrayParamName})->CS2X_RuntimeType;");
+									writer.WriteLinePrefix($"{GetTypeFullName(specialTypes.runtimeType)}* runtimeType = (*{arrayParamName})->CS2X_RuntimeType;");
 									writer.WriteLinePrefix($"size_t oldSize = (size_t)(*((intptr_t*)(*{arrayParamName}) + 1));");
 									writer.WriteLinePrefix($"(*{arrayParamName}) = CS2X_GC_Resize((*{arrayParamName}), oldSize, (size_t)(ArrayOffset + ({elementSizeParamName} * {newLengthParamName})));");
 									writer.WriteLinePrefix($"(*{arrayParamName})->CS2X_RuntimeType = runtimeType;");
@@ -1789,7 +1789,7 @@ namespace CS2X.Core.Transpilers
 					}
 					else if (isDllImportMethod)
 					{
-						string objectTypeName = GetTypeFullName(objectType);
+						string objectTypeName = GetTypeFullName(specialTypes.objectType);
 						var dllNotFoundExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.DllNotFoundException");
 						var dllNotFoundExceptionTypeConstructor = FindDefaultConstructor(dllNotFoundExceptionType);
 						writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(dllNotFoundExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(dllNotFoundExceptionType)}), &{GetRuntimeTypeObjFullName(dllNotFoundExceptionType)}, 0));");
@@ -1818,10 +1818,10 @@ namespace CS2X.Core.Transpilers
 					WriteContrustorFieldInitializers(method);
 
 					// write multicast delegate implementation detail
-					if (method.ContainingType != null && method.ContainingType.BaseType != null && method.ContainingType.BaseType.Equals(multicastDelegateType))
+					if (method.ContainingType != null && method.ContainingType.BaseType != null && method.ContainingType.BaseType.Equals(specialTypes.multicastDelegateType))
 					{
-						var selfField = FindFieldByName(multicastDelegateType.BaseType, "_target");
-						var funcField = FindFieldByName(multicastDelegateType.BaseType, "_methodPtr");
+						var selfField = FindFieldByName(specialTypes.multicastDelegateType.BaseType, "_target");
+						var funcField = FindFieldByName(specialTypes.multicastDelegateType.BaseType, "_methodPtr");
 						writer.WriteLinePrefix($"self->{GetFieldFullName(selfField)} = {GetParameterFullName(method.Parameters[0])};");
 						writer.WriteLinePrefix($"self->{GetFieldFullName(funcField)} = {GetParameterFullName(method.Parameters[1])};");
 					}
@@ -1848,9 +1848,9 @@ namespace CS2X.Core.Transpilers
 						}
 					}
 
-					var selfField = FindFieldByName(multicastDelegateType.BaseType, "_target");
-					var funcField = FindFieldByName(multicastDelegateType.BaseType, "_methodPtr");
-					var nextField = FindFieldByName(multicastDelegateType, "_next");
+					var selfField = FindFieldByName(specialTypes.multicastDelegateType.BaseType, "_target");
+					var funcField = FindFieldByName(specialTypes.multicastDelegateType.BaseType, "_methodPtr");
+					var nextField = FindFieldByName(specialTypes.multicastDelegateType, "_next");
 					string selfFieldName = GetFieldFullName(selfField);
 					string funcFieldName = GetFieldFullName(funcField);
 					string nextFieldName = GetFieldFullName(nextField);
@@ -1867,7 +1867,7 @@ namespace CS2X.Core.Transpilers
 					if (!method.ReturnsVoid) writer.WriteLinePrefix(returnTypeName + " result;");
 					writer.WritePrefix($"if (self->{selfFieldName} != 0) ");
 					if (!method.ReturnsVoid) writer.Write("result = ");
-					writer.Write($"(({returnTypeName} ({callingConventionName}*)({GetTypeFullName(objectType)}*");
+					writer.Write($"(({returnTypeName} ({callingConventionName}*)({GetTypeFullName(specialTypes.objectType)}*");
 					if (method.Parameters.Length != 0) writer.Write(", ");
 					WriteParameterArgTypes();
 					writer.Write($"))self->{funcFieldName})(self->{selfFieldName}");
@@ -2275,13 +2275,13 @@ namespace CS2X.Core.Transpilers
 				}
 
 				// get array length method
-				var getLengthMethod = FindMethodByName(arrayType, "get_Length");
+				var getLengthMethod = FindMethodByName(specialTypes.arrayType, "get_Length");
 				getLengthMethod = ResolveMethod(getLengthMethod, method, semanticModel);
 
 				// write for statement
 				writer.WritePrefix("for (");
 				var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
-				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(getLengthMethod)}(({GetTypeFullName(arrayType)}*){identifierName}); ++{localIterator.name}");
+				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(getLengthMethod)}(({GetTypeFullName(specialTypes.arrayType)}*){identifierName}); ++{localIterator.name}");
 
 				// write statement
 				void WriteLocal()
@@ -2502,7 +2502,7 @@ namespace CS2X.Core.Transpilers
 					var type = ResolveType(c.Declaration.Type);
 					writer.WritePrefix();
 					if (c != first) writer.Write("else ");
-					writer.WriteLine($"if (CS2X_IsType((({GetTypeFullName(objectType)}*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &{GetRuntimeTypeObjFullName(type)})) /* catch */");
+					writer.WriteLine($"if (CS2X_IsType((({GetTypeFullName(specialTypes.objectType)}*)CS2X_ThreadExceptionObject)->CS2X_RuntimeType, &{GetRuntimeTypeObjFullName(type)})) /* catch */");
 				}
 				else
 				{
@@ -2958,7 +2958,7 @@ namespace CS2X.Core.Transpilers
 				var type = operation.Parent.Type;
 				var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
 				var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
-				var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
+				var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, specialTypes.objectType, intptrType);
 				writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}, 0), ");
 				if (!IsVirtualMethod(method))
 				{
@@ -3095,7 +3095,7 @@ namespace CS2X.Core.Transpilers
 				var type = operation.Type;
 				var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
 				var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
-				method = FindMethodBySignature(type, ".ctor", voidType, objectType, intptrType);
+				method = FindMethodBySignature(type, ".ctor", voidType, specialTypes.objectType, intptrType);
 				isDelegateCreation = true;
 			}
 			else
@@ -3349,10 +3349,10 @@ namespace CS2X.Core.Transpilers
 					writer.Write(')');
 					return;
 				}
-				else if (method.MethodKind == MethodKind.BuiltinOperator && method.ContainingType != null && multicastDelegateType.Equals(method.ContainingType.BaseType))
+				else if (method.MethodKind == MethodKind.BuiltinOperator && method.ContainingType != null && specialTypes.multicastDelegateType.Equals(method.ContainingType.BaseType))
 				{
-					if (expression.OperatorToken.ValueText == "+=") method = FindMethodByName(delegateType, "Combine");
-					else if (expression.OperatorToken.ValueText == "-=") method = FindMethodByName(delegateType, "Remove");
+					if (expression.OperatorToken.ValueText == "+=") method = FindMethodByName(specialTypes.delegateType, "Combine");
+					else if (expression.OperatorToken.ValueText == "-=") method = FindMethodByName(specialTypes.delegateType, "Remove");
 					else throw new NotSupportedException("Unsupported assignment method for delegate: " + method.FullName());
 
 					bool isBindingToVirtualMethod = false;
@@ -3467,7 +3467,7 @@ namespace CS2X.Core.Transpilers
 				if (callerType.TypeKind == TypeKind.Enum && !method.IsExtensionMethod) throw new NotImplementedException("Non extension Enum method not supported: " + expression.ToFullString());
 				if (callerType.IsValueType)
 				{
-					if (method.ContainingType.Equals(objectType)) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
+					if (method.ContainingType.Equals(specialTypes.objectType)) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
 					if (IsVirtualMethod(method)) throw new NotSupportedException("ValueType virtual invoke not supported: " + expression.ToFullString());
 				}
 			}

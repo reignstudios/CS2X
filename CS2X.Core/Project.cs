@@ -62,13 +62,17 @@ namespace CS2X.Core
 			if (isParsed) return;
 			isParsed = true;
 
+			// get compilation
+			compilation = (CSharpCompilation)await roslynProject.GetCompilationAsync();
+
 			// validate syntax rules
-			/*var options = new ProjectAnalyzer.Options()
+			var options = new ProjectAnalyzer.Options()
 			{
-				breakOnError = true
+				breakOnError = false,
+				writeSyntaxSuffix = true
 			};
-			var analyzer = new ProjectAnalyzer(options);
-			if (!await analyzer.Analyze(roslynProject)) throw new Exception("Failed to Analyze project: " + roslynProject.FilePath);*/
+			var analyzer = new ProjectAnalyzer(compilation, options);
+			if (!await analyzer.Analyze(roslynProject)) throw new Exception("Failed to Analyze project: " + roslynProject.FilePath);
 
 			// gather references
 			var references = new List<Project>();
@@ -91,7 +95,6 @@ namespace CS2X.Core
 			delegateTypes = new List<INamedTypeSymbol>();
 
 			// parse normal members
-			compilation = (CSharpCompilation)await roslynProject.GetCompilationAsync();
 			ParseNamespace(compilation.Assembly.GlobalNamespace);
 			
 			// merge all types in one list
@@ -104,9 +107,6 @@ namespace CS2X.Core
 
 			// dependency sort all types
 			allTypes = DependencySortTypes(allTypesList);
-
-			// validate basic syntax rules
-			foreach (var type in allTypes) ValidateType(type);
 		}
 
 		public static List<INamedTypeSymbol> DependencySortTypes(IEnumerable<INamedTypeSymbol> types)
@@ -138,26 +138,6 @@ namespace CS2X.Core
 				else allTypesDependencyOrderedList.Insert(index, type);
 			}
 			return allTypesDependencyOrderedList;
-		}
-
-		private void ValidateType(INamedTypeSymbol type)
-		{
-			if (type.TypeKind != TypeKind.Interface)
-			{
-				var ienumerableT = compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerable_T);
-				var ienumerable = compilation.GetSpecialType(SpecialType.System_Collections_IEnumerable);
-				if ((type.Interfaces.Contains(ienumerableT) || type.Interfaces.Contains(ienumerable)) && type.TypeKind != TypeKind.Class)
-				{
-					throw new NotSupportedException("Only classes can implement IEnumerable");
-				}
-
-				var ienumeratorT = compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerator_T);
-				var ienumerator = compilation.GetSpecialType(SpecialType.System_Collections_IEnumerator);
-				if ((type.Interfaces.Contains(ienumeratorT) || type.Interfaces.Contains(ienumerator)) && type.TypeKind != TypeKind.Struct)
-				{
-					throw new NotSupportedException("Only structs can implement IEnumerator");
-				}
-			}
 		}
 
 		private void ParseNamespace(INamespaceSymbol namespaceSymbol)

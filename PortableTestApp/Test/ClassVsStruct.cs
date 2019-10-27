@@ -6,7 +6,10 @@
 
 		public static bool RunTest()
 		{
-			var obj = new ClassVsStruct();
+			var obj = new ClassVsStruct()
+			{
+				myStruct = new ClassVsStruct_Struct()
+			};
 			obj.myStruct.myClass = obj;
 			var value = obj.myStruct;
 			value.myClass = null;

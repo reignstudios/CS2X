@@ -1105,6 +1105,7 @@ char m3_PortableTestApp_Test_ClassVsStruct_RunTest_0()
 	t3_PortableTestApp_Test_ClassVsStruct* l_obj_0;
 	t3_PortableTestApp_Test_ClassVsStruct_Struct l_value_1;
 	l_obj_0 = m3_PortableTestApp_Test_ClassVsStruct__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_ClassVsStruct), &rt3_PortableTestApp_Test_ClassVsStruct_OBJ, 0));
+	l_obj_0->f_myStruct_1 = m3_PortableTestApp_Test_ClassVsStruct_Struct__ctor_0();
 	l_obj_0->f_myStruct_1.f_myClass_2 = l_obj_0;
 	l_value_1 = l_obj_0->f_myStruct_1;
 	l_value_1.f_myClass_2 = 0;

@@ -6,45 +6,20 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CS2X.Core.SyntaxValidation;
 
 namespace CS2X.Core.Transpilers
 {
 	public abstract class Transpiler
 	{
 		public readonly Solution solution;
-		protected INamedTypeSymbol runtimeType, typeType, arrayType, objectType;
-		protected INamedTypeSymbol stringType, stringBuilderType;
-		protected INamedTypeSymbol delegateType, multicastDelegateType;
-		protected INamedTypeSymbol ienumerableT, ienumerable, ienumeratorT, ienumerator;
-		protected IMethodSymbol ienumerableT_GetEnumerator, ienumerable_GetEnumerator, ienumeratorT_GetEnumerator, ienumerator_GetEnumerator;
+		protected SpecialTypes specialTypes;
 
 		public Transpiler(Solution solution)
 		{
 			this.solution = solution;
 			var coreLibProject = solution.coreLibProject;
-
-			// get common types
-			runtimeType = coreLibProject.compilation.GetTypeByMetadataName("System.RuntimeType");
-			typeType = coreLibProject.compilation.GetTypeByMetadataName("System.Type");
-
-			arrayType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Array);
-			objectType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Object);
-
-			stringType = coreLibProject.compilation.GetSpecialType(SpecialType.System_String);
-			stringBuilderType = coreLibProject.compilation.GetTypeByMetadataName("System.Text.StringBuilder");
-
-			delegateType = coreLibProject.compilation.GetSpecialType(SpecialType.System_Delegate);
-			multicastDelegateType = coreLibProject.compilation.GetSpecialType(SpecialType.System_MulticastDelegate);
-
-			// get common generic types
-			ienumerableT = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerable_T);
-			ienumerable = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_IEnumerable);
-			ienumeratorT = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_Generic_IEnumerator_T);
-			ienumerator = coreLibProject.compilation.GetSpecialType(SpecialType.System_Collections_IEnumerator);
-			ienumerableT_GetEnumerator = FindMethodByName(ienumerableT, "GetEnumerator");
-			ienumerable_GetEnumerator = FindMethodByName(ienumerable, "GetEnumerator");
-			ienumeratorT_GetEnumerator = FindMethodByName(ienumeratorT, "get_Current");
-			ienumerator_GetEnumerator = FindMethodByName(ienumerator, "get_Current");
+			specialTypes = new SpecialTypes(coreLibProject.compilation);
 		}
 
 		public abstract void Transpile(string outputPath);
@@ -748,7 +723,7 @@ namespace CS2X.Core.Transpilers
 			if (method.MethodKind != MethodKind.ExplicitInterfaceImplementation) return false;
 			if (!method.Name.EndsWith("GetEnumerator")) return false;
 			if (method.ReturnType.TypeKind != TypeKind.Interface) return false;
-			if (HasInterface(method.ContainingType, ienumerableT) && HasInterface(method.ContainingType, ienumerable)) return false;
+			if (HasInterface(method.ContainingType, specialTypes.ienumerableT) && HasInterface(method.ContainingType, specialTypes.ienumerable)) return false;
 			return true;
 		}
 
@@ -756,7 +731,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (method.MethodKind != MethodKind.PropertyGet) return false;
 			if (!method.Name.EndsWith("get_Current")) return false;
-			if (!objectType.Equals(method.ReturnType) || !HasInterface(method.ContainingType, ienumerator)) return false;
+			if (!specialTypes.objectType.Equals(method.ReturnType) || !HasInterface(method.ContainingType, specialTypes.ienumerator)) return false;
 			return true;
 		}
 
@@ -805,18 +780,6 @@ namespace CS2X.Core.Transpilers
 
 			outExpression = null;
 			memberAccessExpression = null;
-			return false;
-		}
-
-		protected bool IgnoredSpecialGenericInterfaceMethod(IMethodSymbol method)
-		{
-			foreach (var interfaceMethod in method.ExplicitInterfaceImplementations)
-			{
-				if (interfaceMethod.Equals(ienumerableT_GetEnumerator) || interfaceMethod.Equals(ienumerable_GetEnumerator) || interfaceMethod.Equals(ienumerator_GetEnumerator))
-				{
-					return true;
-				}
-			}
 			return false;
 		}
 
