@@ -1,1 +1,1 @@
-﻿* Delegates cannot be bound to non-static struct methods
+﻿* DllImport extern methods cannot use managed types (unless they're a string with the NativeStringParamAttribute)

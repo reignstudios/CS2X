@@ -1006,18 +1006,13 @@ int32_t m4_System_Runtime_InteropServices_Marshal_SizeOf_Int32__0();
 /* =============================== */
 int32_t m2_PortableTestApp_Program_Main_0(t2_System_String** p_args)
 {
-	int32_t l_i_0;
-	t2_System_Object* l_booI2_1;
-	int32_t l_arg_i_2;
-	l_i_0 = 0;
-	l_booI2_1 = l_i_0;
-	l_i_0 = (int32_t)l_booI2_1;
+	int32_t l_arg_i_0;
 	m2_System_Console_WriteLine_0(StringLiteral_5);
-	for (l_arg_i_2 = 0; l_arg_i_2 != m2_System_Array_get_Length_0((t2_System_Array*)p_args); ++l_arg_i_2)
+	for (l_arg_i_0 = 0; l_arg_i_0 != m2_System_Array_get_Length_0((t2_System_Array*)p_args); ++l_arg_i_0)
 	{
-		t2_System_String* l_arg_3;
-		l_arg_3 = ((t2_System_String**)(((char*)p_args) + ArrayOffset))[l_arg_i_2];
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_6, l_arg_3));
+		t2_System_String* l_arg_1;
+		l_arg_1 = ((t2_System_String**)(((char*)p_args) + ArrayOffset))[l_arg_i_0];
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_6, l_arg_1));
 	}
 	m2_System_Console_WriteLine_1();
 	m2_System_Console_WriteLine_0(StringLiteral_7);

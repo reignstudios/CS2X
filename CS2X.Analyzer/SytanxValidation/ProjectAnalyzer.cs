@@ -36,6 +36,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 		private readonly SpecialTypes specialTypes;
 
 		private const string boxingErrorMessage = "Runtime does not support boxing";
+		private const string boxingDelegateErrorMessage = "Cannot bind to non-static struct method as boxing is not supported";
 
 		public delegate void SyntaxErrorCallbackMethod(SyntaxError error);
 		public event SyntaxErrorCallbackMethod SyntaxErrorCallback;
@@ -134,8 +135,6 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.PreDecrementExpression:
 				case SyntaxKind.PostIncrementExpression:
 				case SyntaxKind.PostDecrementExpression:
-				case SyntaxKind.AddAssignmentExpression:
-				case SyntaxKind.SubtractAssignmentExpression:
 				case SyntaxKind.MultiplyAssignmentExpression:
 				case SyntaxKind.DivideAssignmentExpression:
 				case SyntaxKind.LogicalAndExpression:
@@ -153,7 +152,6 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.ReturnStatement:
 				case SyntaxKind.BreakStatement:
 				case SyntaxKind.ContinueStatement:
-				case SyntaxKind.ObjectCreationExpression:
 				case SyntaxKind.ArrayCreationExpression:
 				case SyntaxKind.StackAllocArrayCreationExpression:
 				case SyntaxKind.ArrayType:
@@ -214,6 +212,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.AliasQualifiedName:
 				case SyntaxKind.PredefinedType:
 				case SyntaxKind.IncompleteMember:
+				case SyntaxKind.EmptyStatement:
 					return true;
 
 				// further analysis needed
@@ -227,9 +226,14 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.ArrayRankSpecifier: return Analyze((ArrayRankSpecifierSyntax)syntax);
 				case SyntaxKind.UsingStatement: return Analyze((UsingStatementSyntax)syntax);
 				case SyntaxKind.NameEquals: return Analyze((NameEqualsSyntax)syntax);
+				case SyntaxKind.ObjectCreationExpression: return Analyze((ObjectCreationExpressionSyntax)syntax);
 				case SyntaxKind.EqualsValueClause: return Analyze((EqualsValueClauseSyntax)syntax);
 				case SyntaxKind.Argument: return Analyze((ArgumentSyntax)syntax);
+
+				case SyntaxKind.AddAssignmentExpression:
+				case SyntaxKind.SubtractAssignmentExpression:
 				case SyntaxKind.SimpleAssignmentExpression: return Analyze((AssignmentExpressionSyntax)syntax);
+
 				case SyntaxKind.CastExpression: return Analyze((CastExpressionSyntax)syntax);
 
 				case SyntaxKind.ObjectInitializerExpression:
@@ -392,6 +396,27 @@ namespace CS2X.Analyzer.SyntaxValidation
 			return true;
 		}
 
+		public bool Analyze(ObjectCreationExpressionSyntax syntax)
+		{
+			// check if delegate constructor is boxing
+			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+			var type = semanticModel.GetTypeInfo(syntax).Type;
+			if (type.TypeKind == TypeKind.Delegate && syntax.ArgumentList != null && syntax.ArgumentList.Arguments.Count != 0)
+			{
+				var argument = syntax.ArgumentList.Arguments[0];
+				var symbol = semanticModel.GetSymbolInfo(argument.Expression).Symbol;
+				if (symbol is IMethodSymbol method)
+				{
+					if (IsInvalidDelegateMethod(method))
+					{
+						FireSyntaxErrorCallback(syntax, boxingDelegateErrorMessage);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
 		public bool Analyze(EqualsValueClauseSyntax syntax)
 		{
 			return ValidateBoxing(syntax, syntax.Value);
@@ -418,12 +443,14 @@ namespace CS2X.Analyzer.SyntaxValidation
 			var op = semanticModel.GetOperation(syntax);
 			if (op != null && op.Children != null && op.Children.Count() != 0)
 			{
-				var first = op.Children.First();
-				if (first.Kind == OperationKind.Conversion)
+				var left = op.Children.First();
+				if (left.Kind == OperationKind.Conversion)
 				{
+					// check if assignment is boxing
 					var conversionOp = (IConversionOperation)op.Children.First();
 					var leftType = conversionOp.Type;
 					var rightType = semanticModel.GetTypeInfo(right).Type;
+					if (leftType == null || rightType == null) return true;
 					if
 					(
 						(leftType.SpecialType == SpecialType.System_Object && rightType.IsValueType) ||
@@ -437,6 +464,19 @@ namespace CS2X.Analyzer.SyntaxValidation
 						}
 					}
 				}
+				else if (left.Kind == OperationKind.DelegateCreation)
+				{
+					// check if delegate creation is boxing
+					var rightSymbol = semanticModel.GetSymbolInfo(right).Symbol;
+					if (rightSymbol is IMethodSymbol method)
+					{
+						if (IsInvalidDelegateMethod(method))
+						{
+							FireSyntaxErrorCallback(syntax, boxingDelegateErrorMessage);
+							return false;
+						}
+					}
+				}
 			}
 			return true;
 		}
@@ -444,15 +484,35 @@ namespace CS2X.Analyzer.SyntaxValidation
 		private bool ValidateBoxing(SyntaxNode syntax, SyntaxNode left, SyntaxNode right)
 		{
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+
+			// check if conversion is boxing
 			var conversion = semanticModel.GetConversion(syntax);
+			if (conversion == null) return true;
 			if (conversion.IsBoxing || conversion.IsUnboxing)
 			{
 				FireSyntaxErrorCallback(syntax, boxingErrorMessage);
 				return false;
 			}
 
+			// check if delegate creation is boxing
 			var leftType = semanticModel.GetTypeInfo(left).Type;
+			if (leftType != null && leftType.TypeKind == TypeKind.Delegate)
+			{
+				var symbol = semanticModel.GetSymbolInfo(right).Symbol;
+				if (symbol != null && symbol is IMethodSymbol method)
+				{
+					if (IsInvalidDelegateMethod(method))
+					{
+						FireSyntaxErrorCallback(syntax, boxingDelegateErrorMessage);
+						return false;
+					}
+				}
+			}
+
+			// check if assignment is boxing
 			var rightType = semanticModel.GetTypeInfo(right).Type;
+			if (leftType == null || rightType == null) return true;
+
 			if
 			(
 				(leftType.SpecialType == SpecialType.System_Object && rightType.IsValueType) ||
@@ -466,6 +526,11 @@ namespace CS2X.Analyzer.SyntaxValidation
 				}
 			}
 			return true;
+		}
+
+		private bool IsInvalidDelegateMethod(IMethodSymbol method)
+		{
+			return !method.IsStatic && method.ContainingType.IsValueType;
 		}
 	}
 }
