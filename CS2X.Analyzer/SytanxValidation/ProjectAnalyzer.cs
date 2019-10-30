@@ -137,6 +137,14 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.PostDecrementExpression:
 				case SyntaxKind.MultiplyAssignmentExpression:
 				case SyntaxKind.DivideAssignmentExpression:
+				case SyntaxKind.AndAssignmentExpression:
+				case SyntaxKind.OrAssignmentExpression:
+				case SyntaxKind.ExclusiveOrAssignmentExpression:
+				case SyntaxKind.RightShiftAssignmentExpression:
+				case SyntaxKind.LeftShiftAssignmentExpression:
+				case SyntaxKind.RightShiftExpression:
+				case SyntaxKind.LeftShiftExpression:
+				case SyntaxKind.ModuloExpression:
 				case SyntaxKind.LogicalAndExpression:
 				case SyntaxKind.LogicalNotExpression:
 				case SyntaxKind.LogicalOrExpression:

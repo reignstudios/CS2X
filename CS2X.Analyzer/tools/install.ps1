@@ -34,7 +34,7 @@ if($project.Type -eq "C#")
 }
 if($project.Type -eq "VB.NET")
 {
-    $languageFolder = "vb"
+    return
 }
 if($languageFolder -eq "")
 {
