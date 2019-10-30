@@ -24,13 +24,35 @@ namespace CS2X.Core.Transpilers
 
 		public abstract void Transpile(string outputPath);
 
-		protected CSharpCompilation GetCompilation(IAssemblySymbol assembly, Solution solution)
+		protected CSharpCompilation GetCompilation(ITypeSymbol type)
+		{
+			return GetCompilation(type.ContainingAssembly);
+		}
+
+		protected CSharpCompilation GetCompilation(IAssemblySymbol assembly)
 		{
 			foreach (var project in solution.projects)
 			{
 				if (assembly.Equals(project.compilation.Assembly)) return project.compilation;
 			}
 			throw new Exception("Failed to find CSharpCompilation for assembly: " + assembly.Name);
+		}
+
+		protected SemanticModel GetSemanticModel(SyntaxNode syntax)
+		{
+			return GetSemanticModel(syntax.SyntaxTree);
+		}
+
+		protected SemanticModel GetSemanticModel(SyntaxTree tree)
+		{
+			foreach (var project in solution.projects)
+			{
+				foreach (var compilationTree in project.compilation.SyntaxTrees)
+				{
+					if (tree.Equals(compilationTree)) return project.compilation.GetSemanticModel(tree);
+				}
+			}
+			throw new Exception("Failed to find SemanticModel for SyntaxTree: " + tree.FilePath);
 		}
 
 		protected int NestedCount(ITypeSymbol type)
@@ -587,7 +609,7 @@ namespace CS2X.Core.Transpilers
 			return refAssemblyName;
 		}
 
-		protected ITypeSymbol ResolveType(ITypeSymbol type, IMethodSymbol usedWithinMethod, SemanticModel semanticModel)
+		protected ITypeSymbol ResolveType(ITypeSymbol type, IMethodSymbol usedWithinMethod)
 		{
 			if (type.Kind == SymbolKind.NamedType)
 			{
@@ -600,7 +622,7 @@ namespace CS2X.Core.Transpilers
 				if (symbol.TypeArguments.Length == 0)
 				{
 					if (symbol.ContainingType == null) throw new NotSupportedException("Unsupported generic type: " + type.FullName());
-					var containingType = (INamedTypeSymbol)ResolveType(symbol.ContainingType, usedWithinMethod, semanticModel);
+					var containingType = (INamedTypeSymbol)ResolveType(symbol.ContainingType, usedWithinMethod);
 					symbol = (INamedTypeSymbol)containingType.GetMembers().First(x => x.OriginalDefinition.Equals(symbol.OriginalDefinition));
 				}
 
@@ -610,7 +632,7 @@ namespace CS2X.Core.Transpilers
 				// resolve generic parameters
 				var parameters = symbol.TypeArguments;
 				var typeParams = new ITypeSymbol[parameters.Length];
-				for (int i = 0; i != typeParams.Length; ++i) typeParams[i] = ResolveType(parameters[i], usedWithinMethod, semanticModel);
+				for (int i = 0; i != typeParams.Length; ++i) typeParams[i] = ResolveType(parameters[i], usedWithinMethod);
 
 				// construct from generic source
 				return symbol.OriginalDefinition.Construct(typeParams);
@@ -618,14 +640,16 @@ namespace CS2X.Core.Transpilers
 			else if (type.Kind == SymbolKind.ArrayType)
 			{
 				var symbol = (IArrayTypeSymbol)type;
-				var resolvedType = ResolveType(symbol.ElementType, usedWithinMethod, semanticModel);
-				return semanticModel.Compilation.CreateArrayTypeSymbol(resolvedType);
+				var resolvedType = ResolveType(symbol.ElementType, usedWithinMethod);
+				var compilation = GetCompilation(resolvedType);
+				return compilation.CreateArrayTypeSymbol(resolvedType);
 			}
 			else if (type.Kind == SymbolKind.PointerType)
 			{
 				var symbol = (IPointerTypeSymbol)type;
-				var resolvedType = ResolveType(symbol.PointedAtType, usedWithinMethod, semanticModel);
-				return semanticModel.Compilation.CreatePointerTypeSymbol(resolvedType);
+				var resolvedType = ResolveType(symbol.PointedAtType, usedWithinMethod);
+				var compilation = GetCompilation(resolvedType);
+				return compilation.CreatePointerTypeSymbol(resolvedType);
 			}
 			else if (type.Kind == SymbolKind.TypeParameter)
 			{
@@ -654,7 +678,7 @@ namespace CS2X.Core.Transpilers
 			return type;
 		}
 
-		protected IMethodSymbol ResolveMethod(IMethodSymbol method, IMethodSymbol usedWithinMethod, SemanticModel semanticModel)
+		protected IMethodSymbol ResolveMethod(IMethodSymbol method, IMethodSymbol usedWithinMethod)
 		{
 			// check if we need to resolve generic
 			if (method.IsGenericMethod && method.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter))
@@ -664,7 +688,7 @@ namespace CS2X.Core.Transpilers
 				var typeParams = new ITypeSymbol[parameters.Length];
 				for (int i = 0; i != typeParams.Length; ++i)
 				{
-					var resolvedType = ResolveType(parameters[i], usedWithinMethod, semanticModel);
+					var resolvedType = ResolveType(parameters[i], usedWithinMethod);
 					if (resolvedType == null) throw new Exception("Failed to resolve type for generic method: " + parameters[i].FullName());
 					typeParams[i] = resolvedType;
 				}
@@ -672,19 +696,19 @@ namespace CS2X.Core.Transpilers
 				// make sure we're constructing from generic source
 				if (method.ConstructedFrom != null) method = method.ConstructedFrom.Construct(typeParams);
 				else method = method.OriginalDefinition.Construct(typeParams);
-				return ResolveMethod(method, usedWithinMethod, semanticModel);// keep processing until fully resolved
+				return ResolveMethod(method, usedWithinMethod);// keep processing until fully resolved
 			}
 			else if (method.ContainingType != null && method.ContainingType.IsGenericType && !IsResolvedGenericType(method.ContainingType))
 			{
 				// resolve generic type method lives in and find its matching method
-				var resolvedType = ResolveType(method.ContainingType, usedWithinMethod, semanticModel);
+				var resolvedType = ResolveType(method.ContainingType, usedWithinMethod);
 				foreach (var member in resolvedType.GetMembers())
 				{
 					if (member.Kind != SymbolKind.Method) continue;
 					var memberMethod = (IMethodSymbol)member;
 					if (method.OriginalDefinition.Equals(memberMethod.OriginalDefinition))
 					{
-						return ResolveMethod(memberMethod, usedWithinMethod, semanticModel);// keep processing until fully resolved
+						return ResolveMethod(memberMethod, usedWithinMethod);// keep processing until fully resolved
 					}
 				}
 			}
@@ -754,13 +778,14 @@ namespace CS2X.Core.Transpilers
 			return !method.ContainingType.IsGenericType || IsResolvedGenericType(method.ContainingType);
 		}
 
-		protected bool NotReferenceableOnStack(IMethodSymbol method, ExpressionSyntax expression, SemanticModel semanticModel, out ExpressionSyntax outExpression, out ExpressionSyntax memberAccessExpression)
+		protected bool NotReferenceableOnStack(IMethodSymbol method, ExpressionSyntax expression, out ExpressionSyntax outExpression, out ExpressionSyntax memberAccessExpression)
 		{
 			var currentSyntax = expression;
 			while (currentSyntax != null)
 			{
 				if (currentSyntax is MemberAccessExpressionSyntax memberAccess)
 				{
+					var semanticModel = GetSemanticModel(memberAccess.Expression);
 					var symbol = semanticModel.GetSymbolInfo(memberAccess.Expression).Symbol;
 					var type = semanticModel.GetTypeInfo(memberAccess.Expression).Type;
 					if (symbol.Kind != SymbolKind.Local && type.IsReferenceType)

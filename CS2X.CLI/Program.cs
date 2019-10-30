@@ -9,6 +9,13 @@ namespace CS2X.CLI
 	{
 		static void Main(string[] args)
 		{
+			// TODO: remove: DEV hack
+			args = new string[]
+			{
+				"-s", @"..\..\..\..\..\..\Platforms\Win32\CS2X\Orbital.sln",
+				"-o", @"..\..\..\..\..\..\Platforms\Win32\CS2X\bin"
+			};
+
 			// print help
 			if (args.Length == 0)
 			{
