@@ -5,4 +5,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CS2X.Core\CS2X.Core.csproj" />
+  </ItemGroup>
+
 </Project>

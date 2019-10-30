@@ -1,7 +1,6 @@
-﻿using CS2X.Core;
-using CS2X.Core.Transpilers;
-using System;
+﻿using System;
 using System.IO;
+using CS2X.Core.Transpilers;
 
 namespace CS2X.Core.Test
 {
