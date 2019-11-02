@@ -13,6 +13,7 @@
 #include "..\CS2X.Native\CS2X.InstructionHelpers.h"
 #include "_StringLiterals.h"
 #define ArrayOffset (sizeof(intptr_t) + sizeof(size_t))
+HINSTANCE CS2X_hInstance = 0;
 
 /* =============================== */
 /* Forward declare Types */
@@ -39,10 +40,12 @@ typedef struct t2_System_InvalidCastException t2_System_InvalidCastException;
 typedef struct t2_System_Math t2_System_Math;
 typedef struct t2_System_MathF t2_System_MathF;
 typedef struct t2_System_MulticastDelegate t2_System_MulticastDelegate;
+typedef struct t2_System_NotImplementedException t2_System_NotImplementedException;
 typedef struct t2_System_NotSupportedException t2_System_NotSupportedException;
 typedef struct t2_System_Number t2_System_Number;
 typedef struct t2_System_Object t2_System_Object;
 typedef struct t2_System_ObsoleteAttribute t2_System_ObsoleteAttribute;
+typedef struct t2_System_Random t2_System_Random;
 typedef struct t2_System_RuntimeType t2_System_RuntimeType;
 typedef struct t2_System_String t2_System_String;
 typedef struct t2_System_Type t2_System_Type;
@@ -76,9 +79,11 @@ typedef struct t4_System_Runtime_Versioning_TargetFrameworkAttribute t4_System_R
 typedef struct t3_System_Text_Encoding t3_System_Text_Encoding;
 typedef struct t3_System_Text_StandardEncoding t3_System_Text_StandardEncoding;
 typedef struct t3_System_Text_StringBuilder t3_System_Text_StringBuilder;
+typedef struct t3_System_Threading_Thread t3_System_Threading_Thread;
 typedef int32_t t2_CS2X_NativeStringType;
 typedef struct t2_CS2X_NativeStringParamAttribute t2_CS2X_NativeStringParamAttribute;
 typedef struct t2_System_DateTime t2_System_DateTime;
+typedef struct t2_System_Guid t2_System_Guid;
 typedef struct t2_System_RuntimeTypeHandle t2_System_RuntimeTypeHandle;
 typedef int32_t t3_System_Reflection_MethodImplAttributes;
 typedef int32_t t4_System_Runtime_InteropServices_UnmanagedType;
@@ -106,6 +111,7 @@ struct t2_System_Attribute
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
+
 
 #define f_System_AttributeTargets_Assembly 1
 #define f_System_AttributeTargets_Module 2
@@ -146,6 +152,8 @@ struct t2_System_Console
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
+
+intptr_t f_intptr_t_Zero;
 
 struct t2_System_Delegate
 {
@@ -203,12 +211,26 @@ struct t2_System_InvalidCastException
 	t2_System_String* f__Message_k__BackingField_1;
 };
 
+double f_double_MaxValue;
+double f_double_MinValue;
+double f_double_Epsilon;
+double f_double_NegativeInfinity;
+double f_double_PositiveInfinity;
+double f_double_NaN;
+
 struct t2_System_Math
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
 double f_System_Math_E;
 double f_System_Math_PI;
+
+float f_float_MaxValue;
+float f_float_MinValue;
+float f_float_Epsilon;
+float f_float_PositiveInfinity;
+float f_float_NegativeInfinity;
+float f_float_NaN;
 
 struct t2_System_MathF
 {
@@ -225,11 +247,20 @@ struct t2_System_MulticastDelegate
 	t2_System_MulticastDelegate* f__next_2;
 };
 
+struct t2_System_NotImplementedException
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	t2_System_String* f__Message_k__BackingField_1;
+};
+
 struct t2_System_NotSupportedException
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 	t2_System_String* f__Message_k__BackingField_1;
 };
+
+int32_t f_int32_t_MaxValue;
+int32_t f_int32_t_MinValue;
 
 struct t2_System_Number
 {
@@ -258,6 +289,11 @@ struct t2_System_ObsoleteAttribute
 	t2_System_String* f__message_2;
 };
 
+struct t2_System_Random
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
 struct t2_System_RuntimeType
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
@@ -265,6 +301,9 @@ struct t2_System_RuntimeType
 	t2_System_String* f__Name_k__BackingField_1;
 	t2_System_String* f__FullName_k__BackingField_1;
 };
+
+char16_t f_char16_t_MaxValue;
+char16_t f_char16_t_MinValue;
 
 struct t2_System_String
 {
@@ -471,6 +510,11 @@ struct t3_System_Text_StringBuilder
 	char16_t f__firstChar_1;
 };
 
+struct t3_System_Threading_Thread
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
 #define f_CS2X_NativeStringType_Char 0
 #define f_CS2X_NativeStringType_WideChar 1
 
@@ -480,15 +524,44 @@ struct t2_CS2X_NativeStringParamAttribute
 	t2_CS2X_NativeStringType f_type_2;
 };
 
+uint8_t f_uint8_t_MaxValue;
+uint8_t f_uint8_t_MinValue;
+
 struct t2_System_DateTime
 {
-	time_t f__internalDate_2;
+	intptr_t f__internalDate_2;
 };
+
+struct t2_System_Guid
+{
+	uint8_t* f_data_2;
+};
+t2_System_Guid f_System_Guid_Empty;
+
+int16_t f_int16_t_MaxValue;
+int16_t f_int16_t_MinValue;
+
+int64_t f_int64_t_MaxValue;
+int64_t f_int64_t_MinValue;
 
 struct t2_System_RuntimeTypeHandle
 {
 	t2_System_RuntimeType* f_m_type_2;
 };
+
+int8_t f_int8_t_MaxValue;
+int8_t f_int8_t_MinValue;
+
+uint16_t f_uint16_t_MaxValue;
+uint16_t f_uint16_t_MinValue;
+
+uint32_t f_uint32_t_MaxValue;
+uint32_t f_uint32_t_MinValue;
+
+uint64_t f_uint64_t_MaxValue;
+uint64_t f_uint64_t_MinValue;
+
+uintptr_t f_uintptr_t_Zero;
 
 #define f_System_Reflection_MethodImplAttributes_CodeTypeMask 3
 #define f_System_Reflection_MethodImplAttributes_IL 0
@@ -725,6 +798,15 @@ rt2_System_MulticastDelegate rt2_System_MulticastDelegate_OBJ;
 int8_t rt2_System_MulticastDelegate_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,77,0,117,0,108,0,116,0,105,0,99,0,97,0,115,0,116,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* MulticastDelegate */
 int8_t rt2_System_MulticastDelegate_METADATA_FullName[62] = {0,0,0,0,0,0,0,0,24,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,77,0,117,0,108,0,116,0,105,0,99,0,97,0,115,0,116,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,0,0}; /* System.MulticastDelegate */
 
+typedef struct rt2_System_NotImplementedException
+{
+	t2_System_RuntimeType runtimeType;
+	t2_System_String* (*vTable_get_Message_0)(t2_System_NotImplementedException* self);
+} rt2_System_NotImplementedException;
+rt2_System_NotImplementedException rt2_System_NotImplementedException_OBJ;
+int8_t rt2_System_NotImplementedException_METADATA_Name[60] = {0,0,0,0,0,0,0,0,23,0,0,0,78,0,111,0,116,0,73,0,109,0,112,0,108,0,101,0,109,0,101,0,110,0,116,0,101,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* NotImplementedException */
+int8_t rt2_System_NotImplementedException_METADATA_FullName[74] = {0,0,0,0,0,0,0,0,30,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,78,0,111,0,116,0,73,0,109,0,112,0,108,0,101,0,109,0,101,0,110,0,116,0,101,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* System.NotImplementedException */
+
 typedef struct rt2_System_NotSupportedException
 {
 	t2_System_RuntimeType runtimeType;
@@ -765,6 +847,14 @@ typedef struct rt2_System_ObsoleteAttribute
 rt2_System_ObsoleteAttribute rt2_System_ObsoleteAttribute_OBJ;
 int8_t rt2_System_ObsoleteAttribute_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,79,0,98,0,115,0,111,0,108,0,101,0,116,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* ObsoleteAttribute */
 int8_t rt2_System_ObsoleteAttribute_METADATA_FullName[62] = {0,0,0,0,0,0,0,0,24,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,79,0,98,0,115,0,111,0,108,0,101,0,116,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.ObsoleteAttribute */
+
+typedef struct rt2_System_Random
+{
+	t2_System_RuntimeType runtimeType;
+} rt2_System_Random;
+rt2_System_Random rt2_System_Random_OBJ;
+int8_t rt2_System_Random_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,82,0,97,0,110,0,100,0,111,0,109,0,0,0}; /* Random */
+int8_t rt2_System_Random_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,82,0,97,0,110,0,100,0,111,0,109,0,0,0}; /* System.Random */
 
 typedef struct rt2_System_RuntimeType
 {
@@ -1038,6 +1128,14 @@ rt3_System_Text_StringBuilder rt3_System_Text_StringBuilder_OBJ;
 int8_t rt3_System_Text_StringBuilder_METADATA_Name[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* StringBuilder */
 int8_t rt3_System_Text_StringBuilder_METADATA_FullName[64] = {0,0,0,0,0,0,0,0,25,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,84,0,101,0,120,0,116,0,46,0,83,0,116,0,114,0,105,0,110,0,103,0,66,0,117,0,105,0,108,0,100,0,101,0,114,0,0,0}; /* System.Text.StringBuilder */
 
+typedef struct rt3_System_Threading_Thread
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_System_Threading_Thread;
+rt3_System_Threading_Thread rt3_System_Threading_Thread_OBJ;
+int8_t rt3_System_Threading_Thread_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,84,0,104,0,114,0,101,0,97,0,100,0,0,0}; /* Thread */
+int8_t rt3_System_Threading_Thread_METADATA_FullName[60] = {0,0,0,0,0,0,0,0,23,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,84,0,104,0,114,0,101,0,97,0,100,0,105,0,110,0,103,0,46,0,84,0,104,0,114,0,101,0,97,0,100,0,0,0}; /* System.Threading.Thread */
+
 typedef struct rt2_CS2X_NativeStringType
 {
 	t2_System_RuntimeType runtimeType;
@@ -1069,6 +1167,14 @@ typedef struct rt2_System_DateTime
 rt2_System_DateTime rt2_System_DateTime_OBJ;
 int8_t rt2_System_DateTime_METADATA_Name[30] = {0,0,0,0,0,0,0,0,8,0,0,0,68,0,97,0,116,0,101,0,84,0,105,0,109,0,101,0,0,0}; /* DateTime */
 int8_t rt2_System_DateTime_METADATA_FullName[44] = {0,0,0,0,0,0,0,0,15,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,97,0,116,0,101,0,84,0,105,0,109,0,101,0,0,0}; /* System.DateTime */
+
+typedef struct rt2_System_Guid
+{
+	t2_System_RuntimeType runtimeType;
+} rt2_System_Guid;
+rt2_System_Guid rt2_System_Guid_OBJ;
+int8_t rt2_System_Guid_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,71,0,117,0,105,0,100,0,0,0}; /* Guid */
+int8_t rt2_System_Guid_METADATA_FullName[36] = {0,0,0,0,0,0,0,0,11,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,71,0,117,0,105,0,100,0,0,0}; /* System.Guid */
 
 typedef struct rt2_System_Int16
 {
@@ -1215,6 +1321,7 @@ int32_t m2_intptr_t_ToInt32_0(intptr_t* self);
 int64_t m2_intptr_t_ToInt64_0(intptr_t* self);
 void* m2_intptr_t_ToPointer_0(intptr_t* self);
 intptr_t m2_intptr_t__ctor_3();
+void m2_intptr_t__cctor_0();
 t2_System_Object* m2_System_Delegate_get_Target_0(t2_System_Delegate* self);
 char m2_System_Delegate_op_Equality_0(t2_System_Delegate* p_a, t2_System_Delegate* p_b);
 char m2_System_Delegate_op_Inequality_0(t2_System_Delegate* p_a, t2_System_Delegate* p_b);
@@ -1238,6 +1345,7 @@ char m2_float_IsNegative_0(float p_f);
 t2_System_String* m2_float_ToString_0(float* self);
 float m2_float__ctor_0();
 t2_System_MulticastDelegate* m2_System_MulticastDelegate__ctor_0(t2_System_MulticastDelegate* self);
+t2_System_NotImplementedException* m2_System_NotImplementedException__ctor_0(t2_System_NotImplementedException* self);
 t2_System_NotSupportedException* m2_System_NotSupportedException__ctor_0(t2_System_NotSupportedException* self, t2_System_String* p_message);
 t2_System_String* m2_int32_t_ToString_0(int32_t* self);
 int32_t m2_int32_t__ctor_0();
@@ -1248,6 +1356,10 @@ t2_System_ObsoleteAttribute* m2_System_ObsoleteAttribute__ctor_1(t2_System_Obsol
 t2_System_ObsoleteAttribute* m2_System_ObsoleteAttribute__ctor_2(t2_System_ObsoleteAttribute* self, t2_System_String* p_message, char p_error);
 char m2_System_ObsoleteAttribute_get_IsError_0(t2_System_ObsoleteAttribute* self);
 t2_System_String* m2_System_ObsoleteAttribute_get_Message_0(t2_System_ObsoleteAttribute* self);
+t2_System_Random* m2_System_Random__ctor_0(t2_System_Random* self);
+t2_System_Random* m2_System_Random__ctor_1(t2_System_Random* self, int32_t p_seed);
+int32_t m2_System_Random_GenerateSeed_0();
+int32_t m2_System_Random_Next_0(t2_System_Random* self);
 t2_System_RuntimeType* m2_System_RuntimeType__ctor_0(t2_System_RuntimeType* self);
 t2_System_String* m2_char16_t_ToString_0(char16_t* self);
 char16_t m2_char16_t__ctor_0();
@@ -1310,6 +1422,7 @@ intptr_t m4_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t2_Syste
 void m4_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal);
 intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(t2_System_Object* p_o);
 intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(t2_System_Array* p_a);
+intptr_t m4_System_Runtime_InteropServices_Marshal_GetHINSTANCE_0();
 t4_System_Runtime_InteropServices_OutAttribute* m4_System_Runtime_InteropServices_OutAttribute__ctor_0(t4_System_Runtime_InteropServices_OutAttribute* self);
 t4_System_Runtime_InteropServices_LayoutKind m4_System_Runtime_InteropServices_LayoutKind__ctor_0();
 t4_System_Runtime_InteropServices_StructLayoutAttribute* m4_System_Runtime_InteropServices_StructLayoutAttribute__ctor_0(t4_System_Runtime_InteropServices_StructLayoutAttribute* self, t4_System_Runtime_InteropServices_LayoutKind p_layoutKind);
@@ -1340,13 +1453,16 @@ t2_System_String* m3_System_Text_Encoding_GetString_2(t3_System_Text_Encoding* s
 t3_System_Text_Encoding* m3_System_Text_Encoding__ctor_0(t3_System_Text_Encoding* self);
 t3_System_Text_StandardEncoding* m3_System_Text_StandardEncoding__ctor_0(t3_System_Text_StandardEncoding* self);
 t3_System_Text_StringBuilder* m3_System_Text_StringBuilder__ctor_0(t3_System_Text_StringBuilder* self);
+t3_System_Threading_Thread* m3_System_Threading_Thread__ctor_0(t3_System_Threading_Thread* self);
 t2_CS2X_NativeStringType m2_CS2X_NativeStringType__ctor_0();
 t2_CS2X_NativeStringParamAttribute* m2_CS2X_NativeStringParamAttribute__ctor_0(t2_CS2X_NativeStringParamAttribute* self, t2_CS2X_NativeStringType p_type);
 t2_System_String* m2_uint8_t_ToString_0(uint8_t* self);
 uint8_t m2_uint8_t__ctor_0();
-time_t m2_time_t__ctor_0();
-int64_t m2_System_DateTime_TODO_0(t2_System_DateTime* self);
 t2_System_DateTime m2_System_DateTime__ctor_0();
+t2_System_Guid m2_System_Guid_NewGuid_0();
+t2_System_String* m2_System_Guid_ToString_0(t2_System_Guid* self);
+t2_System_Guid m2_System_Guid__ctor_0();
+void m2_System_Guid__cctor_0();
 t2_System_String* m2_int16_t_ToString_0(int16_t* self);
 int16_t m2_int16_t__ctor_0();
 t2_System_String* m2_int64_t_ToString_0(int64_t* self);
@@ -1368,6 +1484,7 @@ uint32_t m2_uintptr_t_ToUInt32_0(uintptr_t* self);
 uint64_t m2_uintptr_t_ToUInt64_0(uintptr_t* self);
 void* m2_uintptr_t_ToPointer_0(uintptr_t* self);
 uintptr_t m2_uintptr_t__ctor_3();
+void m2_uintptr_t__cctor_0();
 t3_System_Reflection_MethodImplAttributes m3_System_Reflection_MethodImplAttributes__ctor_0();
 t4_System_Runtime_InteropServices_UnmanagedType m4_System_Runtime_InteropServices_UnmanagedType__ctor_0();
 
@@ -1657,6 +1774,11 @@ intptr_t m2_intptr_t__ctor_3()
 	return selfObj;
 }
 
+void m2_intptr_t__cctor_0()
+{
+	f_intptr_t_Zero = m2_intptr_t__ctor_3();
+}
+
 t2_System_Object* m2_System_Delegate_get_Target_0(t2_System_Delegate* self)
 {
 	return self->f__target_1;
@@ -1904,6 +2026,12 @@ t2_System_MulticastDelegate* m2_System_MulticastDelegate__ctor_0(t2_System_Multi
 	return self;
 }
 
+t2_System_NotImplementedException* m2_System_NotImplementedException__ctor_0(t2_System_NotImplementedException* self)
+{
+	m2_System_Exception__ctor_0(self);
+	return self;
+}
+
 t2_System_NotSupportedException* m2_System_NotSupportedException__ctor_0(t2_System_NotSupportedException* self, t2_System_String* p_message)
 {
 	m2_System_Exception__ctor_1(self, p_message);
@@ -1973,6 +2101,29 @@ char m2_System_ObsoleteAttribute_get_IsError_0(t2_System_ObsoleteAttribute* self
 t2_System_String* m2_System_ObsoleteAttribute_get_Message_0(t2_System_ObsoleteAttribute* self)
 {
 	return self->f__message_2;
+}
+
+t2_System_Random* m2_System_Random__ctor_0(t2_System_Random* self)
+{
+	m2_System_Random__ctor_1(self, m2_System_Random_GenerateSeed_0());
+	return self;
+}
+
+t2_System_Random* m2_System_Random__ctor_1(t2_System_Random* self, int32_t p_seed)
+{
+	m2_System_Object__ctor_0(self);
+	srand(p_seed);
+	return self;
+}
+
+int32_t m2_System_Random_GenerateSeed_0()
+{
+	return (int32_t)time(f_intptr_t_Zero);
+}
+
+int32_t m2_System_Random_Next_0(t2_System_Random* self)
+{
+	return rand();
 }
 
 t2_System_RuntimeType* m2_System_RuntimeType__ctor_0(t2_System_RuntimeType* self)
@@ -2466,6 +2617,11 @@ intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(t2
 	return (intptr_t)((char*)p_a + ArrayOffset);
 }
 
+intptr_t m4_System_Runtime_InteropServices_Marshal_GetHINSTANCE_0()
+{
+	return CS2X_hInstance;
+}
+
 t4_System_Runtime_InteropServices_OutAttribute* m4_System_Runtime_InteropServices_OutAttribute__ctor_0(t4_System_Runtime_InteropServices_OutAttribute* self)
 {
 	m2_System_Attribute__ctor_0(self);
@@ -2743,6 +2899,12 @@ t3_System_Text_StringBuilder* m3_System_Text_StringBuilder__ctor_0(t3_System_Tex
 	return self;
 }
 
+t3_System_Threading_Thread* m3_System_Threading_Thread__ctor_0(t3_System_Threading_Thread* self)
+{
+	m2_System_Object__ctor_0(self);
+	return self;
+}
+
 t2_CS2X_NativeStringType m2_CS2X_NativeStringType__ctor_0()
 {
 	t2_CS2X_NativeStringType selfObj = {0};
@@ -2780,24 +2942,33 @@ uint8_t m2_uint8_t__ctor_0()
 	return selfObj;
 }
 
-time_t m2_time_t__ctor_0()
-{
-	time_t selfObj = {0};
-	return selfObj;
-}
-
-int64_t m2_System_DateTime_TODO_0(t2_System_DateTime* self)
-{
-	time_t l_i_0;
-	(*self).f__internalDate_2 = 123;
-	l_i_0 = (*self).f__internalDate_2;
-	return (int64_t)l_i_0;
-}
-
 t2_System_DateTime m2_System_DateTime__ctor_0()
 {
 	t2_System_DateTime selfObj = {0};
 	return selfObj;
+}
+
+t2_System_Guid m2_System_Guid_NewGuid_0()
+{
+	t2_System_Guid l_guid_0;
+	l_guid_0 = m2_System_Guid__ctor_0();
+	return l_guid_0;
+}
+
+t2_System_String* m2_System_Guid_ToString_0(t2_System_Guid* self)
+{
+	return StringLiteral_5;
+}
+
+t2_System_Guid m2_System_Guid__ctor_0()
+{
+	t2_System_Guid selfObj = {0};
+	return selfObj;
+}
+
+void m2_System_Guid__cctor_0()
+{
+	f_System_Guid_Empty = m2_System_Guid__ctor_0();
 }
 
 t2_System_String* m2_int16_t_ToString_0(int16_t* self)
@@ -2994,6 +3165,11 @@ uintptr_t m2_uintptr_t__ctor_3()
 	return selfObj;
 }
 
+void m2_uintptr_t__cctor_0()
+{
+	f_uintptr_t_Zero = m2_uintptr_t__ctor_3();
+}
+
 t3_System_Reflection_MethodImplAttributes m3_System_Reflection_MethodImplAttributes__ctor_0()
 {
 	t3_System_Reflection_MethodImplAttributes selfObj = {0};
@@ -3142,6 +3318,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_MulticastDelegate_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Delegate_OBJ;
 	rt2_System_MulticastDelegate_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_MulticastDelegate_METADATA_Name;
 	rt2_System_MulticastDelegate_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_MulticastDelegate_METADATA_FullName;
+	memset(&rt2_System_NotImplementedException_OBJ, 0, sizeof(rt2_System_NotImplementedException));
+	rt2_System_NotImplementedException_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_NotImplementedException_OBJ;
+	rt2_System_NotImplementedException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Exception_OBJ;
+	rt2_System_NotImplementedException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_NotImplementedException_METADATA_Name;
+	rt2_System_NotImplementedException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_NotImplementedException_METADATA_FullName;
 	memset(&rt2_System_NotSupportedException_OBJ, 0, sizeof(rt2_System_NotSupportedException));
 	rt2_System_NotSupportedException_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_NotSupportedException_OBJ;
 	rt2_System_NotSupportedException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Exception_OBJ;
@@ -3167,6 +3348,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_ObsoleteAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Attribute_OBJ;
 	rt2_System_ObsoleteAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_Name;
 	rt2_System_ObsoleteAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_FullName;
+	memset(&rt2_System_Random_OBJ, 0, sizeof(rt2_System_Random));
+	rt2_System_Random_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Random_OBJ;
+	rt2_System_Random_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt2_System_Random_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_Random_METADATA_Name;
+	rt2_System_Random_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_Random_METADATA_FullName;
 	memset(&rt2_System_RuntimeType_OBJ, 0, sizeof(rt2_System_RuntimeType));
 	rt2_System_RuntimeType_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_RuntimeType_OBJ;
 	rt2_System_RuntimeType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Type_OBJ;
@@ -3337,6 +3523,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt3_System_Text_StringBuilder_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt3_System_Text_StringBuilder_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_Text_StringBuilder_METADATA_Name;
 	rt3_System_Text_StringBuilder_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_Text_StringBuilder_METADATA_FullName;
+	memset(&rt3_System_Threading_Thread_OBJ, 0, sizeof(rt3_System_Threading_Thread));
+	rt3_System_Threading_Thread_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_Threading_Thread_OBJ;
+	rt3_System_Threading_Thread_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_System_Threading_Thread_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_Threading_Thread_METADATA_Name;
+	rt3_System_Threading_Thread_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_Threading_Thread_METADATA_FullName;
 	memset(&rt2_CS2X_NativeStringType_OBJ, 0, sizeof(rt2_CS2X_NativeStringType));
 	rt2_CS2X_NativeStringType_OBJ.runtimeType.CS2X_RuntimeType = &rt2_CS2X_NativeStringType_OBJ;
 	rt2_CS2X_NativeStringType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Enum_OBJ;
@@ -3357,6 +3548,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_DateTime_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
 	rt2_System_DateTime_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_DateTime_METADATA_Name;
 	rt2_System_DateTime_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_DateTime_METADATA_FullName;
+	memset(&rt2_System_Guid_OBJ, 0, sizeof(rt2_System_Guid));
+	rt2_System_Guid_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Guid_OBJ;
+	rt2_System_Guid_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
+	rt2_System_Guid_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_Guid_METADATA_Name;
+	rt2_System_Guid_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_Guid_METADATA_FullName;
 	memset(&rt2_System_Int16_OBJ, 0, sizeof(rt2_System_Int16));
 	rt2_System_Int16_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Int16_OBJ;
 	rt2_System_Int16_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
@@ -3461,6 +3657,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_MathF_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_MulticastDelegate_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_MulticastDelegate_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_NotImplementedException_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_NotImplementedException_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_NotSupportedException_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_NotSupportedException_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Int32_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3471,6 +3669,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_Object_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_Random_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_Random_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_RuntimeType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_RuntimeType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Char_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3539,6 +3739,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt3_System_Text_StandardEncoding_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Text_StringBuilder_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Text_StringBuilder_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_Threading_Thread_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_Threading_Thread_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_CS2X_NativeStringType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_CS2X_NativeStringType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_CS2X_NativeStringParamAttribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3547,6 +3749,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_Byte_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_DateTime_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_DateTime_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_Guid_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_Guid_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Int16_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Int16_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Int64_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3574,6 +3778,7 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_Exception_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt2_System_IndexOutOfRangeException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt2_System_InvalidCastException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
+	rt2_System_NotImplementedException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt2_System_NotSupportedException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 
 	/* <<< === Array Runtime Types === >>> */
@@ -3620,6 +3825,9 @@ void CS2X_InitDllImport_CS2X_CoreLib()
 void CS2X_InvokeStaticConstructors_CS2X_CoreLib()
 {
 	/* Init this project */
+	m2_intptr_t__cctor_0();
 	m2_System_String__cctor_0();
 	m3_System_Text_Encoding__cctor_0();
+	m2_System_Guid__cctor_0();
+	m2_uintptr_t__cctor_0();
 }

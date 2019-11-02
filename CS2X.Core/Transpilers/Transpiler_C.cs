@@ -79,7 +79,12 @@ namespace CS2X.Core.Transpilers
 		public enum API
 		{
 			/// <summary>
-			/// Windows platforms
+			/// Legacy Windows desktop platforms
+			/// </summary>
+			Win16,
+
+			/// <summary>
+			/// Windows desktop platforms
 			/// </summary>
 			Win32,
 
@@ -258,7 +263,7 @@ namespace CS2X.Core.Transpilers
 
 			// transpile project
 			this.transpiledProject = transpiledProject;
-			string filename = project.roslynProject.AssemblyName + (project.type == ProjectTypes.Exe ? ".c" : ".h");
+			string filename = project.roslynProject.AssemblyName + (project.type == ProjectType.Exe ? ".c" : ".h");
 			using (var stream = new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read))
 			using (writer = new StreamWriterEx(stream))
 			{
@@ -285,7 +290,7 @@ namespace CS2X.Core.Transpilers
 
 			// writer info
 			WriteHeaderInfo(writer);
-			if (project.type == ProjectTypes.Dll) writer.WriteLine("#pragma once");
+			if (project.type == ProjectType.Dll) writer.WriteLine("#pragma once");
 
 			// include std libraries
 			if (project.isCoreLib)
@@ -325,6 +330,9 @@ namespace CS2X.Core.Transpilers
 
 				// array size offset
 				writer.WriteLine("#define ArrayOffset (sizeof(intptr_t) + sizeof(size_t))");
+
+				// WinMain HINSTANCE
+				if (options.api == API.Win32 || options.api == API.Win16) writer.WriteLine("HINSTANCE CS2X_hInstance = 0;");
 			}
 
 			// include references
@@ -675,7 +683,7 @@ namespace CS2X.Core.Transpilers
 						if (method.IsExtern && method.IsStatic && GetDllImportName(method, out string dllName, out string name))
 						{
 							string methodName = GetMethodFullName(method);
-							if (options.api == API.Win32)
+							if (options.api == API.Win32 || options.api == API.Win16)
 							{
 								if (dllName == "__Internal") writer.WriteLinePrefix($"{methodName} = GetProcAddress(GetModuleHandleW(NULL), \"{name}\");");
 								else writer.WriteLinePrefix($"{methodName} = GetProcAddress(LoadLibraryW(L\"{dllName}\"), \"{name}\");");
@@ -735,7 +743,7 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLine('}');
 
 			// exe only
-			if (project.type == ProjectTypes.Exe)
+			if (project.type == ProjectType.Exe)
 			{
 				// init string literals
 				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.GlobalProgramMemory_RAM)
@@ -758,8 +766,26 @@ namespace CS2X.Core.Transpilers
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* Entry Point */");
 				writer.WriteLine("/* =============================== */");
-				if (mainMethod.Parameters.Length == 0) writer.WriteLine("int main()");
-				else writer.WriteLine("int main(int argc, char** argv)");
+				bool isWinMain = false;
+				if (project.type == ProjectType.Exe && project.exeType == ProjectExeType.Windows)
+				{
+					if (options.api == API.Win32)
+					{
+						writer.WriteLine("int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)");
+						isWinMain = true;
+					}
+					else if (options.api == API.Win16)
+					{
+						writer.WriteLine("int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)");
+						isWinMain = true;
+					}
+				}
+				
+				if (!isWinMain)
+				{
+					if (mainMethod.Parameters.Length == 0) writer.WriteLine("int main()");
+					else writer.WriteLine("int main(int argc, char** argv)");
+				}
 				writer.WriteLine('{');
 				writer.AddTab();
 
@@ -775,7 +801,9 @@ namespace CS2X.Core.Transpilers
 					writer.WriteLinePrefix("int i;");
 					wroteLocals = true;
 				}
+				if (isWinMain) writer.WriteLinePrefix("CS2X_hInstance = hInstance;");
 				if (wroteLocals) writer.WriteLine();
+
 
 				writer.WriteLinePrefix("/* Init main thread unahandled exeption jump */");
 				writer.WriteLinePrefix("jmp_buf CS2X_UnhandledThreadExceptionBuff;");
@@ -811,20 +839,29 @@ namespace CS2X.Core.Transpilers
 					TrackArrayType(arrayType);
 
 					// GC allocate array and copy args
-					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgs = {GetNewArrayMethod(specialTypes.stringType)}(sizeof({GetTypeFullName(specialTypes.stringType)}), argc, &{GetRuntimeTypeObjFullName(arrayType)});");
-					writer.WriteLinePrefix("for (i = 0; i != argc; ++i)");
-					writer.WriteLinePrefix('{');
-					writer.AddTab();
-					writer.WriteLinePrefix("int i2, managedArgLength;");
-					writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgsRuntimeOffset;");
-					writer.WriteLinePrefix("managedArgsRuntimeOffset = ((char*)managedArgs) + ArrayOffset;");
-					writer.WriteLinePrefix("managedArgLength = strlen(argv[i]);");
-					var allocMethod = FindMethodByName(specialTypes.stringType, "FastAllocateString");
-					writer.WriteLinePrefix($"managedArgsRuntimeOffset[i] = {GetMethodFullName(allocMethod)}(managedArgLength);");
-					var firstCharField = FindFieldByName(specialTypes.stringType, "_firstChar");
-					writer.WriteLinePrefix($"for (i2 = 0; i2 != managedArgLength; ++i2) (&managedArgsRuntimeOffset[i]->{GetFieldFullName(firstCharField)})[i2] = (char16_t)argv[i][i2];");
-					writer.RemoveTab();
-					writer.WriteLinePrefix('}');
+					if (options.api == API.Win16 && project.exeType == ProjectExeType.Windows)
+					{
+						throw new NotImplementedException("TODO: manually parse lpCmdLine");
+					}
+					else
+					{
+						string argc = (project.exeType == ProjectExeType.Windows) ? "__argc" : "argc";
+						string argv = (project.exeType == ProjectExeType.Windows) ? "__argv" : "argv";
+						writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgs = {GetNewArrayMethod(specialTypes.stringType)}(sizeof({GetTypeFullName(specialTypes.stringType)}), {argc}, &{GetRuntimeTypeObjFullName(arrayType)});");
+						writer.WriteLinePrefix($"for (i = 0; i != {argc}; ++i)");
+						writer.WriteLinePrefix('{');
+						writer.AddTab();
+						writer.WriteLinePrefix("int i2, managedArgLength;");
+						writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgsRuntimeOffset;");
+						writer.WriteLinePrefix("managedArgsRuntimeOffset = ((char*)managedArgs) + ArrayOffset;");
+						writer.WriteLinePrefix($"managedArgLength = strlen({argv}[i]);");
+						var allocMethod = FindMethodByName(specialTypes.stringType, "FastAllocateString");
+						writer.WriteLinePrefix($"managedArgsRuntimeOffset[i] = {GetMethodFullName(allocMethod)}(managedArgLength);");
+						var firstCharField = FindFieldByName(specialTypes.stringType, "_firstChar");
+						writer.WriteLinePrefix($"for (i2 = 0; i2 != managedArgLength; ++i2) (&managedArgsRuntimeOffset[i]->{GetFieldFullName(firstCharField)})[i2] = (char16_t){argv}[i][i2];");
+						writer.RemoveTab();
+						writer.WriteLinePrefix('}');
+					}
 
 					// invoke managed main method
 					if (!mainMethod.ReturnsVoid) writer.WritePrefix("returnCode = ");
@@ -1181,7 +1218,7 @@ namespace CS2X.Core.Transpilers
 
 		private bool WriteType(INamedTypeSymbol type, bool writeBody)
 		{
-			if (IsPrimitiveType(type) || type.SpecialType == SpecialType.System_Void) return false;
+			if (type.SpecialType == SpecialType.System_Void) return false;
 			if (type.TypeKind == TypeKind.Interface) return false;
 			if (type.IsGenericType && !IsResolvedGenericType(type)) return false;
 			if (IsCS2XAttributeType(type)) return false;
@@ -1189,6 +1226,8 @@ namespace CS2X.Core.Transpilers
 
 			if (!writeBody)
 			{
+				if (IsPrimitiveType(type)) return false;
+
 				if (type.TypeKind == TypeKind.Enum)
 				{
 					writer.WriteLine($"typedef {GetPrimitiveName(type.EnumUnderlyingType)} {GetTypeFullName(type)};");
@@ -1226,34 +1265,37 @@ namespace CS2X.Core.Transpilers
 				}
 				return members.Length != 0;
 			}
-			else if(type.IsReferenceType || !IsEmptyType(type))
+			else
 			{
-				// get all types that should write non-static fields
-				var objTypeChain = new List<INamedTypeSymbol>();
-				objTypeChain.Add(type);
-				var baseType = type.BaseType;
-				while (baseType != null)
+				if ((type.IsReferenceType || !IsEmptyType(type)) && !IsPrimitiveType(type))
 				{
-					objTypeChain.Add(baseType);
-					baseType = baseType.BaseType;
-				}
-				objTypeChain.Reverse();
-
-				// write non-static fields
-				writer.WriteLine($"struct {GetTypeFullName(type)}");
-				writer.WriteLine('{');
-				writer.AddTab();
-				if (type.IsReferenceType) writer.WriteLinePrefix($"{GetTypeFullName(specialTypes.runtimeType)}* CS2X_RuntimeType;");
-				foreach (var subType in objTypeChain)
-				{
-					foreach (var member in subType.GetMembers())
+					// get all types that should write non-static fields
+					var objTypeChain = new List<INamedTypeSymbol>();
+					objTypeChain.Add(type);
+					var baseType = type.BaseType;
+					while (baseType != null)
 					{
-						if (member.IsStatic) continue;
-						if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
+						objTypeChain.Add(baseType);
+						baseType = baseType.BaseType;
 					}
+					objTypeChain.Reverse();
+
+					// write non-static fields
+					writer.WriteLine($"struct {GetTypeFullName(type)}");
+					writer.WriteLine('{');
+					writer.AddTab();
+					if (type.IsReferenceType) writer.WriteLinePrefix($"{GetTypeFullName(specialTypes.runtimeType)}* CS2X_RuntimeType;");
+					foreach (var subType in objTypeChain)
+					{
+						foreach (var member in subType.GetMembers())
+						{
+							if (member.IsStatic) continue;
+							if (member is IFieldSymbol) WriteField((IFieldSymbol)member);
+						}
+					}
+					writer.RemoveTab();
+					writer.WriteLine("};");
 				}
-				writer.RemoveTab();
-				writer.WriteLine("};");
 
 				// write static fields
 				foreach (var member in type.GetMembers())
@@ -1466,29 +1508,26 @@ namespace CS2X.Core.Transpilers
 								var syntax = (ConstructorDeclarationSyntax)syntaxDeclaration;
 								if (!method.IsStatic && method.ContainingType.IsReferenceType)
 								{
-									IMethodSymbol baseConstructor = null;
 									if (syntax.Initializer != null)
 									{
 										var semanticModel = GetSemanticModel(syntax.Initializer);
-										baseConstructor = (IMethodSymbol)semanticModel.GetSymbolInfo(syntax.Initializer).Symbol;
+										var superConstructor = (IMethodSymbol)semanticModel.GetSymbolInfo(syntax.Initializer).Symbol;
+										writer.WritePrefix(GetMethodFullName(superConstructor));
+										writer.Write("(self");
+										var args = syntax.Initializer.ArgumentList.Arguments;
+										if (args.Count != 0) writer.Write(", ");
+										var last = args.LastOrDefault();
+										foreach (var arg in args)
+										{
+											WriteExpression(arg.Expression);
+											if (arg != last) writer.Write(", ");
+										}
+										writer.WriteLine(");");
 									}
 									else if (method.ContainingType.BaseType != null)
 									{
-										baseConstructor = FindDefaultConstructor(method.ContainingType.BaseType);
-									}
-
-									if (baseConstructor != null)
-									{
-										writer.WritePrefix(GetMethodFullName(baseConstructor));
-										writer.Write("(self");
-										if (baseConstructor.Parameters.Length != 0) writer.Write(", ");
-										var last = baseConstructor.Parameters.LastOrDefault();
-										foreach (var parameter in baseConstructor.Parameters)
-										{
-											writer.Write(GetParameterFullName(parameter));
-											if (last != null && !parameter.Equals(last)) writer.Write(", ");
-										}
-										writer.WriteLine(");");
+										var baseConstructor = FindDefaultConstructor(method.ContainingType.BaseType);
+										writer.WriteLinePrefix($"{GetMethodFullName(baseConstructor)}(self);");
 									}
 								}
 								WriteContrustorFieldInitializers(method);
@@ -1776,6 +1815,11 @@ namespace CS2X.Core.Transpilers
 									var delegateType = method.TypeArguments[0];
 									var constructor = FindDelegateConstructor(delegateType);
 									writer.WriteLinePrefix($"return {GetMethodFullName(constructor)}({GetNewObjectMethod(delegateType)}(sizeof({GetTypeFullName(delegateType)}), &{GetRuntimeTypeObjFullName(delegateType)}, 0), 0, {GetParameterFullName(method.Parameters[0])});");
+								}
+								else if (method.Name == "GetHINSTANCE")
+								{
+									if (options.api == API.Win32 || options.api == API.Win16) writer.WriteLinePrefix("return CS2X_hInstance;");
+									else writer.WriteLinePrefix("return 0;");
 								}
 								else
 								{
@@ -2615,6 +2659,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is SizeOfExpressionSyntax) SizeOfExpression((SizeOfExpressionSyntax)expression);
 			else if (expression is TypeOfExpressionSyntax) TypeOfExpression((TypeOfExpressionSyntax)expression);
 			else if (expression is DefaultExpressionSyntax) DefaultExpression((DefaultExpressionSyntax)expression);
+			else if (expression is CheckedExpressionSyntax) CheckedExpression((CheckedExpressionSyntax)expression);
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
@@ -2935,6 +2980,13 @@ namespace CS2X.Core.Transpilers
 			{
 				var method = (IMethodSymbol)symbol;
 				WriteDelegateCreationOrMethodInvoke(expression, method);
+			}
+			else if (symbol.Kind == SymbolKind.Discard)
+			{
+				var discard = (IDiscardSymbol)symbol;
+				if (discard.NullableAnnotation == NullableAnnotation.Annotated) throw new NotSupportedException("Nullable annotation not supported for discard: " + discard);
+				string local = TryAddStatementLocal(discard.Type, "DISCARD_", null);
+				writer.Write(local);
 			}
 			else
 			{
@@ -3830,6 +3882,11 @@ namespace CS2X.Core.Transpilers
 		{
 			var type = ResolveType(expression.Type);
 			WriteDefaultValue(type, expression);
+		}
+
+		private void CheckedExpression(CheckedExpressionSyntax expression)
+		{
+			WriteExpression(expression.Expression);
 		}
 		#endregion
 

@@ -69,5 +69,12 @@ namespace System.Runtime.InteropServices
 		/// <returns>A instance of the specified delegate type.</returns>
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern TDelegate GetDelegateForFunctionPointer<TDelegate>(IntPtr ptr) where TDelegate : Delegate;
+
+		/// <summary>
+		/// Get hInstance that was passed in from WinMain
+		/// </summary>
+		/// <returns>hInstance</returns>
+		[MethodImpl(MethodImplOptions.InternalCall)]
+		public static extern IntPtr GetHINSTANCE();
 	}
 }

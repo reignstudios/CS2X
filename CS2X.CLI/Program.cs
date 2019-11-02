@@ -13,7 +13,7 @@ namespace CS2X.CLI
 			args = new string[]
 			{
 				"-s", @"..\..\..\..\..\..\Platforms\Win32\CS2X\Orbital.sln",
-				"-o", @"..\..\..\..\..\..\Platforms\Win32\CS2X\bin"
+				"-o", @"..\..\..\..\..\..\Platforms\Win32\CS2X\Native\bin\C"
 			};
 
 			// print help
@@ -65,19 +65,28 @@ namespace CS2X.CLI
 				return;
 			}
 
+			if (!Directory.Exists(outputFolder))
+			{
+				Console.WriteLine("Output folder doesn't exist. Creating!");
+				Directory.CreateDirectory(outputFolder);
+			}
+
 			// load solution
+			Console.WriteLine("Loading solution: " + inputSolution);
 			var solution = new Solution(inputSolution);
 
 			// parse solution
+			Console.WriteLine("Parsing solution...");
 			var task = solution.Parse();
 			task.Wait();
 
 			// transpile solution
+			Console.WriteLine("Transpiling solution...");
 			var options = new Transpiler_C.Options()
 			{
 				api = Transpiler_C.API.Win32,
 				gc = Transpiler_C.GC_Type.Boehm,
-				gcFolderPath = @"..\CS2X.Native",
+				gcFolderPath = @"..\..\..\..\..\..\Submodules\CS2X\CS2X.Native",
 				ptrSize = Transpiler_C.Ptr_Size.Bit_64,
 				endianness = Transpiler_C.Endianness.Little,
 				storeRuntimeTypeStringLiteralMetadata = true,
@@ -86,6 +95,9 @@ namespace CS2X.CLI
 			};
 			var transpiler = new Transpiler_C(solution, options);
 			transpiler.Transpile(outputFolder);
+
+			// finish
+			Console.WriteLine("DONE!");
 		}
 	}
 }

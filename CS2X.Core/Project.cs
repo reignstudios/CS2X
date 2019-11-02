@@ -10,10 +10,35 @@ using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core
 {
-	public enum ProjectTypes
+	public enum ProjectType
 	{
+		/// <summary>
+		/// Executable
+		/// </summary>
 		Exe,
+
+		/// <summary>
+		/// Dynamic link library
+		/// </summary>
 		Dll
+	}
+
+	public enum ProjectExeType
+	{
+		/// <summary>
+		/// Not Applicable
+		/// </summary>
+		NA,
+
+		/// <summary>
+		/// Console application (standard 'main' entry point)
+		/// </summary>
+		Console,
+
+		/// <summary>
+		/// Windows application (special 'WinMain' entry point)
+		/// </summary>
+		Windows
 	}
 
 	public class Project
@@ -24,7 +49,8 @@ namespace CS2X.Core
 		public readonly RoslynProject roslynProject;
 		public readonly bool isCoreLib;
 
-		public readonly ProjectTypes type;
+		public readonly ProjectType type;
+		public readonly ProjectExeType exeType;
 		public readonly OptimizationLevel optimizationLevel;
 		public IReadOnlyList<Project> references { get; private set;}
 		
@@ -49,9 +75,25 @@ namespace CS2X.Core
 
 			// get project type
 			var kind = compilationOptions.OutputKind;
-			if (kind == OutputKind.DynamicallyLinkedLibrary) type = ProjectTypes.Dll;
-			else if (kind == OutputKind.ConsoleApplication || kind == OutputKind.WindowsApplication) type = ProjectTypes.Exe;
-			else throw new Exception("Unsuported project kind: " + roslynProject.FilePath);
+			if (kind == OutputKind.DynamicallyLinkedLibrary)
+			{
+				type = ProjectType.Dll;
+				exeType = ProjectExeType.NA;
+			}
+			else if (kind == OutputKind.ConsoleApplication)
+			{
+				type = ProjectType.Exe;
+				exeType = ProjectExeType.Console;
+			}
+			else if (kind == OutputKind.WindowsApplication)
+			{
+				type = ProjectType.Exe;
+				exeType = ProjectExeType.Windows;
+			}
+			else
+			{
+				throw new Exception("Unsuported project kind: " + roslynProject.FilePath);
+			}
 
 			// check optimization level
 			optimizationLevel = compilationOptions.OptimizationLevel;

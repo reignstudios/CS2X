@@ -1,1 +1,2 @@
 ﻿* DllImport extern methods cannot use managed types (unless they're a string with the NativeStringParamAttribute)
+* Disable nullable value types

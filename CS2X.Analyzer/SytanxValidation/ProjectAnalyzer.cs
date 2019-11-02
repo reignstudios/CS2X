@@ -65,6 +65,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 			bool success = true;
 			foreach (var document in project.Documents)
 			{
+				if (document.SourceCodeKind != SourceCodeKind.Regular) continue;
 				var syntaxTree = await document.GetSyntaxTreeAsync();
 				if (!Analyze(syntaxTree))
 				{
@@ -201,6 +202,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.CatchDeclaration:
 				case SyntaxKind.ThrowStatement:
 				case SyntaxKind.BaseConstructorInitializer:
+				case SyntaxKind.ThisConstructorInitializer:
 				case SyntaxKind.FixedStatement:
 				case SyntaxKind.ArrowExpressionClause:
 				case SyntaxKind.ConditionalExpression:
@@ -221,6 +223,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.PredefinedType:
 				case SyntaxKind.IncompleteMember:
 				case SyntaxKind.EmptyStatement:
+				case SyntaxKind.UncheckedExpression:
 					return true;
 
 				// further analysis needed
@@ -396,7 +399,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 
 		public bool Analyze(NameEqualsSyntax syntax)
 		{
-			if (!(syntax.Parent is AttributeArgumentSyntax))
+			if (!(syntax.Parent is AttributeArgumentSyntax) && !(syntax.Parent is UsingDirectiveSyntax))
 			{
 				FireSyntaxErrorCallback(syntax, "You cannot set type elements in this mannor");
 				return false;
