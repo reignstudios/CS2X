@@ -1,2 +1,3 @@
 ﻿* DllImport extern methods cannot use managed types (unless they're a string with the NativeStringParamAttribute)
 * Disable nullable value types
+* String concat should make sure it only supports operator+ char and not object / boxing

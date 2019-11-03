@@ -1311,7 +1311,19 @@ namespace CS2X.Core.Transpilers
 		private void WriteField(IFieldSymbol field)
 		{
 			if (field.Type.TypeKind == TypeKind.Interface) throw new NotSupportedException("Fields cannot be an interface type");
-			writer.WriteLinePrefix($"{GetTypeFullNameRef(field.Type)} {GetFieldFullName(field)};");
+			if (!field.IsFixedSizeBuffer)
+			{
+				writer.WriteLinePrefix($"{GetTypeFullNameRef(field.Type)} {GetFieldFullName(field)};");
+			}
+			else
+			{
+				var syntaxRef = field.DeclaringSyntaxReferences.First();
+				var syntax = (VariableDeclaratorSyntax)syntaxRef.GetSyntax();
+				var arg = syntax.ArgumentList.Arguments[0];
+				writer.WritePrefix($"{GetTypeFullName(field.Type)} {GetFieldFullName(field)}[");
+				WriteExpression(arg.Expression);
+				writer.WriteLine("];");
+			}
 		}
 
 		private bool WriteMethod(IMethodSymbol method, bool writeBody)
@@ -1769,9 +1781,11 @@ namespace CS2X.Core.Transpilers
 							{
 								if (method.Name == "GenericCompare")
 								{
+									var typeParam = method.TypeArguments[0];
 									var param1 = method.Parameters[0];
 									var param2 = method.Parameters[1];
-									writer.WriteLinePrefix($"return {GetParameterFullName(param1)} == {GetParameterFullName(param2)};");
+									string refPrefix = typeParam.IsValueType ? "&" : "";
+									writer.WriteLinePrefix($"return memcmp({refPrefix}{GetParameterFullName(param1)}, {refPrefix}{GetParameterFullName(param2)}, sizeof({GetTypeFullNameRef(typeParam)})) == 0;");
 								}
 								else
 								{
@@ -1807,7 +1821,10 @@ namespace CS2X.Core.Transpilers
 									string returnType = GetTypeFullNameRef(method.ReturnType);
 									writer.WriteLinePrefix($"{returnType} result;");
 									writer.WriteLinePrefix($"result = &{GetMethodFullName(invokeMethod)};");
-									writer.WriteLinePrefix($"*{GetParameterFullName(method.Parameters[1])} = ({returnType}){GetParameterFullName(method.Parameters[0])};");
+									string delegateParam = GetParameterFullName(method.Parameters[0]);
+									var methodPtrField = FindFieldByName(specialTypes.delegateType, "_methodPtr");
+									writer.WriteLinePrefix($"*{GetParameterFullName(method.Parameters[1])} = ({returnType}){delegateParam};");
+									writer.WriteLinePrefix($"*{GetParameterFullName(method.Parameters[2])} = {delegateParam}->{GetFieldFullName(methodPtrField)};");
 									writer.WriteLinePrefix("return result;");
 								}
 								else if (method.Name == "GetDelegateForFunctionPointer")
@@ -3635,6 +3652,32 @@ namespace CS2X.Core.Transpilers
 					{
 						specialMethod = (IMethodSymbol)type.GetMembers().First(x => x is IMethodSymbol && x.Name == "Concat" && ((IMethodSymbol)x).Parameters.Length == 2);
 					}
+					if
+					(
+						expression.OperatorToken.ValueText == "+" &&
+						operatorMethod.ReturnType.SpecialType == SpecialType.System_String &&
+						operatorMethod.Parameters.Length == 2 &&
+						((operatorMethod.Parameters[0].Type.SpecialType == SpecialType.System_String &&
+						operatorMethod.Parameters[1].Type.SpecialType == SpecialType.System_Object) ||
+						(operatorMethod.Parameters[0].Type.SpecialType == SpecialType.System_Object &&
+						operatorMethod.Parameters[1].Type.SpecialType == SpecialType.System_String))
+					)
+					{
+						ITypeSymbol objType;
+						if (operatorMethod.Parameters[1].Type.SpecialType == SpecialType.System_Object)
+						{
+							var semanticModelRight = GetSemanticModel(expression.Right);
+							objType = semanticModelRight.GetTypeInfo(expression.Right).Type;
+							specialMethod = FindMethodBySignature(specialTypes.stringType, "op_Addition", specialTypes.stringType, specialTypes.stringType, specialTypes.charType);
+						}
+						else
+						{
+							var semanticModelLeft = GetSemanticModel(expression.Left);
+							objType = semanticModelLeft.GetTypeInfo(expression.Left).Type;
+							specialMethod = FindMethodBySignature(specialTypes.stringType, "op_Addition", specialTypes.stringType, specialTypes.charType, specialTypes.stringType);
+						}
+						if (objType.SpecialType != SpecialType.System_Char) throw new NotSupportedException("Unsupported concat expression: " + expression.ToFullString());
+					}
 					else if
 					(
 						expression.OperatorToken.ValueText == "==" &&
@@ -3664,6 +3707,22 @@ namespace CS2X.Core.Transpilers
 						writer.Write(GetMethodFullName(operatorMethod));
 					}
 					writer.Write('(');
+					WriteExpression(expression.Left);
+					writer.Write(", ");
+					WriteExpression(expression.Right);
+					writer.Write(')');
+				}
+				else if (operatorMethod.MethodKind == MethodKind.BuiltinOperator && type != null && type.SpecialType == SpecialType.System_Single)
+				{
+					writer.Write("fmodf(");
+					WriteExpression(expression.Left);
+					writer.Write(", ");
+					WriteExpression(expression.Right);
+					writer.Write(')');
+				}
+				else if (operatorMethod.MethodKind == MethodKind.BuiltinOperator && type != null && type.SpecialType == SpecialType.System_Double)
+				{
+					writer.Write("fmod(");
 					WriteExpression(expression.Left);
 					writer.Write(", ");
 					WriteExpression(expression.Right);

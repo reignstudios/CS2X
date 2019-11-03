@@ -57,6 +57,28 @@ namespace System
 			}
 		}
 
+		public static unsafe string operator+(string str, char c)
+		{
+			if (IsNullOrEmpty(str)) return c.ToString();
+
+			int str0Length = str.Length;
+			string result = FastAllocateString(str0Length + 1);
+			FillStringChecked(result, 0, str);
+			fixed (char* resultPtr = &result._firstChar) resultPtr[str0Length] = c;
+			return result;
+		}
+
+		public static unsafe string operator +(char c, string str)
+		{
+			if (IsNullOrEmpty(str)) return c.ToString();
+
+			int str0Length = str.Length;
+			string result = FastAllocateString(str0Length + 1);
+			FillStringChecked(result, 1, str);
+			fixed (char* resultPtr = &result._firstChar) resultPtr[0] = c;
+			return result;
+		}
+
 		public static string Concat(string str0, string str1)
         {
             if (IsNullOrEmpty(str0))
@@ -74,7 +96,6 @@ namespace System
             }
 
             int str0Length = str0.Length;
-
             string result = FastAllocateString(str0Length + str1.Length);
 
             FillStringChecked(result, 0, str0);

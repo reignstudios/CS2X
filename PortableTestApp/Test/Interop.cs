@@ -36,7 +36,7 @@ namespace PortableTestApp.Test
 
 			FooDelegate myFooDelegate = FooStatic;
 			myFooDelegate += new Interop().Foo;
-			IntPtr dFuncPtr = Marshal.GetFunctionPointerForDelegate<FooDelegate>(myFooDelegate, out IntPtr dThisPtr);
+			IntPtr dFuncPtr = Marshal.GetFunctionPointerForDelegate<FooDelegate>(myFooDelegate, out IntPtr dThisPtr, out _);
 			InvokeDelegateFuncPtr(dFuncPtr, dThisPtr);
 
 			return GetLastError() == 0 && myDelegate(123) == 123 && fooStaticCalled && fooCalled;

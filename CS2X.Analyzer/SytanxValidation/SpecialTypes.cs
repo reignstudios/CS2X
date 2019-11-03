@@ -10,7 +10,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 	public class SpecialTypes
 	{
 		public INamedTypeSymbol runtimeType, typeType, arrayType, objectType;
-		public INamedTypeSymbol stringType;
+		public INamedTypeSymbol stringType, charType;
 		public INamedTypeSymbol delegateType, multicastDelegateType;
 		public INamedTypeSymbol ienumerableT, ienumerable, ienumeratorT, ienumerator;
 		public IMethodSymbol ienumerableT_GetEnumerator, ienumerable_GetEnumerator, ienumeratorT_GetEnumerator, ienumerator_GetEnumerator;
@@ -25,6 +25,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 			objectType = compilation.GetSpecialType(SpecialType.System_Object);
 
 			stringType = compilation.GetSpecialType(SpecialType.System_String);
+			charType = compilation.GetSpecialType(SpecialType.System_Char);
 
 			delegateType = compilation.GetSpecialType(SpecialType.System_Delegate);
 			multicastDelegateType = compilation.GetSpecialType(SpecialType.System_MulticastDelegate);
