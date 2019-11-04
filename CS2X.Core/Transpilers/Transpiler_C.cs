@@ -1136,10 +1136,18 @@ namespace CS2X.Core.Transpilers
 
 		private string CharToLiteral(char value)
 		{
+			// write char unicode data
 			byte[] data;
 			if (options.endianness == Endianness.Little) data = Encoding.Unicode.GetBytes(new char[1] {value});
 			else if (options.endianness == Endianness.Big) data = Encoding.BigEndianUnicode.GetBytes(new char[1] {value});
 			else throw new NotImplementedException("Char endiannes not implemented: " + options.endianness);
+
+			// swap bytes for hex literal
+			byte first = data[0];
+			data[0] = data[1];
+			data[1] = first;
+
+			// return formatted hex value
 			return $"0x{BitConverter.ToString(data).Replace("-", "")}";
 		}
 		#endregion
@@ -3928,7 +3936,7 @@ namespace CS2X.Core.Transpilers
 		private void SizeOfExpression(SizeOfExpressionSyntax expression)
 		{
 			var type = ResolveType(expression.Type);
-			writer.Write($"sizeof({GetTypeFullName(type)})");
+			writer.Write($"sizeof({GetTypeFullNameRef(type)})");
 		}
 
 		private void TypeOfExpression(TypeOfExpressionSyntax expression)
@@ -4117,12 +4125,12 @@ namespace CS2X.Core.Transpilers
 			else if (type.Kind == SymbolKind.ArrayType)
 			{
 				var arrayType = (IArrayTypeSymbol)type;
-				return GetTypeFullName(arrayType.ElementType) + '*';
+				return GetTypeFullName(arrayType.ElementType);
 			}
 			else if (type.Kind == SymbolKind.PointerType)
 			{
 				var arrayType = (IPointerTypeSymbol)type;
-				return GetTypeFullName(arrayType.PointedAtType) + '*';
+				return GetTypeFullName(arrayType.PointedAtType);
 			}
 			else if (type.Kind == SymbolKind.NamedType && ((INamedTypeSymbol)type).IsGenericType)
 			{
