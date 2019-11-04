@@ -145,9 +145,9 @@ namespace CS2X.Core.Transpilers
 			public StringLiteralMemoryLocation stringLiteralMemoryLocation;
 
 			/// <summary>
-			/// Disables up casting checks for extra performance
+			/// Disables down casting checks for extra performance
 			/// </summary>
-			public bool disableUpCastingChecks;
+			public bool disableDownCastingChecks;
 
 			/// <summary>
 			/// Reference Non-Local GC objects on the stack before passing them as 'ref' or 'out' parameters.
@@ -3829,7 +3829,7 @@ namespace CS2X.Core.Transpilers
 			}
 
 			// test up cast
-			if (!options.disableUpCastingChecks)
+			if (!options.disableDownCastingChecks)
 			{
 				var castFromType = ResolveType(expression.Expression);
 				if

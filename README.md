@@ -63,7 +63,7 @@ Almost zero performance loss. C# code will generate in a manner as if hand writt
 * Interfaces are considered 'type-classes' and are compile time only.
 	* Used for generics only.
 	* No casting to them or variable declarations of them.
-* No down-casting performance loss in C and up-casting checks can be disabled for C output.
+* No up-casting performance loss in C and down-casting checks can be disabled for C output.
 * DllImport / PInvoke + Auto-Marshalling of managed types not supported.
 	* Varies to much between platforms in contrast to .NET making writing portable code confusing.
 	* Auto string marshalling has way to many implicits that depend on to many factors to keep track of.
