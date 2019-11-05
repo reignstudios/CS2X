@@ -1,6 +1,6 @@
 [![Gitter](https://badges.gitter.im/ReignStudios/CS2X.svg)](https://gitter.im/ReignStudios/CS2X?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-# CS2X (Currently Experimental)
+# CS2X (Under development)
 Transpiles a C# subset to non .NET languages, platforms, runtimes and enviroments. (Powered by Roslyn)<br>
 
 ## WASM Demo
