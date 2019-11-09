@@ -1,10 +1,17 @@
-﻿using System.Runtime.CompilerServices;
+﻿using CS2X;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace System.Runtime.InteropServices
 {
 	public static class Marshal
 	{
+		[NativeExtern(NativeTarget.C)]
+		internal static extern IntPtr strlen(IntPtr ptr);
+
+		[NativeExtern(NativeTarget.C)]
+		internal static extern IntPtr wcslen(IntPtr ptr);
+
 		public unsafe static IntPtr StringToHGlobalAnsi(string s)
 		{
 			fixed (char* chars = s)
@@ -25,6 +32,18 @@ namespace System.Runtime.InteropServices
 				Encoding.Unicode.GetBytes(chars, s.Length, buffer, byteCount);
 				return new IntPtr(buffer);
 			}
+		}
+
+		public unsafe static string PtrToStringAnsi(IntPtr ptr)
+		{
+			IntPtr length = strlen(ptr);
+			return Encoding.ASCII.GetString((byte*)ptr.ToPointer(), length.ToInt32());
+		}
+
+		public unsafe static string PtrToStringUni(IntPtr ptr)
+		{
+			IntPtr length = wcslen(ptr);
+			return Encoding.Unicode.GetString((byte*)ptr.ToPointer(), length.ToInt32());
 		}
 
 		public unsafe static void FreeHGlobal(IntPtr hglobal)

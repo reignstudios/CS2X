@@ -26,7 +26,8 @@ namespace CS2X.Core.Transpilers
 
 		protected CSharpCompilation GetCompilation(ITypeSymbol type)
 		{
-			return GetCompilation(type.ContainingAssembly);
+			var containingAssembly = ResolveContainingAssembly(type);
+			return GetCompilation(containingAssembly);
 		}
 
 		protected CSharpCompilation GetCompilation(IAssemblySymbol assembly)
@@ -607,6 +608,22 @@ namespace CS2X.Core.Transpilers
 			string refAssemblyName = project.roslynProject.AssemblyName;
 			ParseImplementationDetail(ref refAssemblyName);
 			return refAssemblyName;
+		}
+
+		protected IAssemblySymbol ResolveContainingAssembly(ITypeSymbol type)
+		{
+			if (type.ContainingAssembly != null) return type.ContainingAssembly;
+			switch (type.Kind)
+			{
+				case SymbolKind.ArrayType:
+					var arrayType = (IArrayTypeSymbol)type;
+					return ResolveContainingAssembly(arrayType.ElementType);
+
+				case SymbolKind.PointerType:
+					var pointerType = (IPointerTypeSymbol)type;
+					return ResolveContainingAssembly(pointerType.PointedAtType);
+			}
+			throw new Exception("Failed to resolve containing assembly: " + type.FullName());
 		}
 
 		protected ITypeSymbol ResolveType(ITypeSymbol type, IMethodSymbol usedWithinMethod)

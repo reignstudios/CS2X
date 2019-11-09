@@ -43,17 +43,22 @@ namespace System
             return (value == null || 0u >= (uint)value.Length) ? true : false;
         }
 
-		private static unsafe void FillStringChecked(string dest, int destPos, string src)
+		internal static unsafe void FillStringChecked(string dest, int destPos, string src)
 		{
-			if (src.Length > dest.Length - destPos)
-			{
-				throw new IndexOutOfRangeException();
-			}
-
+			if (src.Length > dest.Length - destPos) throw new IndexOutOfRangeException();
 			fixed (char* pDest = &dest._firstChar)
 			fixed (char* pSrc = &src._firstChar)
 			{
 				Buffer.memcpy(pDest + destPos, pSrc, (void*)(src.Length * sizeof(char)));
+			}
+		}
+
+		internal static unsafe void FillStringChecked(string dest, int destPos, char src)
+		{
+			if (1 > dest.Length - destPos) throw new IndexOutOfRangeException();
+			fixed (char* pDest = &dest._firstChar)
+			{
+				pDest[destPos] = src;
 			}
 		}
 

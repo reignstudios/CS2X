@@ -378,7 +378,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 		{
 			if (syntax.Parent is ObjectCreationExpressionSyntax || syntax.Parent is ArrayCreationExpressionSyntax)
 			{
-				if (!(syntax.Parent.Parent is EqualsValueClauseSyntax))
+				if (!(syntax.Parent.Parent is EqualsValueClauseSyntax) && !(syntax.Parent.Parent is AssignmentExpressionSyntax))
 				{
 					FireSyntaxErrorCallback(syntax, "Initializers only supported after 'EqualsValueClause' contexts");
 					return false;

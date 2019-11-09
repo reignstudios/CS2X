@@ -4,7 +4,8 @@ namespace System
 {
 	public struct IntPtr
 	{
-		public static readonly IntPtr Zero = new IntPtr();
+		public static IntPtr Zero => new IntPtr();
+		public static unsafe int Size => sizeof(void*);
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public unsafe extern IntPtr(int value);

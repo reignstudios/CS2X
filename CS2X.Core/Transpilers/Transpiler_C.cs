@@ -680,28 +680,8 @@ namespace CS2X.Core.Transpilers
 					if (member.Kind == SymbolKind.Method)
 					{
 						var method = (IMethodSymbol)member;
-						if (method.IsExtern && method.IsStatic && GetDllImportName(method, out string dllName, out string name))
+						if (method.IsExtern && method.IsStatic && WriteDllImportMethodBind(method, out string methodName))
 						{
-							string methodName = GetMethodFullName(method);
-							if (options.api == API.Win32 || options.api == API.Win16)
-							{
-								if (dllName == "__Internal") writer.WriteLinePrefix($"{methodName} = GetProcAddress(GetModuleHandleW(NULL), \"{name}\");");
-								else writer.WriteLinePrefix($"{methodName} = GetProcAddress(LoadLibraryW(L\"{dllName}\"), \"{name}\");");
-							}
-							else if (options.api == API.Posix)
-							{
-								if (dllName == "__Internal") writer.WriteLinePrefix($"{methodName} = dlsym(dlopen(NULL, RTLD_LAZY), \"{name}\");");
-								else writer.WriteLinePrefix($"{methodName} = dlsym(dlopen(\"{dllName}\", RTLD_LAZY), \"{name}\");");
-							}
-							else if (options.api == API.MacOS_Classic)
-							{
-								throw new NotImplementedException("TODO: Classic MacOS DllImport");
-							}
-							else
-							{
-								throw new NotSupportedException("Unsupported API for DllImport method: " + options.api);
-							}
-
 							writer.WriteLinePrefix($"if ({methodName} == 0) {methodName} = &{methodName}_DllNotFoundException;");
 						}
 					}
@@ -1863,6 +1843,26 @@ namespace CS2X.Core.Transpilers
 					}
 					else if (isDllImportMethod)
 					{
+						if (WriteDllImportMethodBind(method, out string methodName))
+						{
+							writer.WriteLinePrefix($"if ({methodName} != 0)");
+							writer.WriteLinePrefix('{');
+							writer.AddTab();
+							if (!method.ReturnsVoid) writer.WritePrefix("return ");
+							else writer.WritePrefix();
+							writer.Write($"{methodName}(");
+							var lastParamter = method.Parameters.LastOrDefault();
+							foreach (var parameter in method.Parameters)
+							{
+								writer.Write(GetParameterFullName(parameter));
+								if (!parameter.Equals(lastParamter)) writer.Write(", ");
+							}
+							writer.WriteLine(");");
+							if (method.ReturnsVoid) writer.WriteLinePrefix("return;");
+							writer.RemoveTab();
+							writer.WriteLinePrefix('}');
+						}
+
 						string objectTypeName = GetTypeFullName(specialTypes.objectType);
 						var dllNotFoundExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.DllNotFoundException");
 						var dllNotFoundExceptionTypeConstructor = FindDefaultConstructor(dllNotFoundExceptionType);
@@ -1977,6 +1977,37 @@ namespace CS2X.Core.Transpilers
 				}
 				writer.RemoveTab();
 				writer.WriteLine('}');
+			}
+
+			return true;
+		}
+
+		private bool WriteDllImportMethodBind(IMethodSymbol method, out string methodName)
+		{
+			if (!GetDllImportName(method, out string dllName, out string name))
+			{
+				methodName = null;
+				return false;
+			}
+
+			methodName = GetMethodFullName(method);
+			if (options.api == API.Win32 || options.api == API.Win16)
+			{
+				if (dllName == "__Internal") writer.WriteLinePrefix($"{methodName} = GetProcAddress(GetModuleHandleW(NULL), \"{name}\");");
+				else writer.WriteLinePrefix($"{methodName} = GetProcAddress(LoadLibraryW(L\"{dllName}\"), \"{name}\");");
+			}
+			else if (options.api == API.Posix)
+			{
+				if (dllName == "__Internal") writer.WriteLinePrefix($"{methodName} = dlsym(dlopen(NULL, RTLD_LAZY), \"{name}\");");
+				else writer.WriteLinePrefix($"{methodName} = dlsym(dlopen(\"{dllName}\", RTLD_LAZY), \"{name}\");");
+			}
+			else if (options.api == API.MacOS_Classic)
+			{
+				throw new NotImplementedException("TODO: Classic MacOS DllImport");
+			}
+			else
+			{
+				throw new NotSupportedException("Unsupported API for DllImport method: " + options.api);
 			}
 
 			return true;
@@ -2152,6 +2183,7 @@ namespace CS2X.Core.Transpilers
 				else if (statement is ForEachStatementSyntax) ForEachStatement((ForEachStatementSyntax)statement);
 				else if (statement is SwitchStatementSyntax) SwitchStatement((SwitchStatementSyntax)statement);
 				else if (statement is BreakStatementSyntax) BreakStatement((BreakStatementSyntax)statement);
+				else if (statement is ContinueStatementSyntax) ContinueStatement((ContinueStatementSyntax)statement);
 				else if (statement is FixedStatementSyntax) FixedStatement((FixedStatementSyntax)statement);
 				else if (statement is ReturnStatementSyntax) WriteReturnStatement((ReturnStatementSyntax)statement);
 				else if (statement is TryStatementSyntax) TryStatement((TryStatementSyntax)statement);
@@ -2477,6 +2509,11 @@ namespace CS2X.Core.Transpilers
 			writer.WriteLinePrefix("break;");
 		}
 
+		private void ContinueStatement(ContinueStatementSyntax statement)
+		{
+			writer.WriteLinePrefix("continue;");
+		}
+
 		private void FixedStatement(FixedStatementSyntax statement)
 		{
 			WriteLocalDeclaration(statement.Declaration, ';' + Environment.NewLine, false, true);
@@ -2712,8 +2749,8 @@ namespace CS2X.Core.Transpilers
 				if
 				(
 					!symbol.IsStatic && containingType != null &&
-					(containingType.Equals(method.ContainingType) ||
-					(method.ContainingType.IsGenericType && !method.ContainingType.IsDefinition && containingType.Equals(method.ContainingType.ConstructedFrom)))
+					(IsOfType(method.ContainingType, containingType) ||
+					(method.ContainingType.IsGenericType && !method.ContainingType.IsDefinition && IsOfType(method.ContainingType.ConstructedFrom, containingType)))
 				)
 				{
 					expression = SyntaxFactory.ThisExpression();
@@ -3282,7 +3319,15 @@ namespace CS2X.Core.Transpilers
 				if (rank.Sizes.Count != 1) throw new NotSupportedException("Array creation only supports single rank size");
 			}
 			writer.Write($"{GetNewArrayMethod(elementType)}(sizeof({GetTypeFullName(elementType)}), ");
-			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
+			if (arrayType.RankSpecifiers[0].Sizes[0] is OmittedArraySizeExpressionSyntax)
+			{
+				if (expression.Initializer == null) throw new NotSupportedException("Ommitted array size with no initializer not supported");
+				writer.Write(expression.Initializer.Expressions.Count.ToString());
+			}
+			else
+			{
+				WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// grab first rank size
+			}
 			writer.Write($", &{GetRuntimeTypeObjFullName(type)})");
 
 			// write initializer
