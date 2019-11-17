@@ -3,6 +3,9 @@
 # CS2X (Under development)
 Transpiles a C# subset to non .NET languages, platforms, runtimes and enviroments. (Powered by Roslyn)<br>
 
+CS2X is activily being tested in the development of the Orbital-Framework: https://github.com/reignstudios/Orbital-Framework<br>
+This provides real-world tests and as things progress there more feature will tested and supported here.
+
 ## WASM Demo
 Renders a 1280x720 image then prints how long it took in seconds.<br>
 http://reign-studios.com/wasm/cs2x/ray-trace-benchmark/cs2x.html
