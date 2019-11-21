@@ -3334,12 +3334,12 @@ namespace CS2X.Core.Transpilers
 			if (expression.Initializer != null)
 			{
 				writer.WriteLine(';');
-				IdentifierNameSyntax caller = null;
+				ExpressionSyntax caller = null;
 				InstructionalBody.Local local = null;
 				if (expression.Parent is AssignmentExpressionSyntax)
 				{
 					var parent = (AssignmentExpressionSyntax)expression.Parent;
-					caller = (IdentifierNameSyntax)parent.Left;
+					caller = parent.Left;
 				}
 				else if (expression.Parent is EqualsValueClauseSyntax && expression.Parent.Parent is VariableDeclaratorSyntax)
 				{

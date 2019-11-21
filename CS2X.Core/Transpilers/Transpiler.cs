@@ -419,6 +419,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (GetDllImportAttribute(method, out var dllImportAttribute))
 			{
+				if (dllImportAttribute.ConstructorArguments.Length == 0) throw new NotSupportedException("DllImport attribute must have constructor args: " + dllImportAttribute.ToString());
 				dllName = (string)dllImportAttribute.ConstructorArguments[0].Value;
 				string entryPoint = null;
 				if (dllImportAttribute.NamedArguments.Any(x => x.Key == "EntryPoint"))
