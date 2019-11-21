@@ -56,6 +56,16 @@ namespace CS2X.Core.Transpilers
 			throw new Exception("Failed to find SemanticModel for SyntaxTree: " + tree.FilePath);
 		}
 
+		protected bool IsProjectReferenced(Project project, Project reference, bool testLocalProjectReferences)
+		{
+			foreach (var projRef in project.references)
+			{
+				if (testLocalProjectReferences && projRef == reference) return true;
+				if (IsProjectReferenced(projRef, reference, true)) return true;
+			}
+			return false;
+		}
+
 		protected int NestedCount(ITypeSymbol type)
 		{
 			int count = 0;

@@ -693,15 +693,19 @@ namespace CS2X.Core.Transpilers
 			// init static constructors
 			writer.WriteLine();
 			string staticConstructorInitMethod = $"CS2X_InvokeStaticConstructors_{assemblyName}";
+			string staticConstructorInit_IsInitMethod = staticConstructorInitMethod + "_IsInit";
+			writer.WriteLine($"char {staticConstructorInit_IsInitMethod} = 0;");
 			writer.WriteLine($"void {staticConstructorInitMethod}()");
 			writer.WriteLine('{');
 			writer.AddTab();
+			writer.WriteLinePrefix($"if ({staticConstructorInit_IsInitMethod}) return;");
+			writer.WriteLinePrefix($"{staticConstructorInit_IsInitMethod} = 1;");
 			if (project.references.Count != 0)
 			{
 				writer.WriteLinePrefix("/* Init references */");
 				foreach (var reference in project.references)
 				{
-					writer.WriteLinePrefix($"CS2X_InvokeStaticConstructors_{GetProjectNameFlat(reference)}();");
+					if (!IsProjectReferenced(project, reference, false)) writer.WriteLinePrefix($"CS2X_InvokeStaticConstructors_{GetProjectNameFlat(reference)}();");
 				}
 				writer.WriteLine();
 			}
