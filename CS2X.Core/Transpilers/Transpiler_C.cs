@@ -3384,7 +3384,7 @@ namespace CS2X.Core.Transpilers
 			var ptrType = (IPointerTypeSymbol)type;
 			if (arrayType.RankSpecifiers.Count != 1) throw new NotSupportedException("stackalloc only supports single rank");
 			if (arrayType.RankSpecifiers[0].Sizes.Count != 1) throw new NotSupportedException("stackalloc only supports single rank size");
-			writer.Write($"alloca(sizeof({GetTypeFullName(ptrType.PointedAtType)}) * (");
+			writer.Write($"alloca(sizeof({GetTypeFullNameRef(ptrType.PointedAtType)}) * (");
 			WriteExpression(arrayType.RankSpecifiers[0].Sizes[0]);// fixed arrays should always support this form
 			writer.Write("))");
 			
