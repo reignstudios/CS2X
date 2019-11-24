@@ -342,6 +342,13 @@ namespace CS2X.Analyzer.SyntaxValidation
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			foreach (var parameter in syntax.Parameters)
 			{
+				var symbol = semanticModel.GetDeclaredSymbol(parameter);
+				if (symbol != null && symbol.IsOptional && !specialTypes.attributeType.Equals(symbol.ContainingType.BaseType))
+				{
+					FireSyntaxErrorCallback(syntax, "Optional parameters not supported");
+					return false;
+				}
+
 				var type = semanticModel.GetTypeInfo(parameter.Type).Type;
 				if (type != null && type.TypeKind == TypeKind.Interface)
 				{

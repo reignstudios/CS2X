@@ -2066,6 +2066,7 @@ namespace CS2X.Core.Transpilers
 			var lastParameter = parameters.LastOrDefault();
 			foreach (var parameter in parameters)
 			{
+				if (parameter.IsOptional) throw new NotSupportedException("Optional parameters not supported: " + parameter);
 				string ptr = string.Empty;
 				if (IsParameterPassByRef(parameter)) ptr = "*";
 				writer.Write($"{GetTypeFullNameRef(parameter.Type)}{ptr} {GetParameterFullName(parameter)}");
@@ -3175,26 +3176,7 @@ namespace CS2X.Core.Transpilers
 			// optional parameters
 			if (argumentList.Arguments.Count != method.Parameters.Length)
 			{
-				if (argumentList.Arguments.Count > method.Parameters.Length) throw new Exception("Method argument count is larger than parameter count");
-				int start = method.Parameters.Length - (method.Parameters.Length - argumentList.Arguments.Count);
-				writer.Write(", ");
-				for (int i = start; i != method.Parameters.Length; ++i)
-				{
-					var parameter = method.Parameters[i];
-					if (!parameter.IsOptional) throw new Exception("Parameter is not optional: " + parameter);
-					if (parameter.HasExplicitDefaultValue) 
-					{
-						writer.Write(GetFormatedConstValue(parameter.ExplicitDefaultValue));
-					}
-					else
-					{
-						var reference = parameter.DeclaringSyntaxReferences.First();
-						var syntaxDeclaration = (ParameterSyntax)reference.GetSyntax();
-						if (IsParameterPassByRef(parameter)) writer.Write('&');
-						WriteExpression(syntaxDeclaration.Default.Value);
-					};
-					if (i != method.Parameters.Length - 1) writer.Write(", ");
-				}
+				throw new NotSupportedException("Argument count != method parameter count. (Optional parameters not supported)");
 			}
 		}
 

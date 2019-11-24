@@ -50,6 +50,8 @@ typedef struct t2_System_RuntimeType t2_System_RuntimeType;
 typedef struct t2_System_String t2_System_String;
 typedef struct t2_System_Type t2_System_Type;
 typedef struct t2_System_ValueType t2_System_ValueType;
+typedef struct t3_System_Diagnostics_Debug t3_System_Diagnostics_Debug;
+typedef struct t3_System_IO_Path t3_System_IO_Path;
 typedef struct t3_System_Reflection_AssemblyCompanyAttribute t3_System_Reflection_AssemblyCompanyAttribute;
 typedef struct t3_System_Reflection_AssemblyConfigurationAttribute t3_System_Reflection_AssemblyConfigurationAttribute;
 typedef struct t3_System_Reflection_AssemblyCopyrightAttribute t3_System_Reflection_AssemblyCopyrightAttribute;
@@ -153,7 +155,6 @@ struct t2_System_Console
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
 
-intptr_t f_intptr_t_Zero;
 
 struct t2_System_Delegate
 {
@@ -289,10 +290,15 @@ struct t2_System_ObsoleteAttribute
 	t2_System_String* f__message_2;
 };
 
+uint32_t f_uint32_t_MaxValue;
+uint32_t f_uint32_t_MinValue;
+
 struct t2_System_Random
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
+	uint32_t f_seed_1;
 };
+uint32_t f_System_Random_rand_max;
 
 struct t2_System_RuntimeType
 {
@@ -325,6 +331,17 @@ struct t2_System_ValueType
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
+
+struct t3_System_Diagnostics_Debug
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t3_System_IO_Path
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+char16_t f_System_IO_Path_DirectorySeparatorChar;
 
 struct t3_System_Reflection_AssemblyCompanyAttribute
 {
@@ -534,8 +551,9 @@ struct t2_System_DateTime
 
 struct t2_System_Guid
 {
-	uint8_t* f_data_2;
+	uint8_t f_data_2[16];
 };
+t2_System_Random* f_System_Guid_random;
 t2_System_Guid f_System_Guid_Empty;
 
 int16_t f_int16_t_MaxValue;
@@ -554,9 +572,6 @@ int8_t f_int8_t_MinValue;
 
 uint16_t f_uint16_t_MaxValue;
 uint16_t f_uint16_t_MinValue;
-
-uint32_t f_uint32_t_MaxValue;
-uint32_t f_uint32_t_MinValue;
 
 uint64_t f_uint64_t_MaxValue;
 uint64_t f_uint64_t_MinValue;
@@ -848,6 +863,14 @@ rt2_System_ObsoleteAttribute rt2_System_ObsoleteAttribute_OBJ;
 int8_t rt2_System_ObsoleteAttribute_METADATA_Name[48] = {0,0,0,0,0,0,0,0,17,0,0,0,79,0,98,0,115,0,111,0,108,0,101,0,116,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* ObsoleteAttribute */
 int8_t rt2_System_ObsoleteAttribute_METADATA_FullName[62] = {0,0,0,0,0,0,0,0,24,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,79,0,98,0,115,0,111,0,108,0,101,0,116,0,101,0,65,0,116,0,116,0,114,0,105,0,98,0,117,0,116,0,101,0,0,0}; /* System.ObsoleteAttribute */
 
+typedef struct rt2_System_UInt32
+{
+	t2_System_RuntimeType runtimeType;
+} rt2_System_UInt32;
+rt2_System_UInt32 rt2_System_UInt32_OBJ;
+int8_t rt2_System_UInt32_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,85,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* UInt32 */
+int8_t rt2_System_UInt32_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,85,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* System.UInt32 */
+
 typedef struct rt2_System_Random
 {
 	t2_System_RuntimeType runtimeType;
@@ -895,6 +918,22 @@ typedef struct rt2_System_ValueType
 rt2_System_ValueType rt2_System_ValueType_OBJ;
 int8_t rt2_System_ValueType_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,86,0,97,0,108,0,117,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* ValueType */
 int8_t rt2_System_ValueType_METADATA_FullName[46] = {0,0,0,0,0,0,0,0,16,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,86,0,97,0,108,0,117,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* System.ValueType */
+
+typedef struct rt3_System_Diagnostics_Debug
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_System_Diagnostics_Debug;
+rt3_System_Diagnostics_Debug rt3_System_Diagnostics_Debug_OBJ;
+int8_t rt3_System_Diagnostics_Debug_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,68,0,101,0,98,0,117,0,103,0,0,0}; /* Debug */
+int8_t rt3_System_Diagnostics_Debug_METADATA_FullName[62] = {0,0,0,0,0,0,0,0,24,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,105,0,97,0,103,0,110,0,111,0,115,0,116,0,105,0,99,0,115,0,46,0,68,0,101,0,98,0,117,0,103,0,0,0}; /* System.Diagnostics.Debug */
+
+typedef struct rt3_System_IO_Path
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_System_IO_Path;
+rt3_System_IO_Path rt3_System_IO_Path_OBJ;
+int8_t rt3_System_IO_Path_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,80,0,97,0,116,0,104,0,0,0}; /* Path */
+int8_t rt3_System_IO_Path_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,79,0,46,0,80,0,97,0,116,0,104,0,0,0}; /* System.IO.Path */
 
 typedef struct rt3_System_Reflection_AssemblyCompanyAttribute
 {
@@ -1216,14 +1255,6 @@ rt2_System_UInt16 rt2_System_UInt16_OBJ;
 int8_t rt2_System_UInt16_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,85,0,73,0,110,0,116,0,49,0,54,0,0,0}; /* UInt16 */
 int8_t rt2_System_UInt16_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,85,0,73,0,110,0,116,0,49,0,54,0,0,0}; /* System.UInt16 */
 
-typedef struct rt2_System_UInt32
-{
-	t2_System_RuntimeType runtimeType;
-} rt2_System_UInt32;
-rt2_System_UInt32 rt2_System_UInt32_OBJ;
-int8_t rt2_System_UInt32_METADATA_Name[26] = {0,0,0,0,0,0,0,0,6,0,0,0,85,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* UInt32 */
-int8_t rt2_System_UInt32_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,85,0,73,0,110,0,116,0,51,0,50,0,0,0}; /* System.UInt32 */
-
 typedef struct rt2_System_UInt64
 {
 	t2_System_RuntimeType runtimeType;
@@ -1280,13 +1311,13 @@ int8_t rt0_System_Char___ARRAY_METADATA_FullName[40] = {0,0,0,0,0,0,0,0,13,0,0,0
 /* =============================== */
 /* POINTER Runtime Types */
 /* =============================== */
-typedef struct rt0_System_Void__PTR
+typedef struct rt0_System_Byte__PTR
 {
 	t2_System_RuntimeType runtimeType;
-} rt0_System_Void__PTR;
-rt0_System_Void__PTR rt0_System_Void__PTR_OBJ;
-int8_t rt0_System_Void__PTR_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,86,0,111,0,105,0,100,0,42,0,0,0}; /* Void* */
-int8_t rt0_System_Void__PTR_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,86,0,111,0,105,0,100,0,42,0,0,0}; /* System.Void* */
+} rt0_System_Byte__PTR;
+rt0_System_Byte__PTR rt0_System_Byte__PTR_OBJ;
+int8_t rt0_System_Byte__PTR_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,66,0,121,0,116,0,101,0,42,0,0,0}; /* Byte* */
+int8_t rt0_System_Byte__PTR_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,66,0,121,0,116,0,101,0,42,0,0,0}; /* System.Byte* */
 
 /* =============================== */
 /* Forward decalre Methods */
@@ -1314,6 +1345,8 @@ void m2_System_Console_Write_0(t2_System_String* p_s);
 void m2_System_Console_WriteLine_0(t2_System_String* p_s);
 void m2_System_Console_WriteLine_1();
 t2_System_String* m2_System_Console_ReadLine_0();
+intptr_t m2_intptr_t_get_Zero_0();
+int32_t m2_intptr_t_get_Size_0();
 intptr_t m2_intptr_t__ctor_0(int32_t p_value);
 intptr_t m2_intptr_t__ctor_1(int64_t p_value);
 intptr_t m2_intptr_t__ctor_2(void* p_value);
@@ -1321,7 +1354,6 @@ int32_t m2_intptr_t_ToInt32_0(intptr_t* self);
 int64_t m2_intptr_t_ToInt64_0(intptr_t* self);
 void* m2_intptr_t_ToPointer_0(intptr_t* self);
 intptr_t m2_intptr_t__ctor_3();
-void m2_intptr_t__cctor_0();
 t2_System_Object* m2_System_Delegate_get_Target_0(t2_System_Delegate* self);
 char m2_System_Delegate_op_Equality_0(t2_System_Delegate* p_a, t2_System_Delegate* p_b);
 char m2_System_Delegate_op_Inequality_0(t2_System_Delegate* p_a, t2_System_Delegate* p_b);
@@ -1332,6 +1364,7 @@ t2_System_Delegate* m2_System_Delegate__ctor_0(t2_System_Delegate* self);
 t2_System_DllNotFoundException* m2_System_DllNotFoundException__ctor_0(t2_System_DllNotFoundException* self);
 t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self);
 t2_System_String* m2_System_Environment_get_NewLine_0();
+void m2_System_Environment_SetEnvironmentVariable_0(t2_System_String* p_variable, t2_System_String* p_value);
 t2_System_Exception* m2_System_Exception__ctor_0(t2_System_Exception* self);
 t2_System_Exception* m2_System_Exception__ctor_1(t2_System_Exception* self, t2_System_String* p_message);
 t2_System_String* m2_System_Exception_get_Message_0(t2_System_Exception* self);
@@ -1356,6 +1389,8 @@ t2_System_ObsoleteAttribute* m2_System_ObsoleteAttribute__ctor_1(t2_System_Obsol
 t2_System_ObsoleteAttribute* m2_System_ObsoleteAttribute__ctor_2(t2_System_ObsoleteAttribute* self, t2_System_String* p_message, char p_error);
 char m2_System_ObsoleteAttribute_get_IsError_0(t2_System_ObsoleteAttribute* self);
 t2_System_String* m2_System_ObsoleteAttribute_get_Message_0(t2_System_ObsoleteAttribute* self);
+t2_System_String* m2_uint32_t_ToString_0(uint32_t* self);
+uint32_t m2_uint32_t__ctor_0();
 t2_System_Random* m2_System_Random__ctor_0(t2_System_Random* self);
 t2_System_Random* m2_System_Random__ctor_1(t2_System_Random* self, int32_t p_seed);
 int32_t m2_System_Random_GenerateSeed_0();
@@ -1371,6 +1406,9 @@ int32_t m2_System_String_get_Length_0(t2_System_String* self);
 t2_System_String* m2_System_String_FastAllocateString_0(int32_t p_length);
 char m2_System_String_IsNullOrEmpty_0(t2_System_String* p_value);
 void m2_System_String_FillStringChecked_0(t2_System_String* p_dest, int32_t p_destPos, t2_System_String* p_src);
+void m2_System_String_FillStringChecked_1(t2_System_String* p_dest, int32_t p_destPos, char16_t p_src);
+t2_System_String* m2_System_String_op_Addition_0(t2_System_String* p_str, char16_t p_c);
+t2_System_String* m2_System_String_op_Addition_1(char16_t p_c, t2_System_String* p_str);
 t2_System_String* m2_System_String_Concat_0(t2_System_String* p_str0, t2_System_String* p_str1);
 t2_System_String* m2_System_String_Concat_1(t2_System_String* p_str0, t2_System_String* p_str1, t2_System_String* p_str2);
 t2_System_String* m2_System_String_Concat_2(t2_System_String* p_str0, t2_System_String* p_str1, t2_System_String* p_str2, t2_System_String* p_str3);
@@ -1381,6 +1419,10 @@ void m2_System_String__cctor_0();
 t2_System_Type* m2_System_Type_GetTypeFromHandle_0(t2_System_RuntimeTypeHandle p_handle);
 t2_System_Type* m2_System_Type__ctor_0(t2_System_Type* self);
 t2_System_ValueType* m2_System_ValueType__ctor_0(t2_System_ValueType* self);
+void m3_System_Diagnostics_Debug_WriteLine_0(t2_System_String* p_message);
+t2_System_String* m3_System_IO_Path_Combine_0(t2_System_String* p_path1, t2_System_String* p_path2);
+t2_System_String* m3_System_IO_Path_Combine_1(t2_System_String* p_path1, t2_System_String* p_path2, t2_System_String* p_path3);
+t2_System_String* m3_System_IO_Path_Combine_2(t2_System_String* p_path1, t2_System_String* p_path2, t2_System_String* p_path3, t2_System_String* p_path4);
 t3_System_Reflection_AssemblyCompanyAttribute* m3_System_Reflection_AssemblyCompanyAttribute__ctor_0(t3_System_Reflection_AssemblyCompanyAttribute* self, t2_System_String* p_company);
 t2_System_String* m3_System_Reflection_AssemblyCompanyAttribute_get_Company_0(t3_System_Reflection_AssemblyCompanyAttribute* self);
 t3_System_Reflection_AssemblyConfigurationAttribute* m3_System_Reflection_AssemblyConfigurationAttribute__ctor_0(t3_System_Reflection_AssemblyConfigurationAttribute* self, t2_System_String* p_configuration);
@@ -1419,6 +1461,8 @@ t4_System_Runtime_InteropServices_CallingConvention m4_System_Runtime_InteropSer
 t4_System_Runtime_InteropServices_DllImportAttribute* m4_System_Runtime_InteropServices_DllImportAttribute__ctor_0(t4_System_Runtime_InteropServices_DllImportAttribute* self, t2_System_String* p_dllName);
 intptr_t m4_System_Runtime_InteropServices_Marshal_StringToHGlobalAnsi_0(t2_System_String* p_s);
 intptr_t m4_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t2_System_String* p_s);
+t2_System_String* m4_System_Runtime_InteropServices_Marshal_PtrToStringAnsi_0(intptr_t p_ptr);
+t2_System_String* m4_System_Runtime_InteropServices_Marshal_PtrToStringUni_0(intptr_t p_ptr);
 void m4_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal);
 intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForObject_0(t2_System_Object* p_o);
 intptr_t m4_System_Runtime_InteropServices_Marshal_GetNativePointerForArray_0(t2_System_Array* p_a);
@@ -1473,10 +1517,9 @@ t2_System_String* m2_int8_t_ToString_0(int8_t* self);
 int8_t m2_int8_t__ctor_0();
 t2_System_String* m2_uint16_t_ToString_0(uint16_t* self);
 uint16_t m2_uint16_t__ctor_0();
-t2_System_String* m2_uint32_t_ToString_0(uint32_t* self);
-uint32_t m2_uint32_t__ctor_0();
 t2_System_String* m2_uint64_t_ToString_0(uint64_t* self);
 uint64_t m2_uint64_t__ctor_0();
+int32_t m2_uintptr_t_get_Size_0();
 uintptr_t m2_uintptr_t__ctor_0(uint32_t p_value);
 uintptr_t m2_uintptr_t__ctor_1(uint64_t p_value);
 uintptr_t m2_uintptr_t__ctor_2(void* p_value);
@@ -1738,6 +1781,16 @@ t2_System_String* m2_System_Console_ReadLine_0()
 	return m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__ASCII_k__BackingField, l_str_0, (int32_t)strlen(l_str_0));
 }
 
+intptr_t m2_intptr_t_get_Zero_0()
+{
+	return m2_intptr_t__ctor_3();
+}
+
+int32_t m2_intptr_t_get_Size_0()
+{
+	return sizeof(void*);
+}
+
 intptr_t m2_intptr_t__ctor_0(int32_t p_value)
 {
 	return (int32_t)p_value;
@@ -1772,11 +1825,6 @@ intptr_t m2_intptr_t__ctor_3()
 {
 	intptr_t selfObj = {0};
 	return selfObj;
-}
-
-void m2_intptr_t__cctor_0()
-{
-	f_intptr_t_Zero = m2_intptr_t__ctor_3();
 }
 
 t2_System_Object* m2_System_Delegate_get_Target_0(t2_System_Delegate* self)
@@ -1922,6 +1970,21 @@ t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self)
 t2_System_String* m2_System_Environment_get_NewLine_0()
 {
 	return StringLiteral_3;
+}
+
+void m2_System_Environment_SetEnvironmentVariable_0(t2_System_String* p_variable, t2_System_String* p_value)
+{
+	t2_System_String* l_envVar_0;
+	int32_t l_encodedCount_1;
+	uint8_t* l_encoded_2;
+	char16_t* l_envVarPtr_3;
+	l_envVar_0 = m2_System_String_Concat_0(m2_System_String_op_Addition_0(p_variable, 0x003D), p_value);
+	l_encodedCount_1 = m3_System_Text_Encoding_GetByteCount_1(f_System_Text_Encoding__Default_k__BackingField, l_envVar_0);
+	l_encoded_2 = alloca(sizeof(uint8_t) * (l_encodedCount_1));
+	l_envVarPtr_3 = ((char*)l_envVar_0) + m4_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
+	m3_System_Text_Encoding_GetBytes_4(f_System_Text_Encoding__Default_k__BackingField, l_envVarPtr_3, m2_System_String_get_Length_0(l_envVar_0), l_encoded_2, l_encodedCount_1);
+	l_encoded_2[l_encodedCount_1 - 1] = 0;
+	_putenv(l_encoded_2);
 }
 
 t2_System_Exception* m2_System_Exception__ctor_0(t2_System_Exception* self)
@@ -2103,6 +2166,30 @@ t2_System_String* m2_System_ObsoleteAttribute_get_Message_0(t2_System_ObsoleteAt
 	return self->f__message_2;
 }
 
+t2_System_String* m2_uint32_t_ToString_0(uint32_t* self)
+{
+	uint8_t* l_str_0;
+	int32_t l_length_1;
+	char16_t* l_charArray_2;
+	int32_t l_i_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (11));
+	l_length_1 = sprintf(l_str_0, "%u", (*self));
+	l_str_0[10] = 0;
+	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
+	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
+	{
+		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
+	}
+	l_charArray_2[l_length_1] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
+}
+
+uint32_t m2_uint32_t__ctor_0()
+{
+	uint32_t selfObj = {0};
+	return selfObj;
+}
+
 t2_System_Random* m2_System_Random__ctor_0(t2_System_Random* self)
 {
 	m2_System_Random__ctor_1(self, m2_System_Random_GenerateSeed_0());
@@ -2112,18 +2199,21 @@ t2_System_Random* m2_System_Random__ctor_0(t2_System_Random* self)
 t2_System_Random* m2_System_Random__ctor_1(t2_System_Random* self, int32_t p_seed)
 {
 	m2_System_Object__ctor_0(self);
-	srand(p_seed);
+	self->f_seed_1 = (uint32_t)p_seed;
 	return self;
 }
 
 int32_t m2_System_Random_GenerateSeed_0()
 {
-	return (int32_t)time(f_intptr_t_Zero);
+	return (int32_t)time(m2_intptr_t_get_Zero_0());
 }
 
 int32_t m2_System_Random_Next_0(t2_System_Random* self)
 {
-	return rand();
+	int32_t l_result_0;
+	self->f_seed_1 = self->f_seed_1 * 1103515245 + 12345;
+	l_result_0 = (int32_t)((self->f_seed_1 / 65536) % 32768);
+	return (int32_t)(fmodf(l_result_0, (float)32767)) * 2147483647;
 }
 
 t2_System_RuntimeType* m2_System_RuntimeType__ctor_0(t2_System_RuntimeType* self)
@@ -2223,6 +2313,54 @@ void m2_System_String_FillStringChecked_0(t2_System_String* p_dest, int32_t p_de
 	{
 		memcpy(l_pDest_0 + p_destPos, l_pSrc_1, (void*)(m2_System_String_get_Length_0(p_src) * sizeof(char16_t)));
 	}
+}
+
+void m2_System_String_FillStringChecked_1(t2_System_String* p_dest, int32_t p_destPos, char16_t p_src)
+{
+	char16_t* l_pDest_0;
+	if (1 > m2_System_String_get_Length_0(p_dest) - p_destPos)
+	{
+		CS2X_ThreadExceptionObject = m2_System_IndexOutOfRangeException__ctor_0(CS2X_AllocType(sizeof(t2_System_IndexOutOfRangeException), &rt2_System_IndexOutOfRangeException_OBJ, 0));
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
+	l_pDest_0 = &p_dest->f__firstChar_1;
+	{
+		l_pDest_0[p_destPos] = p_src;
+	}
+}
+
+t2_System_String* m2_System_String_op_Addition_0(t2_System_String* p_str, char16_t p_c)
+{
+	int32_t l_str0Length_0;
+	t2_System_String* l_result_1;
+	char16_t* l_resultPtr_2;
+	if (m2_System_String_IsNullOrEmpty_0(p_str))
+	{
+		return m2_char16_t_ToString_0(&p_c);
+	}
+	l_str0Length_0 = m2_System_String_get_Length_0(p_str);
+	l_result_1 = m2_System_String_FastAllocateString_0(l_str0Length_0 + 1);
+	m2_System_String_FillStringChecked_0(l_result_1, 0, p_str);
+	l_resultPtr_2 = &l_result_1->f__firstChar_1;
+	l_resultPtr_2[l_str0Length_0] = p_c;
+	return l_result_1;
+}
+
+t2_System_String* m2_System_String_op_Addition_1(char16_t p_c, t2_System_String* p_str)
+{
+	int32_t l_str0Length_0;
+	t2_System_String* l_result_1;
+	char16_t* l_resultPtr_2;
+	if (m2_System_String_IsNullOrEmpty_0(p_str))
+	{
+		return m2_char16_t_ToString_0(&p_c);
+	}
+	l_str0Length_0 = m2_System_String_get_Length_0(p_str);
+	l_result_1 = m2_System_String_FastAllocateString_0(l_str0Length_0 + 1);
+	m2_System_String_FillStringChecked_0(l_result_1, 1, p_str);
+	l_resultPtr_2 = &l_result_1->f__firstChar_1;
+	l_resultPtr_2[0] = p_c;
+	return l_result_1;
 }
 
 t2_System_String* m2_System_String_Concat_0(t2_System_String* p_str0, t2_System_String* p_str1)
@@ -2354,6 +2492,70 @@ t2_System_ValueType* m2_System_ValueType__ctor_0(t2_System_ValueType* self)
 {
 	m2_System_Object__ctor_0(self);
 	return self;
+}
+
+void m3_System_Diagnostics_Debug_WriteLine_0(t2_System_String* p_message)
+{
+	char16_t* l_messagePtr_0;
+	char16_t* l_newLinePtr_1;
+	l_messagePtr_0 = ((char*)p_message) + m4_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
+	OutputDebugStringW(l_messagePtr_0);
+	l_newLinePtr_1 = ((char*)m2_System_Environment_get_NewLine_0()) + m4_System_Runtime_CompilerServices_RuntimeHelpers_get_OffsetToStringData_0();
+	OutputDebugStringW(l_newLinePtr_1);
+}
+
+t2_System_String* m3_System_IO_Path_Combine_0(t2_System_String* p_path1, t2_System_String* p_path2)
+{
+	t2_System_String* l_result_0;
+	int32_t l_offset_1;
+	l_result_0 = m2_System_String_FastAllocateString_0(m2_System_String_get_Length_0(p_path1) + m2_System_String_get_Length_0(p_path2) + 1);
+	l_offset_1 = 0;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path1);
+	l_offset_1 += m2_System_String_get_Length_0(p_path1);
+	m2_System_String_FillStringChecked_1(l_result_0, l_offset_1, 0x005C);
+	l_offset_1 += 1;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path2);
+	return l_result_0;
+}
+
+t2_System_String* m3_System_IO_Path_Combine_1(t2_System_String* p_path1, t2_System_String* p_path2, t2_System_String* p_path3)
+{
+	t2_System_String* l_result_0;
+	int32_t l_offset_1;
+	l_result_0 = m2_System_String_FastAllocateString_0(m2_System_String_get_Length_0(p_path1) + m2_System_String_get_Length_0(p_path2) + m2_System_String_get_Length_0(p_path3) + 2);
+	l_offset_1 = 0;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path1);
+	l_offset_1 += m2_System_String_get_Length_0(p_path1);
+	m2_System_String_FillStringChecked_1(l_result_0, l_offset_1, 0x005C);
+	l_offset_1 += 1;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path2);
+	l_offset_1 += m2_System_String_get_Length_0(p_path2);
+	m2_System_String_FillStringChecked_1(l_result_0, l_offset_1, 0x005C);
+	l_offset_1 += 1;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path3);
+	return l_result_0;
+}
+
+t2_System_String* m3_System_IO_Path_Combine_2(t2_System_String* p_path1, t2_System_String* p_path2, t2_System_String* p_path3, t2_System_String* p_path4)
+{
+	t2_System_String* l_result_0;
+	int32_t l_offset_1;
+	l_result_0 = m2_System_String_FastAllocateString_0(m2_System_String_get_Length_0(p_path1) + m2_System_String_get_Length_0(p_path2) + m2_System_String_get_Length_0(p_path3) + m2_System_String_get_Length_0(p_path4) + 3);
+	l_offset_1 = 0;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path1);
+	l_offset_1 += m2_System_String_get_Length_0(p_path1);
+	m2_System_String_FillStringChecked_1(l_result_0, l_offset_1, 0x005C);
+	l_offset_1 += 1;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path2);
+	l_offset_1 += m2_System_String_get_Length_0(p_path2);
+	m2_System_String_FillStringChecked_1(l_result_0, l_offset_1, 0x005C);
+	l_offset_1 += 1;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path3);
+	l_offset_1 += m2_System_String_get_Length_0(p_path3);
+	m2_System_String_FillStringChecked_1(l_result_0, l_offset_1, 0x005C);
+	l_offset_1 += 1;
+	m2_System_String_FillStringChecked_0(l_result_0, l_offset_1, p_path4);
+	return l_result_0;
 }
 
 t3_System_Reflection_AssemblyCompanyAttribute* m3_System_Reflection_AssemblyCompanyAttribute__ctor_0(t3_System_Reflection_AssemblyCompanyAttribute* self, t2_System_String* p_company)
@@ -2600,6 +2802,20 @@ intptr_t m4_System_Runtime_InteropServices_Marshal_StringToHGlobalUni_0(t2_Syste
 		m3_System_Text_Encoding_GetBytes_4(f_System_Text_Encoding__Unicode_k__BackingField, l_chars_0, m2_System_String_get_Length_0(p_s), l_buffer_2, l_byteCount_1);
 		return m2_intptr_t__ctor_2(l_buffer_2);
 	}
+}
+
+t2_System_String* m4_System_Runtime_InteropServices_Marshal_PtrToStringAnsi_0(intptr_t p_ptr)
+{
+	intptr_t l_length_0;
+	l_length_0 = strlen(p_ptr);
+	return m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__ASCII_k__BackingField, (uint8_t*)m2_intptr_t_ToPointer_0(&p_ptr), m2_intptr_t_ToInt32_0(&l_length_0));
+}
+
+t2_System_String* m4_System_Runtime_InteropServices_Marshal_PtrToStringUni_0(intptr_t p_ptr)
+{
+	intptr_t l_length_0;
+	l_length_0 = wcslen(p_ptr);
+	return m3_System_Text_Encoding_GetString_0(f_System_Text_Encoding__Unicode_k__BackingField, (uint8_t*)m2_intptr_t_ToPointer_0(&p_ptr), m2_intptr_t_ToInt32_0(&l_length_0));
 }
 
 void m4_System_Runtime_InteropServices_Marshal_FreeHGlobal_0(intptr_t p_hglobal)
@@ -2951,13 +3167,47 @@ t2_System_DateTime m2_System_DateTime__ctor_0()
 t2_System_Guid m2_System_Guid_NewGuid_0()
 {
 	t2_System_Guid l_guid_0;
+	int32_t l_i_1;
 	l_guid_0 = m2_System_Guid__ctor_0();
+	for (l_i_1 = 0; l_i_1 != 16; ++l_i_1)
+	{
+		int32_t l_number_2;
+		l_number_2 = (int32_t)(fmodf((fmodf(m2_System_Random_Next_0(f_System_Guid_random), (float)2147483647)), 255));
+		l_guid_0.f_data_2[l_i_1] = (uint8_t)l_number_2;
+	}
+	l_guid_0.f_data_2[7] &= 15;
+	l_guid_0.f_data_2[7] |= 64;
+	l_guid_0.f_data_2[9] &= 63;
+	l_guid_0.f_data_2[9] |= 128;
 	return l_guid_0;
 }
 
 t2_System_String* m2_System_Guid_ToString_0(t2_System_Guid* self)
 {
-	return StringLiteral_5;
+	uint8_t* l_str_0;
+	int32_t l_i_1;
+	int32_t l_i2_2;
+	char16_t* l_charArray_3;
+	l_str_0 = alloca(sizeof(uint8_t) * (37));
+	for (l_i_1 = 0, l_i2_2 = 0; l_i_1 != 16; ++l_i_1, l_i2_2 += 2)
+	{
+		if (l_i_1 == 4 || l_i_1 == 6 || l_i_1 == 8 || l_i_1 == 10)
+		{
+			char16_t l_delimiter_3;
+			l_delimiter_3 = 0x002D;
+			m3_System_Text_Encoding_GetBytes_4(f_System_Text_Encoding__ASCII_k__BackingField, &l_delimiter_3, 1, &l_str_0[l_i2_2], 1);
+			++l_i2_2;
+		}
+		sprintf(&l_str_0[l_i2_2], "%02x", (*self).f_data_2[l_i_1]);
+	}
+	l_str_0[36] = 0;
+	l_charArray_3 = alloca(sizeof(char16_t) * (38));
+	for (l_i_1 = 0; l_i_1 != 37; ++l_i_1)
+	{
+		l_charArray_3[l_i_1] = (char16_t)l_str_0[l_i_1];
+	}
+	l_charArray_3[37] = 0x0000;
+	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_3);
 }
 
 t2_System_Guid m2_System_Guid__ctor_0()
@@ -2968,6 +3218,7 @@ t2_System_Guid m2_System_Guid__ctor_0()
 
 void m2_System_Guid__cctor_0()
 {
+	f_System_Guid_random = m2_System_Random__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_Random), &rt2_System_Random_OBJ, 0));
 	f_System_Guid_Empty = m2_System_Guid__ctor_0();
 }
 
@@ -3081,30 +3332,6 @@ uint16_t m2_uint16_t__ctor_0()
 	return selfObj;
 }
 
-t2_System_String* m2_uint32_t_ToString_0(uint32_t* self)
-{
-	uint8_t* l_str_0;
-	int32_t l_length_1;
-	char16_t* l_charArray_2;
-	int32_t l_i_3;
-	l_str_0 = alloca(sizeof(uint8_t) * (11));
-	l_length_1 = sprintf(l_str_0, "%u", (*self));
-	l_str_0[10] = 0;
-	l_charArray_2 = alloca(sizeof(char16_t) * (l_length_1 + 1));
-	for (l_i_3 = 0; l_i_3 != l_length_1; ++l_i_3)
-	{
-		l_charArray_2[l_i_3] = (char16_t)l_str_0[l_i_3];
-	}
-	l_charArray_2[l_length_1] = 0x0000;
-	return m2_System_String__ctor_0(CS2X_AllocTypeAtomic(sizeof(t2_System_String), &rt2_System_String_OBJ, 0), l_charArray_2);
-}
-
-uint32_t m2_uint32_t__ctor_0()
-{
-	uint32_t selfObj = {0};
-	return selfObj;
-}
-
 t2_System_String* m2_uint64_t_ToString_0(uint64_t* self)
 {
 	uint8_t* l_str_0;
@@ -3127,6 +3354,11 @@ uint64_t m2_uint64_t__ctor_0()
 {
 	uint64_t selfObj = {0};
 	return selfObj;
+}
+
+int32_t m2_uintptr_t_get_Size_0()
+{
+	return sizeof(void*);
 }
 
 uintptr_t m2_uintptr_t__ctor_0(uint32_t p_value)
@@ -3348,6 +3580,11 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_ObsoleteAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Attribute_OBJ;
 	rt2_System_ObsoleteAttribute_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_Name;
 	rt2_System_ObsoleteAttribute_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_FullName;
+	memset(&rt2_System_UInt32_OBJ, 0, sizeof(rt2_System_UInt32));
+	rt2_System_UInt32_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_UInt32_OBJ;
+	rt2_System_UInt32_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
+	rt2_System_UInt32_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_UInt32_METADATA_Name;
+	rt2_System_UInt32_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_UInt32_METADATA_FullName;
 	memset(&rt2_System_Random_OBJ, 0, sizeof(rt2_System_Random));
 	rt2_System_Random_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_Random_OBJ;
 	rt2_System_Random_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -3378,6 +3615,16 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_ValueType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt2_System_ValueType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_ValueType_METADATA_Name;
 	rt2_System_ValueType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_ValueType_METADATA_FullName;
+	memset(&rt3_System_Diagnostics_Debug_OBJ, 0, sizeof(rt3_System_Diagnostics_Debug));
+	rt3_System_Diagnostics_Debug_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_Diagnostics_Debug_OBJ;
+	rt3_System_Diagnostics_Debug_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_System_Diagnostics_Debug_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_Name;
+	rt3_System_Diagnostics_Debug_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_FullName;
+	memset(&rt3_System_IO_Path_OBJ, 0, sizeof(rt3_System_IO_Path));
+	rt3_System_IO_Path_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_IO_Path_OBJ;
+	rt3_System_IO_Path_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_System_IO_Path_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_IO_Path_METADATA_Name;
+	rt3_System_IO_Path_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_IO_Path_METADATA_FullName;
 	memset(&rt3_System_Reflection_AssemblyCompanyAttribute_OBJ, 0, sizeof(rt3_System_Reflection_AssemblyCompanyAttribute));
 	rt3_System_Reflection_AssemblyCompanyAttribute_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_Reflection_AssemblyCompanyAttribute_OBJ;
 	rt3_System_Reflection_AssemblyCompanyAttribute_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Attribute_OBJ;
@@ -3578,11 +3825,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	rt2_System_UInt16_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
 	rt2_System_UInt16_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_UInt16_METADATA_Name;
 	rt2_System_UInt16_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_UInt16_METADATA_FullName;
-	memset(&rt2_System_UInt32_OBJ, 0, sizeof(rt2_System_UInt32));
-	rt2_System_UInt32_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_UInt32_OBJ;
-	rt2_System_UInt32_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
-	rt2_System_UInt32_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_UInt32_METADATA_Name;
-	rt2_System_UInt32_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_UInt32_METADATA_FullName;
 	memset(&rt2_System_UInt64_OBJ, 0, sizeof(rt2_System_UInt64));
 	rt2_System_UInt64_OBJ.runtimeType.CS2X_RuntimeType = &rt2_System_UInt64_OBJ;
 	rt2_System_UInt64_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_ValueType_OBJ;
@@ -3669,6 +3911,8 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_Object_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ObsoleteAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_UInt32_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt2_System_UInt32_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Random_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_Random_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_RuntimeType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3681,6 +3925,10 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_Type_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ValueType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ValueType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_Path_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_Path_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Reflection_AssemblyCompanyAttribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Reflection_AssemblyCompanyAttribute_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Reflection_AssemblyConfigurationAttribute_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3761,8 +4009,6 @@ void CS2X_InitLib_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_SByte_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_UInt16_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_UInt16_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
-	((t2_System_String*)rt2_System_UInt32_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
-	((t2_System_String*)rt2_System_UInt32_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_UInt64_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_UInt64_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_UIntPtr_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -3806,15 +4052,15 @@ void CS2X_InitLib_CS2X_CoreLib()
 
 	/* <<< === Pointer Runtime Types === >>> */
 	/* Init runtime type objects */
-	memset(&rt0_System_Void__PTR_OBJ, 0, sizeof(rt0_System_Void__PTR));
-	rt0_System_Void__PTR_OBJ.runtimeType.CS2X_RuntimeType = &rt0_System_Void__PTR_OBJ;
-	rt0_System_Void__PTR_OBJ.runtimeType.f__BaseType_k__BackingField_1 = 0;
-	rt0_System_Void__PTR_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt0_System_Void__PTR_METADATA_Name;
-	rt0_System_Void__PTR_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt0_System_Void__PTR_METADATA_FullName;
+	memset(&rt0_System_Byte__PTR_OBJ, 0, sizeof(rt0_System_Byte__PTR));
+	rt0_System_Byte__PTR_OBJ.runtimeType.CS2X_RuntimeType = &rt0_System_Byte__PTR_OBJ;
+	rt0_System_Byte__PTR_OBJ.runtimeType.f__BaseType_k__BackingField_1 = 0;
+	rt0_System_Byte__PTR_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt0_System_Byte__PTR_METADATA_Name;
+	rt0_System_Byte__PTR_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt0_System_Byte__PTR_METADATA_FullName;
 
 	/* Init runtime type metadata / string literals */
-	((t2_System_String*)rt0_System_Void__PTR_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
-	((t2_System_String*)rt0_System_Void__PTR_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt0_System_Byte__PTR_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt0_System_Byte__PTR_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 }
 
 void CS2X_InitDllImport_CS2X_CoreLib()
@@ -3822,10 +4068,12 @@ void CS2X_InitDllImport_CS2X_CoreLib()
 	/* Init this project */
 }
 
+char CS2X_InvokeStaticConstructors_CS2X_CoreLib_IsInit = 0;
 void CS2X_InvokeStaticConstructors_CS2X_CoreLib()
 {
+	if (CS2X_InvokeStaticConstructors_CS2X_CoreLib_IsInit) return;
+	CS2X_InvokeStaticConstructors_CS2X_CoreLib_IsInit = 1;
 	/* Init this project */
-	m2_intptr_t__cctor_0();
 	m2_System_String__cctor_0();
 	m3_System_Text_Encoding__cctor_0();
 	m2_System_Guid__cctor_0();
