@@ -49,7 +49,7 @@ namespace System
 			fixed (char* pDest = &dest._firstChar)
 			fixed (char* pSrc = &src._firstChar)
 			{
-				Buffer.memcpy(pDest + destPos, pSrc, (void*)(src.Length * sizeof(char)));
+				Buffer.memcpy(pDest + destPos, pSrc, (UIntPtr)(src.Length * sizeof(char)));
 			}
 		}
 

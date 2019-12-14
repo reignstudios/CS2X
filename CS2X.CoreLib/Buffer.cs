@@ -5,10 +5,10 @@ namespace System
 	public static class Buffer
 	{
 		[NativeExtern(NativeTarget.C)]
-		internal static unsafe extern void* memcpy(void* _Dst, void* _Src, void* _Size);
+		internal static unsafe extern void* memcpy(void* _Dst, void* _Src, UIntPtr _Size);
 
 		[NativeExtern(NativeTarget.C)]
-		internal static unsafe extern void* malloc(void* _Size);
+		internal static unsafe extern void* malloc(UIntPtr _Size);
 
 		[NativeExtern(NativeTarget.C)]
 		internal static unsafe extern void free(void* _Block);
@@ -21,7 +21,7 @@ namespace System
 		public static unsafe void MemoryCopy(void* source, void* destination, ulong destinationSizeInBytes, ulong sourceBytesToCopy)
 		{
 			if (sourceBytesToCopy > destinationSizeInBytes) throw new ArgumentOutOfRangeException();
-			memcpy(destination, source, (void*)sourceBytesToCopy);
+			memcpy(destination, source, (UIntPtr)sourceBytesToCopy);
 		}
 	}
 }

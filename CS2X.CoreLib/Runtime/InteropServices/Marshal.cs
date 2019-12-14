@@ -17,7 +17,7 @@ namespace System.Runtime.InteropServices
 			fixed (char* chars = s)
 			{
 				int byteCount = Encoding.ASCII.GetByteCount(chars, s.Length);
-				byte* buffer = (byte*)Buffer.malloc((void*)byteCount);
+				byte* buffer = (byte*)Buffer.malloc((UIntPtr)byteCount);
 				Encoding.ASCII.GetBytes(chars, s.Length, buffer, byteCount);
 				return new IntPtr(buffer);
 			}
@@ -28,7 +28,7 @@ namespace System.Runtime.InteropServices
 			fixed (char* chars = s)
 			{
 				int byteCount = Encoding.Unicode.GetByteCount(chars, s.Length);
-				byte* buffer = (byte*)Buffer.malloc((void*)byteCount);
+				byte* buffer = (byte*)Buffer.malloc((UIntPtr)byteCount);
 				Encoding.Unicode.GetBytes(chars, s.Length, buffer, byteCount);
 				return new IntPtr(buffer);
 			}
@@ -44,6 +44,11 @@ namespace System.Runtime.InteropServices
 		{
 			IntPtr length = wcslen(ptr);
 			return Encoding.Unicode.GetString((byte*)ptr.ToPointer(), length.ToInt32());
+		}
+
+		public unsafe static IntPtr AllocHGlobal(int cb)
+		{
+			return (IntPtr)Buffer.malloc((UIntPtr)cb);
 		}
 
 		public unsafe static void FreeHGlobal(IntPtr hglobal)
