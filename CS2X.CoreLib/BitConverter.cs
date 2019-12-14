@@ -53,7 +53,7 @@
 
         public static double ToDouble(byte[] value, int startIndex)
         {
-            return Int64BitsToDouble(ToInt64(value, startIndex));;
+            return Int64BitsToDouble(ToInt64(value, startIndex));
         }
 
         public static unsafe long DoubleToInt64Bits(double value)

@@ -4,7 +4,7 @@ namespace System
 {
     public abstract class Enum : ValueType
 	{
-		[MethodImpl(MethodImplOptions.InternalCall)]
-		public extern string ToString();
+		//[MethodImpl(MethodImplOptions.InternalCall)]
+		//public extern string ToString();
 	}
 }

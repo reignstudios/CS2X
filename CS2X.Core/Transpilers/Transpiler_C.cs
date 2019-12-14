@@ -1497,10 +1497,17 @@ namespace CS2X.Core.Transpilers
 								}
 								else if(syntax.ExpressionBody != null)
 								{
-									if (!method.ReturnsVoid) writer.WritePrefix("return ");
-									writer.Write(writer.prefix);
-									WriteExpression(syntax.ExpressionBody.Expression);
-									writer.WriteLine(';');
+									if (syntax.ExpressionBody.Expression is ThrowExpressionSyntax)
+									{
+										WriteExpression(syntax.ExpressionBody.Expression);
+									}
+									else
+									{
+										if (!method.ReturnsVoid) writer.WritePrefix("return ");
+										else writer.WritePrefix();
+										WriteExpression(syntax.ExpressionBody.Expression);
+										writer.WriteLine(';');
+									}
 								}
 								else
 								{
@@ -1558,13 +1565,44 @@ namespace CS2X.Core.Transpilers
 								else if (isVirtualAutoPropertyMethod)
 								{
 									if (method.IsStatic) throw new NotSupportedException("Virtual auto property cannot be static");
-									if (method.MethodKind == MethodKind.PropertyGet) writer.WriteLinePrefix($"return self->{GetFieldFullName(virtualAutoPropertyField)};");
-									else if (method.MethodKind == MethodKind.PropertySet) writer.WriteLinePrefix($"self->{GetFieldFullName(virtualAutoPropertyField)} = {GetParameterFullName(method.Parameters[0])};");
-									else throw new NotImplementedException("Virtual auto property method kind is invalid: " + method.MethodKind);
+									if (syntax.ExpressionBody != null && syntax.ExpressionBody.Expression is ThrowExpressionSyntax)
+									{
+										WriteExpression(syntax.ExpressionBody.Expression);
+									}
+									else
+									{
+										if (method.MethodKind == MethodKind.PropertyGet) writer.WriteLinePrefix($"return self->{GetFieldFullName(virtualAutoPropertyField)};");
+										else if (method.MethodKind == MethodKind.PropertySet) writer.WriteLinePrefix($"self->{GetFieldFullName(virtualAutoPropertyField)} = {GetParameterFullName(method.Parameters[0])};");
+										else throw new NotImplementedException("Virtual auto property method kind is invalid: " + method.MethodKind);
+									}
+								}
+								else if (syntax.ExpressionBody != null)
+								{
+									if (syntax.ExpressionBody.Expression is ThrowExpressionSyntax)
+									{
+										WriteExpression(syntax.ExpressionBody.Expression);
+									}
+									else
+									{
+										if (method.MethodKind == MethodKind.PropertyGet)
+										{
+											writer.WritePrefix("return ");
+											WriteExpression(syntax.ExpressionBody.Expression);
+											writer.WriteLine(';');
+										}
+										else if (method.MethodKind == MethodKind.PropertySet)
+										{
+											WriteExpression(syntax.ExpressionBody.Expression);
+										}
+										else
+										{
+											throw new NotImplementedException("Unsupported property method kind is: " + method.MethodKind);
+										}
+									}
 								}
 								else
 								{
-									throw new NotImplementedException("AccessorDeclarationSyntax body was null and not a virtual auto property (This should never be hit)");
+									throw new NotImplementedException("Unsupported empty AccessorDeclarationSyntax: " + syntax.ToFullString());
 								}
 							}
 							else if (syntaxDeclaration is ArrowExpressionClauseSyntax)
@@ -1782,6 +1820,18 @@ namespace CS2X.Core.Transpilers
 								else
 								{
 									throw new NotSupportedException($"Unsupported EqualityComparer method: " + method.Name);
+								}
+							}
+							else if (type.Name == "Enum")
+							{
+								if (method.Name == "ToString")
+								{
+									var emptyString = FindFieldByName(specialTypes.stringType, "Empty");
+									writer.WriteLinePrefix($"return {GetFieldFullName(emptyString)};");
+								}
+								else
+								{
+									throw new NotSupportedException($"Unsupported Enum method: " + method.Name);
 								}
 							}
 							else
@@ -2194,6 +2244,7 @@ namespace CS2X.Core.Transpilers
 				else if (statement is TryStatementSyntax) TryStatement((TryStatementSyntax)statement);
 				else if (statement is ThrowStatementSyntax) ThrowStatement((ThrowStatementSyntax)statement);
 				else if (statement is UsingStatementSyntax) UsingStatement((UsingStatementSyntax)statement);
+				else if (statement is EmptyStatementSyntax) EmptyStatement((EmptyStatementSyntax)statement);
 				else throw new NotSupportedException("Unsupported statement: " + statement.GetType());
 			}
 			BlockStartCallback = null;
@@ -2702,6 +2753,11 @@ namespace CS2X.Core.Transpilers
 			--tryCatchNestingLevel;
 		}
 
+		private void EmptyStatement(EmptyStatementSyntax statement)
+		{
+			writer.WriteLine(';');
+		}
+
 		private void WriteExpression(ExpressionSyntax expression)
 		{
 			if (expression is LiteralExpressionSyntax) WriteLiteralExpression((LiteralExpressionSyntax)expression);
@@ -2727,6 +2783,7 @@ namespace CS2X.Core.Transpilers
 			else if (expression is TypeOfExpressionSyntax) TypeOfExpression((TypeOfExpressionSyntax)expression);
 			else if (expression is DefaultExpressionSyntax) DefaultExpression((DefaultExpressionSyntax)expression);
 			else if (expression is CheckedExpressionSyntax) CheckedExpression((CheckedExpressionSyntax)expression);
+			else if (expression is ThrowExpressionSyntax) ThrowExpression((ThrowExpressionSyntax)expression);
 			else throw new NotImplementedException("Unsupported expression: " + expression.GetType());
 		}
 
@@ -3255,13 +3312,13 @@ namespace CS2X.Core.Transpilers
 			if (expression.Initializer != null)
 			{
 				writer.WriteLine(';');
-				IdentifierNameSyntax caller = null;
+				ExpressionSyntax caller = null;
 				InstructionalBody.Local local = null;
 				ITypeSymbol type;
 				if (expression.Parent is AssignmentExpressionSyntax)
 				{
 					var parent = (AssignmentExpressionSyntax)expression.Parent;
-					caller = (IdentifierNameSyntax)parent.Left;
+					caller = parent.Left;
 					type = ResolveType(parent.Left);
 				}
 				else if (expression.Parent is EqualsValueClauseSyntax && expression.Parent.Parent is VariableDeclaratorSyntax)
@@ -3601,7 +3658,17 @@ namespace CS2X.Core.Transpilers
 				if (caller is ThisExpressionSyntax) callerType = method.ContainingType;
 				else callerType = ResolveType(caller);
 
-				if (callerType.TypeKind == TypeKind.Enum && !method.IsExtensionMethod) throw new NotImplementedException("Non extension Enum method not supported: " + expression.ToFullString());
+				if (callerType.TypeKind == TypeKind.Enum && !method.IsExtensionMethod)
+				{
+					if (method.Name == "ToString")
+					{
+						throw new NotImplementedException("TODO");
+					}
+					else
+					{
+						throw new NotSupportedException("Non extension Enum method not supported: " + expression.ToFullString());
+					}
+				}
 				if (callerType.IsValueType)
 				{
 					if (method.ContainingType.Equals(specialTypes.objectType)) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
@@ -3751,7 +3818,7 @@ namespace CS2X.Core.Transpilers
 					WriteExpression(expression.Right);
 					writer.Write(')');
 				}
-				else if (operatorMethod.MethodKind == MethodKind.BuiltinOperator && type != null && type.SpecialType == SpecialType.System_Single)
+				else if (expression.OperatorToken.ValueText == "%" && operatorMethod.MethodKind == MethodKind.BuiltinOperator && type != null && type.SpecialType == SpecialType.System_Single)
 				{
 					writer.Write("fmodf(");
 					WriteExpression(expression.Left);
@@ -3759,7 +3826,7 @@ namespace CS2X.Core.Transpilers
 					WriteExpression(expression.Right);
 					writer.Write(')');
 				}
-				else if (operatorMethod.MethodKind == MethodKind.BuiltinOperator && type != null && type.SpecialType == SpecialType.System_Double)
+				else if (expression.OperatorToken.ValueText == "%" && operatorMethod.MethodKind == MethodKind.BuiltinOperator && type != null && type.SpecialType == SpecialType.System_Double)
 				{
 					writer.Write("fmod(");
 					WriteExpression(expression.Left);
@@ -3985,6 +4052,14 @@ namespace CS2X.Core.Transpilers
 		private void CheckedExpression(CheckedExpressionSyntax expression)
 		{
 			WriteExpression(expression.Expression);
+		}
+
+		private void ThrowExpression(ThrowExpressionSyntax expression)
+		{
+			writer.WritePrefix("CS2X_ThreadExceptionObject = ");
+			WriteExpression(expression.Expression);
+			writer.WriteLine(';');
+			writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
 		}
 		#endregion
 

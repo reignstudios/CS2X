@@ -1732,7 +1732,7 @@ char m3_PortableTestApp_Test_Operators_RunTest_0()
 	l_obj_3 = m3_PortableTestApp_Test_Operators__ctor_0(CS2X_AllocTypeAtomic(sizeof(t3_PortableTestApp_Test_Operators), &rt3_PortableTestApp_Test_Operators_OBJ, 0));
 	l_i_4 = m3_PortableTestApp_Test_Operators_op_Implicit_0(l_obj_3);
 	l_obj_3 = m3_PortableTestApp_Test_Operators_op_Explicit_0(l_i_4);
-	return fmodf(l_vec3_2.f_x_2, l_vec3_2.f_y_2) && l_i_4 == 123 && l_obj_3 == 0;
+	return l_vec3_2.f_x_2 == l_vec3_2.f_y_2 && l_i_4 == 123 && l_obj_3 == 0;
 }
 
 t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators__ctor_0(t3_PortableTestApp_Test_Operators* self)
@@ -1950,7 +1950,7 @@ t4_PortableTestApp_Test_Operators_Vec2 m4_PortableTestApp_Test_Operators_Vec2__c
 
 t4_PortableTestApp_Test_Operators_Vec2 m4_PortableTestApp_Test_Operators_Vec2_op_Addition_0(t4_PortableTestApp_Test_Operators_Vec2 p_value1, t4_PortableTestApp_Test_Operators_Vec2 p_value2)
 {
-	return m4_PortableTestApp_Test_Operators_Vec2__ctor_0(fmodf(p_value1.f_x_2, p_value2.f_x_2), fmodf(p_value1.f_y_2, p_value2.f_y_2));
+	return m4_PortableTestApp_Test_Operators_Vec2__ctor_0(p_value1.f_x_2 + p_value2.f_x_2, p_value1.f_y_2 + p_value2.f_y_2);
 }
 
 t4_PortableTestApp_Test_Operators_Vec2 m4_PortableTestApp_Test_Operators_Vec2_op_UnaryNegation_0(t4_PortableTestApp_Test_Operators_Vec2 p_value1)
