@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using CS2X.Core;
-using CS2X.Core.Transpilers;
+using CS2X.Core.Transpilers.C;
 
 namespace CS2X.CLI
 {

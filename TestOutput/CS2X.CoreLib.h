@@ -1495,7 +1495,6 @@ t2_System_Delegate* m2_System_Delegate_Remove_0(t2_System_Delegate* p_source, t2
 t2_System_Delegate* m2_System_Delegate_RemoveAll_0(t2_System_Delegate* p_source, t2_System_Delegate* p_value);
 t2_System_Delegate* m2_System_Delegate__ctor_0(t2_System_Delegate* self);
 t2_System_DllNotFoundException* m2_System_DllNotFoundException__ctor_0(t2_System_DllNotFoundException* self);
-t2_System_String* m2_System_Enum_ToString_0(t2_System_Enum* self);
 t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self);
 t2_System_String* m2_System_Environment_get_NewLine_0();
 void m2_System_Environment_SetEnvironmentVariable_0(t2_System_String* p_variable, t2_System_String* p_value);
@@ -2225,11 +2224,6 @@ t2_System_DllNotFoundException* m2_System_DllNotFoundException__ctor_0(t2_System
 {
 	m2_System_Exception__ctor_0(self);
 	return self;
-}
-
-t2_System_String* m2_System_Enum_ToString_0(t2_System_Enum* self)
-{
-	return f_System_String_Empty;
 }
 
 t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self)
