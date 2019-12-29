@@ -363,7 +363,6 @@ namespace CS2X.Core.Transpilers.C
 						using (var stream = new MemoryStream())
 						using (instructionalBody = new InstructionalBody(stream, writer))
 						{
-							instructionalBody.disableWrite = isCollectionPass;
 							var origWriter = writer;
 							writer = instructionalBody;
 							if (syntaxDeclaration is MethodDeclarationSyntax)

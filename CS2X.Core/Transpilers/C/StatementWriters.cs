@@ -85,7 +85,6 @@ namespace CS2X.Core.Transpilers.C
 				using (var stream = new MemoryStream())
 				using (var subInstructionalBody = new InstructionalBody(stream, writer))
 				{
-					subInstructionalBody.disableWrite = isCollectionPass;
 					subInstructionalBody.locals.AddRange(instructionalBody.locals);// copy parent block locals
 					var origWriter = writer;
 					var origInstructionalBody = instructionalBody;

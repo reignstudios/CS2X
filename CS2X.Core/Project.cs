@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using CS2X.Analyzer.SyntaxValidation;
+using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace CS2X.Core
 {

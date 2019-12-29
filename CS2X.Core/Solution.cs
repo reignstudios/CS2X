@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.FindSymbols;
+using System.Linq;
 
 namespace CS2X.Core
 {
@@ -62,6 +65,28 @@ namespace CS2X.Core
 				foreach (var project in projects)
 				{
 					await project.Parse();
+				}
+
+				// parse generics
+				foreach (var project in projects)
+				foreach (var type in project.allTypes)
+				{
+					if (!type.IsGenericType || !type.IsDefinition || type.TypeKind == TypeKind.Interface) continue;
+					if (type.Name.Contains("List"))
+					{ }
+
+					if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Struct && type.TypeKind != TypeKind.Delegate) throw new NotSupportedException("Unsupported generic type kind: " + type.TypeKind);
+					var implementations = await SymbolFinder.FindReferencesAsync(type, roslynSolution);
+					foreach (var implementation in implementations)
+					foreach (var location in implementation.Locations)
+					{
+						var semanticModel = await location.Document.GetSemanticModelAsync();
+						int position = location.Location.SourceSpan.Start;
+						//var symbol2 = semanticModel.GetEnclosingSymbol(position);
+						var symbol = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace);// as INamedTypeSymbol;
+						if (symbol != null)// && SymbolUtils.IsResolvedGenericType(symbol))
+						{ }
+					}
 				}
 			}
 		}
