@@ -21,6 +21,9 @@ namespace CS2X.Core
 		public IReadOnlyList<Project> projects { get; private set; }
 		public Project coreLibProject { get; private set; }
 
+		public IReadOnlyList<INamedTypeSymbol> genericTypes { get; private set; }
+		public IReadOnlyList<IMethodSymbol> genericMethods { get; private set; }
+
 		static Solution()
 		{
 			if (MSBuildLocator.CanRegister) MSBuildLocator.RegisterDefaults();
@@ -67,14 +70,12 @@ namespace CS2X.Core
 					await project.Parse();
 				}
 
-				// parse generics
+				// find all generics type uses
+				var genericTypeList = new HashSet<INamedTypeSymbol>();
 				foreach (var project in projects)
 				foreach (var type in project.allTypes)
 				{
-					if (!type.IsGenericType || !type.IsDefinition || type.TypeKind == TypeKind.Interface) continue;
-					if (type.Name.Contains("List"))
-					{ }
-
+					if (!type.IsGenericType || !type.IsDefinition || type.TypeKind == TypeKind.Interface || type.TypeKind == TypeKind.Enum) continue;
 					if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Struct && type.TypeKind != TypeKind.Delegate) throw new NotSupportedException("Unsupported generic type kind: " + type.TypeKind);
 					var implementations = await SymbolFinder.FindReferencesAsync(type, roslynSolution);
 					foreach (var implementation in implementations)
@@ -82,12 +83,73 @@ namespace CS2X.Core
 					{
 						var semanticModel = await location.Document.GetSemanticModelAsync();
 						int position = location.Location.SourceSpan.Start;
-						//var symbol2 = semanticModel.GetEnclosingSymbol(position);
-						var symbol = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace);// as INamedTypeSymbol;
-						if (symbol != null)// && SymbolUtils.IsResolvedGenericType(symbol))
-						{ }
+						var symbol = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace);
+						if (symbol != null)
+						{
+							INamedTypeSymbol resolvedType = null;
+							if (symbol is INamedTypeSymbol namedSymbol)
+							{
+								resolvedType = namedSymbol;
+							}
+							else if (symbol is IMethodSymbol methodSymbol)
+							{
+								resolvedType = methodSymbol.ContainingType;
+							}
+							else
+							{
+								throw new NotSupportedException("Unsupported generic symbol resolver kind: " + symbol.Kind);
+							}
+							
+							if (SymbolUtils.IsResolvedGenericType(resolvedType))
+							{
+								genericTypeList.Add(resolvedType);
+							}
+						}
 					}
 				}
+				genericTypes = genericTypeList.ToList();
+
+				// find all generics method uses
+				var genericMethodList = new HashSet<IMethodSymbol>();
+				foreach (var project in projects)
+				foreach (var type in project.allTypes)
+				{
+					if (type.TypeKind == TypeKind.Interface || type.TypeKind == TypeKind.Enum) continue;
+					if (type.TypeKind != TypeKind.Class && type.TypeKind != TypeKind.Struct && type.TypeKind != TypeKind.Delegate) throw new NotSupportedException("Unsupported generic type kind: " + type.TypeKind);
+					
+					INamedTypeSymbol resolvedType;
+					if (type.IsGenericType)
+					{
+						resolvedType = genericTypeList.FirstOrDefault(x => x.OriginalDefinition.Equals(type.OriginalDefinition));
+						if (resolvedType == null) continue;// no uses of generic type, so skip
+					}
+					else
+					{
+						resolvedType = type;
+					}
+
+					foreach (var member in resolvedType.GetMembers())
+					{
+						var method = member as IMethodSymbol;
+						if (method == null || !method.IsGenericMethod) continue;
+						var implementations = await SymbolFinder.FindReferencesAsync(method, roslynSolution);
+						foreach (var implementation in implementations)
+						foreach (var location in implementation.Locations)
+						{
+							var semanticModel = await location.Document.GetSemanticModelAsync();
+							int position = location.Location.SourceSpan.Start;
+							var resolvedMethod = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace) as IMethodSymbol;
+							if (resolvedMethod != null)
+							{
+								if (SymbolUtils.IsResolvedGenericMethod(resolvedMethod))
+								{
+									genericMethodList.Add(resolvedMethod);
+								}
+							}
+						}
+					}
+				}
+				genericMethods = genericMethodList.ToList();
 			}
 		}
 	}

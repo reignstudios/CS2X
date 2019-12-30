@@ -19,5 +19,12 @@ namespace CS2X.Core
 			}
 			return true;
 		}
+
+		public static bool IsResolvedGenericMethod(IMethodSymbol method)
+		{
+			if (!method.IsGenericMethod || method.IsDefinition) return false;
+			if (method.TypeArguments.Any(x => x.TypeKind == TypeKind.TypeParameter)) return false;
+			return !method.ContainingType.IsGenericType || IsResolvedGenericType(method.ContainingType);
+		}
 	}
 }
