@@ -142,9 +142,9 @@ namespace CS2X.Core.Transpilers.C
 							// write types
 							WriteTypes_ForwardDeclared(allTypes);
 							WriteTypes(allTypes);
-							WriteRuntimeTypes(allTypes);
-							WriteRuntimeTypes(arrayTypes);
-							WriteRuntimeTypes(pointerTypes);
+							WriteRuntimeTypes(allTypes, "Normal");
+							WriteRuntimeTypes(arrayTypes, "Array");
+							WriteRuntimeTypes(pointerTypes, "Pointer");
 
 							// write methods
 							WriteMethods_ForwardDeclared(methods);
@@ -640,11 +640,11 @@ namespace CS2X.Core.Transpilers.C
 			}
 		}
 
-		private void WriteRuntimeTypes(IEnumerable<ITypeSymbol> types)
+		private void WriteRuntimeTypes(IEnumerable<ITypeSymbol> types, string catagory)
 		{
 			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Runtime Types */");
+			writer.WriteLine($"/* Runtime Types '{catagory}' */");
 			writer.WriteLine("/* =============================== */");
 			foreach (var type in types)
 			{
@@ -656,6 +656,7 @@ namespace CS2X.Core.Transpilers.C
 		{
 			if (pvalueToIValueTypes.Count != 0)// NOTE: this must happen after all types have been defined
 			{
+				writer.WriteLine();
 				writer.WriteLine("/* =============================== */");
 				writer.WriteLine("/* PValue to IValue inline helpers */");
 				writer.WriteLine("/* =============================== */");
