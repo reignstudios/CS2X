@@ -4,9 +4,16 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 		<RootNamespace>System</RootNamespace>
 
+		<!-- Ignore common warnings for unsupported CS2X feature subset -->
+		<NoWarn>0660,0661</NoWarn>
+
 		<!--Disable .NET Core SDK libs-->
 		<NoStdLib>true</NoStdLib>
+		<NoCompilerStandardLib>true</NoCompilerStandardLib>
 		<DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+
+    <!-- Set CoreLib settings -->
+		<RuntimeMetadataVersion>v4.0.30319</RuntimeMetadataVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

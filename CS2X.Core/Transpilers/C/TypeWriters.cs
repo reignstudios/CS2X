@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.FindSymbols;
+using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core.Transpilers.C
 {
@@ -57,7 +58,7 @@ namespace CS2X.Core.Transpilers.C
 					if (IsResolvedGenericMethod(method)) throw new Exception("Expected unresolved generic method");
 					foreach (var genericMethod in genericMethods)// write all permutations
 					{
-						if (genericMethod.ConstructedFrom.Equals(method))
+						if (genericMethod.ConstructedFrom.IsEqual(method))
 						{
 							resolvedMethod = genericMethod;
 							WriteResolvedMethod();
@@ -213,7 +214,7 @@ namespace CS2X.Core.Transpilers.C
 				{
 					var arg = method.TypeArguments[i];
 					var param = method.TypeParameters[i];
-					if (arg.Equals(param)) throw new Exception("TypeArguments and TypeParameters for generic method don't match: " + method.FullName());
+					if (arg.IsEqual(param)) throw new Exception("TypeArguments and TypeParameters for generic method don't match: " + method.FullName());
 				}
 			}
 
@@ -292,7 +293,7 @@ namespace CS2X.Core.Transpilers.C
 							string ptr = string.Empty;
 							writer.Write(GetTypeFullNameRef(parameter.Type));
 							if (IsParameterPassByRef(parameter)) writer.Write('*');
-							if (lastParameter != null && !parameter.Equals(lastParameter)) writer.Write(", ");
+							if (lastParameter != null && !parameter.IsEqual(lastParameter)) writer.Write(", ");
 						}
 						writer.WriteLine(");");
 						return true;
@@ -786,7 +787,7 @@ namespace CS2X.Core.Transpilers.C
 							foreach (var parameter in method.Parameters)
 							{
 								writer.Write(GetParameterFullName(parameter));
-								if (!parameter.Equals(lastParamter)) writer.Write(", ");
+								if (!parameter.IsEqual(lastParamter)) writer.Write(", ");
 							}
 							writer.WriteLine(");");
 							if (method.ReturnsVoid) writer.WriteLinePrefix("return;");
@@ -823,7 +824,7 @@ namespace CS2X.Core.Transpilers.C
 					WriteContrustorFieldInitializers(method);
 
 					// write multicast delegate implementation detail
-					if (method.ContainingType != null && method.ContainingType.BaseType != null && method.ContainingType.BaseType.Equals(specialTypes.multicastDelegateType))
+					if (method.ContainingType != null && method.ContainingType.BaseType != null && method.ContainingType.BaseType.IsEqual(specialTypes.multicastDelegateType))
 					{
 						var selfField = FindFieldByName(specialTypes.multicastDelegateType.BaseType, "_target");
 						var funcField = FindFieldByName(specialTypes.multicastDelegateType.BaseType, "_methodPtr");
@@ -839,7 +840,7 @@ namespace CS2X.Core.Transpilers.C
 						foreach (var parameter in method.Parameters)
 						{
 							writer.Write(GetTypeFullNameRef(parameter.Type));
-							if (last != null && !parameter.Equals(last)) writer.Write(", ");
+							if (last != null && !parameter.IsEqual(last)) writer.Write(", ");
 						}
 					}
 
@@ -849,7 +850,7 @@ namespace CS2X.Core.Transpilers.C
 						foreach (var parameter in method.Parameters)
 						{
 							writer.Write(GetParameterFullName(parameter));
-							if (last != null && !parameter.Equals(last)) writer.Write(", ");
+							if (last != null && !parameter.IsEqual(last)) writer.Write(", ");
 						}
 					}
 
@@ -998,7 +999,7 @@ namespace CS2X.Core.Transpilers.C
 				string ptr = string.Empty;
 				if (IsParameterPassByRef(parameter)) ptr = "*";
 				writer.Write($"{GetTypeFullNameRef(parameter.Type)}{ptr} {GetParameterFullName(parameter)}");
-				if (lastParameter != null && !parameter.Equals(lastParameter)) writer.Write(", ");
+				if (lastParameter != null && !parameter.IsEqual(lastParameter)) writer.Write(", ");
 			}
 		}
 	}

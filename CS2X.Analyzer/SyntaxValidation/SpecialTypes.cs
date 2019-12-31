@@ -54,7 +54,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 			foreach (var interfaceMethod in method.ExplicitInterfaceImplementations)
 			{
 				var originalMethod = interfaceMethod.OriginalDefinition;
-				if (originalMethod.Equals(ienumerableT_GetEnumerator) || originalMethod.Equals(ienumerable_GetEnumerator) || originalMethod.Equals(ienumerator_GetEnumerator))
+				if (originalMethod.IsEqual(ienumerableT_GetEnumerator) || originalMethod.IsEqual(ienumerable_GetEnumerator) || originalMethod.IsEqual(ienumerator_GetEnumerator))
 				{
 					return true;
 				}

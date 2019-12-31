@@ -72,10 +72,12 @@
 			public T i;
 			public E i2;
 
+			#pragma warning disable 0693
 			public bool Aaa<T>(T t)
 			{
 				return t == null;
 			}
+			#pragma warning restore 0693
 		}
 
 		public virtual bool TestVirt<E>(E value)

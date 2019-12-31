@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.FindSymbols;
+using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core.Transpilers.C
 {
@@ -789,7 +790,7 @@ namespace CS2X.Core.Transpilers.C
 								if (args1.Length != args2.Length) return false;
 								for (int i = 0; i != args1.Length; ++i)
 								{
-									if (!args1[i].Equals(args2[i])) return false;
+									if (!args1[i].IsEqual(args2[i])) return false;
 								}
 								return true;
 							}
@@ -797,7 +798,7 @@ namespace CS2X.Core.Transpilers.C
 							highestMethod = genericMethods.First
 							(
 								x =>
-								(x.Equals(highestMethod) || x.ConstructedFrom.Equals(highestMethod)) &&
+								(x.IsEqual(highestMethod) || x.ConstructedFrom.IsEqual(highestMethod)) &&
 								AllTypeArgsMatch(x.TypeArguments, resolvedMethod.TypeArguments)
 							);
 						}
@@ -810,7 +811,7 @@ namespace CS2X.Core.Transpilers.C
 						if (IsResolvedGenericMethod(method)) throw new Exception("Expected unresolved generic method");
 						foreach (var genericMethod in genericMethods)// write all permutations
 						{
-							if (genericMethod.ConstructedFrom.Equals(method))
+							if (genericMethod.ConstructedFrom.IsEqual(method))
 							{
 								resolvedMethod = genericMethod;
 								WriteResolvedMethod();

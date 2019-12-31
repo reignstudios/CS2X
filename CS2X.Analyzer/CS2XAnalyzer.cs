@@ -12,15 +12,19 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace CS2X.Analyzer
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	#pragma warning disable RS1022
 	public class CS2XAnalyzer : DiagnosticAnalyzer
+	#pragma warning restore RS1022
 	{
 		public const string DiagnosticId = "CS2XAnalyzer";
 		private static DiagnosticDescriptor ErrorRule = new DiagnosticDescriptor(DiagnosticId, "CS2X", "{0}", "Naming", DiagnosticSeverity.Error, isEnabledByDefault: true, description: string.Empty);
 		private static DiagnosticDescriptor WarningRule = new DiagnosticDescriptor(DiagnosticId, "CS2X", "{0}", "Naming", DiagnosticSeverity.Warning, isEnabledByDefault: true, description: string.Empty);
-		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(ErrorRule); } }
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(ErrorRule, WarningRule);
 
 		public override void Initialize(AnalysisContext context)
 		{
+			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
+
 			// See https://github.com/dotnet/roslyn/blob/master/docs/analyzers/Analyzer%20Actions%20Semantics.md for more information
 			context.EnableConcurrentExecution();
 			context.RegisterSemanticModelAction(AnalyzeSyntax);

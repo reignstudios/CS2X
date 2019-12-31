@@ -34,7 +34,7 @@ namespace CS2X.Core.Transpilers
 		{
 			foreach (var project in solution.projects)
 			{
-				if (assembly.Equals(project.compilation.Assembly)) return project.compilation;
+				if (assembly.IsEqual(project.compilation.Assembly)) return project.compilation;
 			}
 			throw new Exception("Failed to find CSharpCompilation for assembly: " + assembly.Name);
 		}
@@ -165,7 +165,7 @@ namespace CS2X.Core.Transpilers
 		protected bool IsAutoProperty(IPropertySymbol property, out IFieldSymbol field)
 		{
 			var members = property.ContainingType.GetMembers();
-			field = (IFieldSymbol)members.FirstOrDefault(x => x.Kind == SymbolKind.Field && property.Equals(((IFieldSymbol)x).AssociatedSymbol));
+			field = (IFieldSymbol)members.FirstOrDefault(x => x.Kind == SymbolKind.Field && property.IsEqual(((IFieldSymbol)x).AssociatedSymbol));
 			return field != null;
 		}
 
@@ -290,7 +290,7 @@ namespace CS2X.Core.Transpilers
 				if (member.Kind == SymbolKind.Method)
 				{
 					var otherMethod = (IMethodSymbol)member;
-					if (otherMethod.OriginalDefinition.Equals(method.OriginalDefinition) || (method.IsExtensionMethod && otherMethod.Equals(method.ReducedFrom))) break;
+					if (otherMethod.OriginalDefinition.IsEqual(method.OriginalDefinition) || (method.IsExtensionMethod && otherMethod.IsEqual(method.ReducedFrom))) break;
 					else if (otherMethod.Name == method.Name) ++index;
 				}
 			}
@@ -312,7 +312,7 @@ namespace CS2X.Core.Transpilers
 				{
 					var memberMethod = member as IMethodSymbol;
 					if (memberMethod == null) continue;
-					if (method.Equals(memberMethod) || (method.IsGenericMethod && method.ConstructedFrom.Equals(memberMethod)))
+					if (method.IsEqual(memberMethod) || (method.IsGenericMethod && method.ConstructedFrom.IsEqual(memberMethod)))
 					{
 						found = true;
 						break;
@@ -357,8 +357,8 @@ namespace CS2X.Core.Transpilers
 					if (member.Kind != SymbolKind.Method) continue;
 					var method = (IMethodSymbol)member;
 					if (!IsVirtualMethod(method)) continue;
-					if (method.Equals(rootSlotMethod) || rootSlotMethod.Equals(method.OverriddenMethod)) return method;
-					if (rootSlotMethod.IsGenericMethod && (rootSlotMethod.ConstructedFrom.Equals(method) || rootSlotMethod.ConstructedFrom.Equals(method.OverriddenMethod))) return method;
+					if (method.IsEqual(rootSlotMethod) || rootSlotMethod.IsEqual(method.OverriddenMethod)) return method;
+					if (rootSlotMethod.IsGenericMethod && (rootSlotMethod.ConstructedFrom.IsEqual(method) || rootSlotMethod.ConstructedFrom.IsEqual(method.OverriddenMethod))) return method;
 				}
 				baseType = baseType.BaseType;
 			} while (baseType != null);
@@ -538,7 +538,7 @@ namespace CS2X.Core.Transpilers
 			var members = type.GetMembers();
 			var property = members.FirstOrDefault(x => x.Kind == SymbolKind.Property && x.Name == propertyName) as IPropertySymbol;
 			if (property == null) return null;
-			return members.FirstOrDefault(x => x.Kind == SymbolKind.Field && property.Equals(((IFieldSymbol)x).AssociatedSymbol)) as IFieldSymbol;
+			return members.FirstOrDefault(x => x.Kind == SymbolKind.Field && property.IsEqual(((IFieldSymbol)x).AssociatedSymbol)) as IFieldSymbol;
 		}
 
 		protected IMethodSymbol FindMethodByName(ITypeSymbol type, string methodName)
@@ -548,7 +548,7 @@ namespace CS2X.Core.Transpilers
 
 		protected IMethodSymbol FindMethodByReturnType(ITypeSymbol type, string methodName, ITypeSymbol returnType)
 		{
-			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName && ((IMethodSymbol)x).ReturnType.Equals(returnType)) as IMethodSymbol;
+			return type.GetMembers().FirstOrDefault(x => x.Kind == SymbolKind.Method && x.Name == methodName && ((IMethodSymbol)x).ReturnType.IsEqual(returnType)) as IMethodSymbol;
 		}
 
 		protected IMethodSymbol FindMethodBySignature(ITypeSymbol type, string methodName, ITypeSymbol returnType, params ITypeSymbol[] parameters)
@@ -558,13 +558,13 @@ namespace CS2X.Core.Transpilers
 				if (member.Kind != SymbolKind.Method) continue;
 				if (member.Name != methodName) continue;
 				var method = (IMethodSymbol)member;
-				if (!method.ReturnType.Equals(returnType)) continue;
+				if (!method.ReturnType.IsEqual(returnType)) continue;
 				if (method.Parameters.Length != parameters.Length) continue;
 
 				bool match = true;
 				for (int i = 0; i != method.Parameters.Length; ++i)
 				{
-					if (!method.Parameters[i].Type.Equals(parameters[i]))
+					if (!method.Parameters[i].Type.IsEqual(parameters[i]))
 					{
 						match = false;
 						break;
@@ -651,7 +651,7 @@ namespace CS2X.Core.Transpilers
 				{
 					if (symbol.ContainingType == null) throw new NotSupportedException("Unsupported generic type: " + type.FullName());
 					var containingType = (INamedTypeSymbol)ResolveType(symbol.ContainingType, usedWithinMethod);
-					symbol = (INamedTypeSymbol)containingType.GetMembers().First(x => x.OriginalDefinition.Equals(symbol.OriginalDefinition));
+					symbol = (INamedTypeSymbol)containingType.GetMembers().First(x => x.OriginalDefinition.IsEqual(symbol.OriginalDefinition));
 				}
 
 				// check if all generic type args are resolved
@@ -687,7 +687,7 @@ namespace CS2X.Core.Transpilers
 					var containingType = usedWithinMethod.ContainingType;
 					while (containingType != null)
 					{
-						if (containingType.OriginalDefinition.Equals(symbol.ContainingType.OriginalDefinition)) break;
+						if (containingType.OriginalDefinition.IsEqual(symbol.ContainingType.OriginalDefinition)) break;
 						containingType = containingType.ContainingType;
 					}
 					if (containingType == null) throw new Exception("Failed to find ITypeParameterSymbol type: " + symbol.Name);
@@ -734,7 +734,7 @@ namespace CS2X.Core.Transpilers
 				{
 					if (member.Kind != SymbolKind.Method) continue;
 					var memberMethod = (IMethodSymbol)member;
-					if (method.OriginalDefinition.Equals(memberMethod.OriginalDefinition))
+					if (method.OriginalDefinition.IsEqual(memberMethod.OriginalDefinition))
 					{
 						return ResolveMethod(memberMethod, usedWithinMethod);// keep processing until fully resolved
 					}
@@ -749,7 +749,7 @@ namespace CS2X.Core.Transpilers
 			var next = type;
 			while (next != null)
 			{
-				if (next.Equals(isType)) return true;
+				if (next.IsEqual(isType)) return true;
 				next = next.BaseType;
 			}
 			return false;
@@ -762,7 +762,7 @@ namespace CS2X.Core.Transpilers
 			{
 				foreach (var i in next.Interfaces)
 				{
-					if (i.Equals(interfaceType)) return true;
+					if (i.IsEqual(interfaceType)) return true;
 					if (HasInterface(i, interfaceType)) return true;
 				}
 				next = next.BaseType;
@@ -783,7 +783,7 @@ namespace CS2X.Core.Transpilers
 		{
 			if (method.MethodKind != MethodKind.PropertyGet) return false;
 			if (!method.Name.EndsWith("get_Current")) return false;
-			if (!specialTypes.objectType.Equals(method.ReturnType) || !HasInterface(method.ContainingType, specialTypes.ienumerator)) return false;
+			if (!specialTypes.objectType.IsEqual(method.ReturnType) || !HasInterface(method.ContainingType, specialTypes.ienumerator)) return false;
 			return true;
 		}
 

@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.FindSymbols;
+using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core.Transpilers.C
 {
@@ -287,10 +288,10 @@ namespace CS2X.Core.Transpilers.C
 						IMethodSymbol resolvedMethod = null;
 
 						// check if method is used in generic type
-						var genericType = genericTypes.FirstOrDefault(x => x.ConstructedFrom.Equals(methodOverride.ContainingType));
+						var genericType = genericTypes.FirstOrDefault(x => x.ConstructedFrom.IsEqual(methodOverride.ContainingType));
 						if (genericType != null)
 						{
-							resolvedMethod = (IMethodSymbol)genericType.GetMembers().First(x => x.OriginalDefinition.Equals(methodOverride.OriginalDefinition));
+							resolvedMethod = (IMethodSymbol)genericType.GetMembers().First(x => x.OriginalDefinition.IsEqual(methodOverride.OriginalDefinition));
 						}
 
 						// construct method and track

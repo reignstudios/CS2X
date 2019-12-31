@@ -1,3 +1,6 @@
+<<< Real CoreLib location >>>
+https://github.com/dotnet/runtime/blob/master/src/coreclr/src/System.Private.CoreLib/System.Private.CoreLib.csproj
+
 <<< Roslyn Code Analyzers >>>
 * In VS 2019 installer: Check "Visual Stdios extension development".
 * In VS 2019 installer -> "Individual Components" tab: Check ".NET Compiler Platform SDK".

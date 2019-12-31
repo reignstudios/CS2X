@@ -10,6 +10,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.FindSymbols;
+using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core.Transpilers.C
 {
@@ -787,7 +788,7 @@ namespace CS2X.Core.Transpilers.C
 					writer.Write(')');
 					return;
 				}
-				else if (method.MethodKind == MethodKind.BuiltinOperator && method.ContainingType != null && specialTypes.multicastDelegateType.Equals(method.ContainingType.BaseType))
+				else if (method.MethodKind == MethodKind.BuiltinOperator && method.ContainingType != null && specialTypes.multicastDelegateType.IsEqual(method.ContainingType.BaseType))
 				{
 					if (expression.OperatorToken.ValueText == "+=") method = FindMethodByName(specialTypes.delegateType, "Combine");
 					else if (expression.OperatorToken.ValueText == "-=") method = FindMethodByName(specialTypes.delegateType, "Remove");
@@ -918,7 +919,7 @@ namespace CS2X.Core.Transpilers.C
 				}
 				if (callerType.IsValueType)
 				{
-					if (method.ContainingType.Equals(specialTypes.objectType)) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
+					if (method.ContainingType.IsEqual(specialTypes.objectType)) throw new NotSupportedException("ValueType boxing invoke not supported: " + expression.ToFullString());
 					if (IsVirtualMethod(method)) throw new NotSupportedException("ValueType virtual invoke not supported: " + expression.ToFullString());
 				}
 			}
@@ -1087,10 +1088,10 @@ namespace CS2X.Core.Transpilers.C
 					if
 					(
 						expression.OperatorToken.ValueText == "+" &&
-						operatorMethod.ReturnType.Equals(type) &&
+						operatorMethod.ReturnType.IsEqual(type) &&
 						operatorMethod.Parameters.Length == 2 &&
-						operatorMethod.Parameters[0].Type.Equals(type) &&
-						operatorMethod.Parameters[1].Type.Equals(type)
+						operatorMethod.Parameters[0].Type.IsEqual(type) &&
+						operatorMethod.Parameters[1].Type.IsEqual(type)
 					)
 					{
 						var delegateType = type.BaseType.BaseType;
@@ -1099,10 +1100,10 @@ namespace CS2X.Core.Transpilers.C
 					else if
 					(
 						expression.OperatorToken.ValueText == "-" &&
-						operatorMethod.ReturnType.Equals(type) &&
+						operatorMethod.ReturnType.IsEqual(type) &&
 						operatorMethod.Parameters.Length == 2 &&
-						operatorMethod.Parameters[0].Type.Equals(type) &&
-						operatorMethod.Parameters[1].Type.Equals(type)
+						operatorMethod.Parameters[0].Type.IsEqual(type) &&
+						operatorMethod.Parameters[1].Type.IsEqual(type)
 					)
 					{
 						var delegateType = type.BaseType.BaseType;

@@ -262,7 +262,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 		{
 			var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 			var type = semanticModel.GetDeclaredSymbol(syntax);
-			if (type.Interfaces.Any(x => x.OriginalDefinition.Equals(specialTypes.ienumeratorT)) || type.Interfaces.Any(x => x.OriginalDefinition.Equals(specialTypes.ienumerator)))
+			if (type.Interfaces.Any(x => x.OriginalDefinition.IsEqual(specialTypes.ienumeratorT)) || type.Interfaces.Any(x => x.OriginalDefinition.IsEqual(specialTypes.ienumerator)))
 			{
 				FireSyntaxErrorCallback(syntax, "Only structs can implement IEnumerator");
 				return false;
@@ -343,7 +343,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 			foreach (var parameter in syntax.Parameters)
 			{
 				var symbol = semanticModel.GetDeclaredSymbol(parameter);
-				if (symbol != null && symbol.IsOptional && !specialTypes.attributeType.Equals(symbol.ContainingType.BaseType))
+				if (symbol != null && symbol.IsOptional && !specialTypes.attributeType.IsEqual(symbol.ContainingType.BaseType))
 				{
 					FireSyntaxErrorCallback(syntax, "Optional parameters not supported");
 					return false;
