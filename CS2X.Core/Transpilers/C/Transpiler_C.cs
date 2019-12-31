@@ -129,15 +129,15 @@ namespace CS2X.Core.Transpilers.C
 							WriteStringLiterals();
 
 							// gather list of all types dependency ordered
-							var allTypes = new HashSet<INamedTypeSymbol>();
+							var allTypes = new List<INamedTypeSymbol>(genericTypes);
 							foreach (var project in solution.projects)
 							{
-								// get ordered list of all project types
-								var allProjectTypes = new List<INamedTypeSymbol>(project.allTypes);
-								allProjectTypes.AddRange(transpiledProject.genericTypes);
-								allProjectTypes = Project.DependencySortTypes(allProjectTypes);
-								foreach (var type in allProjectTypes) allTypes.Add(type);
+								foreach (var type in project.allTypes)
+								{
+									if (!type.IsGenericType) allTypes.Add(type);
+								}
 							}
+							allTypes = Project.DependencySortTypes(allTypes);
 
 							// write types
 							WriteTypes_ForwardDeclared(allTypes);

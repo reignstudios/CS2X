@@ -87,9 +87,10 @@ namespace CS2X.Core
 
 	static class ISymbolExt
 	{
-		private static SymbolDisplayFormat nameFormat = new SymbolDisplayFormat(typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameOnly, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
-		private static SymbolDisplayFormat fullNameFormat = new SymbolDisplayFormat(memberOptions:SymbolDisplayMemberOptions.IncludeContainingType | SymbolDisplayMemberOptions.IncludeParameters, typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters, parameterOptions:SymbolDisplayParameterOptions.IncludeType);
-		private static SymbolDisplayFormat fullNamespaceFormat = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
+		private static readonly SymbolDisplayFormat nameFormat = new SymbolDisplayFormat(typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameOnly, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
+		private static readonly SymbolDisplayFormat fullNameFormat = new SymbolDisplayFormat(memberOptions:SymbolDisplayMemberOptions.IncludeContainingType | SymbolDisplayMemberOptions.IncludeParameters, typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters, parameterOptions:SymbolDisplayParameterOptions.IncludeType);
+		private static readonly SymbolDisplayFormat fullMethodNameFormat = new SymbolDisplayFormat(memberOptions:SymbolDisplayMemberOptions.IncludeContainingType, typeQualificationStyle:SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces, genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters);
+		private static readonly SymbolDisplayFormat fullNamespaceFormat = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces);
 
 		public static string Name(this ISymbol symbol)
 		{
@@ -99,6 +100,11 @@ namespace CS2X.Core
 		public static string FullName(this ISymbol symbol)
 		{
 			return symbol.ToDisplayString(fullNameFormat);
+		}
+
+		public static string FullMethodName(this IMethodSymbol symbol)
+		{
+			return symbol.ToDisplayString(fullMethodNameFormat);
 		}
 
 		public static string FullNamespace(this ISymbol symbol)

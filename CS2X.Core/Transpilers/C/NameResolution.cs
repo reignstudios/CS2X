@@ -325,12 +325,16 @@ namespace CS2X.Core.Transpilers.C
 			using (allowTypePrefix.Disable())
 			{
 				int index = GetMethodOverloadIndex(method);
+
 				string methodName;
-				if (method.IsGenericMethod) methodName = method.Name();
+				if (method.IsGenericMethod) methodName = method.FullMethodName();
 				else methodName = method.Name;
+
 				ParseImplementationDetail(ref methodName);
 				int nestingCount = NestedCount(method);
-				return $"m{nestingCount}_{GetTypeFullName(method.ContainingType)}_{methodName}_{index}";
+
+				if (method.IsGenericMethod) return $"m{nestingCount}_{methodName}_{index}";
+				else return $"m{nestingCount}_{GetTypeFullName(method.ContainingType)}_{methodName}_{index}";
 			}
 		}
 
