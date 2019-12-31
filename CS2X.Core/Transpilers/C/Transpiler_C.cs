@@ -120,7 +120,7 @@ namespace CS2X.Core.Transpilers.C
 						}
 
 						// write to C file
-						string filename = Path.GetFileNameWithoutExtension(solution.filename) + ".c";
+						string filename = exeProject.roslynProject.Name + ".c";
 						using (var stream = new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read))
 						using (var writerRoot = new StreamWriterEx(stream))
 						{

@@ -51,8 +51,7 @@ This project will focus on transpiling a C# subset with a modified type system f
 
 ## How does it basically work?
 * C89
-	* All '.dll' files get built to a '.h' header file and '.exe' gets built to a '.c' source file.
-	* String literals accross all binaries get merged into a '_StringLiterals.h' file.
+	* Each executable gets built to a single '.c' source file including all dependencies.
 	* String literals on embedded devices, cartridges, etc can be stored in program memory / ROM to save ram.
 	* All GC methods are agnostic allowing any built-in or custom GC backend.
 * Other: TODO
