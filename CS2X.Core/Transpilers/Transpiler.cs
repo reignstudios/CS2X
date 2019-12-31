@@ -10,7 +10,7 @@ using CS2X.Analyzer.SyntaxValidation;
 
 namespace CS2X.Core.Transpilers
 {
-	public abstract class Transpiler : IDisposable
+	public abstract class Transpiler
 	{
 		public readonly Solution solution;
 		protected SpecialTypes specialTypes;
@@ -21,8 +21,6 @@ namespace CS2X.Core.Transpilers
 			var coreLibProject = solution.coreLibProject;
 			specialTypes = new SpecialTypes(coreLibProject.compilation);
 		}
-
-		public abstract void Dispose();
 
 		public abstract void Transpile(string outputPath);
 

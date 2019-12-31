@@ -172,10 +172,6 @@
     <ClCompile Include="PortableTestApp_VCPP.cpp" />
     <ClCompile Include="TestCode.c" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\CS2X.CoreLib.h" />
-    <ClInclude Include="..\_StringLiterals.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

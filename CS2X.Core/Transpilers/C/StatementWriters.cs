@@ -331,7 +331,7 @@ namespace CS2X.Core.Transpilers.C
 
 				// write for statement
 				writer.WritePrefix("for (");
-				var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", project.compilation.GetSpecialType(SpecialType.System_Int32));
+				var localIterator = TryAddLocal(statement.Identifier.ValueText + "_i", specialTypes.int32Type);
 				writer.Write($"{localIterator.name} = 0; {localIterator.name} != {GetMethodFullName(getLengthMethod)}(({GetTypeFullName(specialTypes.arrayType)}*){identifierName}); ++{localIterator.name}");
 
 				// write statement

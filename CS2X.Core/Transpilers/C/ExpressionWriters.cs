@@ -161,16 +161,6 @@ namespace CS2X.Core.Transpilers.C
 			{
 				literalName = "StringLiteral_" + stringLiterals.Count.ToString();
 				stringLiterals.Add(literalValue, literalName);
-				string value;
-				if (literalValue.Length > 64) value = literalValue.Substring(0, 64);
-				else value = literalValue;
-				if (value.Contains('\n')) value = value.Replace("\n", "/n");
-				if (value.Contains('\r')) value = value.Replace("\r", "/r");
-				stringLiteralWriter.WriteLine($"/* {value} */");
-				stringLiteralWriter.Write($"int8_t {literalName}[{GetStringMemorySize(literalValue)}] = ");
-				stringLiteralWriter.Write(StringToLiteral(literalValue));
-				stringLiteralWriter.WriteLine(';');
-
 			}
 			else
 			{

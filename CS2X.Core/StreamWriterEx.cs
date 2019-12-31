@@ -13,7 +13,8 @@ namespace System.IO
 
 		public StreamWriterEx next, prev;
 		public string prefix = string.Empty;
-		public bool disableWrite, disablePrefix;
+		public static bool disableWrite;
+		public bool disablePrefix;
 
 		public StreamWriterEx(Stream stream)
 		: base(stream, defaultEncoding)

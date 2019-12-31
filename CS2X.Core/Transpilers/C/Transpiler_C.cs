@@ -15,117 +15,30 @@ namespace CS2X.Core.Transpilers.C
 {
 	public sealed partial class Transpiler_C : Transpiler
 	{
-		class TranspiledProject : IDisposable
+		class TranspiledProject
 		{
 			public bool isWritten;
 			public readonly Project project;
 			public readonly List<TranspiledProject> references = new List<TranspiledProject>();
-			public readonly HashSet<IMethodSymbol> genericMethods = new HashSet<IMethodSymbol>();
 			public readonly HashSet<INamedTypeSymbol> genericTypes = new HashSet<INamedTypeSymbol>();
-			public readonly HashSet<IArrayTypeSymbol> arrayTypes = new HashSet<IArrayTypeSymbol>();
-			public readonly HashSet<IPointerTypeSymbol> pointerTypes = new HashSet<IPointerTypeSymbol>();
-			public readonly HashSet<ITypeSymbol> pvalueToIValueTypes = new HashSet<ITypeSymbol>();
-
-			private MemoryStream typesStream_ForwardDeclare, typesStream, runtimeTypesStream;
-			private MemoryStream methodsStream_ForwardDeclare, methodsStream;
-
-			public StreamWriterEx typesStream_ForwardDeclare_Writer, typesStream_Writer, runtimeTypesStream_Writer;
-			public StreamWriterEx methodsStream_ForwardDeclare_Writer, methodsStream_Writer;
 
 			public TranspiledProject(Project project)
 			{
 				this.project = project;
-
-				typesStream_ForwardDeclare = new MemoryStream();
-				typesStream = new MemoryStream();
-				runtimeTypesStream = new MemoryStream();
-				methodsStream_ForwardDeclare = new MemoryStream();
-				methodsStream = new MemoryStream();
-
-				typesStream_ForwardDeclare_Writer = new StreamWriterEx(typesStream_ForwardDeclare);
-				typesStream_Writer = new StreamWriterEx(typesStream);
-				runtimeTypesStream_Writer = new StreamWriterEx(runtimeTypesStream);
-				methodsStream_ForwardDeclare_Writer = new StreamWriterEx(methodsStream_ForwardDeclare);
-				methodsStream_Writer = new StreamWriterEx(methodsStream);
-			}
-
-			public void Dispose()
-			{
-				// writers
-				if (typesStream_ForwardDeclare_Writer != null)
-				{
-					typesStream_ForwardDeclare_Writer.Dispose();
-					typesStream_ForwardDeclare_Writer = null;
-				}
-
-				if (typesStream_Writer != null)
-				{
-					typesStream_Writer.Dispose();
-					typesStream_Writer = null;
-				}
-
-				if (runtimeTypesStream_Writer != null)
-				{
-					runtimeTypesStream_Writer.Dispose();
-					runtimeTypesStream_Writer = null;
-				}
-
-				if (methodsStream_ForwardDeclare_Writer != null)
-				{
-					methodsStream_ForwardDeclare_Writer.Dispose();
-					methodsStream_ForwardDeclare_Writer = null;
-				}
-
-				if (methodsStream_Writer != null)
-				{
-					methodsStream_Writer.Dispose();
-					methodsStream_Writer = null;
-				}
-
-				// streams
-				if (typesStream_ForwardDeclare != null)
-				{
-					typesStream_ForwardDeclare.Dispose();
-					typesStream_ForwardDeclare = null;
-				}
-
-				if (typesStream != null)
-				{
-					typesStream.Dispose();
-					typesStream = null;
-				}
-
-				if (runtimeTypesStream != null)
-				{
-					runtimeTypesStream.Dispose();
-					runtimeTypesStream = null;
-				}
-
-				if (methodsStream_ForwardDeclare != null)
-				{
-					methodsStream_ForwardDeclare.Dispose();
-					methodsStream_ForwardDeclare = null;
-				}
-
-				if (methodsStream != null)
-				{
-					methodsStream.Dispose();
-					methodsStream = null;
-				}
 			}
 		}
 
 		public readonly Options options;
 		private List<TranspiledProject> transpiledProjects = new List<TranspiledProject>();
 		private TranspiledProject transpiledProject;// active transpiling project
-		private Project project;// active project
 		private IMethodSymbol method;// active method
-		private StreamWriterEx writer, stringLiteralWriter;
+		private StreamWriterEx writer;//, stringLiteralWriter;
 		private BlockSyntax block;// active body block
 		private List<StatementSyntax> blockStatementsOverride;
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<ITypeSymbol, string> allStatementLocals;// all active statement locals
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
+		private HashSet<IMethodSymbol> methods;// all methods that span all projects
 		private HashSet<IMethodSymbol> genericMethods;// generic methods that span all projects
 		private HashSet<INamedTypeSymbol> genericTypes;// generic types that span all projects
 		private HashSet<IArrayTypeSymbol> arrayTypes;// array types that span all projects
@@ -133,13 +46,8 @@ namespace CS2X.Core.Transpilers.C
 		private HashSet<ITypeSymbol> pvalueToIValueTypes;// types to generate pvalue to ivalue helper methods
 		private int tryCatchNestingLevel;// used for special local name mangling
 
-		//private const string typesHeader_ForwardDeclared = "_Types_ForwardDeclared.h";
-		//private const string typesHeader = "_Types.h";
-		//private const string runtimeTypesHeader = "_RuntimeTypes.h";
-		//private const string methodsHeader_ForwardDeclared = "_Methods_ForwardDeclared.h";
-		//private const string methodsHeader = "_Methods.h";
-		//private const string stringLiteralsHeader = "_StringLiterals.h";
 		private string stringTypeName, stringRuntimeTypeName;
+		private IArrayTypeSymbol stringArrayType;// used if entry point has args
 
 		public Transpiler_C(Solution solution, in Options options)
 		: base(solution)
@@ -147,52 +55,114 @@ namespace CS2X.Core.Transpilers.C
 			this.options = options;
 		}
 
-		public override void Dispose()
-		{
-			if (transpiledProjects != null)
-			{
-				foreach (var project in transpiledProjects) project.Dispose();
-				transpiledProjects = null;
-			}
-		}
-
 		public override void Transpile(string outputPath)
 		{
-			// allocate helper objects
+			// get common names
 			stringTypeName = GetTypeFullName(specialTypes.stringType);
 			stringRuntimeTypeName = GetRuntimeTypeObjFullName(specialTypes.stringType);
 
-			allStatementLocals = new Dictionary<ITypeSymbol, string>();
-			genericMethods = new HashSet<IMethodSymbol>();
-			genericTypes = new HashSet<INamedTypeSymbol>();
-			arrayTypes = new HashSet<IArrayTypeSymbol>();
-			pointerTypes = new HashSet<IPointerTypeSymbol>();
-			pvalueToIValueTypes = new HashSet<ITypeSymbol>();
+			// run clean pass for each exe
+			var exeProjects = solution.projects.Where(x => x.type == ProjectType.Exe);
+			foreach (var exeProject in exeProjects)
+			{
+				// allocate helper objects
+				allStatementLocals = new Dictionary<ITypeSymbol, string>();
+				methods = new HashSet<IMethodSymbol>();
+				genericMethods = new HashSet<IMethodSymbol>();
+				genericTypes = new HashSet<INamedTypeSymbol>();
+				arrayTypes = new HashSet<IArrayTypeSymbol>();
+				pointerTypes = new HashSet<IPointerTypeSymbol>();
+				pvalueToIValueTypes = new HashSet<ITypeSymbol>();
+				stringLiterals = new Dictionary<string, string>();
 
-			// dispose existing transpiled projects
-			foreach (var project in transpiledProjects) project.Dispose();
-			transpiledProjects.Clear();
+				// clear existing transpiled projects
+				transpiledProjects.Clear();
 
-			// start writing projects
-			//stringLiterals = new Dictionary<string, string>();
-			//using (var stringLiteralStream = new FileStream(Path.Combine(outputPath, stringLiteralsHeader), FileMode.Create, FileAccess.Write, FileShare.Read))
-			//using (stringLiteralWriter = new StreamWriterEx(stringLiteralStream))
-			//{
-			//	// write string literal header
-			//	WriteHeaderInfo(stringLiteralWriter);
-			//	stringLiteralWriter.WriteLine("#pragma once");
-			//	stringLiteralWriter.WriteLine();
-
-			// write projects
-			foreach (var project in solution.projects)
+				// start processing and writing projects
+				for (int i = 0; i != 2; ++i)
 				{
-					var transpileReference = transpiledProjects.FirstOrDefault(x => x.project == project);
-					if (transpileReference == null || !transpileReference.isWritten) TranspileProject(outputPath, project);
+					StreamWriterEx.disableWrite = i == 0;// disable write on collection pass for better performance
+
+					if (StreamWriterEx.disableWrite)// collection pass
+					{
+						using (var stream = new MemoryStream())
+						using (writer = new StreamWriterEx(stream))
+						{
+							// write project
+							TranspileProjectsOrdered(exeProject, WriteProject_CollectionPass);
+
+							// make sure all generic types and methods are found by looping over them until no changed detected
+							while (true)// TODO: optimize: only parse added generics in each pass
+							{
+								int typeCount = genericTypes.Count;
+								int methodCount = genericMethods.Count;
+								foreach (var type in genericTypes.ToArray())
+								{
+									foreach (var method in type.GetMembers())
+									{
+										if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
+									}
+									WriteType(type, true);
+								}
+								foreach (var method in genericMethods.ToArray()) WriteMethod(method, true);
+								if (typeCount == genericTypes.Count && methodCount == genericMethods.Count) break;
+							}
+						}
+					}
+					else// write to disk pass
+					{
+						// create 'String[]' array type and make sure its runtime type is tracked for C to C# args conversion
+						var mainMethod = exeProject.compilation.GetEntryPoint(new System.Threading.CancellationToken());
+						if (mainMethod.Parameters.Length != 0)
+						{
+							stringArrayType = solution.coreLibProject.compilation.CreateArrayTypeSymbol(specialTypes.stringType);
+							TrackArrayType(stringArrayType);
+						}
+
+						// write to C file
+						string filename = Path.GetFileNameWithoutExtension(solution.filename) + ".c";
+						using (var stream = new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read))
+						using (var writerRoot = new StreamWriterEx(stream))
+						{
+							writer = writerRoot;
+							WriteHeader(exeProject);
+							WriteStringLiterals();
+
+							// gather list of all types dependency ordered
+							var allTypes = new HashSet<INamedTypeSymbol>();
+							foreach (var project in solution.projects)
+							{
+								// get ordered list of all project types
+								var allProjectTypes = new List<INamedTypeSymbol>(project.allTypes);
+								allProjectTypes.AddRange(transpiledProject.genericTypes);
+								allProjectTypes = Project.DependencySortTypes(allProjectTypes);
+								foreach (var type in allProjectTypes) allTypes.Add(type);
+							}
+
+							// write types
+							WriteTypes_ForwardDeclared(allTypes);
+							WriteTypes(allTypes);
+							WriteRuntimeTypes(allTypes);
+							WriteRuntimeTypes(arrayTypes);
+							WriteRuntimeTypes(pointerTypes);
+
+							// write methods
+							WriteMethods_ForwardDeclared(methods);
+							WritePValueToIValueConverterMethods();
+							WriteRuntimeHelperMethods();
+							WriteMethods(methods);
+
+							// init runtime for each project / assembly
+							foreach (var transpiledProject in transpiledProjects) transpiledProject.isWritten = false;// clear isWritten
+							TranspileProjectsOrdered(exeProject, WriteRuntimeInitialisation);
+						}
+					}
 				}
-			//}
+			}
 		}
 
-		private TranspiledProject TranspileProject(string outputPath, Project project)
+		private delegate void TranspileProjectsOrderedCallback(Project project);
+		private TranspiledProject TranspileProjectsOrdered(Project project, TranspileProjectsOrderedCallback callback)
 		{
 			var transpiledProject = transpiledProjects.FirstOrDefault(x => x.project == project);
 			if (transpiledProject == null) transpiledProject = new TranspiledProject(project);
@@ -201,328 +171,31 @@ namespace CS2X.Core.Transpilers.C
 			foreach (var reference in project.references)
 			{
 				var transpileReference = transpiledProjects.FirstOrDefault(x => x.project == reference);
-				if (transpileReference == null || !transpileReference.isWritten) transpileReference = TranspileProject(outputPath, reference);
+				if (transpileReference == null || !transpileReference.isWritten) transpileReference = TranspileProjectsOrdered(reference, callback);
 				if (!transpiledProject.references.Contains(transpileReference)) transpiledProject.references.Add(transpileReference);
 			}
 
 			// transpile project
 			this.transpiledProject = transpiledProject;
-			//string filename = project.roslynProject.AssemblyName + (project.type == ProjectType.Exe ? ".c" : ".h");
-			//using (var stream = new FileStream(Path.Combine(outputPath, filename), FileMode.Create, FileAccess.Write, FileShare.Read))
-			//using (writer = new StreamWriterEx(stream))
-			//{
-				WriteProject(project);
-			//}
+			callback(project);
+
+			// mark project as written
+			transpiledProject.isWritten = true;
 
 			// finish
 			if (!transpiledProjects.Contains(transpiledProject)) transpiledProjects.Add(transpiledProject);
 			return transpiledProject;
 		}
 
-		private void WriteHeaderInfo(StreamWriterEx writer)
+		private void WriteProject_CollectionPass(Project project)
 		{
-			writer.WriteLine("/* ############################### */");
-			writer.WriteLine($"/* Generated with CS2X v{Utils.GetAssemblyInfoVersion()} */");
-			writer.WriteLine("/* ############################### */");
-		}
-
-		private void WriteProject(Project project)
-		{
-			this.project = project;
-			var dependencyOrderedGenerics = Project.DependencySortTypes(transpiledProject.genericTypes);
-
-			/*// writer info
-			WriteHeaderInfo(writer);
-			if (project.type == ProjectType.Dll) writer.WriteLine("#pragma once");
-
-			// include std libraries
-			if (project.isCoreLib)
-			{
-				// std
-				writer.WriteLine("#include <stdio.h>");
-				writer.WriteLine("#include <math.h>");
-				writer.WriteLine("#include <float.h>");
-				writer.WriteLine("#include <stdint.h>");
-				writer.WriteLine("#include <uchar.h>");
-				writer.WriteLine("#include <locale.h>");
-				writer.WriteLine("#include <time.h>");
-				if (options.api == API.Posix) writer.WriteLine("#include <dlfcn.h>");
-				if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
-
-				// write include of gc to be used
-				string gcFileName;
-				switch (options.gc)
-				{
-					case GC_Type.Disabled: gcFileName = null; break;
-					case GC_Type.Dumby: gcFileName = "CS2X.GC.Dumby"; break;
-					case GC_Type.Boehm: gcFileName = "CS2X.GC.Boehm"; break;
-					case GC_Type.Portable: gcFileName = "CS2X.GC.Portable"; break;
-					case GC_Type.Micro: gcFileName = "CS2X.GC.Micro"; break;
-					default: throw new Exception("Unsupported GC option: " + options.gc);
-				}
-
-				if (gcFileName != null)
-				{
-					gcFileName = Path.Combine(options.gcFolderPath, gcFileName);
-					writer.WriteLine($"#include \"{gcFileName}.h\"");
-				}
-				writer.WriteLine($"#include \"{Path.Combine(options.gcFolderPath, "CS2X.InstructionHelpers.h")}\"");
-
-				// include string literals
-				//writer.WriteLine($"#include \"{stringLiteralsHeader}\"");
-
-				// array size offset
-				writer.WriteLine("#define ArrayOffset (sizeof(intptr_t) + sizeof(size_t))");
-
-				// WinMain HINSTANCE
-				if (options.api == API.Win32 || options.api == API.Win16) writer.WriteLine("HINSTANCE CS2X_hInstance = 0;");
-			}
-
-			// include references
-			foreach (var reference in project.references)
-			{
-				writer.WriteLine($"#include \"{reference.roslynProject.AssemblyName}.h\"");
-			}*/
-
-			// forward declare types
-			writer = transpiledProject.typesStream_ForwardDeclare_Writer;
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Forward declare Types */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes) WriteType(type, false);
-
-			if (dependencyOrderedGenerics.Count != 0)
-			{
-				writer.WriteLine();
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* Forward declare Generic Types */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in dependencyOrderedGenerics) WriteType(type, false);
-			}
-
 			// type definitions
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Type definitions */");
-			writer.WriteLine("/* =============================== */");
 			foreach (var type in project.allTypes)
 			{
 				if (WriteType(type, true)) writer.WriteLine();
 			}
 
-			if (dependencyOrderedGenerics.Count != 0)
-			{
-				writer.WriteLine();
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* Generic Type definitions */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in dependencyOrderedGenerics)
-				{
-					if (WriteType(type, true)) writer.WriteLine();
-				}
-			}
-
-			// runtime type definitions
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Runtime Types */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes)
-			{
-				if (WriteRuntimeType(type, writer)) writer.WriteLine();
-			}
-
-			if (dependencyOrderedGenerics.Count != 0)
-			{
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* Generic Runtime Types */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in dependencyOrderedGenerics)
-				{
-					if (WriteRuntimeType(type, writer)) writer.WriteLine();
-				}
-			}
-
-			if (transpiledProject.arrayTypes.Count != 0)
-			{
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* ARRAY Runtime Types */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.arrayTypes.ToArray())
-				{
-					if (WriteRuntimeType(type, writer)) writer.WriteLine();
-				}
-			}
-
-			if (transpiledProject.pointerTypes.Count != 0)
-			{
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* POINTER Runtime Types */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.pointerTypes.ToArray())
-				{
-					if (WriteRuntimeType(type, writer)) writer.WriteLine();
-				}
-			}
-
-			if (transpiledProject.pvalueToIValueTypes.Count != 0)// NOTE: this must happen after all types have been defined
-			{
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* PValue to IValue inline helpers */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in transpiledProject.pvalueToIValueTypes.ToArray())
-				{
-					string typeName = GetTypeFullName(type);
-					writer.WriteLine($"{typeName}* CS2X_PValueToIValue_{typeName}({typeName} pvalue, {typeName}* ivalue)");
-					writer.WriteLine('{');
-					writer.AddTab();
-					writer.WriteLinePrefix("(*ivalue) = pvalue;");
-					writer.WriteLinePrefix("return ivalue;");
-					writer.RemoveTab();
-					writer.WriteLine('}');
-					writer.WriteLine();
-				}
-			}
-
-			// forward declare methods
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Forward decalre Methods */");
-			writer.WriteLine("/* =============================== */");
-			foreach (var type in project.allTypes)
-			{
-				if (type.TypeKind == TypeKind.Interface) continue;
-				foreach (var method in type.GetMembers())
-				{
-					if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, false);
-				}
-			}
-
-			if (dependencyOrderedGenerics.Count != 0)
-			{
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* Forward decalre Generic Type Methods */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in dependencyOrderedGenerics)
-				{
-					if (type.TypeKind == TypeKind.Interface) continue;
-					foreach (var method in type.GetMembers())
-					{
-						if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, false);
-					}
-				}
-			}
-
-			foreach (var method in transpiledProject.genericMethods.ToArray())
-			{
-				WriteMethod(method, false);
-			}
-
-			// helper runtime methods
-			//if (project.isCoreLib)
-			//{
-			//	writer.WriteLine();
-			//	writer.WriteLine("/* =============================== */");
-			//	writer.WriteLine("/* Helper runtime methods */");
-			//	writer.WriteLine("/* =============================== */");
-			//	string runtimeTypeName = GetTypeFullName(specialTypes.runtimeType);
-
-			//	// alloc GC type and set runtime ptr helper
-			//	writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType, void* finalizerFuncPtr)");
-			//	writer.WriteLine('{');
-			//	writer.AddTab();
-			//	writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(size, finalizerFuncPtr);");
-			//	writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
-			//	writer.WriteLinePrefix("return ptr;");
-			//	writer.RemoveTab();
-			//	writer.WriteLine('}');
-
-			//	// alloc atomic GC type and set runtime ptr helper
-			//	writer.WriteLine();
-			//	writer.WriteLine($"void* CS2X_AllocTypeAtomic(size_t size, {runtimeTypeName}* runtimeType, void* finalizerFuncPtr)");
-			//	writer.WriteLine('{');
-			//	writer.AddTab();
-			//	writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(size, finalizerFuncPtr);");
-			//	writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
-			//	writer.WriteLinePrefix("return ptr;");
-			//	writer.RemoveTab();
-			//	writer.WriteLine('}');
-
-			//	// alloc array GC type and set runtime ptr helper and length
-			//	writer.WriteLine();
-			//	writer.WriteLine($"void* CS2X_AllocArrayType(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
-			//	writer.WriteLine('{');
-			//	writer.AddTab();
-			//	writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(ArrayOffset + (elementSize * length), 0);");
-			//	writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
-			//	writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
-			//	writer.WriteLinePrefix("return ptr;");
-			//	writer.RemoveTab();
-			//	writer.WriteLine('}');
-
-			//	// alloc atomic array GC type and set runtime ptr helper and length
-			//	writer.WriteLine();
-			//	writer.WriteLine($"void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
-			//	writer.WriteLine('{');
-			//	writer.AddTab();
-			//	writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(ArrayOffset + (elementSize * length), 0);");
-			//	writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
-			//	writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
-			//	writer.WriteLinePrefix("return ptr;");
-			//	writer.RemoveTab();
-			//	writer.WriteLine('}');
-
-			//	// 'is' type helper method
-			//	var runtimeTypeBaseTypeField = FindAutoPropertyFieldByName(specialTypes.typeType, "BaseType");
-			//	writer.WriteLine();
-			//	writer.WriteLine($"char CS2X_IsType({runtimeTypeName}* runtimeType, {runtimeTypeName}* isRuntimeType)");
-			//	writer.WriteLine('{');
-			//	writer.AddTab();
-			//	writer.WriteLinePrefix($"{runtimeTypeName}* runtimeTypeBase = runtimeType;");
-			//	writer.WriteLinePrefix("while (runtimeTypeBase != 0)");
-			//	writer.WriteLinePrefix('{');
-			//	writer.AddTab();
-			//	writer.WriteLinePrefix("if (runtimeTypeBase == isRuntimeType) return 1;");
-			//	writer.WriteLinePrefix($"runtimeTypeBase = runtimeTypeBase->{GetFieldFullName(runtimeTypeBaseTypeField)};");
-			//	writer.RemoveTab();
-			//	writer.WriteLinePrefix('}');
-			//	writer.WriteLinePrefix("return 0;");
-			//	writer.RemoveTab();
-			//	writer.WriteLine('}');
-
-			//	// 'up-cast' type helper method
-			//	string objectTypeName = GetTypeFullName(specialTypes.objectType);
-			//	writer.WriteLine();
-			//	writer.WriteLine($"{objectTypeName}* CS2X_TestUpCast({objectTypeName}* self, {runtimeTypeName}* isRuntimeType)");
-			//	writer.WriteLine('{');
-			//	writer.AddTab();
-			//	writer.WriteLinePrefix("if (self == 0) return 0;");
-			//	writer.WriteLinePrefix("if (CS2X_IsType(self->CS2X_RuntimeType, isRuntimeType)) return self;");
-			//	var castExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.InvalidCastException");
-			//	var castExceptionTypeConstructor = FindDefaultConstructor(castExceptionType);
-			//	writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(castExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(castExceptionType)}), &{GetRuntimeTypeObjFullName(castExceptionType)}, 0));");
-			//	writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
-			//	writer.RemoveTab();
-			//	writer.WriteLine('}');
-
-			//	// ref gc object on stack helper
-			//	if (options.refNonLocalGCParamsOnStack)
-			//	{
-			//		writer.WriteLine();
-			//		writer.WriteLine($"void* CS2X_RefObjOnStack(void** stackRef, void* obj)");
-			//		writer.WriteLine('{');
-			//		writer.AddTab();
-			//		writer.WriteLinePrefix("return (*stackRef) = obj;");
-			//		writer.RemoveTab();
-			//		writer.WriteLine('}');
-			//	}
-			//}
-
 			// method definitions
-			writer.WriteLine();
-			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Method definitions */");
-			writer.WriteLine("/* =============================== */");
-
 			foreach (var type in project.allTypes)
 			{
 				if (type.TypeKind == TypeKind.Interface) continue;
@@ -531,34 +204,180 @@ namespace CS2X.Core.Transpilers.C
 					if (method is IMethodSymbol && WriteMethod((IMethodSymbol)method, true)) writer.WriteLine();
 				}
 			}
+		}
 
-			if (dependencyOrderedGenerics.Count != 0)
+		private void WriteHeader(Project project)
+		{
+			// writer info
+			writer.WriteLine("/* ############################### */");
+			writer.WriteLine($"/* '{project.roslynProject.Name}' Generated with CS2X v{Utils.GetAssemblyInfoVersion()} */");
+			writer.WriteLine("/* ############################### */");
+
+			// include C standard apis
+			writer.WriteLine("#include <stdio.h>");
+			writer.WriteLine("#include <math.h>");
+			writer.WriteLine("#include <float.h>");
+			writer.WriteLine("#include <stdint.h>");
+			writer.WriteLine("#include <uchar.h>");
+			writer.WriteLine("#include <locale.h>");
+			writer.WriteLine("#include <time.h>");
+			if (options.api == API.Posix) writer.WriteLine("#include <dlfcn.h>");
+			if (options.stringLiteralMemoryLocation == StringLiteralMemoryLocation.ReadonlyProgramMemory_AVR) writer.WriteLine("#include <avr/pgmspace.h>");
+
+			// write include of gc to be used
+			string gcFileName;
+			switch (options.gc)
+			{
+				case GC_Type.Disabled: gcFileName = null; break;
+				case GC_Type.Dumby: gcFileName = "CS2X.GC.Dumby"; break;
+				case GC_Type.Boehm: gcFileName = "CS2X.GC.Boehm"; break;
+				case GC_Type.Portable: gcFileName = "CS2X.GC.Portable"; break;
+				case GC_Type.Micro: gcFileName = "CS2X.GC.Micro"; break;
+				default: throw new Exception("Unsupported GC option: " + options.gc);
+			}
+
+			if (gcFileName != null)
+			{
+				gcFileName = Path.Combine(options.gcFolderPath, gcFileName);
+				writer.WriteLine($"#include \"{gcFileName}.h\"");
+			}
+			writer.WriteLine($"#include \"{Path.Combine(options.gcFolderPath, "CS2X.InstructionHelpers.h")}\"");
+
+			// array size offset
+			writer.WriteLine("#define ArrayOffset (sizeof(intptr_t) + sizeof(size_t))");
+
+			// WinMain HINSTANCE
+			if (options.api == API.Win32 || options.api == API.Win16) writer.WriteLine("HINSTANCE CS2X_hInstance = 0;");
+		}
+
+		private void WriteStringLiterals()
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* String literals */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var literal in stringLiterals)
+			{
+				string value;
+				if (literal.Key.Length > 64) value = literal.Key.Substring(0, 64);
+				else value = literal.Key;
+				if (value.Contains('\n')) value = value.Replace("\n", "/n");
+				if (value.Contains('\r')) value = value.Replace("\r", "/r");
+				value = value.Replace("\0", " ");// make sure there are no escape characters
+				writer.WriteLine($"/* {value} */");
+				writer.Write($"int8_t {literal.Value}[{GetStringMemorySize(literal.Key)}] = ");
+				writer.Write(StringToLiteral(literal.Key));
+				writer.WriteLine(';');
+			}
+		}
+
+		private void WriteRuntimeHelperMethods()
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Helper runtime methods */");
+			writer.WriteLine("/* =============================== */");
+			string runtimeTypeName = GetTypeFullName(specialTypes.runtimeType);
+
+			// alloc GC type and set runtime ptr helper
+			writer.WriteLine($"void* CS2X_AllocType(size_t size, {runtimeTypeName}* runtimeType, void* finalizerFuncPtr)");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(size, finalizerFuncPtr);");
+			writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+			writer.WriteLinePrefix("return ptr;");
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
+			// alloc atomic GC type and set runtime ptr helper
+			writer.WriteLine();
+			writer.WriteLine($"void* CS2X_AllocTypeAtomic(size_t size, {runtimeTypeName}* runtimeType, void* finalizerFuncPtr)");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(size, finalizerFuncPtr);");
+			writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+			writer.WriteLinePrefix("return ptr;");
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
+			// alloc array GC type and set runtime ptr helper and length
+			writer.WriteLine();
+			writer.WriteLine($"void* CS2X_AllocArrayType(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_New(ArrayOffset + (elementSize * length), 0);");
+			writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+			writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
+			writer.WriteLinePrefix("return ptr;");
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
+			// alloc atomic array GC type and set runtime ptr helper and length
+			writer.WriteLine();
+			writer.WriteLine($"void* CS2X_AllocArrayTypeAtomic(size_t elementSize, size_t length, {runtimeTypeName}* runtimeType)");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix($"{runtimeTypeName}* ptr = CS2X_GC_NewAtomic(ArrayOffset + (elementSize * length), 0);");
+			writer.WriteLinePrefix("ptr->CS2X_RuntimeType = runtimeType;");
+			writer.WriteLinePrefix("*((size_t*)ptr + 1) = length;");
+			writer.WriteLinePrefix("return ptr;");
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
+			// 'is' type helper method
+			var runtimeTypeBaseTypeField = FindAutoPropertyFieldByName(specialTypes.typeType, "BaseType");
+			writer.WriteLine();
+			writer.WriteLine($"char CS2X_IsType({runtimeTypeName}* runtimeType, {runtimeTypeName}* isRuntimeType)");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix($"{runtimeTypeName}* runtimeTypeBase = runtimeType;");
+			writer.WriteLinePrefix("while (runtimeTypeBase != 0)");
+			writer.WriteLinePrefix('{');
+			writer.AddTab();
+			writer.WriteLinePrefix("if (runtimeTypeBase == isRuntimeType) return 1;");
+			writer.WriteLinePrefix($"runtimeTypeBase = runtimeTypeBase->{GetFieldFullName(runtimeTypeBaseTypeField)};");
+			writer.RemoveTab();
+			writer.WriteLinePrefix('}');
+			writer.WriteLinePrefix("return 0;");
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
+			// 'up-cast' type helper method
+			string objectTypeName = GetTypeFullName(specialTypes.objectType);
+			writer.WriteLine();
+			writer.WriteLine($"{objectTypeName}* CS2X_TestUpCast({objectTypeName}* self, {runtimeTypeName}* isRuntimeType)");
+			writer.WriteLine('{');
+			writer.AddTab();
+			writer.WriteLinePrefix("if (self == 0) return 0;");
+			writer.WriteLinePrefix("if (CS2X_IsType(self->CS2X_RuntimeType, isRuntimeType)) return self;");
+			var castExceptionType = solution.coreLibProject.compilation.GetTypeByMetadataName("System.InvalidCastException");
+			var castExceptionTypeConstructor = FindDefaultConstructor(castExceptionType);
+			writer.WriteLinePrefix($"CS2X_ThreadExceptionObject = {GetMethodFullName(castExceptionTypeConstructor)}(CS2X_AllocType(sizeof({GetTypeFullName(castExceptionType)}), &{GetRuntimeTypeObjFullName(castExceptionType)}, 0));");
+			writer.WriteLinePrefix("longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */");
+			writer.RemoveTab();
+			writer.WriteLine('}');
+
+			// ref gc object on stack helper
+			if (options.refNonLocalGCParamsOnStack)
 			{
 				writer.WriteLine();
-				writer.WriteLine("/* =============================== */");
-				writer.WriteLine("/* Generic Type Method definitions */");
-				writer.WriteLine("/* =============================== */");
-				foreach (var type in dependencyOrderedGenerics)
-				{
-					if (type.TypeKind == TypeKind.Interface) continue;
-					foreach (var method in type.GetMembers())
-					{
-						if (method is IMethodSymbol && WriteMethod((IMethodSymbol)method, true)) writer.WriteLine();
-					}
-				}
+				writer.WriteLine($"void* CS2X_RefObjOnStack(void** stackRef, void* obj)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix("return (*stackRef) = obj;");
+				writer.RemoveTab();
+				writer.WriteLine('}');
 			}
+		}
 
-			foreach (var method in transpiledProject.genericMethods.ToArray())
-			{
-				if (WriteMethod(method, true)) writer.WriteLine();
-			}
-
+		private void WriteRuntimeInitialisation(Project project)
+		{
 			// init library
 			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Init Library */");
+			writer.WriteLine($"/* Init Runtime '{project.roslynProject.AssemblyName}' */");
 			writer.WriteLine("/* =============================== */");
 			string assemblyName = GetProjectNameFlat(project);
-			writer.WriteLine($"void CS2X_InitLib_{assemblyName}()");
+			writer.WriteLine($"void CS2X_InitAssembly_{assemblyName}()");
 			writer.WriteLine('{');
 			writer.AddTab();
 
@@ -567,32 +386,32 @@ namespace CS2X.Core.Transpilers.C
 				writer.WriteLinePrefix("/* Init references */");
 				foreach (var reference in project.references)
 				{
-					writer.WriteLinePrefix($"CS2X_InitLib_{GetProjectNameFlat(reference)}();");
+					writer.WriteLinePrefix($"CS2X_InitAssembly_{GetProjectNameFlat(reference)}();");
 				}
 				writer.WriteLine();
 			}
 
 			WriteInitRuntimeTypes(project.allTypes);
 
-			if (dependencyOrderedGenerics.Count != 0)
+			if (genericTypes.Count != 0)
 			{
 				writer.WriteLine();
 				writer.WriteLinePrefix("/* <<< === Generic Runtime Types === >>> */");
-				WriteInitRuntimeTypes(dependencyOrderedGenerics);
+				WriteInitRuntimeTypes(genericTypes);
 			}
 
-			if (transpiledProject.arrayTypes.Count != 0)
+			if (arrayTypes.Count != 0)
 			{
 				writer.WriteLine();
 				writer.WriteLinePrefix("/* <<< === Array Runtime Types === >>> */");
-				WriteInitRuntimeTypes(transpiledProject.arrayTypes.ToArray());
+				WriteInitRuntimeTypes(arrayTypes.ToArray());
 			}
 
-			if (transpiledProject.pointerTypes.Count != 0)
+			if (pointerTypes.Count != 0)
 			{
 				writer.WriteLine();
 				writer.WriteLinePrefix("/* <<< === Pointer Runtime Types === >>> */");
-				WriteInitRuntimeTypes(transpiledProject.pointerTypes.ToArray());
+				WriteInitRuntimeTypes(pointerTypes.ToArray());
 			}
 
 			writer.RemoveTab();
@@ -749,7 +568,7 @@ namespace CS2X.Core.Transpilers.C
 				writer.WriteLine();
 				writer.WriteLinePrefix("/* Init main thread unahandled exeption jump */");
 				writer.WriteLinePrefix("CS2X_GC_Init();");
-				writer.WriteLinePrefix($"CS2X_InitLib_{assemblyName}();");
+				writer.WriteLinePrefix($"CS2X_InitAssembly_{assemblyName}();");
 				writer.WriteLinePrefix("CS2X_InitStringLiterals();");
 				writer.WriteLinePrefix($"{dllImportInitMethod}();");
 				writer.WriteLinePrefix($"{staticConstructorInitMethod}();");
@@ -762,10 +581,6 @@ namespace CS2X.Core.Transpilers.C
 				}
 				else
 				{
-					// create array type and make sure its runtime type is tracked
-					var arrayType = project.compilation.CreateArrayTypeSymbol(specialTypes.stringType);
-					TrackArrayType(arrayType);
-
 					// GC allocate array and copy args
 					if (options.api == API.Win16 && project.exeType == ProjectExeType.Windows)
 					{
@@ -775,12 +590,12 @@ namespace CS2X.Core.Transpilers.C
 					{
 						string argc = (project.exeType == ProjectExeType.Windows) ? "__argc" : "argc";
 						string argv = (project.exeType == ProjectExeType.Windows) ? "__argv" : "argv";
-						writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgs = {GetNewArrayMethod(specialTypes.stringType)}(sizeof({GetTypeFullName(specialTypes.stringType)}), {argc}, &{GetRuntimeTypeObjFullName(arrayType)});");
+						writer.WriteLinePrefix($"{GetTypeFullNameRef(stringArrayType)} managedArgs = {GetNewArrayMethod(specialTypes.stringType)}(sizeof({GetTypeFullName(specialTypes.stringType)}), {argc}, &{GetRuntimeTypeObjFullName(stringArrayType)});");
 						writer.WriteLinePrefix($"for (i = 0; i != {argc}; ++i)");
 						writer.WriteLinePrefix('{');
 						writer.AddTab();
 						writer.WriteLinePrefix("int i2, managedArgLength;");
-						writer.WriteLinePrefix($"{GetTypeFullNameRef(arrayType)} managedArgsRuntimeOffset;");
+						writer.WriteLinePrefix($"{GetTypeFullNameRef(stringArrayType)} managedArgsRuntimeOffset;");
 						writer.WriteLinePrefix("managedArgsRuntimeOffset = ((char*)managedArgs) + ArrayOffset;");
 						writer.WriteLinePrefix($"managedArgLength = strlen({argv}[i]);");
 						var allocMethod = FindMethodByName(specialTypes.stringType, "FastAllocateString");
@@ -802,28 +617,85 @@ namespace CS2X.Core.Transpilers.C
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}
+		}
 
-			// make sure all generic types and methods are found by looping over them until no changed detected
-			writer.disableWrite = true;
-			while (true)
+		private void WriteTypes_ForwardDeclared(IEnumerable<INamedTypeSymbol> types)
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Forward declare Types */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var type in types) WriteType(type, false);
+		}
+
+		private void WriteTypes(IEnumerable<INamedTypeSymbol> types)
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Type definitions */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var type in types)
 			{
-				int typeCount = transpiledProject.genericTypes.Count;
-				int methodCount = transpiledProject.genericMethods.Count;
-				foreach (var type in transpiledProject.genericTypes.ToArray())
-				{
-					foreach (var method in type.GetMembers())
-					{
-						if (method is IMethodSymbol) WriteMethod((IMethodSymbol)method, true);
-					}
-					WriteType(type, true);
-				}
-				foreach (var method in transpiledProject.genericMethods.ToArray()) WriteMethod(method, true);
-				if (typeCount == transpiledProject.genericTypes.Count && methodCount == transpiledProject.genericMethods.Count) break;
+				if (WriteType(type, true)) writer.WriteLine();
 			}
-			writer.disableWrite = false;
+		}
 
-			// mark project as written
-			transpiledProject.isWritten = true;
+		private void WriteRuntimeTypes(IEnumerable<ITypeSymbol> types)
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Runtime Types */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var type in types)
+			{
+				if (WriteRuntimeType(type, writer)) writer.WriteLine();
+			}
+		}
+
+		private void WritePValueToIValueConverterMethods()
+		{
+			if (pvalueToIValueTypes.Count != 0)// NOTE: this must happen after all types have been defined
+			{
+				writer.WriteLine("/* =============================== */");
+				writer.WriteLine("/* PValue to IValue inline helpers */");
+				writer.WriteLine("/* =============================== */");
+				foreach (var type in pvalueToIValueTypes.ToArray())
+				{
+					string typeName = GetTypeFullName(type);
+					writer.WriteLine($"{typeName}* CS2X_PValueToIValue_{typeName}({typeName} pvalue, {typeName}* ivalue)");
+					writer.WriteLine('{');
+					writer.AddTab();
+					writer.WriteLinePrefix("(*ivalue) = pvalue;");
+					writer.WriteLinePrefix("return ivalue;");
+					writer.RemoveTab();
+					writer.WriteLine('}');
+					writer.WriteLine();
+				}
+			}
+		}
+
+		private void WriteMethods_ForwardDeclared(IEnumerable<IMethodSymbol> methods)
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Forward decalre Methods */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var method in methods)
+			{
+				WriteMethod(method, false);
+			}
+		}
+
+		private void WriteMethods(IEnumerable<IMethodSymbol> methods)
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Methods definitions */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var method in methods)
+			{
+				if (WriteMethod(method, true)) writer.WriteLine();
+			}
 		}
 
 		private void WriteInitRuntimeTypes(IEnumerable<ITypeSymbol> types)
@@ -977,6 +849,14 @@ namespace CS2X.Core.Transpilers.C
 			return false;
 		}
 
+		private void TrackMethod(IMethodSymbol method)
+		{
+			if (!ExistsInReference(methods, method))
+			{
+				methods.Add(method);
+			}
+		}
+
 		private void TrackGenericMethod(IMethodSymbol genericMethod)
 		{
 			if (!genericMethod.IsGenericMethod) throw new Exception("TrackGenericMethod failed as method is not generic: " + genericMethod.FullName());
@@ -984,7 +864,7 @@ namespace CS2X.Core.Transpilers.C
 			if (!ExistsInReference(genericMethods, genericMethod))
 			{
 				genericMethods.Add(genericMethod);
-				transpiledProject.genericMethods.Add(genericMethod);
+				methods.Add(method);
 			}
 		}
 
@@ -1004,7 +884,6 @@ namespace CS2X.Core.Transpilers.C
 			if (!ExistsInReference(arrayTypes, arrayType))
 			{
 				arrayTypes.Add(arrayType);
-				transpiledProject.arrayTypes.Add(arrayType);
 			}
 		}
 
@@ -1013,7 +892,6 @@ namespace CS2X.Core.Transpilers.C
 			if (!ExistsInReference(pointerTypes, pointerType))
 			{
 				pointerTypes.Add(pointerType);
-				transpiledProject.pointerTypes.Add(pointerType);
 			}
 		}
 
@@ -1022,7 +900,6 @@ namespace CS2X.Core.Transpilers.C
 			if (!ExistsInReference(pvalueToIValueTypes, type))
 			{
 				pvalueToIValueTypes.Add(type);
-				transpiledProject.pvalueToIValueTypes.Add(type);
 			}
 		}
 

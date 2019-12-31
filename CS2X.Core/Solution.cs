@@ -9,6 +9,7 @@ using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace CS2X.Core
 {
@@ -21,8 +22,8 @@ namespace CS2X.Core
 		public IReadOnlyList<Project> projects { get; private set; }
 		public Project coreLibProject { get; private set; }
 
-		public IReadOnlyList<INamedTypeSymbol> genericTypes { get; private set; }
-		public IReadOnlyList<IMethodSymbol> genericMethods { get; private set; }
+		//public IReadOnlyList<INamedTypeSymbol> genericTypes { get; private set; }
+		//public IReadOnlyList<IMethodSymbol> genericMethods { get; private set; }
 
 		static Solution()
 		{
@@ -69,8 +70,8 @@ namespace CS2X.Core
 				{
 					await project.Parse();
 				}
-
-				// find all generics type uses
+				
+				/*// find all generics type uses
 				var genericTypeList = new HashSet<INamedTypeSymbol>();
 				foreach (var project in projects)
 				foreach (var type in project.allTypes)
@@ -86,24 +87,25 @@ namespace CS2X.Core
 						var symbol = await SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace);
 						if (symbol != null)
 						{
-							INamedTypeSymbol resolvedType = null;
+							INamedTypeSymbol genericType = null;
 							if (symbol is INamedTypeSymbol namedSymbol)
 							{
-								resolvedType = namedSymbol;
+								genericType = namedSymbol;
 							}
 							else if (symbol is IMethodSymbol methodSymbol)
 							{
-								resolvedType = methodSymbol.ContainingType;
+								genericType = methodSymbol.ContainingType;
 							}
 							else
 							{
 								throw new NotSupportedException("Unsupported generic symbol resolver kind: " + symbol.Kind);
 							}
 							
-							if (SymbolUtils.IsResolvedGenericType(resolvedType))
-							{
-								genericTypeList.Add(resolvedType);
-							}
+							//if (SymbolUtils.IsResolvedGenericType(resolvedType))
+							//{
+							//	genericTypeList.Add(resolvedType);
+							//}
+							AddGenericTypeRecursive(genericType, genericTypeList);
 						}
 					}
 				}
@@ -120,7 +122,7 @@ namespace CS2X.Core
 					INamedTypeSymbol resolvedType;
 					if (type.IsGenericType)
 					{
-						resolvedType = genericTypeList.FirstOrDefault(x => x.OriginalDefinition.Equals(type.OriginalDefinition));
+						resolvedType = genericTypeList.FirstOrDefault(x => SymbolEqualityComparer.Default.Equals(x.OriginalDefinition, type.OriginalDefinition));
 						if (resolvedType == null) continue;// no uses of generic type, so skip
 					}
 					else
@@ -149,8 +151,32 @@ namespace CS2X.Core
 						}
 					}
 				}
-				genericMethods = genericMethodList.ToList();
+				genericMethods = genericMethodList.ToList();*/
 			}
 		}
+		
+		//private void AddGenericTypeRecursive(INamedTypeSymbol type, HashSet<INamedTypeSymbol> genericTypeList)
+		//{
+		//	if (!SymbolUtils.IsResolvedGenericType(type)) return;
+		//	genericTypeList.Add(type);
+
+		//	// scan for generic members
+		//	foreach (var member in type.GetMembers())
+		//	{
+		//		if (member is IFieldSymbol field)
+		//		{
+		//			if (field.Type is INamedTypeSymbol namedType && namedType.IsGenericType)
+		//			{
+						
+		//				var contructedType = namedType.OriginalDefinition.Construct();
+		//				AddGenericTypeRecursive(contructedType, genericTypeList);
+		//			}
+		//		}
+		//		/*else
+		//		{
+		//			throw new NotSupportedException("Unsupported member: " + member.FullName());
+		//		}*/
+		//	}
+		//}
 	}
 }

@@ -910,6 +910,7 @@ namespace CS2X.Core.Transpilers.C
 				writer.WriteLine('}');
 			}
 
+			TrackMethod(method);
 			return true;
 		}
 
