@@ -107,9 +107,19 @@ namespace System.IO
 			}
 		}
 
+		protected override unsafe int Read(byte* buffer, int offset, int count)
+		{
+			return (int)fread(buffer + offset, (UIntPtr)sizeof(byte), (UIntPtr)count, stream);
+		}
+
 		public unsafe override int Read(byte[] buffer, int offset, int count)
 		{
 			fixed (byte* butterPtr = buffer) return (int)fread(butterPtr + offset, (UIntPtr)sizeof(byte), (UIntPtr)count, stream);
+		}
+
+		protected override unsafe void Write(byte* buffer, int offset, int count)
+		{
+			fwrite(buffer + offset, (UIntPtr)sizeof(byte), (UIntPtr)count, stream);
 		}
 
 		public unsafe override void Write(byte[] buffer, int offset, int count)

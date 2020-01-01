@@ -15,21 +15,20 @@
 
         public abstract void Dispose();
 
+        protected unsafe abstract int Read(byte* buffer, int offset, int count);
         public abstract int Read(byte[] buffer, int offset, int count);
-        public virtual int ReadByte()
+        public unsafe virtual int ReadByte()
         {
-            byte[] oneByteArray = new byte[1];
-            int r = Read(oneByteArray, 0, 1);
-            if (r == 0) return -1;
-            return oneByteArray[0];
+            byte data;
+            if (Read(&data, 0, 1) == 0) return -1;
+            return data;
         }
 
+        protected unsafe abstract void Write(byte* buffer, int offset, int count);
         public abstract void Write(byte[] buffer, int offset, int count);
-        public virtual void WriteByte(byte value)
+        public unsafe virtual void WriteByte(byte value)
         {
-            byte[] oneByteArray = new byte[1];
-            oneByteArray[0] = value;
-            Write(oneByteArray, 0, 1);
+            Write(&value, 0, 1);
         }
     }
 }
