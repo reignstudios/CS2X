@@ -54,11 +54,20 @@ __declspec(thread) void* CS2X_ThreadExceptionObject;
 /* ====================================== */
 /* Platform Helpers */
 /* ====================================== */
-void CS2X_DisplayErrorMessage(char* message)
+void CS2X_DisplayErrorMessage(char* message, char* title)
 {
 	#ifdef _WIN32
-	MessageBoxA(NULL, message, "Error", MB_OK);
+	MessageBoxA(NULL, message, title, MB_OK);
 	#else
 	printf("%s\n", message);
+	#endif
+}
+
+void CS2X_DisplayErrorMessageW(wchar_t* message, wchar_t* title)
+{
+	#ifdef _WIN32
+	MessageBoxW(NULL, message, title, MB_OK);
+	#else
+	wprintf(L"%s\n", message);
 	#endif
 }

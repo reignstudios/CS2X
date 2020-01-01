@@ -38,14 +38,6 @@
 		OpenOrCreate = 4,
 		//
 		// Summary:
-		//     Specifies that the operating system should open an existing file. When the file
-		//     is opened, it should be truncated so that its size is zero bytes. This requires
-		//     System.Security.Permissions.FileIOPermissionAccess.Write permission. Attempts
-		//     to read from a file opened with FileMode.Truncate cause an System.ArgumentException
-		//     exception.
-		Truncate = 5,
-		//
-		// Summary:
 		//     Opens the file if it exists and seeks to the end of the file, or creates a new
 		//     file. This requires System.Security.Permissions.FileIOPermissionAccess.Append
 		//     permission. FileMode.Append can be used only in conjunction with FileAccess.Write.

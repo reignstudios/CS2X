@@ -211,7 +211,8 @@ namespace CS2X.Core.Transpilers.C
 		{
 			// writer info
 			writer.WriteLine("/* ############################### */");
-			writer.WriteLine($"/* '{project.roslynProject.Name}' Generated with CS2X v{Utils.GetAssemblyInfoVersion()} */");
+			writer.WriteLine($"/* {project.roslynProject.Name} */");
+			writer.WriteLine($"/* Generated with CS2X v{Utils.GetAssemblyInfoVersion()} */");
 			writer.WriteLine("/* ############################### */");
 
 			// include C standard apis
@@ -558,7 +559,8 @@ namespace CS2X.Core.Transpilers.C
 				writer.WriteLinePrefix("int result = setjmp(CS2X_UnhandledThreadExceptionBuff);");
 				writer.WriteLinePrefix("if (result != 0)");
 				writer.WriteLinePrefix('{');
-				writer.WriteLinePrefix("\tCS2X_DisplayErrorMessage(\"Unhandled Exception\");");
+				writer.WriteLinePrefix("\tt2_System_Exception* exception = (t2_System_Exception*)CS2X_ThreadExceptionObject;");
+				writer.WriteLinePrefix("\tCS2X_DisplayErrorMessageW(&exception->f__Message_k__BackingField_1->f__firstChar_1, L\"Unhandled Exception\");");
 				writer.WriteLinePrefix("\texit(-2);");
 				writer.WriteLinePrefix('}');
 				writer.WriteLinePrefix("else");
