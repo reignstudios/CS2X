@@ -64,10 +64,10 @@ Almost zero performance loss. C# code will generate in a manner as if hand writt
 	* Virtuals like 'MyStruct.GetType()' or 'MyEnum.GetType()' give compile time errors (use typeof instead).
 	* Cannot bind a delegate to a structs non-static method.
 * Interfaces are considered 'type-classes' and are compile time only.
-	* Used for generics only.
+	* Used for generics or general code consistency.
 	* No casting to them or variable declarations of them.
 * No up-casting performance loss in C and down-casting checks can be disabled for C output.
-* DllImport / PInvoke + Auto-Marshalling of managed types not supported.
+* Auto-Marshalling of managed types not supported.
 	* Varies to much between platforms in contrast to .NET making writing portable code confusing.
 	* Auto string marshalling has way to many implicits that depend on to many factors to keep track of.
 	* Redundant allocations. If you want to pass the same string multiple times in multiple methods for example auto-marshaling it everytime doesn't make sense. Its far better to be explicit here and make that obvious by pre-marshalling the type once.
