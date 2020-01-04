@@ -1,5 +1,6 @@
 /* ############################### */
-/* 'PortableTestApp' Generated with CS2X v0.1.0 */
+/* PortableTestApp */
+/* Generated with CS2X v0.0.0 */
 /* ############################### */
 #include <stdio.h>
 #include <math.h>
@@ -26,102 +27,116 @@ int8_t StringLiteral_2[72] = {0,0,0,0,0,0,0,0,29,0,0,0,100,0,101,0,115,0,116,0,1
 int8_t StringLiteral_3[18] = {0,0,0,0,0,0,0,0,2,0,0,0,13,0,10,0,0,0};
 /*  */
 int8_t StringLiteral_4[14] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+/* File already exists */
+int8_t StringLiteral_5[52] = {0,0,0,0,0,0,0,0,19,0,0,0,70,0,105,0,108,0,101,0,32,0,97,0,108,0,114,0,101,0,97,0,100,0,121,0,32,0,101,0,120,0,105,0,115,0,116,0,115,0,0,0};
+/* Failed to create file */
+int8_t StringLiteral_6[56] = {0,0,0,0,0,0,0,0,21,0,0,0,70,0,97,0,105,0,108,0,101,0,100,0,32,0,116,0,111,0,32,0,99,0,114,0,101,0,97,0,116,0,101,0,32,0,102,0,105,0,108,0,101,0,0,0};
+/* File doesn't exists */
+int8_t StringLiteral_7[52] = {0,0,0,0,0,0,0,0,19,0,0,0,70,0,105,0,108,0,101,0,32,0,100,0,111,0,101,0,115,0,110,0,39,0,116,0,32,0,101,0,120,0,105,0,115,0,116,0,115,0,0,0};
+/* Access error */
+int8_t StringLiteral_8[38] = {0,0,0,0,0,0,0,0,12,0,0,0,65,0,99,0,99,0,101,0,115,0,115,0,32,0,101,0,114,0,114,0,111,0,114,0,0,0};
 /* Printing args... */
-int8_t StringLiteral_5[46] = {0,0,0,0,0,0,0,0,16,0,0,0,80,0,114,0,105,0,110,0,116,0,105,0,110,0,103,0,32,0,97,0,114,0,103,0,115,0,46,0,46,0,46,0,0,0};
+int8_t StringLiteral_9[46] = {0,0,0,0,0,0,0,0,16,0,0,0,80,0,114,0,105,0,110,0,116,0,105,0,110,0,103,0,32,0,97,0,114,0,103,0,115,0,46,0,46,0,46,0,0,0};
 /* Arg:  */
-int8_t StringLiteral_6[24] = {0,0,0,0,0,0,0,0,5,0,0,0,65,0,114,0,103,0,58,0,32,0,0,0};
+int8_t StringLiteral_10[24] = {0,0,0,0,0,0,0,0,5,0,0,0,65,0,114,0,103,0,58,0,32,0,0,0};
 /* Running tests... */
-int8_t StringLiteral_7[46] = {0,0,0,0,0,0,0,0,16,0,0,0,82,0,117,0,110,0,110,0,105,0,110,0,103,0,32,0,116,0,101,0,115,0,116,0,115,0,46,0,46,0,46,0,0,0};
+int8_t StringLiteral_11[46] = {0,0,0,0,0,0,0,0,16,0,0,0,82,0,117,0,110,0,110,0,105,0,110,0,103,0,32,0,116,0,101,0,115,0,116,0,115,0,46,0,46,0,46,0,0,0};
 /* ClassNesting */
-int8_t StringLiteral_8[38] = {0,0,0,0,0,0,0,0,12,0,0,0,67,0,108,0,97,0,115,0,115,0,78,0,101,0,115,0,116,0,105,0,110,0,103,0,0,0};
+int8_t StringLiteral_12[38] = {0,0,0,0,0,0,0,0,12,0,0,0,67,0,108,0,97,0,115,0,115,0,78,0,101,0,115,0,116,0,105,0,110,0,103,0,0,0};
 /* ClassVsStruct */
-int8_t StringLiteral_9[40] = {0,0,0,0,0,0,0,0,13,0,0,0,67,0,108,0,97,0,115,0,115,0,86,0,115,0,83,0,116,0,114,0,117,0,99,0,116,0,0,0};
+int8_t StringLiteral_13[40] = {0,0,0,0,0,0,0,0,13,0,0,0,67,0,108,0,97,0,115,0,115,0,86,0,115,0,83,0,116,0,114,0,117,0,99,0,116,0,0,0};
 /* Enums */
-int8_t StringLiteral_10[24] = {0,0,0,0,0,0,0,0,5,0,0,0,69,0,110,0,117,0,109,0,115,0,0,0};
+int8_t StringLiteral_14[24] = {0,0,0,0,0,0,0,0,5,0,0,0,69,0,110,0,117,0,109,0,115,0,0,0};
 /* RefOutParameters */
-int8_t StringLiteral_11[46] = {0,0,0,0,0,0,0,0,16,0,0,0,82,0,101,0,102,0,79,0,117,0,116,0,80,0,97,0,114,0,97,0,109,0,101,0,116,0,101,0,114,0,115,0,0,0};
+int8_t StringLiteral_15[46] = {0,0,0,0,0,0,0,0,16,0,0,0,82,0,101,0,102,0,79,0,117,0,116,0,80,0,97,0,114,0,97,0,109,0,101,0,116,0,101,0,114,0,115,0,0,0};
 /* FieldsAndProperties */
-int8_t StringLiteral_12[52] = {0,0,0,0,0,0,0,0,19,0,0,0,70,0,105,0,101,0,108,0,100,0,115,0,65,0,110,0,100,0,80,0,114,0,111,0,112,0,101,0,114,0,116,0,105,0,101,0,115,0,0,0};
+int8_t StringLiteral_16[52] = {0,0,0,0,0,0,0,0,19,0,0,0,70,0,105,0,101,0,108,0,100,0,115,0,65,0,110,0,100,0,80,0,114,0,111,0,112,0,101,0,114,0,116,0,105,0,101,0,115,0,0,0};
 /* FlowControlAndEnumerators */
-int8_t StringLiteral_13[64] = {0,0,0,0,0,0,0,0,25,0,0,0,70,0,108,0,111,0,119,0,67,0,111,0,110,0,116,0,114,0,111,0,108,0,65,0,110,0,100,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0};
+int8_t StringLiteral_17[64] = {0,0,0,0,0,0,0,0,25,0,0,0,70,0,108,0,111,0,119,0,67,0,111,0,110,0,116,0,114,0,111,0,108,0,65,0,110,0,100,0,69,0,110,0,117,0,109,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0};
 /* ExtensionMethods */
-int8_t StringLiteral_14[46] = {0,0,0,0,0,0,0,0,16,0,0,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0};
+int8_t StringLiteral_18[46] = {0,0,0,0,0,0,0,0,16,0,0,0,69,0,120,0,116,0,101,0,110,0,115,0,105,0,111,0,110,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0};
 /* Destructors */
-int8_t StringLiteral_15[36] = {0,0,0,0,0,0,0,0,11,0,0,0,68,0,101,0,115,0,116,0,114,0,117,0,99,0,116,0,111,0,114,0,115,0,0,0};
+int8_t StringLiteral_19[36] = {0,0,0,0,0,0,0,0,11,0,0,0,68,0,101,0,115,0,116,0,114,0,117,0,99,0,116,0,111,0,114,0,115,0,0,0};
 /* TryCatch */
-int8_t StringLiteral_16[30] = {0,0,0,0,0,0,0,0,8,0,0,0,84,0,114,0,121,0,67,0,97,0,116,0,99,0,104,0,0,0};
+int8_t StringLiteral_20[30] = {0,0,0,0,0,0,0,0,8,0,0,0,84,0,114,0,121,0,67,0,97,0,116,0,99,0,104,0,0,0};
 /* Interop */
-int8_t StringLiteral_17[28] = {0,0,0,0,0,0,0,0,7,0,0,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,0,0};
+int8_t StringLiteral_21[28] = {0,0,0,0,0,0,0,0,7,0,0,0,73,0,110,0,116,0,101,0,114,0,111,0,112,0,0,0};
 /* VirtualMethods */
-int8_t StringLiteral_18[42] = {0,0,0,0,0,0,0,0,14,0,0,0,86,0,105,0,114,0,116,0,117,0,97,0,108,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0};
+int8_t StringLiteral_22[42] = {0,0,0,0,0,0,0,0,14,0,0,0,86,0,105,0,114,0,116,0,117,0,97,0,108,0,77,0,101,0,116,0,104,0,111,0,100,0,115,0,0,0};
 /* Generics */
-int8_t StringLiteral_19[30] = {0,0,0,0,0,0,0,0,8,0,0,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,115,0,0,0};
+int8_t StringLiteral_23[30] = {0,0,0,0,0,0,0,0,8,0,0,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,115,0,0,0};
 /* Delegates */
-int8_t StringLiteral_20[32] = {0,0,0,0,0,0,0,0,9,0,0,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,115,0,0,0};
+int8_t StringLiteral_24[32] = {0,0,0,0,0,0,0,0,9,0,0,0,68,0,101,0,108,0,101,0,103,0,97,0,116,0,101,0,115,0,0,0};
 /* Indexers */
-int8_t StringLiteral_21[30] = {0,0,0,0,0,0,0,0,8,0,0,0,73,0,110,0,100,0,101,0,120,0,101,0,114,0,115,0,0,0};
+int8_t StringLiteral_25[30] = {0,0,0,0,0,0,0,0,8,0,0,0,73,0,110,0,100,0,101,0,120,0,101,0,114,0,115,0,0,0};
 /* Operators */
-int8_t StringLiteral_22[32] = {0,0,0,0,0,0,0,0,9,0,0,0,79,0,112,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0};
+int8_t StringLiteral_26[32] = {0,0,0,0,0,0,0,0,9,0,0,0,79,0,112,0,101,0,114,0,97,0,116,0,111,0,114,0,115,0,0,0};
 /* StringEncoding */
-int8_t StringLiteral_23[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0};
+int8_t StringLiteral_27[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,116,0,114,0,105,0,110,0,103,0,69,0,110,0,99,0,111,0,100,0,105,0,110,0,103,0,0,0};
 /* CoreGenericCollections */
-int8_t StringLiteral_24[58] = {0,0,0,0,0,0,0,0,22,0,0,0,67,0,111,0,114,0,101,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,115,0,0,0};
+int8_t StringLiteral_28[58] = {0,0,0,0,0,0,0,0,22,0,0,0,67,0,111,0,114,0,101,0,71,0,101,0,110,0,101,0,114,0,105,0,99,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,115,0,0,0};
 /* NewOverrides */
-int8_t StringLiteral_25[38] = {0,0,0,0,0,0,0,0,12,0,0,0,78,0,101,0,119,0,79,0,118,0,101,0,114,0,114,0,105,0,100,0,101,0,115,0,0,0};
+int8_t StringLiteral_29[38] = {0,0,0,0,0,0,0,0,12,0,0,0,78,0,101,0,119,0,79,0,118,0,101,0,114,0,114,0,105,0,100,0,101,0,115,0,0,0};
 /* NumbersToStrings */
-int8_t StringLiteral_26[46] = {0,0,0,0,0,0,0,0,16,0,0,0,78,0,117,0,109,0,98,0,101,0,114,0,115,0,84,0,111,0,83,0,116,0,114,0,105,0,110,0,103,0,115,0,0,0};
+int8_t StringLiteral_30[46] = {0,0,0,0,0,0,0,0,16,0,0,0,78,0,117,0,109,0,98,0,101,0,114,0,115,0,84,0,111,0,83,0,116,0,114,0,105,0,110,0,103,0,115,0,0,0};
 /* TESTS DONE! */
-int8_t StringLiteral_27[36] = {0,0,0,0,0,0,0,0,11,0,0,0,84,0,69,0,83,0,84,0,83,0,32,0,68,0,79,0,78,0,69,0,33,0,0,0};
+int8_t StringLiteral_31[36] = {0,0,0,0,0,0,0,0,11,0,0,0,84,0,69,0,83,0,84,0,83,0,32,0,68,0,79,0,78,0,69,0,33,0,0,0};
 /* SUCCESS:  */
-int8_t StringLiteral_28[32] = {0,0,0,0,0,0,0,0,9,0,0,0,83,0,85,0,67,0,67,0,69,0,83,0,83,0,58,0,32,0,0,0};
+int8_t StringLiteral_32[32] = {0,0,0,0,0,0,0,0,9,0,0,0,83,0,85,0,67,0,67,0,69,0,83,0,83,0,58,0,32,0,0,0};
 /* ERROR:  */
-int8_t StringLiteral_29[28] = {0,0,0,0,0,0,0,0,7,0,0,0,69,0,82,0,82,0,79,0,82,0,58,0,32,0,0,0};
+int8_t StringLiteral_33[28] = {0,0,0,0,0,0,0,0,7,0,0,0,69,0,82,0,82,0,79,0,82,0,58,0,32,0,0,0};
+/* A */
+int8_t StringLiteral_34[16] = {0,0,0,0,0,0,0,0,1,0,0,0,65,0,0,0};
+/* B */
+int8_t StringLiteral_35[16] = {0,0,0,0,0,0,0,0,1,0,0,0,66,0,0,0};
+/* C */
+int8_t StringLiteral_36[16] = {0,0,0,0,0,0,0,0,1,0,0,0,67,0,0,0};
 /* 127 */
-int8_t StringLiteral_30[20] = {0,0,0,0,0,0,0,0,3,0,0,0,49,0,50,0,55,0,0,0};
+int8_t StringLiteral_37[20] = {0,0,0,0,0,0,0,0,3,0,0,0,49,0,50,0,55,0,0,0};
 /* -128 */
-int8_t StringLiteral_31[22] = {0,0,0,0,0,0,0,0,4,0,0,0,45,0,49,0,50,0,56,0,0,0};
+int8_t StringLiteral_38[22] = {0,0,0,0,0,0,0,0,4,0,0,0,45,0,49,0,50,0,56,0,0,0};
 /* 255 */
-int8_t StringLiteral_32[20] = {0,0,0,0,0,0,0,0,3,0,0,0,50,0,53,0,53,0,0,0};
+int8_t StringLiteral_39[20] = {0,0,0,0,0,0,0,0,3,0,0,0,50,0,53,0,53,0,0,0};
 /* 0 */
-int8_t StringLiteral_33[16] = {0,0,0,0,0,0,0,0,1,0,0,0,48,0,0,0};
+int8_t StringLiteral_40[16] = {0,0,0,0,0,0,0,0,1,0,0,0,48,0,0,0};
 /* 32767 */
-int8_t StringLiteral_34[24] = {0,0,0,0,0,0,0,0,5,0,0,0,51,0,50,0,55,0,54,0,55,0,0,0};
+int8_t StringLiteral_41[24] = {0,0,0,0,0,0,0,0,5,0,0,0,51,0,50,0,55,0,54,0,55,0,0,0};
 /* -32768 */
-int8_t StringLiteral_35[26] = {0,0,0,0,0,0,0,0,6,0,0,0,45,0,51,0,50,0,55,0,54,0,56,0,0,0};
+int8_t StringLiteral_42[26] = {0,0,0,0,0,0,0,0,6,0,0,0,45,0,51,0,50,0,55,0,54,0,56,0,0,0};
 /* 65535 */
-int8_t StringLiteral_36[24] = {0,0,0,0,0,0,0,0,5,0,0,0,54,0,53,0,53,0,51,0,53,0,0,0};
+int8_t StringLiteral_43[24] = {0,0,0,0,0,0,0,0,5,0,0,0,54,0,53,0,53,0,51,0,53,0,0,0};
 /* 2147483647 */
-int8_t StringLiteral_37[34] = {0,0,0,0,0,0,0,0,10,0,0,0,50,0,49,0,52,0,55,0,52,0,56,0,51,0,54,0,52,0,55,0,0,0};
+int8_t StringLiteral_44[34] = {0,0,0,0,0,0,0,0,10,0,0,0,50,0,49,0,52,0,55,0,52,0,56,0,51,0,54,0,52,0,55,0,0,0};
 /* -2147483648 */
-int8_t StringLiteral_38[36] = {0,0,0,0,0,0,0,0,11,0,0,0,45,0,50,0,49,0,52,0,55,0,52,0,56,0,51,0,54,0,52,0,56,0,0,0};
+int8_t StringLiteral_45[36] = {0,0,0,0,0,0,0,0,11,0,0,0,45,0,50,0,49,0,52,0,55,0,52,0,56,0,51,0,54,0,52,0,56,0,0,0};
 /* 4294967295 */
-int8_t StringLiteral_39[34] = {0,0,0,0,0,0,0,0,10,0,0,0,52,0,50,0,57,0,52,0,57,0,54,0,55,0,50,0,57,0,53,0,0,0};
+int8_t StringLiteral_46[34] = {0,0,0,0,0,0,0,0,10,0,0,0,52,0,50,0,57,0,52,0,57,0,54,0,55,0,50,0,57,0,53,0,0,0};
 /* 9223372036854775807 */
-int8_t StringLiteral_40[52] = {0,0,0,0,0,0,0,0,19,0,0,0,57,0,50,0,50,0,51,0,51,0,55,0,50,0,48,0,51,0,54,0,56,0,53,0,52,0,55,0,55,0,53,0,56,0,48,0,55,0,0,0};
+int8_t StringLiteral_47[52] = {0,0,0,0,0,0,0,0,19,0,0,0,57,0,50,0,50,0,51,0,51,0,55,0,50,0,48,0,51,0,54,0,56,0,53,0,52,0,55,0,55,0,53,0,56,0,48,0,55,0,0,0};
 /* -9223372036854775808 */
-int8_t StringLiteral_41[54] = {0,0,0,0,0,0,0,0,20,0,0,0,45,0,57,0,50,0,50,0,51,0,51,0,55,0,50,0,48,0,51,0,54,0,56,0,53,0,52,0,55,0,55,0,53,0,56,0,48,0,56,0,0,0};
+int8_t StringLiteral_48[54] = {0,0,0,0,0,0,0,0,20,0,0,0,45,0,57,0,50,0,50,0,51,0,51,0,55,0,50,0,48,0,51,0,54,0,56,0,53,0,52,0,55,0,55,0,53,0,56,0,48,0,56,0,0,0};
 /* 18446744073709551615 */
-int8_t StringLiteral_42[54] = {0,0,0,0,0,0,0,0,20,0,0,0,49,0,56,0,52,0,52,0,54,0,55,0,52,0,52,0,48,0,55,0,51,0,55,0,48,0,57,0,53,0,53,0,49,0,54,0,49,0,53,0,0,0};
+int8_t StringLiteral_49[54] = {0,0,0,0,0,0,0,0,20,0,0,0,49,0,56,0,52,0,52,0,54,0,55,0,52,0,52,0,48,0,55,0,51,0,55,0,48,0,57,0,53,0,53,0,49,0,54,0,49,0,53,0,0,0};
 /* 3.40282E+38 */
-int8_t StringLiteral_43[36] = {0,0,0,0,0,0,0,0,11,0,0,0,51,0,46,0,52,0,48,0,50,0,56,0,50,0,69,0,43,0,51,0,56,0,0,0};
+int8_t StringLiteral_50[36] = {0,0,0,0,0,0,0,0,11,0,0,0,51,0,46,0,52,0,48,0,50,0,56,0,50,0,69,0,43,0,51,0,56,0,0,0};
 /* 1.17549E-38 */
-int8_t StringLiteral_44[36] = {0,0,0,0,0,0,0,0,11,0,0,0,49,0,46,0,49,0,55,0,53,0,52,0,57,0,69,0,45,0,51,0,56,0,0,0};
+int8_t StringLiteral_51[36] = {0,0,0,0,0,0,0,0,11,0,0,0,49,0,46,0,49,0,55,0,53,0,52,0,57,0,69,0,45,0,51,0,56,0,0,0};
 /* 1234.43 */
-int8_t StringLiteral_45[28] = {0,0,0,0,0,0,0,0,7,0,0,0,49,0,50,0,51,0,52,0,46,0,52,0,51,0,0,0};
+int8_t StringLiteral_52[28] = {0,0,0,0,0,0,0,0,7,0,0,0,49,0,50,0,51,0,52,0,46,0,52,0,51,0,0,0};
 /* 1.79769E+308 */
-int8_t StringLiteral_46[38] = {0,0,0,0,0,0,0,0,12,0,0,0,49,0,46,0,55,0,57,0,55,0,54,0,57,0,69,0,43,0,51,0,48,0,56,0,0,0};
+int8_t StringLiteral_53[38] = {0,0,0,0,0,0,0,0,12,0,0,0,49,0,46,0,55,0,57,0,55,0,54,0,57,0,69,0,43,0,51,0,48,0,56,0,0,0};
 /* 2.22507E-308 */
-int8_t StringLiteral_47[38] = {0,0,0,0,0,0,0,0,12,0,0,0,50,0,46,0,50,0,50,0,53,0,48,0,55,0,69,0,45,0,51,0,48,0,56,0,0,0};
+int8_t StringLiteral_54[38] = {0,0,0,0,0,0,0,0,12,0,0,0,50,0,46,0,50,0,50,0,53,0,48,0,55,0,69,0,45,0,51,0,48,0,56,0,0,0};
 /* ￿ */
-int8_t StringLiteral_48[16] = {0,0,0,0,0,0,0,0,1,0,0,0,255,255,0,0};
+int8_t StringLiteral_55[16] = {0,0,0,0,0,0,0,0,1,0,0,0,255,255,0,0};
 /*   */
-int8_t StringLiteral_49[16] = {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0};
+int8_t StringLiteral_56[16] = {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0};
 /* Some Data */
-int8_t StringLiteral_50[32] = {0,0,0,0,0,0,0,0,9,0,0,0,83,0,111,0,109,0,101,0,32,0,68,0,97,0,116,0,97,0,0,0};
+int8_t StringLiteral_57[32] = {0,0,0,0,0,0,0,0,9,0,0,0,83,0,111,0,109,0,101,0,32,0,68,0,97,0,116,0,97,0,0,0};
 /* YAHOO */
-int8_t StringLiteral_51[24] = {0,0,0,0,0,0,0,0,5,0,0,0,89,0,65,0,72,0,79,0,79,0,0,0};
+int8_t StringLiteral_58[24] = {0,0,0,0,0,0,0,0,5,0,0,0,89,0,65,0,72,0,79,0,79,0,0,0};
 /* 'newSize' must be 0 or greater */
-int8_t StringLiteral_52[74] = {0,0,0,0,0,0,0,0,30,0,0,0,39,0,110,0,101,0,119,0,83,0,105,0,122,0,101,0,39,0,32,0,109,0,117,0,115,0,116,0,32,0,98,0,101,0,32,0,48,0,32,0,111,0,114,0,32,0,103,0,114,0,101,0,97,0,116,0,101,0,114,0,0,0};
+int8_t StringLiteral_59[74] = {0,0,0,0,0,0,0,0,30,0,0,0,39,0,110,0,101,0,119,0,83,0,105,0,122,0,101,0,39,0,32,0,109,0,117,0,115,0,116,0,32,0,98,0,101,0,32,0,48,0,32,0,111,0,114,0,32,0,103,0,114,0,101,0,97,0,116,0,101,0,114,0,0,0};
 
 /* =============================== */
 /* Forward declare Types */
@@ -207,7 +222,10 @@ typedef struct t2_System_ThrowArgumentNullException t2_System_ThrowArgumentNullE
 typedef struct t2_System_Type t2_System_Type;
 typedef struct t2_System_ValueType t2_System_ValueType;
 typedef struct t3_System_Diagnostics_Debug t3_System_Diagnostics_Debug;
+typedef struct t3_System_IO_File t3_System_IO_File;
+typedef struct t3_System_IO_FileNotFoundException t3_System_IO_FileNotFoundException;
 typedef struct t3_System_IO_FileStream t3_System_IO_FileStream;
+typedef struct t3_System_IO_IOException t3_System_IO_IOException;
 typedef struct t3_System_IO_Path t3_System_IO_Path;
 typedef struct t3_System_IO_Stream t3_System_IO_Stream;
 typedef struct t3_System_Reflection_AssemblyCompanyAttribute t3_System_Reflection_AssemblyCompanyAttribute;
@@ -796,9 +814,27 @@ struct t3_System_Diagnostics_Debug
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
 
+struct t3_System_IO_File
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+};
+
+struct t3_System_IO_FileNotFoundException
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	t2_System_String* f__Message_k__BackingField_1;
+};
+
 struct t3_System_IO_FileStream
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
+	intptr_t f_stream_2;
+};
+
+struct t3_System_IO_IOException
+{
+	t2_System_RuntimeType* CS2X_RuntimeType;
+	t2_System_String* f__Message_k__BackingField_1;
 };
 
 struct t3_System_IO_Path
@@ -1052,7 +1088,6 @@ uintptr_t f_uintptr_t_Zero;
 #define f_System_IO_FileMode_Create 2
 #define f_System_IO_FileMode_Open 3
 #define f_System_IO_FileMode_OpenOrCreate 4
-#define f_System_IO_FileMode_Truncate 5
 #define f_System_IO_FileMode_Append 6
 
 #define f_System_IO_FileShare_None 0
@@ -1821,6 +1856,23 @@ rt3_System_Diagnostics_Debug rt3_System_Diagnostics_Debug_OBJ;
 int8_t rt3_System_Diagnostics_Debug_METADATA_Name[24] = {0,0,0,0,0,0,0,0,5,0,0,0,68,0,101,0,98,0,117,0,103,0,0,0}; /* Debug */
 int8_t rt3_System_Diagnostics_Debug_METADATA_FullName[62] = {0,0,0,0,0,0,0,0,24,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,68,0,105,0,97,0,103,0,110,0,111,0,115,0,116,0,105,0,99,0,115,0,46,0,68,0,101,0,98,0,117,0,103,0,0,0}; /* System.Diagnostics.Debug */
 
+typedef struct rt3_System_IO_File
+{
+	t2_System_RuntimeType runtimeType;
+} rt3_System_IO_File;
+rt3_System_IO_File rt3_System_IO_File_OBJ;
+int8_t rt3_System_IO_File_METADATA_Name[22] = {0,0,0,0,0,0,0,0,4,0,0,0,70,0,105,0,108,0,101,0,0,0}; /* File */
+int8_t rt3_System_IO_File_METADATA_FullName[42] = {0,0,0,0,0,0,0,0,14,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,79,0,46,0,70,0,105,0,108,0,101,0,0,0}; /* System.IO.File */
+
+typedef struct rt3_System_IO_FileNotFoundException
+{
+	t2_System_RuntimeType runtimeType;
+	t2_System_String* (*vTable_get_Message_0)(t3_System_IO_FileNotFoundException* self);
+} rt3_System_IO_FileNotFoundException;
+rt3_System_IO_FileNotFoundException rt3_System_IO_FileNotFoundException_OBJ;
+int8_t rt3_System_IO_FileNotFoundException_METADATA_Name[56] = {0,0,0,0,0,0,0,0,21,0,0,0,70,0,105,0,108,0,101,0,78,0,111,0,116,0,70,0,111,0,117,0,110,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* FileNotFoundException */
+int8_t rt3_System_IO_FileNotFoundException_METADATA_FullName[76] = {0,0,0,0,0,0,0,0,31,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,79,0,46,0,70,0,105,0,108,0,101,0,78,0,111,0,116,0,70,0,111,0,117,0,110,0,100,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* System.IO.FileNotFoundException */
+
 typedef struct rt3_System_IO_FileStream
 {
 	t2_System_RuntimeType runtimeType;
@@ -1829,13 +1881,24 @@ typedef struct rt3_System_IO_FileStream
 	void (*vTable_set_Position_0)(t3_System_IO_FileStream* self, int64_t p_value);
 	void (*vTable_Dispose_0)(t3_System_IO_FileStream* self);
 	int32_t (*vTable_Read_0)(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
+	int32_t (*vTable_Read_1)(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
 	int32_t (*vTable_ReadByte_0)(t3_System_IO_FileStream* self);
 	void (*vTable_Write_0)(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
+	void (*vTable_Write_1)(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
 	void (*vTable_WriteByte_0)(t3_System_IO_FileStream* self, uint8_t p_value);
 } rt3_System_IO_FileStream;
 rt3_System_IO_FileStream rt3_System_IO_FileStream_OBJ;
 int8_t rt3_System_IO_FileStream_METADATA_Name[34] = {0,0,0,0,0,0,0,0,10,0,0,0,70,0,105,0,108,0,101,0,83,0,116,0,114,0,101,0,97,0,109,0,0,0}; /* FileStream */
 int8_t rt3_System_IO_FileStream_METADATA_FullName[54] = {0,0,0,0,0,0,0,0,20,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,79,0,46,0,70,0,105,0,108,0,101,0,83,0,116,0,114,0,101,0,97,0,109,0,0,0}; /* System.IO.FileStream */
+
+typedef struct rt3_System_IO_IOException
+{
+	t2_System_RuntimeType runtimeType;
+	t2_System_String* (*vTable_get_Message_0)(t3_System_IO_IOException* self);
+} rt3_System_IO_IOException;
+rt3_System_IO_IOException rt3_System_IO_IOException_OBJ;
+int8_t rt3_System_IO_IOException_METADATA_Name[36] = {0,0,0,0,0,0,0,0,11,0,0,0,73,0,79,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* IOException */
+int8_t rt3_System_IO_IOException_METADATA_FullName[56] = {0,0,0,0,0,0,0,0,21,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,73,0,79,0,46,0,73,0,79,0,69,0,120,0,99,0,101,0,112,0,116,0,105,0,111,0,110,0,0,0}; /* System.IO.IOException */
 
 typedef struct rt3_System_IO_Path
 {
@@ -1853,8 +1916,10 @@ typedef struct rt3_System_IO_Stream
 	void (*vTable_set_Position_0)(t3_System_IO_Stream* self, int64_t p_value);
 	void (*vTable_Dispose_0)(t3_System_IO_Stream* self);
 	int32_t (*vTable_Read_0)(t3_System_IO_Stream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
+	int32_t (*vTable_Read_1)(t3_System_IO_Stream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
 	int32_t (*vTable_ReadByte_0)(t3_System_IO_Stream* self);
 	void (*vTable_Write_0)(t3_System_IO_Stream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
+	void (*vTable_Write_1)(t3_System_IO_Stream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
 	void (*vTable_WriteByte_0)(t3_System_IO_Stream* self, uint8_t p_value);
 } rt3_System_IO_Stream;
 rt3_System_IO_Stream rt3_System_IO_Stream_OBJ;
@@ -2283,7 +2348,7 @@ int8_t rt0_System_Byte__PTR_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83
 
 
 /* =============================== */
-/* Forward decalre Methods */
+/* Forward declare Methods */
 /* =============================== */
 t2_System_ArgumentException* m2_System_ArgumentException__ctor_0(t2_System_ArgumentException* self);
 t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_0(t2_System_ArgumentOutOfRangeException* self);
@@ -2338,6 +2403,7 @@ t2_System_Delegate* m2_System_Delegate_Remove_0(t2_System_Delegate* p_source, t2
 t2_System_Delegate* m2_System_Delegate_RemoveAll_0(t2_System_Delegate* p_source, t2_System_Delegate* p_value);
 t2_System_Delegate* m2_System_Delegate__ctor_0(t2_System_Delegate* self);
 t2_System_DllNotFoundException* m2_System_DllNotFoundException__ctor_0(t2_System_DllNotFoundException* self);
+t2_System_String* m2_System_Enum_ToString_0(t2_System_Enum* self);
 t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self);
 t2_System_String* m2_System_Environment_get_NewLine_0();
 void m2_System_Environment_SetEnvironmentVariable_0(t2_System_String* p_variable, t2_System_String* p_value);
@@ -2397,13 +2463,21 @@ t2_System_Type* m2_System_Type_GetTypeFromHandle_0(t2_System_RuntimeTypeHandle p
 t2_System_Type* m2_System_Type__ctor_0(t2_System_Type* self);
 t2_System_ValueType* m2_System_ValueType__ctor_0(t2_System_ValueType* self);
 void m3_System_Diagnostics_Debug_WriteLine_0(t2_System_String* p_message);
+char m3_System_IO_File_Exists_0(t2_System_String* p_path);
+char m3_System_IO_File_ExistsInternal_0(uint8_t* p_path);
+t3_System_IO_FileNotFoundException* m3_System_IO_FileNotFoundException__ctor_0(t3_System_IO_FileNotFoundException* self);
+t3_System_IO_FileNotFoundException* m3_System_IO_FileNotFoundException__ctor_1(t3_System_IO_FileNotFoundException* self, t2_System_String* p_message);
 int64_t m3_System_IO_FileStream_get_Length_0(t3_System_IO_FileStream* self);
 int64_t m3_System_IO_FileStream_get_Position_0(t3_System_IO_FileStream* self);
 void m3_System_IO_FileStream_set_Position_0(t3_System_IO_FileStream* self, int64_t p_value);
 t3_System_IO_FileStream* m3_System_IO_FileStream__ctor_0(t3_System_IO_FileStream* self, t2_System_String* p_path, t3_System_IO_FileMode p_mode, t3_System_IO_FileAccess p_access, t3_System_IO_FileShare p_share);
 void m3_System_IO_FileStream_Dispose_0(t3_System_IO_FileStream* self);
 int32_t m3_System_IO_FileStream_Read_0(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
+int32_t m3_System_IO_FileStream_Read_1(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
 void m3_System_IO_FileStream_Write_0(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
+void m3_System_IO_FileStream_Write_1(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count);
+t3_System_IO_IOException* m3_System_IO_IOException__ctor_0(t3_System_IO_IOException* self);
+t3_System_IO_IOException* m3_System_IO_IOException__ctor_1(t3_System_IO_IOException* self, t2_System_String* p_message);
 t2_System_String* m3_System_IO_Path_Combine_0(t2_System_String* p_path1, t2_System_String* p_path2);
 t2_System_String* m3_System_IO_Path_Combine_1(t2_System_String* p_path1, t2_System_String* p_path2, t2_System_String* p_path3);
 t2_System_String* m3_System_IO_Path_Combine_2(t2_System_String* p_path1, t2_System_String* p_path2, t2_System_String* p_path3, t2_System_String* p_path4);
@@ -2764,6 +2838,19 @@ char16_t* CS2X_PValueToIValue_char16_t(char16_t pvalue, char16_t* ivalue)
 	return ivalue;
 }
 
+
+/* =============================== */
+/* Enum ToString Method definitions */
+/* =============================== */
+t2_System_String* t4_PortableTestApp_Test_Enums_MyEnum_ToString(t4_PortableTestApp_Test_Enums_MyEnum value)
+{
+	switch (value)
+	{
+		case 6: return StringLiteral_34;
+		case 7: return StringLiteral_35;
+		case 1: return StringLiteral_36;
+	}
+}
 
 /* =============================== */
 /* Helper runtime methods */
@@ -3310,6 +3397,11 @@ t2_System_DllNotFoundException* m2_System_DllNotFoundException__ctor_0(t2_System
 {
 	m2_System_Exception__ctor_0(self);
 	return self;
+}
+
+t2_System_String* m2_System_Enum_ToString_0(t2_System_Enum* self)
+{
+	return f_System_String_Empty;
 }
 
 t2_System_Enum* m2_System_Enum__ctor_0(t2_System_Enum* self)
@@ -3861,6 +3953,32 @@ void m3_System_Diagnostics_Debug_WriteLine_0(t2_System_String* p_message)
 	OutputDebugStringW(l_newLinePtr_1);
 }
 
+char m3_System_IO_File_Exists_0(t2_System_String* p_path)
+{
+	uint8_t* l_pathData_0;
+	uint8_t* l_pathDataPtr_1;
+	l_pathData_0 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__Default_k__BackingField, p_path);
+	l_pathDataPtr_1 = (uint8_t*)(((char*)l_pathData_0) + ArrayOffset);
+	return m3_System_IO_File_ExistsInternal_0(l_pathDataPtr_1);
+}
+
+char m3_System_IO_File_ExistsInternal_0(uint8_t* p_path)
+{
+	return access(p_path, 0) == 0;
+}
+
+t3_System_IO_FileNotFoundException* m3_System_IO_FileNotFoundException__ctor_0(t3_System_IO_FileNotFoundException* self)
+{
+	m2_System_Exception__ctor_0(self);
+	return self;
+}
+
+t3_System_IO_FileNotFoundException* m3_System_IO_FileNotFoundException__ctor_1(t3_System_IO_FileNotFoundException* self, t2_System_String* p_message)
+{
+	m2_System_Exception__ctor_1(self, p_message);
+	return self;
+}
+
 int64_t m3_System_IO_FileStream_get_Length_0(t3_System_IO_FileStream* self)
 {
 	return 	CS2X_ThreadExceptionObject = m2_System_NotImplementedException__ctor_0(CS2X_AllocType(sizeof(t2_System_NotImplementedException), &rt2_System_NotImplementedException_OBJ, 0));
@@ -3882,26 +4000,148 @@ void m3_System_IO_FileStream_set_Position_0(t3_System_IO_FileStream* self, int64
 
 t3_System_IO_FileStream* m3_System_IO_FileStream__ctor_0(t3_System_IO_FileStream* self, t2_System_String* p_path, t3_System_IO_FileMode p_mode, t3_System_IO_FileAccess p_access, t3_System_IO_FileShare p_share)
 {
+	uint8_t* l_pathData_0;
+	uint8_t* l_pathDataPtr_1;
 	m3_System_IO_Stream__ctor_0(self);
+	l_pathData_0 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__Default_k__BackingField, p_path);
+	l_pathDataPtr_1 = (uint8_t*)(((char*)l_pathData_0) + ArrayOffset);
+	{
+		switch (p_mode)
+		{
+			case 1:
+				if (m3_System_IO_File_ExistsInternal_0(l_pathDataPtr_1))
+				{
+					CS2X_ThreadExceptionObject = m3_System_IO_IOException__ctor_1(CS2X_AllocType(sizeof(t3_System_IO_IOException), &rt3_System_IO_IOException_OBJ, 0), StringLiteral_5);
+					longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+				}
+				break;
+			case 4:
+				if (p_access == 1 && !m3_System_IO_File_ExistsInternal_0(l_pathDataPtr_1))
+				{
+					self->f_stream_2 = fopen(l_pathDataPtr_1, "w");
+					if (self->f_stream_2 == m2_intptr_t_get_Zero_0())
+					{
+						CS2X_ThreadExceptionObject = m3_System_IO_IOException__ctor_1(CS2X_AllocType(sizeof(t3_System_IO_IOException), &rt3_System_IO_IOException_OBJ, 0), StringLiteral_6);
+						longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+					}
+					fclose(self->f_stream_2);
+					self->f_stream_2 = m2_intptr_t_get_Zero_0();
+				}
+				break;
+			case 3:
+				if (!m3_System_IO_File_ExistsInternal_0(l_pathDataPtr_1))
+				{
+					CS2X_ThreadExceptionObject = m3_System_IO_IOException__ctor_1(CS2X_AllocType(sizeof(t3_System_IO_IOException), &rt3_System_IO_IOException_OBJ, 0), StringLiteral_7);
+					longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+				}
+				break;
+		}
+		switch (p_access)
+		{
+			case 1:
+				switch (p_mode)
+				{
+					case 4:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "rb");
+						break;
+					case 3:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "rb");
+						break;
+					default:
+						CS2X_ThreadExceptionObject = m2_System_ArgumentException__ctor_0(CS2X_AllocType(sizeof(t2_System_ArgumentException), &rt2_System_ArgumentException_OBJ, 0));
+						longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+				}
+				break;
+			case 2:
+				switch (p_mode)
+				{
+					case 4:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "wb");
+						break;
+					case 2:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "wb");
+						break;
+					case 6:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "ab");
+						break;
+					default:
+						CS2X_ThreadExceptionObject = m2_System_ArgumentException__ctor_0(CS2X_AllocType(sizeof(t2_System_ArgumentException), &rt2_System_ArgumentException_OBJ, 0));
+						longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+				}
+				break;
+			case 3:
+				switch (p_mode)
+				{
+					case 4:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "rbwb");
+						break;
+					case 2:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "rbwb");
+						break;
+					case 3:
+						self->f_stream_2 = fopen(l_pathDataPtr_1, "rbwb");
+						break;
+					default:
+						CS2X_ThreadExceptionObject = m2_System_ArgumentException__ctor_0(CS2X_AllocType(sizeof(t2_System_ArgumentException), &rt2_System_ArgumentException_OBJ, 0));
+						longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+				}
+				break;
+			default:
+				CS2X_ThreadExceptionObject = m2_System_NotImplementedException__ctor_0(CS2X_AllocType(sizeof(t2_System_NotImplementedException), &rt2_System_NotImplementedException_OBJ, 0));
+				longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+		}
+	}
+	if (self->f_stream_2 == m2_intptr_t_get_Zero_0())
+	{
+		CS2X_ThreadExceptionObject = m3_System_IO_IOException__ctor_1(CS2X_AllocType(sizeof(t3_System_IO_IOException), &rt3_System_IO_IOException_OBJ, 0), StringLiteral_8);
+		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	}
 	return self;
 }
 
 void m3_System_IO_FileStream_Dispose_0(t3_System_IO_FileStream* self)
 {
-	CS2X_ThreadExceptionObject = m2_System_NotImplementedException__ctor_0(CS2X_AllocType(sizeof(t2_System_NotImplementedException), &rt2_System_NotImplementedException_OBJ, 0));
-	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	if (self->f_stream_2 != m2_intptr_t_get_Zero_0())
+	{
+		fclose(self->f_stream_2);
+		self->f_stream_2 = m2_intptr_t_get_Zero_0();
+	}
 }
 
 int32_t m3_System_IO_FileStream_Read_0(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count)
 {
-	CS2X_ThreadExceptionObject = m2_System_NotImplementedException__ctor_0(CS2X_AllocType(sizeof(t2_System_NotImplementedException), &rt2_System_NotImplementedException_OBJ, 0));
-	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	return (int32_t)fread(p_buffer + p_offset, (uintptr_t)sizeof(uint8_t), (uintptr_t)p_count, self->f_stream_2);
+}
+
+int32_t m3_System_IO_FileStream_Read_1(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count)
+{
+	uint8_t* l_butterPtr_0;
+	l_butterPtr_0 = (uint8_t*)(((char*)p_buffer) + ArrayOffset);
+	return (int32_t)fread(l_butterPtr_0 + p_offset, (uintptr_t)sizeof(uint8_t), (uintptr_t)p_count, self->f_stream_2);
 }
 
 void m3_System_IO_FileStream_Write_0(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count)
 {
-	CS2X_ThreadExceptionObject = m2_System_NotImplementedException__ctor_0(CS2X_AllocType(sizeof(t2_System_NotImplementedException), &rt2_System_NotImplementedException_OBJ, 0));
-	longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
+	fwrite(p_buffer + p_offset, (uintptr_t)sizeof(uint8_t), (uintptr_t)p_count, self->f_stream_2);
+}
+
+void m3_System_IO_FileStream_Write_1(t3_System_IO_FileStream* self, uint8_t* p_buffer, int32_t p_offset, int32_t p_count)
+{
+	uint8_t* l_butterPtr_0;
+	l_butterPtr_0 = (uint8_t*)(((char*)p_buffer) + ArrayOffset);
+	fwrite(l_butterPtr_0 + p_offset, (uintptr_t)sizeof(uint8_t), (uintptr_t)p_count, self->f_stream_2);
+}
+
+t3_System_IO_IOException* m3_System_IO_IOException__ctor_0(t3_System_IO_IOException* self)
+{
+	m2_System_Exception__ctor_0(self);
+	return self;
+}
+
+t3_System_IO_IOException* m3_System_IO_IOException__ctor_1(t3_System_IO_IOException* self, t2_System_String* p_message)
+{
+	m2_System_Exception__ctor_1(self, p_message);
+	return self;
 }
 
 t2_System_String* m3_System_IO_Path_Combine_0(t2_System_String* p_path1, t2_System_String* p_path2)
@@ -3960,23 +4200,17 @@ t2_System_String* m3_System_IO_Path_Combine_2(t2_System_String* p_path1, t2_Syst
 
 int32_t m3_System_IO_Stream_ReadByte_0(t3_System_IO_Stream* self)
 {
-	uint8_t* l_oneByteArray_0;
-	int32_t l_r_1;
-	l_oneByteArray_0 = CS2X_AllocArrayTypeAtomic(sizeof(uint8_t), 1, &rt0_System_Byte___ARRAY_OBJ);
-	l_r_1 = ((rt3_System_IO_Stream*)self->CS2X_RuntimeType)->vTable_Read_0(self, l_oneByteArray_0, 0, 1);
-	if (l_r_1 == 0)
+	uint8_t l_data_0;
+	if (((rt3_System_IO_Stream*)self->CS2X_RuntimeType)->vTable_Read_0(self, &l_data_0, 0, 1) == 0)
 	{
 		return -1;
 	}
-	return ((uint8_t*)(((char*)l_oneByteArray_0) + ArrayOffset))[0];
+	return l_data_0;
 }
 
 void m3_System_IO_Stream_WriteByte_0(t3_System_IO_Stream* self, uint8_t p_value)
 {
-	uint8_t* l_oneByteArray_0;
-	l_oneByteArray_0 = CS2X_AllocArrayTypeAtomic(sizeof(uint8_t), 1, &rt0_System_Byte___ARRAY_OBJ);
-	((uint8_t*)(((char*)l_oneByteArray_0) + ArrayOffset))[0] = p_value;
-	((rt3_System_IO_Stream*)self->CS2X_RuntimeType)->vTable_Write_0(self, l_oneByteArray_0, 0, 1);
+	((rt3_System_IO_Stream*)self->CS2X_RuntimeType)->vTable_Write_0(self, &p_value, 0, 1);
 }
 
 t3_System_IO_Stream* m3_System_IO_Stream__ctor_0(t3_System_IO_Stream* self)
@@ -4867,35 +5101,35 @@ t4_System_Runtime_InteropServices_UnmanagedType m4_System_Runtime_InteropService
 int32_t m2_PortableTestApp_Program_Main_0(t2_System_String** p_args)
 {
 	int32_t l_arg_i_0;
-	m2_System_Console_WriteLine_0(StringLiteral_5);
+	m2_System_Console_WriteLine_0(StringLiteral_9);
 	for (l_arg_i_0 = 0; l_arg_i_0 != m2_System_Array_get_Length_0((t2_System_Array*)p_args); ++l_arg_i_0)
 	{
 		t2_System_String* l_arg_1;
 		l_arg_1 = ((t2_System_String**)(((char*)p_args) + ArrayOffset))[l_arg_i_0];
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_6, l_arg_1));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_10, l_arg_1));
 	}
 	m2_System_Console_WriteLine_1();
-	m2_System_Console_WriteLine_0(StringLiteral_7);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ClassNesting_RunTest_0(), StringLiteral_8);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ClassVsStruct_RunTest_0(), StringLiteral_9);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Enums_RunTest_0(), StringLiteral_10);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_RefOutParameters_RunTest_0(), StringLiteral_11);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FieldsAndProperties_RunTest_0(), StringLiteral_12);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0(), StringLiteral_13);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ExtensionMethods_RunTest_0(), StringLiteral_14);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Destructors_RunTest_0(), StringLiteral_15);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_TryCatch_RunTest_0(), StringLiteral_16);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Interop_RunTest_0(), StringLiteral_17);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_18);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_19);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_20);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Indexers_RunTest_0(), StringLiteral_21);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Operators_RunTest_0(), StringLiteral_22);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_StringEncoding_RunTest_0(), StringLiteral_23);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_CoreGenericCollections_RunTest_0(), StringLiteral_24);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_NewOverrides_RunTest_0(), StringLiteral_25);
-	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_NumbersToStrings_RunTest_0(), StringLiteral_26);
-	m2_System_Console_WriteLine_0(StringLiteral_27);
+	m2_System_Console_WriteLine_0(StringLiteral_11);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ClassNesting_RunTest_0(), StringLiteral_12);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ClassVsStruct_RunTest_0(), StringLiteral_13);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Enums_RunTest_0(), StringLiteral_14);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_RefOutParameters_RunTest_0(), StringLiteral_15);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FieldsAndProperties_RunTest_0(), StringLiteral_16);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_FlowControlAndEnumerators_RunTest_0(), StringLiteral_17);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_ExtensionMethods_RunTest_0(), StringLiteral_18);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Destructors_RunTest_0(), StringLiteral_19);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_TryCatch_RunTest_0(), StringLiteral_20);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Interop_RunTest_0(), StringLiteral_21);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_VirtualMethods_RunTest_0(), StringLiteral_22);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Generics_RunTest_0(), StringLiteral_23);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Delegates_RunTest_0(), StringLiteral_24);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Indexers_RunTest_0(), StringLiteral_25);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_Operators_RunTest_0(), StringLiteral_26);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_StringEncoding_RunTest_0(), StringLiteral_27);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_CoreGenericCollections_RunTest_0(), StringLiteral_28);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_NewOverrides_RunTest_0(), StringLiteral_29);
+	m2_PortableTestApp_Program_Log_0(m3_PortableTestApp_Test_NumbersToStrings_RunTest_0(), StringLiteral_30);
+	m2_System_Console_WriteLine_0(StringLiteral_31);
 	return 99;
 }
 
@@ -4903,11 +5137,11 @@ void m2_PortableTestApp_Program_Log_0(char p_success, t2_System_String* p_messag
 {
 	if (p_success)
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_28, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_32, p_message));
 	}
 	else
 	{
-		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_29, p_message));
+		m2_System_Console_WriteLine_0(m2_System_String_Concat_0(StringLiteral_33, p_message));
 	}
 }
 
@@ -5114,7 +5348,7 @@ char m3_PortableTestApp_Test_Enums_RunTest_0()
 {
 	t4_PortableTestApp_Test_Enums_MyEnum l_e_0;
 	l_e_0 = 7;
-	return (int32_t)l_e_0 == 7 && sizeof(t4_PortableTestApp_Test_Enums_MyEnum) == sizeof(uint8_t);
+	return (int32_t)l_e_0 == 7 && sizeof(t4_PortableTestApp_Test_Enums_MyEnum) == sizeof(uint8_t) && m2_System_String_Equals_0(t4_PortableTestApp_Test_Enums_MyEnum_ToString(l_e_0), StringLiteral_35);
 }
 
 char m3_PortableTestApp_Test_ExtensionMethods_RunTest_0()
@@ -5560,7 +5794,7 @@ char m3_PortableTestApp_Test_NumbersToStrings_RunTest_0()
 	l_float64_21 = m2_double_ToString_0(CS2X_PValueToIValue_double(1234.4321, &IVALUE_double));
 	l_c_Max_22 = m2_char16_t_ToString_0(CS2X_PValueToIValue_char16_t(0xFFFF, &IVALUE_char16_t));
 	l_c_Min_23 = m2_char16_t_ToString_0(CS2X_PValueToIValue_char16_t(0x0000, &IVALUE_char16_t));
-	return m2_System_String_Equals_0(l_i8_Max_0, StringLiteral_30) && m2_System_String_Equals_0(l_i8_Min_1, StringLiteral_31) && m2_System_String_Equals_0(l_ui8_Max_8, StringLiteral_32) && m2_System_String_Equals_0(l_ui8_Min_9, StringLiteral_33) && m2_System_String_Equals_0(l_i16_Max_2, StringLiteral_34) && m2_System_String_Equals_0(l_i16_Min_3, StringLiteral_35) && m2_System_String_Equals_0(l_ui16_Max_10, StringLiteral_36) && m2_System_String_Equals_0(l_ui16_Min_11, StringLiteral_33) && m2_System_String_Equals_0(l_i32_Max_4, StringLiteral_37) && m2_System_String_Equals_0(l_i32_Min_5, StringLiteral_38) && m2_System_String_Equals_0(l_ui32_Max_12, StringLiteral_39) && m2_System_String_Equals_0(l_ui32_Min_13, StringLiteral_33) && m2_System_String_Equals_0(l_i64_Max_6, StringLiteral_40) && m2_System_String_Equals_0(l_i64_Min_7, StringLiteral_41) && m2_System_String_Equals_0(l_ui64_Max_14, StringLiteral_42) && m2_System_String_Equals_0(l_ui64_Min_15, StringLiteral_33) && m2_System_String_Equals_0(l_float32_Max_16, StringLiteral_43) && m2_System_String_Equals_0(l_float32_Min_17, StringLiteral_44) && m2_System_String_Equals_0(l_float32_18, StringLiteral_45) && m2_System_String_Equals_0(l_float64_Max_19, StringLiteral_46) && m2_System_String_Equals_0(l_float64_Min_20, StringLiteral_47) && m2_System_String_Equals_0(l_float64_21, StringLiteral_45) && m2_System_String_Equals_0(l_c_Max_22, StringLiteral_48) && m2_System_String_Equals_0(l_c_Min_23, StringLiteral_49);
+	return m2_System_String_Equals_0(l_i8_Max_0, StringLiteral_37) && m2_System_String_Equals_0(l_i8_Min_1, StringLiteral_38) && m2_System_String_Equals_0(l_ui8_Max_8, StringLiteral_39) && m2_System_String_Equals_0(l_ui8_Min_9, StringLiteral_40) && m2_System_String_Equals_0(l_i16_Max_2, StringLiteral_41) && m2_System_String_Equals_0(l_i16_Min_3, StringLiteral_42) && m2_System_String_Equals_0(l_ui16_Max_10, StringLiteral_43) && m2_System_String_Equals_0(l_ui16_Min_11, StringLiteral_40) && m2_System_String_Equals_0(l_i32_Max_4, StringLiteral_44) && m2_System_String_Equals_0(l_i32_Min_5, StringLiteral_45) && m2_System_String_Equals_0(l_ui32_Max_12, StringLiteral_46) && m2_System_String_Equals_0(l_ui32_Min_13, StringLiteral_40) && m2_System_String_Equals_0(l_i64_Max_6, StringLiteral_47) && m2_System_String_Equals_0(l_i64_Min_7, StringLiteral_48) && m2_System_String_Equals_0(l_ui64_Max_14, StringLiteral_49) && m2_System_String_Equals_0(l_ui64_Min_15, StringLiteral_40) && m2_System_String_Equals_0(l_float32_Max_16, StringLiteral_50) && m2_System_String_Equals_0(l_float32_Min_17, StringLiteral_51) && m2_System_String_Equals_0(l_float32_18, StringLiteral_52) && m2_System_String_Equals_0(l_float64_Max_19, StringLiteral_53) && m2_System_String_Equals_0(l_float64_Min_20, StringLiteral_54) && m2_System_String_Equals_0(l_float64_21, StringLiteral_52) && m2_System_String_Equals_0(l_c_Max_22, StringLiteral_55) && m2_System_String_Equals_0(l_c_Min_23, StringLiteral_56);
 }
 
 t3_PortableTestApp_Test_Operators* m3_PortableTestApp_Test_Operators_op_Explicit_0(int32_t p_value)
@@ -5630,9 +5864,9 @@ char m3_PortableTestApp_Test_StringEncoding_RunTest_0()
 {
 	uint8_t* l_data_0;
 	t2_System_String* l_result_1;
-	l_data_0 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, StringLiteral_50);
+	l_data_0 = m3_System_Text_Encoding_GetBytes_5(f_System_Text_Encoding__UTF8_k__BackingField, StringLiteral_57);
 	l_result_1 = m3_System_Text_Encoding_GetString_1(f_System_Text_Encoding__UTF8_k__BackingField, l_data_0);
-	return m2_System_String_Equals_0(l_result_1, StringLiteral_50);
+	return m2_System_String_Equals_0(l_result_1, StringLiteral_57);
 }
 
 char m3_PortableTestApp_Test_TryCatch_RunTest_0()
@@ -5662,14 +5896,14 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 			int CS2X_IS_JMP_2;
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_1, sizeof(jmp_buf));
 			/* using */
-			l_obj_1 = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_51);
+			l_obj_1 = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_58);
 			memcpy(CS2X_JMP_LAST_2, CS2X_ThreadExceptionJmpBuff, sizeof(jmp_buf));
 			CS2X_IS_JMP_2 = setjmp(CS2X_JMP_2);
 			if (CS2X_IS_JMP_2 == 0)
 			{
 				memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_2, sizeof(jmp_buf));
 				l_objRef_0 = l_obj_1;
-				CS2X_ThreadExceptionObject = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_51);
+				CS2X_ThreadExceptionObject = m3_PortableTestApp_Test_MyException__ctor_0(CS2X_AllocType(sizeof(t3_PortableTestApp_Test_MyException), &rt3_PortableTestApp_Test_MyException_OBJ, 0), StringLiteral_58);
 				longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 			}
 			memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_2, sizeof(jmp_buf));
@@ -5704,7 +5938,7 @@ char m3_PortableTestApp_Test_TryCatch_RunTest_0()
 			/* protected return */
 			{
 				char CS2X_RETURN_1;
-				CS2X_RETURN_1 = m2_System_String_Equals_0(l_e_1->f__Message_k__BackingField_1, StringLiteral_51) && l_objRef_0->f_isDisposed_2;
+				CS2X_RETURN_1 = m2_System_String_Equals_0(l_e_1->f__Message_k__BackingField_1, StringLiteral_58) && l_objRef_0->f_isDisposed_2;
 				memcpy(CS2X_ThreadExceptionJmpBuff, CS2X_JMP_LAST_0, sizeof(jmp_buf));
 				return CS2X_RETURN_1;
 			}
@@ -6332,7 +6566,7 @@ void m2_System_Array_Resize_System_Int32__0(int32_t** p_array, int32_t p_newSize
 {
 	if (p_newSize < 0)
 	{
-		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_52);
+		CS2X_ThreadExceptionObject = m2_System_ArgumentOutOfRangeException__ctor_1(CS2X_AllocType(sizeof(t2_System_ArgumentOutOfRangeException), &rt2_System_ArgumentOutOfRangeException_OBJ, 0), StringLiteral_59);
 		longjmp(CS2X_ThreadExceptionJmpBuff, 1); /* throw exception */
 	}
 	if ((*p_array) == 0)
@@ -6575,11 +6809,26 @@ void CS2X_InitAssembly_CS2X_CoreLib()
 	rt3_System_Diagnostics_Debug_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt3_System_Diagnostics_Debug_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_Name;
 	rt3_System_Diagnostics_Debug_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_FullName;
+	memset(&rt3_System_IO_File_OBJ, 0, sizeof(rt3_System_IO_File));
+	rt3_System_IO_File_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_IO_File_OBJ;
+	rt3_System_IO_File_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
+	rt3_System_IO_File_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_IO_File_METADATA_Name;
+	rt3_System_IO_File_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_IO_File_METADATA_FullName;
+	memset(&rt3_System_IO_FileNotFoundException_OBJ, 0, sizeof(rt3_System_IO_FileNotFoundException));
+	rt3_System_IO_FileNotFoundException_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_IO_FileNotFoundException_OBJ;
+	rt3_System_IO_FileNotFoundException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Exception_OBJ;
+	rt3_System_IO_FileNotFoundException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_IO_FileNotFoundException_METADATA_Name;
+	rt3_System_IO_FileNotFoundException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_IO_FileNotFoundException_METADATA_FullName;
 	memset(&rt3_System_IO_FileStream_OBJ, 0, sizeof(rt3_System_IO_FileStream));
 	rt3_System_IO_FileStream_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_IO_FileStream_OBJ;
 	rt3_System_IO_FileStream_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt3_System_IO_Stream_OBJ;
 	rt3_System_IO_FileStream_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_IO_FileStream_METADATA_Name;
 	rt3_System_IO_FileStream_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_IO_FileStream_METADATA_FullName;
+	memset(&rt3_System_IO_IOException_OBJ, 0, sizeof(rt3_System_IO_IOException));
+	rt3_System_IO_IOException_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_IO_IOException_OBJ;
+	rt3_System_IO_IOException_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Exception_OBJ;
+	rt3_System_IO_IOException_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt3_System_IO_IOException_METADATA_Name;
+	rt3_System_IO_IOException_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt3_System_IO_IOException_METADATA_FullName;
 	memset(&rt3_System_IO_Path_OBJ, 0, sizeof(rt3_System_IO_Path));
 	rt3_System_IO_Path_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_IO_Path_OBJ;
 	rt3_System_IO_Path_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -6911,8 +7160,14 @@ void CS2X_InitAssembly_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_ValueType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_File_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_File_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_FileNotFoundException_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_FileNotFoundException_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_IO_FileStream_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_IO_FileStream_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_IOException_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt3_System_IO_IOException_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_IO_Path_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_IO_Path_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_IO_Stream_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
@@ -7022,21 +7277,27 @@ void CS2X_InitAssembly_CS2X_CoreLib()
 	rt2_System_NotImplementedException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt2_System_NotSupportedException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt2_System_ThrowArgumentNullException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
+	rt3_System_IO_FileNotFoundException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt3_System_IO_FileStream_OBJ.vTable_get_Length_0 = &m3_System_IO_FileStream_get_Length_0;
 	rt3_System_IO_FileStream_OBJ.vTable_get_Position_0 = &m3_System_IO_FileStream_get_Position_0;
 	rt3_System_IO_FileStream_OBJ.vTable_set_Position_0 = &m3_System_IO_FileStream_set_Position_0;
 	rt3_System_IO_FileStream_OBJ.vTable_Dispose_0 = &m3_System_IO_FileStream_Dispose_0;
 	rt3_System_IO_FileStream_OBJ.vTable_Read_0 = &m3_System_IO_FileStream_Read_0;
+	rt3_System_IO_FileStream_OBJ.vTable_Read_1 = &m3_System_IO_FileStream_Read_1;
 	rt3_System_IO_FileStream_OBJ.vTable_ReadByte_0 = &m3_System_IO_Stream_ReadByte_0;
 	rt3_System_IO_FileStream_OBJ.vTable_Write_0 = &m3_System_IO_FileStream_Write_0;
+	rt3_System_IO_FileStream_OBJ.vTable_Write_1 = &m3_System_IO_FileStream_Write_1;
 	rt3_System_IO_FileStream_OBJ.vTable_WriteByte_0 = &m3_System_IO_Stream_WriteByte_0;
+	rt3_System_IO_IOException_OBJ.vTable_get_Message_0 = &m2_System_Exception_get_Message_0;
 	rt3_System_IO_Stream_OBJ.vTable_get_Length_0 = 0;
 	rt3_System_IO_Stream_OBJ.vTable_get_Position_0 = 0;
 	rt3_System_IO_Stream_OBJ.vTable_set_Position_0 = 0;
 	rt3_System_IO_Stream_OBJ.vTable_Dispose_0 = 0;
 	rt3_System_IO_Stream_OBJ.vTable_Read_0 = 0;
+	rt3_System_IO_Stream_OBJ.vTable_Read_1 = 0;
 	rt3_System_IO_Stream_OBJ.vTable_ReadByte_0 = &m3_System_IO_Stream_ReadByte_0;
 	rt3_System_IO_Stream_OBJ.vTable_Write_0 = 0;
+	rt3_System_IO_Stream_OBJ.vTable_Write_1 = 0;
 	rt3_System_IO_Stream_OBJ.vTable_WriteByte_0 = &m3_System_IO_Stream_WriteByte_0;
 
 	/* <<< === Generic Runtime Types === >>> */
@@ -7686,6 +7947,13 @@ void CS2X_InitStringLiterals()
 	((t2_System_String*)StringLiteral_50)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_51)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)StringLiteral_52)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_53)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_54)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_55)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_56)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_57)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_58)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)StringLiteral_59)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 }
 
 /* =============================== */
@@ -7701,7 +7969,8 @@ int main(int argc, char** argv)
 	int result = setjmp(CS2X_UnhandledThreadExceptionBuff);
 	if (result != 0)
 	{
-		CS2X_DisplayErrorMessage("Unhandled Exception");
+		t2_System_Exception* exception = (t2_System_Exception*)CS2X_ThreadExceptionObject;
+		CS2X_DisplayErrorMessageW(&exception->f__Message_k__BackingField_1->f__firstChar_1, L"Unhandled Exception");
 		exit(-2);
 	}
 	else

@@ -16,7 +16,7 @@ namespace PortableTestApp.Test
 		public static bool RunTest()
 		{
 			var e = MyEnum.B;
-			return (int)e == 7 && sizeof(MyEnum) == sizeof(byte);
+			return (int)e == 7 && sizeof(MyEnum) == sizeof(byte) && e.ToString() == "B";
 		}
 	}
 }

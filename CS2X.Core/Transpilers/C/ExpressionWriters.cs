@@ -910,7 +910,32 @@ namespace CS2X.Core.Transpilers.C
 				{
 					if (method.Name == "ToString")
 					{
-						throw new NotImplementedException("TODO");
+						string enumToStringMethodName;
+						if (!enumToStringMethods.ContainsKey(callerType))
+						{
+							// add special enum ToString method
+							enumToStringMethodName = GetTypeFullName(callerType) + "_ToString";
+							enumToStringMethods.Add(callerType, enumToStringMethodName);
+
+							// add string literals for each enum field
+							foreach (var member in callerType.GetMembers())
+							{
+								if (member.Kind != SymbolKind.Field) continue;
+								var field = (IFieldSymbol)member;
+								TryAddStringLiteral(field.Name);
+							}
+						}
+						else
+						{
+							// get existing ToString enum method
+							enumToStringMethodName = enumToStringMethods[callerType];
+						}
+
+						// write special enum ToString method instead of base one
+						writer.Write($"{enumToStringMethodName}(");
+						WriteExpression(caller);
+						writer.Write(')');
+						return;
 					}
 					else
 					{

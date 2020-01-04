@@ -39,6 +39,7 @@ namespace CS2X.Core.Transpilers.C
 		private InstructionalBody instructionalBody;// active instructional body states and values
 		private Dictionary<ITypeSymbol, string> allStatementLocals;// all active statement locals
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
+		private Dictionary<ITypeSymbol, string> enumToStringMethods;// string literals that span all projects
 		private HashSet<IMethodSymbol> methods;// all methods that span all projects
 		private HashSet<IMethodSymbol> genericMethods;// generic methods that span all projects
 		private HashSet<INamedTypeSymbol> genericTypes;// generic types that span all projects
@@ -75,6 +76,7 @@ namespace CS2X.Core.Transpilers.C
 				pointerTypes = new HashSet<IPointerTypeSymbol>();
 				pvalueToIValueTypes = new HashSet<ITypeSymbol>();
 				stringLiterals = new Dictionary<string, string>();
+				enumToStringMethods = new Dictionary<ITypeSymbol, string>();
 
 				// clear existing transpiled projects
 				transpiledProjects.Clear();
@@ -150,6 +152,7 @@ namespace CS2X.Core.Transpilers.C
 							// write methods
 							WriteMethods_ForwardDeclared(methods);
 							WritePValueToIValueConverterMethods();
+							WriteEnumToStringMethods();
 							WriteRuntimeHelperMethods();
 							WriteMethods(methods);
 
@@ -682,7 +685,7 @@ namespace CS2X.Core.Transpilers.C
 		{
 			writer.WriteLine();
 			writer.WriteLine("/* =============================== */");
-			writer.WriteLine("/* Forward decalre Methods */");
+			writer.WriteLine("/* Forward declare Methods */");
 			writer.WriteLine("/* =============================== */");
 			foreach (var method in methods)
 			{
@@ -699,6 +702,34 @@ namespace CS2X.Core.Transpilers.C
 			foreach (var method in methods)
 			{
 				if (WriteMethod(method, true)) writer.WriteLine();
+			}
+		}
+
+		private void WriteEnumToStringMethods()
+		{
+			writer.WriteLine();
+			writer.WriteLine("/* =============================== */");
+			writer.WriteLine("/* Enum ToString Method definitions */");
+			writer.WriteLine("/* =============================== */");
+			foreach (var e in enumToStringMethods)
+			{
+				writer.WriteLine($"{stringTypeName}* {e.Value}({GetTypeFullName(e.Key)} value)");
+				writer.WriteLine('{');
+				writer.AddTab();
+				writer.WriteLinePrefix($"switch (value)");
+				writer.WriteLinePrefix('{');
+				writer.AddTab();
+				foreach (var member in e.Key.GetMembers())
+				{
+					if (member.Kind != SymbolKind.Field) continue;
+					var field = (IFieldSymbol)member;
+					string literalName = stringLiterals[field.Name];
+					writer.WriteLinePrefix($"case {field.ConstantValue}: return {literalName};");
+				}
+				writer.RemoveTab();
+				writer.WriteLinePrefix('}');
+				writer.RemoveTab();
+				writer.WriteLine('}');
 			}
 		}
 
