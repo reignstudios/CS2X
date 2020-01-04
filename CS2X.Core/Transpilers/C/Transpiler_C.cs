@@ -728,6 +728,8 @@ namespace CS2X.Core.Transpilers.C
 				}
 				writer.RemoveTab();
 				writer.WriteLinePrefix('}');
+				var emptyStringField = FindFieldByName(specialTypes.stringType, "Empty");
+				writer.WriteLinePrefix($"return {GetFieldFullName(emptyStringField)};");
 				writer.RemoveTab();
 				writer.WriteLine('}');
 			}

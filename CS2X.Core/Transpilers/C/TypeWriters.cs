@@ -704,8 +704,8 @@ namespace CS2X.Core.Transpilers.C
 							{
 								if (method.Name == "ToString")
 								{
-									var emptyString = FindFieldByName(specialTypes.stringType, "Empty");
-									writer.WriteLinePrefix($"return {GetFieldFullName(emptyString)};");
+									var emptyStringField = FindFieldByName(specialTypes.stringType, "Empty");
+									writer.WriteLinePrefix($"return {GetFieldFullName(emptyStringField)};");
 								}
 								else
 								{

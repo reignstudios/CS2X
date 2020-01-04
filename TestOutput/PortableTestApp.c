@@ -2850,6 +2850,7 @@ t2_System_String* t4_PortableTestApp_Test_Enums_MyEnum_ToString(t4_PortableTestA
 		case 7: return StringLiteral_35;
 		case 1: return StringLiteral_36;
 	}
+	return f_System_String_Empty;
 }
 
 /* =============================== */
