@@ -22,6 +22,7 @@ This project will focus on transpiling a C# subset with a modified type system f
 	* C89: modern, legacy and embedded platforms (x86, MIPS, SPARC, RISC-V, PPC, M68K, AVR, etc)
 	* CC65: 6502 platforms (Atari, C64, NES, Apple II, etc)
 	* SDCC: Many targets (ColecoVision, ZX Spectrum, etc)
+	* z88dk: Z80 platforms
 * LLVM
 * LLVM IR => Assembly: CP1610 (Intellivision)
 * LLVM IR => Assembly: Intel 8048 (Magnavox Odyssey 2)
