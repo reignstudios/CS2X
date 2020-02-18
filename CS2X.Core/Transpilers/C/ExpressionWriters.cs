@@ -262,7 +262,7 @@ namespace CS2X.Core.Transpilers.C
 			var conversion = semanticModel.GetConversion(expression);
 			if (conversion != null && conversion.IsImplicit && conversion.IsUserDefined)
 			{
-				var method = conversion.MethodSymbol;
+				var method = ResolveMethod(conversion.MethodSymbol, this.method);
 				if (method != null && !method.IsExtern)
 				{
 					requiredConversion = true;
@@ -401,7 +401,7 @@ namespace CS2X.Core.Transpilers.C
 				var type = operation.Parent.Type;
 				var voidType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_Void);
 				var intptrType = solution.coreLibProject.compilation.GetSpecialType(SpecialType.System_IntPtr);
-				var constructorMethod = FindMethodBySignature(type, ".ctor", voidType, specialTypes.objectType, intptrType);
+				var constructorMethod = ResolveMethod(FindMethodBySignature(type, ".ctor", voidType, specialTypes.objectType, intptrType), this.method);
 				writer.Write($"{GetMethodFullName(constructorMethod)}({GetNewObjectMethod(type)}(sizeof({GetTypeFullName(type)}), &{GetRuntimeTypeObjFullName(type)}, 0), ");
 				if (!IsVirtualMethod(method))
 				{
@@ -526,8 +526,11 @@ namespace CS2X.Core.Transpilers.C
 			}
 			else
 			{
-				method = ResolveMethod((IMethodSymbol)symbol, this.method);
+				method = (IMethodSymbol)symbol;
 			}
+
+			// resolve method
+			method = ResolveMethod(method, this.method);
 
 			// write constructor and allocator
 			writer.Write(GetMethodFullName(method));
@@ -549,7 +552,7 @@ namespace CS2X.Core.Transpilers.C
 			{
 				var arg = expression.ArgumentList.Arguments[0];
 				var argSemanticModel = GetSemanticModel(arg.Expression);
-				var argMethod = (IMethodSymbol)argSemanticModel.GetSymbolInfo(arg.Expression).Symbol;
+				var argMethod = ResolveMethod((IMethodSymbol)argSemanticModel.GetSymbolInfo(arg.Expression).Symbol, this.method);
 				if (!argMethod.IsStatic) WriteCaller(arg.Expression);
 				else writer.Write("0");
 				writer.Write($", &{GetMethodFullName(argMethod)}");
@@ -758,7 +761,8 @@ namespace CS2X.Core.Transpilers.C
 					var indexExpression = arguments[0].Expression;
 
 					// write method invoke
-					writer.Write(GetMethodFullName(property.SetMethod));
+					var setMethod = ResolveMethod(property.SetMethod, method);
+					writer.Write(GetMethodFullName(setMethod));
 					writer.Write('(');
 					WriteExpression(elementAccessExpression.Expression);
 					writer.Write(", ");
@@ -869,7 +873,7 @@ namespace CS2X.Core.Transpilers.C
 		{
 			var semanticModel = GetSemanticModel(expression);
 			var symbolInfo = semanticModel.GetSymbolInfo(expression);
-			var method = (IMethodSymbol)symbolInfo.Symbol;
+			var method = ResolveMethod((IMethodSymbol)symbolInfo.Symbol, this.method);
 			bool isStaticExternCMethod = false;
 			ITypeSymbol callerType = null;
 
@@ -1188,7 +1192,7 @@ namespace CS2X.Core.Transpilers.C
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 			if (symbol != null && symbol.Kind == SymbolKind.Method && !symbol.IsExtern && !symbol.IsImplicitlyDeclared)
 			{
-				var method = (IMethodSymbol)symbol;
+				var method = ResolveMethod((IMethodSymbol)symbol, this.method);
 				if (method.MethodKind == MethodKind.Conversion)
 				{
 					writer.Write(GetMethodFullName(method));
@@ -1271,7 +1275,7 @@ namespace CS2X.Core.Transpilers.C
 					}
 					else
 					{
-						var getMethod = property.GetMethod;
+						var getMethod = ResolveMethod(property.GetMethod, method);
 						writer.Write(GetMethodFullName(getMethod));
 						writer.Write('(');
 						ITypeSymbol callerType = GetCallerType(expression.Expression, expression);
