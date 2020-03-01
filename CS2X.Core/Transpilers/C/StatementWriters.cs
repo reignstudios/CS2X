@@ -32,13 +32,9 @@ namespace CS2X.Core.Transpilers.C
 		{
 			var localName = prefix + GetTypeFullName(type);
 			if (suffix != null) localName += suffix;
-			if (!allStatementLocals.ContainsKey(type))
-			{
-				allStatementLocals.Add(type, localName);
-				TrackPValueToIValueType(type);
-				var localVar = instructionalBody.specialLocals.FirstOrDefault(x => x.name == localName);
-				if (localVar == null) instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, GetTypeFullNameRef(type), localName));
-			}
+			TrackPValueToIValueType(type);
+			var localVar = instructionalBody.specialLocals.FirstOrDefault(x => x.name == localName && x.block == block);
+			if (localVar == null) instructionalBody.specialLocals.Add(new InstructionalBody.SpecialLocal(block, GetTypeFullNameRef(type), localName));
 			return localName;
 		}
 

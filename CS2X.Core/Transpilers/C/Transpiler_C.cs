@@ -37,7 +37,6 @@ namespace CS2X.Core.Transpilers.C
 		private BlockSyntax block;// active body block
 		private List<StatementSyntax> blockStatementsOverride;
 		private InstructionalBody instructionalBody;// active instructional body states and values
-		private Dictionary<ITypeSymbol, string> allStatementLocals;// all active statement locals
 		private Dictionary<string, string> stringLiterals;// string literals that span all projects
 		private Dictionary<ITypeSymbol, string> enumToStringMethods;// string literals that span all projects
 		private HashSet<IMethodSymbol> methods;// all methods that span all projects
@@ -68,7 +67,6 @@ namespace CS2X.Core.Transpilers.C
 			foreach (var exeProject in exeProjects)
 			{
 				// allocate helper objects
-				allStatementLocals = new Dictionary<ITypeSymbol, string>();
 				methods = new HashSet<IMethodSymbol>();
 				genericMethods = new HashSet<IMethodSymbol>();
 				genericTypes = new HashSet<INamedTypeSymbol>();

@@ -322,9 +322,6 @@ namespace CS2X.Core.Transpilers.C
 			}
 			WriteParameters(method.Parameters);
 
-			// reset statement locals
-			allStatementLocals.Clear();
-
 			// write method block
 			if (!writeBody)
 			{
