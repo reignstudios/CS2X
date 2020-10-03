@@ -221,6 +221,7 @@ typedef struct t2_System_String t2_System_String;
 typedef struct t2_System_ThrowArgumentNullException t2_System_ThrowArgumentNullException;
 typedef struct t2_System_Type t2_System_Type;
 typedef struct t2_System_ValueType t2_System_ValueType;
+typedef int32_t t4_System_Collections_ObjectModel_ReadOnlyCollectionType;
 typedef struct t3_System_Diagnostics_Debug t3_System_Diagnostics_Debug;
 typedef struct t3_System_IO_File t3_System_IO_File;
 typedef struct t3_System_IO_FileNotFoundException t3_System_IO_FileNotFoundException;
@@ -808,6 +809,9 @@ struct t2_System_ValueType
 {
 	t2_System_RuntimeType* CS2X_RuntimeType;
 };
+
+#define f_System_Collections_ObjectModel_ReadOnlyCollectionType_Array 0
+#define f_System_Collections_ObjectModel_ReadOnlyCollectionType_List 1
 
 struct t3_System_Diagnostics_Debug
 {
@@ -1848,6 +1852,14 @@ rt2_System_ValueType rt2_System_ValueType_OBJ;
 int8_t rt2_System_ValueType_METADATA_Name[32] = {0,0,0,0,0,0,0,0,9,0,0,0,86,0,97,0,108,0,117,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* ValueType */
 int8_t rt2_System_ValueType_METADATA_FullName[46] = {0,0,0,0,0,0,0,0,16,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,86,0,97,0,108,0,117,0,101,0,84,0,121,0,112,0,101,0,0,0}; /* System.ValueType */
 
+typedef struct rt4_System_Collections_ObjectModel_ReadOnlyCollectionType
+{
+	t2_System_RuntimeType runtimeType;
+} rt4_System_Collections_ObjectModel_ReadOnlyCollectionType;
+rt4_System_Collections_ObjectModel_ReadOnlyCollectionType rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_OBJ;
+int8_t rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_METADATA_Name[58] = {0,0,0,0,0,0,0,0,22,0,0,0,82,0,101,0,97,0,100,0,79,0,110,0,108,0,121,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,84,0,121,0,112,0,101,0,0,0}; /* ReadOnlyCollectionType */
+int8_t rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_METADATA_FullName[120] = {0,0,0,0,0,0,0,0,53,0,0,0,83,0,121,0,115,0,116,0,101,0,109,0,46,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,115,0,46,0,79,0,98,0,106,0,101,0,99,0,116,0,77,0,111,0,100,0,101,0,108,0,46,0,82,0,101,0,97,0,100,0,79,0,110,0,108,0,121,0,67,0,111,0,108,0,108,0,101,0,99,0,116,0,105,0,111,0,110,0,84,0,121,0,112,0,101,0,0,0}; /* System.Collections.ObjectModel.ReadOnlyCollectionType */
+
 typedef struct rt3_System_Diagnostics_Debug
 {
 	t2_System_RuntimeType runtimeType;
@@ -2351,6 +2363,7 @@ int8_t rt0_System_Byte__PTR_METADATA_FullName[38] = {0,0,0,0,0,0,0,0,12,0,0,0,83
 /* Forward declare Methods */
 /* =============================== */
 t2_System_ArgumentException* m2_System_ArgumentException__ctor_0(t2_System_ArgumentException* self);
+t2_System_ArgumentException* m2_System_ArgumentException__ctor_1(t2_System_ArgumentException* self, t2_System_String* p_message);
 t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_0(t2_System_ArgumentOutOfRangeException* self);
 t2_System_ArgumentOutOfRangeException* m2_System_ArgumentOutOfRangeException__ctor_1(t2_System_ArgumentOutOfRangeException* self, t2_System_String* p_message);
 int32_t m2_System_Array_get_Length_0(t2_System_Array* self);
@@ -2462,6 +2475,7 @@ t2_System_ThrowArgumentNullException* m2_System_ThrowArgumentNullException__ctor
 t2_System_Type* m2_System_Type_GetTypeFromHandle_0(t2_System_RuntimeTypeHandle p_handle);
 t2_System_Type* m2_System_Type__ctor_0(t2_System_Type* self);
 t2_System_ValueType* m2_System_ValueType__ctor_0(t2_System_ValueType* self);
+t4_System_Collections_ObjectModel_ReadOnlyCollectionType m4_System_Collections_ObjectModel_ReadOnlyCollectionType__ctor_0();
 void m3_System_Diagnostics_Debug_WriteLine_0(t2_System_String* p_message);
 char m3_System_IO_File_Exists_0(t2_System_String* p_path);
 char m3_System_IO_File_ExistsInternal_0(uint8_t* p_path);
@@ -2911,6 +2925,12 @@ t2_System_Object* CS2X_TestUpCast(t2_System_Object* self, t2_System_RuntimeType*
 t2_System_ArgumentException* m2_System_ArgumentException__ctor_0(t2_System_ArgumentException* self)
 {
 	m2_System_Exception__ctor_0(self);
+	return self;
+}
+
+t2_System_ArgumentException* m2_System_ArgumentException__ctor_1(t2_System_ArgumentException* self, t2_System_String* p_message)
+{
+	m2_System_Exception__ctor_1(self, p_message);
 	return self;
 }
 
@@ -3942,6 +3962,12 @@ t2_System_ValueType* m2_System_ValueType__ctor_0(t2_System_ValueType* self)
 {
 	m2_System_Object__ctor_0(self);
 	return self;
+}
+
+t4_System_Collections_ObjectModel_ReadOnlyCollectionType m4_System_Collections_ObjectModel_ReadOnlyCollectionType__ctor_0()
+{
+	t4_System_Collections_ObjectModel_ReadOnlyCollectionType selfObj = {0};
+	return selfObj;
 }
 
 void m3_System_Diagnostics_Debug_WriteLine_0(t2_System_String* p_message)
@@ -6805,6 +6831,11 @@ void CS2X_InitAssembly_CS2X_CoreLib()
 	rt2_System_ValueType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
 	rt2_System_ValueType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt2_System_ValueType_METADATA_Name;
 	rt2_System_ValueType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt2_System_ValueType_METADATA_FullName;
+	memset(&rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_OBJ, 0, sizeof(rt4_System_Collections_ObjectModel_ReadOnlyCollectionType));
+	rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_OBJ.runtimeType.CS2X_RuntimeType = &rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_OBJ;
+	rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Enum_OBJ;
+	rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_OBJ.runtimeType.f__Name_k__BackingField_1 = (t2_System_String*)rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_METADATA_Name;
+	rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_OBJ.runtimeType.f__FullName_k__BackingField_1 = (t2_System_String*)rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_METADATA_FullName;
 	memset(&rt3_System_Diagnostics_Debug_OBJ, 0, sizeof(rt3_System_Diagnostics_Debug));
 	rt3_System_Diagnostics_Debug_OBJ.runtimeType.CS2X_RuntimeType = &rt3_System_Diagnostics_Debug_OBJ;
 	rt3_System_Diagnostics_Debug_OBJ.runtimeType.f__BaseType_k__BackingField_1 = &rt2_System_Object_OBJ;
@@ -7159,6 +7190,8 @@ void CS2X_InitAssembly_CS2X_CoreLib()
 	((t2_System_String*)rt2_System_Type_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ValueType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt2_System_ValueType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
+	((t2_System_String*)rt4_System_Collections_ObjectModel_ReadOnlyCollectionType_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_Diagnostics_Debug_METADATA_FullName)->CS2X_RuntimeType = &rt2_System_String_OBJ;
 	((t2_System_String*)rt3_System_IO_File_METADATA_Name)->CS2X_RuntimeType = &rt2_System_String_OBJ;
