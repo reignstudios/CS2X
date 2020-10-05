@@ -13,7 +13,7 @@ namespace CS2X.Core.Test
 			var solution = new Solution(Path.Combine(path, @"PortableTestApp\PortableTestApp.csproj"));
 
 			// parse solution
-			var task = solution.Parse("Debug");
+			var task = solution.Parse("Debug", "AnyCPU");
 			task.Wait();
 
 			// transpile solution

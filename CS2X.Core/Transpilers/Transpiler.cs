@@ -50,7 +50,10 @@ namespace CS2X.Core.Transpilers
 			{
 				foreach (var compilationTree in project.compilation.SyntaxTrees)
 				{
-					if (tree.Equals(compilationTree)) return project.compilation.GetSemanticModel(tree);
+					if (tree.Equals(compilationTree))
+					{
+						return project.compilation.GetSemanticModel(compilationTree);
+					}
 				}
 			}
 			throw new Exception("Failed to find SemanticModel for SyntaxTree: " + tree.FilePath);

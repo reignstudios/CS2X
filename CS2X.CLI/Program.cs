@@ -77,7 +77,7 @@ namespace CS2X.CLI
 
 			// parse solution
 			Console.WriteLine("Parsing solution...");
-			var task = solution.Parse("Debug");
+			var task = solution.Parse("Debug", "AnyCPU");
 			task.Wait();
 
 			// transpile solution

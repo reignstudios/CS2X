@@ -2473,6 +2473,8 @@ char m2_System_String_Equals_0(t2_System_String* self, t2_System_String* p_value
 void m2_System_String__cctor_0();
 t2_System_ThrowArgumentNullException* m2_System_ThrowArgumentNullException__ctor_0(t2_System_ThrowArgumentNullException* self);
 t2_System_Type* m2_System_Type_GetTypeFromHandle_0(t2_System_RuntimeTypeHandle p_handle);
+char m2_System_Type_IsAssignableFrom_0(t2_System_Type* self, t2_System_Type* p_c);
+t2_System_String* m2_System_Type_ToString_0(t2_System_Type* self);
 t2_System_Type* m2_System_Type__ctor_0(t2_System_Type* self);
 t2_System_ValueType* m2_System_ValueType__ctor_0(t2_System_ValueType* self);
 t4_System_Collections_ObjectModel_ReadOnlyCollectionType m4_System_Collections_ObjectModel_ReadOnlyCollectionType__ctor_0();
@@ -3950,6 +3952,26 @@ t2_System_ThrowArgumentNullException* m2_System_ThrowArgumentNullException__ctor
 t2_System_Type* m2_System_Type_GetTypeFromHandle_0(t2_System_RuntimeTypeHandle p_handle)
 {
 	return p_handle.f_m_type_2;
+}
+
+char m2_System_Type_IsAssignableFrom_0(t2_System_Type* self, t2_System_Type* p_c)
+{
+	t2_System_Type* l_t_0;
+	l_t_0 = p_c;
+	while (l_t_0 != 0)
+	{
+		if (l_t_0 == self)
+		{
+			return 1;
+		}
+		l_t_0 = l_t_0->f__BaseType_k__BackingField_1;
+	}
+	return 0;
+}
+
+t2_System_String* m2_System_Type_ToString_0(t2_System_Type* self)
+{
+	return self->f__FullName_k__BackingField_1;
 }
 
 t2_System_Type* m2_System_Type__ctor_0(t2_System_Type* self)

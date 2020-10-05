@@ -40,11 +40,12 @@ namespace CS2X.Core
 			else throw new Exception("Invalid file type: " + filename);
 		}
 
-		public async Task Parse(string configuration)
+		public async Task Parse(string configuration, string platform)
 		{
 			var properties = new Dictionary<string, string>()
 			{
-			   { "Configuration", configuration }
+			   { "Configuration", configuration },
+			   { "Platform", platform }
 			};
 			using (var workspace = MSBuildWorkspace.Create(properties))
 			{
