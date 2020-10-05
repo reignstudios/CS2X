@@ -10,6 +10,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS2X.Core", "CS2X.Core\CS2X.Core.csproj", "{91890585-99E7-4575-871F-4C64FE73AFDD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS2X.CLI", "CS2X.CLI\CS2X.CLI.csproj", "{D6D16CF8-E0A4-4E29-9EEB-7D6672470F14}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A3577CF6-ED40-4DC0-BCC0-FDB7DEF838BC} = {A3577CF6-ED40-4DC0-BCC0-FDB7DEF838BC}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS2X.Core.Test", "CS2X.Core.Test\CS2X.Core.Test.csproj", "{89F7038F-2814-469C-AB91-EAB5E1AAC075}"
 	ProjectSection(ProjectDependencies) = postProject

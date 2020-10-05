@@ -11,5 +11,21 @@ namespace System
 
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		public static extern Type GetTypeFromHandle(RuntimeTypeHandle handle);
+
+		public bool IsAssignableFrom(Type c)
+		{
+			var t = c;
+			while (t != null)
+			{
+				if (t == this) return true;
+				t = t.BaseType;
+			}
+			return false;
+		}
+
+		public string ToString()
+		{
+			return FullName;
+		}
 	}
 }
