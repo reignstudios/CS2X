@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 
     <!-- Ignore common warnings in that come up in test objects -->
     <NoWarn>0660,0661,0649,0168,0162</NoWarn>
