@@ -43,8 +43,9 @@ namespace CS2X.Analyzer.SyntaxValidation
 
 		private void FireSyntaxErrorCallback(SyntaxNode syntax, string message)
 		{
-			message = "CS2X: " + message;
+			message = "CS2X ERROR: " + message;
 			if (options.writeSyntaxSuffix) message += $" ({syntax})";
+			System.Diagnostics.Debug.WriteLine(message);
 			SyntaxErrorCallback?.Invoke(new SyntaxError(syntax, message));
 		}
 
@@ -224,6 +225,7 @@ namespace CS2X.Analyzer.SyntaxValidation
 				case SyntaxKind.IncompleteMember:
 				case SyntaxKind.EmptyStatement:
 				case SyntaxKind.UncheckedExpression:
+				case SyntaxKind.IsExpression:
 					return true;
 
 				// further analysis needed

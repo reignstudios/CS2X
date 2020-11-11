@@ -11,6 +11,12 @@ namespace System.Collections.Generic
 			if (wasEnabled) GC.EnableAutoCollections();
 		}
 
+		public List(T[] collection)
+		{
+			_items = new T[collection.Length];
+			Array.Copy(collection, 0, _items, 0, collection.Length);
+		}
+
 		public int Count => _items.Length;
 
 		public Enumerator GetEnumerator()
