@@ -490,6 +490,10 @@ namespace CS2X.Core.Transpilers.C
 			// expression.Expression is the caller and will be writen from the WriteCaller method
 			var semanticModel = GetSemanticModel(expression.Name);
 			var nameSymbol = semanticModel.GetSymbolInfo(expression.Name).Symbol;
+			if (nameSymbol == null || expression.ToString().Contains("HINSTANCE.Zero"))// TEST
+			{
+				var diagnostics = semanticModel.GetDiagnostics();
+			}
 			if
 			(
 				nameSymbol is IMethodSymbol ||

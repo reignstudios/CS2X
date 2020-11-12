@@ -11,12 +11,15 @@ using Microsoft.CodeAnalysis.FindSymbols;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 
+using System.Runtime.Loader;
+using System.Reflection;
+
 namespace CS2X.Core
 {
 	public class Solution
 	{
 		public RoslynSolution roslynSolution { get; private set; }
-		public readonly string filename;
+		public readonly string filename, name;
 		private readonly bool isProjFileName;
 
 		public IReadOnlyList<Project> projects { get; private set; }
@@ -27,12 +30,22 @@ namespace CS2X.Core
 
 		static Solution()
 		{
-			if (MSBuildLocator.CanRegister) MSBuildLocator.RegisterDefaults();
+			if (MSBuildLocator.CanRegister)//MSBuildLocator.RegisterDefaults();
+			{
+				//MSBuildLocator.RegisterDefaults();
+
+				MSBuildLocator.RegisterMSBuildPath(@"C:\Program Files\dotnet\sdk\5.0.100");// TEST
+				//MSBuildLocator.RegisterMSBuildPath(@"C:\Program Files\dotnet\sdk\3.1.404");// TEST
+
+				//var instances = MSBuildLocator.QueryVisualStudioInstances();
+				//MSBuildLocator.RegisterInstance(instances.First());
+			}
 		}
 
 		public Solution(string filename)
 		{
 			this.filename = filename;
+			name = Path.GetFileNameWithoutExtension(filename);
 			if (!File.Exists(filename)) throw new Exception("File does not exists: " + filename);
 			string ext = Path.GetExtension(filename);
 			if (ext == ".csproj") isProjFileName = true;
@@ -40,8 +53,37 @@ namespace CS2X.Core
 			else throw new Exception("Invalid file type: " + filename);
 		}
 
+		private Assembly Default_Resolving(AssemblyLoadContext context, AssemblyName assemblyName)// TEST
+		{
+			/*string name = assemblyName.Name;
+			if (name.Contains("Orbital"))
+			{
+				var ca = context.LoadFromAssemblyPath(@"F:\Dev\Reign\Orbital-Framework\Platforms\Win32\NetCore\Orbital.Host\bin\Debug\net5.0\Orbital.Host.dll");
+				return ca;
+			}
+
+			if (name.Contains("CS2X"))
+			{
+				var ca = context.LoadFromAssemblyPath(@"F:\Dev\Reign\Orbital-Framework\Submodules\CS2X\CS2X.CoreLib\bin\Debug\net5.0\CS2X.CoreLib.dll");
+				return ca;
+			}
+
+			if (name.Contains("CoreLib"))
+			{ }
+
+			string path = Path.Combine(@"C:\Program Files\dotnet\sdk\5.0.100", name + ".dll");
+			var a = context.LoadFromAssemblyPath(path);
+			if (a == null)
+			{ }
+			return a;*/
+
+			return null;
+		}
+
 		public async Task Parse(string configuration, string platform)
 		{
+			//AssemblyLoadContext.Default.Resolving += Default_Resolving;// TEST
+
 			var properties = new Dictionary<string, string>()
 			{
 			   { "Configuration", configuration },
@@ -159,7 +201,7 @@ namespace CS2X.Core
 				genericMethods = genericMethodList.ToList();*/
 			}
 		}
-		
+
 		//private void AddGenericTypeRecursive(INamedTypeSymbol type, HashSet<INamedTypeSymbol> genericTypeList)
 		//{
 		//	if (!SymbolUtils.IsResolvedGenericType(type)) return;
@@ -172,7 +214,7 @@ namespace CS2X.Core
 		//		{
 		//			if (field.Type is INamedTypeSymbol namedType && namedType.IsGenericType)
 		//			{
-						
+
 		//				var contructedType = namedType.OriginalDefinition.Construct();
 		//				AddGenericTypeRecursive(contructedType, genericTypeList);
 		//			}
@@ -183,5 +225,10 @@ namespace CS2X.Core
 		//		}*/
 		//	}
 		//}
+
+		public override string ToString()
+		{
+			return name != null ? name : base.ToString();
+		}
 	}
 }
