@@ -304,8 +304,7 @@ namespace CS2X.Core.Transpilers.C
 				{
 					var caller = WriteCaller(expression);
 					var type = GetCallerType(caller, expression);
-					if (type.IsReferenceType) writer.Write("->");
-					else writer.Write('.');
+					writer.Write(GetAccessDelimiter(type));
 					writer.Write(GetFieldFullName(field));
 				}
 				else
@@ -322,8 +321,7 @@ namespace CS2X.Core.Transpilers.C
 					{
 						var caller = WriteCaller(expression);
 						var type = GetCallerType(caller, expression);
-						if (type.IsReferenceType) writer.Write("->");
-						else writer.Write('.');
+						writer.Write(GetAccessDelimiter(type));
 						writer.Write(GetFieldFullName(field));
 					}
 					else
@@ -490,10 +488,6 @@ namespace CS2X.Core.Transpilers.C
 			// expression.Expression is the caller and will be writen from the WriteCaller method
 			var semanticModel = GetSemanticModel(expression.Name);
 			var nameSymbol = semanticModel.GetSymbolInfo(expression.Name).Symbol;
-			if (nameSymbol == null || expression.ToString().Contains("HINSTANCE.Zero"))// TEST
-			{
-				var diagnostics = semanticModel.GetDiagnostics();
-			}
 			if
 			(
 				nameSymbol is IMethodSymbol ||
@@ -596,8 +590,7 @@ namespace CS2X.Core.Transpilers.C
 
 					var leftSemanticModel = GetSemanticModel(e.Left);
 					var field = (IFieldSymbol)leftSemanticModel.GetSymbolInfo(e.Left).Symbol;
-					if (type.IsReferenceType) writer.Write("->");
-					else writer.Write('.');
+					writer.Write(GetAccessDelimiter(type));
 					writer.Write(GetFieldFullName(field));
 
 					writer.Write(" = ");
@@ -1017,9 +1010,31 @@ namespace CS2X.Core.Transpilers.C
 			var symbol = semanticModel.GetSymbolInfo(expression).Symbol;
 			if (symbol == null)
 			{
-				WriteExpression(expression.Left);
-				writer.Write($" {expression.OperatorToken.ValueText} ");
-				WriteExpression(expression.Right);
+				if (expression.OperatorToken.IsKind(SyntaxKind.IsKeyword))
+				{
+					var semanticModelLeft = GetSemanticModel(expression.Left);
+					var typeLeft = semanticModelLeft.GetTypeInfo(expression.Left).Type;
+					if (typeLeft.IsReferenceType)
+					{
+						writer.Write("CS2X_IsType(");
+						WriteExpression(expression.Left);
+						writer.Write("->CS2X_RuntimeType, ");
+						var semanticModelRight = GetSemanticModel(expression.Right);
+						var typeRight = semanticModelRight.GetTypeInfo(expression.Right).Type;
+						writer.Write("&" + GetRuntimeTypeObjFullName(typeRight));
+						writer.Write(")");
+					}
+					else
+					{
+						throw new NotImplementedException();// TODO
+					}
+				}
+				else
+				{
+					WriteExpression(expression.Left);
+					writer.Write($" {expression.OperatorToken.ValueText} ");
+					WriteExpression(expression.Right);
+				}
 			}
 			else if (symbol is IMethodSymbol)
 			{

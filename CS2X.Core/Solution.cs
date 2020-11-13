@@ -30,15 +30,39 @@ namespace CS2X.Core
 
 		static Solution()
 		{
-			if (MSBuildLocator.CanRegister)//MSBuildLocator.RegisterDefaults();
+			// find newest SDK path
+			string sdkPath = null;
+			using (var process = new System.Diagnostics.Process())
+			{
+				process.StartInfo.FileName = "dotnet";
+				process.StartInfo.Arguments = "--list-sdks";
+				process.StartInfo.RedirectStandardOutput = true;
+				process.StartInfo.UseShellExecute = false;
+				process.Start();
+				process.WaitForExit();
+				var stream = process.StandardOutput;
+				while (!stream.EndOfStream)
+				{
+					string line = stream.ReadLine();
+					var match = System.Text.RegularExpressions.Regex.Match(line, @"(\d*)\.(\d*)\.(\d*) \[(.*)\]");
+					if (match.Success)
+					{
+						sdkPath = Path.Combine(match.Groups[4].Value, $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}");
+					}
+				}
+			}
+
+			// manually pre-load all SDK libs (NOTE: this is needed as 'MSBuildWorkspace' may not load everything needed)
+			var context = AssemblyLoadContext.Default;
+			foreach (string file in Directory.GetFiles(sdkPath, "*.dll"))
+			{
+				context.LoadFromAssemblyPath(file);
+			}
+
+			if (MSBuildLocator.CanRegister)
 			{
 				//MSBuildLocator.RegisterDefaults();
-
-				MSBuildLocator.RegisterMSBuildPath(@"C:\Program Files\dotnet\sdk\5.0.100");// TEST
-				//MSBuildLocator.RegisterMSBuildPath(@"C:\Program Files\dotnet\sdk\3.1.404");// TEST
-
-				//var instances = MSBuildLocator.QueryVisualStudioInstances();
-				//MSBuildLocator.RegisterInstance(instances.First());
+				MSBuildLocator.RegisterMSBuildPath(sdkPath);
 			}
 		}
 
@@ -53,37 +77,22 @@ namespace CS2X.Core
 			else throw new Exception("Invalid file type: " + filename);
 		}
 
+		const string _msBuildPath = @"C:\Program Files\dotnet\sdk\5.0.100";
 		private Assembly Default_Resolving(AssemblyLoadContext context, AssemblyName assemblyName)// TEST
 		{
-			/*string name = assemblyName.Name;
-			if (name.Contains("Orbital"))
+			var sdkAssemblyPath = Path.Combine(_msBuildPath, assemblyName.Name + ".dll");
+
+			// A race condition, but is extremely unlikely to be a problem
+			if (File.Exists(sdkAssemblyPath))
 			{
-				var ca = context.LoadFromAssemblyPath(@"F:\Dev\Reign\Orbital-Framework\Platforms\Win32\NetCore\Orbital.Host\bin\Debug\net5.0\Orbital.Host.dll");
-				return ca;
+				return context.LoadFromAssemblyPath(sdkAssemblyPath);
 			}
-
-			if (name.Contains("CS2X"))
-			{
-				var ca = context.LoadFromAssemblyPath(@"F:\Dev\Reign\Orbital-Framework\Submodules\CS2X\CS2X.CoreLib\bin\Debug\net5.0\CS2X.CoreLib.dll");
-				return ca;
-			}
-
-			if (name.Contains("CoreLib"))
-			{ }
-
-			string path = Path.Combine(@"C:\Program Files\dotnet\sdk\5.0.100", name + ".dll");
-			var a = context.LoadFromAssemblyPath(path);
-			if (a == null)
-			{ }
-			return a;*/
 
 			return null;
 		}
 
 		public async Task Parse(string configuration, string platform)
 		{
-			//AssemblyLoadContext.Default.Resolving += Default_Resolving;// TEST
-
 			var properties = new Dictionary<string, string>()
 			{
 			   { "Configuration", configuration },

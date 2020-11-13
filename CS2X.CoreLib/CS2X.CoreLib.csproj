@@ -12,8 +12,6 @@
 		<NoCompilerStandardLib>true</NoCompilerStandardLib>
 		<DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
 
-		<Configurations>Debug</Configurations><!--TEST-->
-
     <!-- Set CoreLib settings -->
 		<RuntimeMetadataVersion>v4.0.30319</RuntimeMetadataVersion>
   </PropertyGroup>
