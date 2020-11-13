@@ -360,9 +360,21 @@ namespace CS2X.Core.Transpilers
 					if (member.Kind != SymbolKind.Method) continue;
 					var method = (IMethodSymbol)member;
 					if (!IsVirtualMethod(method)) continue;
-					if (method.IsEqual(rootSlotMethod) || rootSlotMethod.IsEqual(method.OverriddenMethod)) return method;
-					if (rootSlotMethod.IsGenericMethod && (rootSlotMethod.ConstructedFrom.IsEqual(method) || rootSlotMethod.ConstructedFrom.IsEqual(method.OverriddenMethod))) return method;
+
+					// confirm this method is an override of root method
+					var overriddenMethod = method;
+					while (overriddenMethod != null)
+					{
+						if (rootSlotMethod.IsEqual(overriddenMethod)) break;
+						if (rootSlotMethod.IsGenericMethod && rootSlotMethod.ConstructedFrom.IsEqual(overriddenMethod)) break;
+						overriddenMethod = overriddenMethod.OverriddenMethod;
+					}
+					if (overriddenMethod == null) continue;
+
+					// return top-level method
+					return method;
 				}
+
 				baseType = baseType.BaseType;
 			} while (baseType != null);
 			throw new Exception("Failed to find highest virtual method slot");

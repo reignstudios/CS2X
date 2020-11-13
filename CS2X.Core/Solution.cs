@@ -75,6 +75,7 @@ namespace CS2X.Core
 				context.LoadFromAssemblyPath(file);
 			}
 
+			// register libraries if needed
 			if (MSBuildLocator.CanRegister)
 			{
 				if (sdkPath != null) MSBuildLocator.RegisterMSBuildPath(sdkPath);
