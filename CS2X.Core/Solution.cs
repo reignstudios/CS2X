@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
+using System.Diagnostics;
 
 using System.Runtime.Loader;
 using System.Reflection;
@@ -32,24 +33,32 @@ namespace CS2X.Core
 		{
 			// find newest SDK path
 			string sdkPath = null;
-			using (var process = new System.Diagnostics.Process())
+			try
 			{
-				process.StartInfo.FileName = "dotnet";
-				process.StartInfo.Arguments = "--list-sdks";
-				process.StartInfo.RedirectStandardOutput = true;
-				process.StartInfo.UseShellExecute = false;
-				process.Start();
-				process.WaitForExit();
-				var stream = process.StandardOutput;
-				while (!stream.EndOfStream)
+				using (var process = new Process())
 				{
-					string line = stream.ReadLine();
-					var match = System.Text.RegularExpressions.Regex.Match(line, @"(\d*)\.(\d*)\.(\d*) \[(.*)\]");
-					if (match.Success)
+					process.StartInfo.FileName = "dotnet";
+					process.StartInfo.Arguments = "--list-sdks";
+					process.StartInfo.RedirectStandardOutput = true;
+					process.StartInfo.UseShellExecute = false;
+					process.Start();
+					process.WaitForExit();
+					var stream = process.StandardOutput;
+					while (!stream.EndOfStream)
 					{
-						sdkPath = Path.Combine(match.Groups[4].Value, $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}");
+						string line = stream.ReadLine();
+						var match = System.Text.RegularExpressions.Regex.Match(line, @"(\d*)\.(\d*)\.(\d*) \[(.*)\]");
+						if (match.Success)
+						{
+							sdkPath = Path.Combine(match.Groups[4].Value, $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}");
+						}
 					}
 				}
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine(".NET SDK not installed?");
+				Debug.WriteLine(e.Message);
 			}
 
 			// manually pre-load all SDK libs (NOTE: this is needed as 'MSBuildWorkspace' may not load everything needed)
@@ -61,8 +70,8 @@ namespace CS2X.Core
 
 			if (MSBuildLocator.CanRegister)
 			{
-				//MSBuildLocator.RegisterDefaults();
-				MSBuildLocator.RegisterMSBuildPath(sdkPath);
+				if (sdkPath != null) MSBuildLocator.RegisterMSBuildPath(sdkPath);
+				else MSBuildLocator.RegisterDefaults();
 			}
 		}
 
