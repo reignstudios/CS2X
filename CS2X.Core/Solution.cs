@@ -44,13 +44,20 @@ namespace CS2X.Core
 					process.Start();
 					process.WaitForExit();
 					var stream = process.StandardOutput;
+					var bestVersion = new Version("0.0.0");
 					while (!stream.EndOfStream)
 					{
 						string line = stream.ReadLine();
 						var match = System.Text.RegularExpressions.Regex.Match(line, @"(\d*)\.(\d*)\.(\d*) \[(.*)\]");
 						if (match.Success)
 						{
-							sdkPath = Path.Combine(match.Groups[4].Value, $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}");
+							string versionString = $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}";
+							var version = new Version(versionString);
+							if (version > bestVersion)
+							{
+								bestVersion = version;
+								sdkPath = Path.Combine(match.Groups[4].Value, versionString);
+							}
 						}
 					}
 				}
