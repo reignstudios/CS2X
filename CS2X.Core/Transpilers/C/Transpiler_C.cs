@@ -835,6 +835,7 @@ namespace CS2X.Core.Transpilers.C
 								AllTypeArgsMatch(x.TypeArguments, resolvedMethod.TypeArguments)
 							);
 						}
+
 						if (!highestMethod.IsAbstract) writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(resolvedMethod)} = &{GetMethodFullName(highestMethod)};");
 						else writer.WriteLinePrefix($"{obj}.{GetVTableMethodFullName(resolvedMethod)} = 0;");
 					}

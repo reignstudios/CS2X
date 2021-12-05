@@ -105,6 +105,19 @@ namespace CS2X.Core
 			if (isParsed) return;
 			isParsed = true;
 
+			// gather references
+			var references = new List<Project>();
+			var sln = roslynProject.Solution;
+			foreach (var reference in roslynProject.ProjectReferences)
+			{
+				var project = solution.projects.FirstOrDefault(x => x.roslynProject.Id == reference.ProjectId);
+				if (project == null) throw new Exception("Project reference not found in solution: " + reference.ProjectId);
+				references.Add(project);
+				await project.Parse();
+			}
+
+			this.references = references;
+
 			// get compilation
 			compilation = (CSharpCompilation)await roslynProject.GetCompilationAsync();
 
@@ -117,19 +130,6 @@ namespace CS2X.Core
 			};
 			var analyzer = new ProjectAnalyzer(compilation, options);
 			if (!await analyzer.Analyze(roslynProject)) throw new Exception("Failed to Analyze project: " + roslynProject.FilePath);
-
-			// gather references
-			var references = new List<Project>();
-			var sln = roslynProject.Solution;
-			foreach (var reference in roslynProject.AllProjectReferences)
-			{
-				var project = solution.projects.FirstOrDefault(x => x.roslynProject.Id == reference.ProjectId);
-				if (project == null) throw new Exception("Project reference not found in solution: " + reference.ProjectId);
-				references.Add(project);
-				await project.Parse();
-			}
-
-			this.references = references;
 
 			// init main objects
 			classTypes = new List<INamedTypeSymbol>();
@@ -216,6 +216,11 @@ namespace CS2X.Core
 			{
 				ParseNormalMembers(subMember);
 			}
+		}
+
+		public override string ToString()
+		{
+			return roslynProject != null ? roslynProject.Name : base.ToString();
 		}
 	}
 }

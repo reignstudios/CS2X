@@ -360,5 +360,11 @@ namespace CS2X.Core.Transpilers.C
 		{
 			return "_";
 		}
+
+		protected static string GetAccessDelimiter(ITypeSymbol type)
+		{
+			if (type.IsReferenceType || type.Kind == SymbolKind.PointerType) return "->";
+			else return ".";
+		}
 	}
 }

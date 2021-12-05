@@ -10,13 +10,17 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
+using System.Diagnostics;
+
+using System.Runtime.Loader;
+using System.Reflection;
 
 namespace CS2X.Core
 {
 	public class Solution
 	{
 		public RoslynSolution roslynSolution { get; private set; }
-		public readonly string filename;
+		public readonly string filename, name;
 		private readonly bool isProjFileName;
 
 		public IReadOnlyList<Project> projects { get; private set; }
@@ -27,17 +31,81 @@ namespace CS2X.Core
 
 		static Solution()
 		{
-			if (MSBuildLocator.CanRegister) MSBuildLocator.RegisterDefaults();
+			// find newest SDK path
+			string sdkPath = null;
+			try
+			{
+				using (var process = new Process())
+				{
+					process.StartInfo.FileName = "dotnet";
+					process.StartInfo.Arguments = "--list-sdks";
+					process.StartInfo.RedirectStandardOutput = true;
+					process.StartInfo.UseShellExecute = false;
+					process.Start();
+					process.WaitForExit();
+					var stream = process.StandardOutput;
+					var bestVersion = new Version("0.0.0");
+					while (!stream.EndOfStream)
+					{
+						string line = stream.ReadLine();
+						var match = System.Text.RegularExpressions.Regex.Match(line, @"(\d*)\.(\d*)\.(\d*) \[(.*)\]");
+						if (match.Success)
+						{
+							string versionString = $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}";
+							var version = new Version(versionString);
+							if (version > bestVersion)
+							{
+								bestVersion = version;
+								sdkPath = Path.Combine(match.Groups[4].Value, versionString);
+							}
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine(".NET SDK not installed?");
+				Debug.WriteLine(e.Message);
+			}
+
+			// manually pre-load all SDK libs (NOTE: this is needed as 'MSBuildWorkspace' may not load everything needed)
+			var context = AssemblyLoadContext.Default;
+			foreach (string file in Directory.GetFiles(sdkPath, "*.dll"))
+			{
+				context.LoadFromAssemblyPath(file);
+			}
+
+			// register libraries if needed
+			if (MSBuildLocator.CanRegister)
+			{
+				if (sdkPath != null) MSBuildLocator.RegisterMSBuildPath(sdkPath);
+				else MSBuildLocator.RegisterDefaults();
+			}
 		}
 
 		public Solution(string filename)
 		{
 			this.filename = filename;
+			name = Path.GetFileNameWithoutExtension(filename);
 			if (!File.Exists(filename)) throw new Exception("File does not exists: " + filename);
 			string ext = Path.GetExtension(filename);
 			if (ext == ".csproj") isProjFileName = true;
 			else if (ext == ".sln") isProjFileName = false;
 			else throw new Exception("Invalid file type: " + filename);
+		}
+
+		const string _msBuildPath = @"C:\Program Files\dotnet\sdk\5.0.100";
+		private Assembly Default_Resolving(AssemblyLoadContext context, AssemblyName assemblyName)// TEST
+		{
+			var sdkAssemblyPath = Path.Combine(_msBuildPath, assemblyName.Name + ".dll");
+
+			// A race condition, but is extremely unlikely to be a problem
+			if (File.Exists(sdkAssemblyPath))
+			{
+				return context.LoadFromAssemblyPath(sdkAssemblyPath);
+			}
+
+			return null;
 		}
 
 		public async Task Parse(string configuration, string platform)
@@ -159,7 +227,7 @@ namespace CS2X.Core
 				genericMethods = genericMethodList.ToList();*/
 			}
 		}
-		
+
 		//private void AddGenericTypeRecursive(INamedTypeSymbol type, HashSet<INamedTypeSymbol> genericTypeList)
 		//{
 		//	if (!SymbolUtils.IsResolvedGenericType(type)) return;
@@ -172,7 +240,7 @@ namespace CS2X.Core
 		//		{
 		//			if (field.Type is INamedTypeSymbol namedType && namedType.IsGenericType)
 		//			{
-						
+
 		//				var contructedType = namedType.OriginalDefinition.Construct();
 		//				AddGenericTypeRecursive(contructedType, genericTypeList);
 		//			}
@@ -183,5 +251,10 @@ namespace CS2X.Core
 		//		}*/
 		//	}
 		//}
+
+		public override string ToString()
+		{
+			return name != null ? name : base.ToString();
+		}
 	}
 }
