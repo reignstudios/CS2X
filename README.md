@@ -1,5 +1,9 @@
 [![Gitter](https://badges.gitter.im/ReignStudios/CS2X.svg)](https://gitter.im/ReignStudios/CS2X?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+# NOTE: IL2X is being re-investigated for CPU targets
+https://github.com/reignstudios/IL2X<br>
+This would end up making CS2X mostly for GPU targets.<br><br>
+
 # CS2X (Under development)
 Transpiles a C# subset to non .NET languages, platforms, runtimes and enviroments. (Powered by Roslyn)<br>
 

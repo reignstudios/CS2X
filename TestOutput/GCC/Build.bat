@@ -1,0 +1,1 @@
+gcc ../RayTraceBenchmark.c -march=x86-64 -o ./test.exe -O3

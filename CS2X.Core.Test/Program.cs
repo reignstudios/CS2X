@@ -10,7 +10,8 @@ namespace CS2X.Core.Test
 		{
 			// load solution
 			string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\");
-			var solution = new Solution(Path.Combine(path, @"PortableTestApp\PortableTestApp.csproj"));
+			//var solution = new Solution(Path.Combine(path, @"PortableTestApp\PortableTestApp.csproj"));
+			var solution = new Solution(Path.Combine(path, @"RayTraceBenchmark\RayTraceBenchmark.csproj"));
 
 			// parse solution
 			var task = solution.Parse("Debug", "AnyCPU");
