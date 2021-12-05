@@ -1,4 +1,4 @@
-[![Gitter](https://badges.gitter.im/ReignStudios/CS2X.svg)](https://gitter.im/ReignStudios/CS2X?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+# <a href="https://discord.gg/QmJEGER9An"><image src="https://theme.zdassets.com/theme_assets/678183/cc59daa07820943e943c2fc283b9079d7003ff76.svg"/></a>
 
 # NOTE: IL2X is being re-investigated for CPU targets
 https://github.com/reignstudios/IL2X<br>
